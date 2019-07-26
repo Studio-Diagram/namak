@@ -1,0 +1,129 @@
+<div ng-controller="menuCategoryCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addMenuCategoryModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت دسته‌بندی جدید</h2>
+                    <a class="mainButton redButton" ng-click="closeAddMenuCategoryModal()" href="#" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="addMenuCategory()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن صفحه</a>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات دسته‌بندی</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>نام دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_menu_category_data.name" type="text" aria-label="First name"
+                                       class="form-control" placeholder="نام دسته‌بندی">
+                            </div>
+                            <div class="col">
+                                <label>نوع دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_menu_category_data.kind" class="form-control" id="sel1">
+                                    <option value="">نوع دسته‌بندی</option>
+                                    <option ng-selected="new_menu_category_data.kind === 'KITCHEN'" value="KITCHEN">
+                                      آشپزخانه
+                                    </option>
+                                    <option ng-selected="new_menu_category_data.kind === 'BAR'" value="BAR">
+                                        بار
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div ng-repeat="printer in printers" class="col">
+                                <label><input ng-checked="printer.is_checked" class="form-control" type="checkbox" ng-model="is_checked" ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">پرینتر {{ printer.printer_name }}</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                    <a class="addUser mainButton greenButton" ng-click="openAddMenuCategoryModal()" data-toggle="modal"
+                       data-backdrop="static" data-keyboard="false"><i
+                            class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام دسته‌بندی</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="category in menu_categories">
+                            <th scope="row">{{ category.name }}</th>
+                            <td><a ng-click="editMenuCategory(category.id)" href=""><i class="fas fa-user-cog"></i></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <nav ng-hide="1" aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <span class="page-link">قبلی</span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">۱</a></li>
+                        <li class="page-item active">
+                                            <span class="page-link">
+                                                ۲
+                                                <span class="sr-only">(current)</span>
+                                            </span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">۳</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">بعدی</a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </main>
+
+
+        </div>
+    </main>
+</div>

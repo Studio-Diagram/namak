@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        @font-face {
+            font-family: IRANSans;
+            font-style: normal;
+            font-weight: normal;
+            src: url('{% static 'fonts/ttf/IRANSansWeb.ttf' %}') format('truetype');
+        }
+
+        @font-face {
+            font-family: IRANSansNums;
+            font-style: normal;
+            font-weight: normal;
+            src: url('{% static 'fonts/ttf/IRANsansNUMs.ttf' %}') format('truetype');
+        }
+
+        .iranian-number {
+            font-family: IRANSansNums;
+        }
+
+        .tableWrapper {
+
+            background: white;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid black;
+            margin-bottom: 30px;
+
+        }
+
+        body {
+            font-size: 1.2em;
+            width: 80mm;
+            margin: auto;
+            font-family: 'IRANSans', tahoma, serif;
+            font-weight: normal;
+            direction: rtl;
+            text-align: center;
+        }
+
+        .table td, .table th {
+
+            padding: .75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+
+        }
+
+        *, ::after, ::before {
+
+            box-sizing: border-box;
+
+        }
+
+        table {
+
+            border-collapse: collapse;
+
+        }
+
+        .table {
+
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+
+        }
+
+        .table thead th {
+
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+
+        }
+    </style>
+</head>
+<body>
+<div class="tableWrapper">
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>شماره فاکتور</td>
+            <td class="iranian-number">{{ invoice_data.factor_number }}</td>
+        </tr>
+        <tr>
+            <td>نام مهمان</td>
+            <td>{{ invoice_data.customer_name }}</td>
+        </tr>
+        <tr>
+            <td>نام میز</td>
+            <td>{{ invoice_data.table_name }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="tableWrapper">
+    <table class="table">
+        <thead style="background: black;color: white;font-size: 0.7em;">
+        <tr>
+            <th scope="col">نام</th>
+            <th scope="col">فی</th>
+            <th scope="col">تعداد</th>
+            <th scope="col">کل</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in invoice_data.items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td class="iranian-number">{{ item.item_price }}</td>
+                <td class="iranian-number">{{ item.numbers }}</td>
+                <td class="iranian-number">{{ item.price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="tableWrapper" style="background: black;color: white;margin: 0;border: none;font-size: 1.5em;font-weight: 800;margin-top: 200px;">
+    <table class="table">
+        <tbody>
+        <tr>
+            <td scope="col" style="
+    border: none;
+">جمع کل</td>
+            <td class="iranian-number" scope="col" style="
+    border: none;
+">{{ invoice_data.total_price }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+
+</html>

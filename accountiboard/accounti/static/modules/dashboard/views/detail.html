@@ -1,0 +1,59 @@
+<div ng-controller="supplierDetailCtrl">
+    <main class="pageContent container-fluid">
+                    <div class="tableButtons clearfix">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
+                                <li class="breadcrumb-item"><a ui-sref="account_manager.supplier({ supplier: supplier_id })">{{ supplier_name }}</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ state_word }}</li>
+                            </ol>
+                        </nav>
+                        <div class="dateFilter tableLefty">
+                            <span>تا تاریخ:</span>
+                            <input ng-model="search_data_supplier.to_time" disabled class="form-control listFilter tableLefty" type="text" placeholder="تا الان">
+                        </div>
+                        <div class="dateFilter tableLefty">
+                            <span>نمایش از تاریخ:</span>
+                            <input ng-model="search_data_supplier.from_time" disabled class="form-control listFilter tableLefty" type="text" placeholder="از یک‌ماه پیش">
+                        </div>
+                    </div>
+                    <div class="row userPageContent">
+                        <main class="col-sm-12 ">
+
+                            <div class="tableWrapper">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">تاریخ</th>
+                                            <th scope="col">مبلغ</th>
+                                            <th scope="col">نوع</th>
+                                            <th scope="col">تخفیف</th>
+                                            <th scope="col">مالیات</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="invoice in invoices_data">
+                                            <td>{{ invoice.date | persianNumber }}</td>
+                                            <td>{{ invoice.price | number | persianNumber }} ریال</td>
+                                            <td>{{ invoice.kind }}</td>
+                                            <td>{{ invoice.discount | number | persianNumber }} ریال</td>
+                                            <td>{{ invoice.tax | number | persianNumber }} ریال</td>
+                                            <td><a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                                        </tr>
+                                        <tr class="tableTotal">
+                                            <th>جمع کل</th>
+                                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </main>
+                    </div>
+                </main>
+</div>

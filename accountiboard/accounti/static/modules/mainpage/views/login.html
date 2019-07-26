@@ -1,0 +1,27 @@
+<main ng-controller="loginCtrl">
+    <a class="bigLogo" alt="" href=""><img src="static/img/boardlogored.svg" alt=""></a>
+    <form id="systemLogin">
+        <h2>ورود به سیستم</h2>
+        <div ng-show="is_error" class="alert alert-danger alert-dismissible">
+            <strong style="text-align: right!important;">{{ error_msg }}</strong>
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+            </div>
+            <input ng-model="user_login_data.username" type="text" class="form-control" id="userInput" aria-describedby=""
+                   placeholder="کارت بکشید / شماره کاربری">
+
+        </div>
+        <div class="form-group  input-group">
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fas fa-unlock-alt"></i></span>
+            </div>
+            <input ng-model="user_login_data.password" type="password" class="form-control" id="passInput" aria-describedby="" placeholder="رمز عبور">
+        </div>
+
+        <button ng-click="send_login_data()" type="submit" class="submitButton btn btn-primary">
+            <span><i ng-class="{'fa fa-spinner fa-spin': is_loading}"></i></span>{{ buttonText }}</button>
+        <a class="smallLink" href="users.html" alt="">رمز عبور خود را فراموش کرده‌اید؟</a>
+    </form>
+</main>

@@ -1,0 +1,213 @@
+<div ng-controller="employeeCtrl">
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal" id="addUserModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت کارمند جدید</h2>
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()" alt="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="registerEmployee()" href="" alt="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" alt="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن صفحه</a>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات شخصی</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>نام<i class="fas fa-star-of-life"></i></label>
+                                <input ng-required="$touched" ng-model="new_employee_data.first_name" type="text"
+                                       aria-label="First name"
+                                       class="form-control" placeholder="نام">
+                            </div>
+                            <div class="col">
+                                <label>نام خانوادگی<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.last_name" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="نام خانوادگی">
+                            </div>
+                            <div class="col">
+                                <label>نام پدر<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.father_name" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="نام پدر">
+                            </div>
+                            <div class="col">
+                                <label>شماره شناسنامه<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.national_code" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="شماره شناسنامه">
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label>موبایل<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.phone" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="موبایل">
+                            </div>
+                            <div class="col-2">
+                                <label>رمز عبور<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.password" type="password" aria-label="Last name"
+                                       class="form-control" placeholder="رمز عبور">
+                            </div>
+                            <div class="col-2">
+                                <label>تکرار رمز عبور<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.re_password" type="password" aria-label="Last name"
+                                       class="form-control" placeholder="تکرار رمز عبور">
+                            </div>
+                            <div class="col-6">
+                                <label>آدرس<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.home_address" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="آدرس">
+                            </div>
+                        </div>
+                        <h3>اطلاعات حساب بانکی</h3>
+                        <div class="row">
+                            <div class="col-3">
+                                <label>نام بانک<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.bank_name" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="نام بانک">
+                            </div>
+                            <div class="col-3">
+                                <label>شماره کارت اعتباری<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.bank_card_number" type="text" aria-label="Last name"
+                                       class="form-control"
+                                       placeholder="شماره کارت اعتباری">
+                            </div>
+                            <div class="col-6">
+                                <label>شماره شبا<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.shaba" type="text" aria-label="Last name"
+                                       class="form-control" placeholder="شماره شبا">
+                            </div>
+                        </div>
+                        <h3>اطلاعات کارمندی</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>سمت<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.position" type="text" aria-label="First name"
+                                       class="form-control" placeholder="سمت">
+                            </div>
+                            <div class="col">
+                                <label>حقوق شیفت پایه<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.base_worksheet_salary" type="text"
+                                       aria-label="Last name"
+                                       class="form-control" placeholder="حقوق شیفت پایه">
+                            </div>
+                            <div class="col">
+                                <label>تعداد شیفت پایه<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.base_worksheet_count" type="text"
+                                       aria-label="Last name"
+                                       class="form-control"
+                                       placeholder="تعداد شیفت پایه">
+                            </div>
+                            <div class="col">
+                                <label>سطح دسترسی<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_employee_data.auth_level" class="form-control" id="sel1">
+                                    <option>سطح دسترسی</option>
+                                    <option ng-selected="new_employee_data.auth_level === 0" value="0">۰</option>
+                                    <option ng-selected="new_employee_data.auth_level === 1" value="1">۱</option>
+                                    <option ng-selected="new_employee_data.auth_level === 2" value="2">۲</option>
+                                    <option ng-selected="new_employee_data.auth_level === 3" value="3">۳</option>
+                                    <option ng-selected="new_employee_data.auth_level === 4" value="4">۴</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>شماره کارت عضویت<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_employee_data.membership_card_number" type="text"
+                                       class="form-control" placeholder="شماره کارت عضویت">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <input ng-keyup="searchEmployee()" ng-model="serach_data_employee.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                    <a class="addUser mainButton greenButton" ng-click="openAddEmployeeModal()" data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> کارمند جدید</a>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام خانوادگی</th>
+                            <th scope="col">سمت</th>
+                            <th scope="col">دسترسی</th>
+                            <th scope="col">تغییرات شیفت</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="employee in employees">
+                            <th scope="row">{{ employee.last_name }}</th>
+                            <td>{{ employee.position }}</td>
+                            <td>{{ employee.auth_lvl | persianNumber }}</td>
+                            <td></td>
+                            <td><a ng-click="editEmployee(employee.id)" href="" alt=""><i
+                                    class="fas fa-user-cog"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <nav ng-hide="1" aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <span class="page-link">قبلی</span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">۱</a></li>
+                        <li class="page-item active">
+                                            <span class="page-link">
+                                                ۲
+                                                <span class="sr-only">(current)</span>
+                                            </span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">۳</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">بعدی</a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </main>
+
+
+        </div>
+    </main>
+</div>

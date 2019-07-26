@@ -1,0 +1,934 @@
+angular.module("dashboard")
+    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
+        var initialize = function () {
+            $scope.is_in_edit_mode = false;
+            $scope.current_menu_nav = "MENU";
+            $scope.new_invoice_data = {
+                'invoice_sales_id': 0,
+                'table_id': 0,
+                'table_name': 0,
+                'member_id': 0,
+                'guest_numbers': 0,
+                'member_name': '',
+                'member_data': '',
+                'current_game': {
+                    'id': 0,
+                    'numbers': 0,
+                    'start_time': ''
+                },
+                'menu_items_old': [],
+                'menu_items_new': [],
+                'shop_items_old': [],
+                'shop_items_new': [],
+                'games': [],
+                'total_price': 0,
+                'cash': 0,
+                'card': 0,
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id,
+                'username': $rootScope.user_data.username
+            };
+
+            $scope.will_delete_items = {
+                'invoice_id': 0,
+                'shop': [],
+                'menu': [],
+                'game': [],
+                "message": '',
+                'username': $rootScope.user_data.username
+            };
+
+            $scope.tables_have_invoice = [];
+
+            $scope.selected_table_data = [];
+            $scope.selected_table = "";
+
+            $scope.tables = [];
+
+            $scope.search_data_menu_item = {
+                'search_word': '',
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+
+            $scope.serach_data_employee = {
+                'search_word': '',
+                'branch_id': $rootScope.user_data.branch
+            };
+            $scope.search_data_shop_products = {
+                'search_word': '',
+                'username': $rootScope.user_data.username
+            };
+            $scope.employeeSearchWord = '';
+            $scope.get_menu_items_with_categories_data($rootScope.user_data);
+            $scope.get_tables_data($rootScope.user_data);
+            $scope.getAllTodayInvoices();
+            $scope.get_shop_products();
+        };
+
+        $scope.settleInvoice = function () {
+            var sending_data = {
+                'invoice_id': $scope.new_invoice_data.invoice_sales_id,
+                'cash': $scope.new_invoice_data.cash,
+                'card': $scope.new_invoice_data.card,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.settleInvoiceSale(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.closePayModal();
+                        $scope.getAllTodayInvoices();
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
+                        $scope.closeAddInvoiceModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.closePayModal();
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.closePayModal();
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.print_data = function (invoice_id, print_kind, invoice_data) {
+            if (print_kind === "CASH") {
+                var sending_data = {
+                    'is_customer_print': 1,
+                    'invoice_id': invoice_id
+                };
+                $http({
+                    method: 'POST',
+                    url: 'http://127.0.0.1:8000/printData',
+                    data: sending_data,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                })
+            }
+            else if (print_kind === "NO-CASH") {
+                var sending_data = {
+                    'is_customer_print': 0,
+                    'invoice_id': invoice_id,
+                    'invoice_data': invoice_data
+                };
+                $http({
+                    method: 'POST',
+                    url: 'http://127.0.0.1:8000/printData',
+                    data: sending_data,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(function successCallback(response) {
+
+                }, function errorCallback(response) {
+                    var sending_data_2 = {
+                        'invoice_id': invoice_id,
+                        'activate_is_print': true
+                    };
+                    dashboardHttpRequest.printAfterSave(sending_data_2)
+                        .then(function (data) {
+                            if (data['response_code'] === 2) {
+
+                            }
+                            else if (data['response_code'] === 3) {
+                                $scope.error_message = data['error_msg'];
+                                $scope.openErrorModal();
+                            }
+                        }, function (error) {
+                            $scope.error_message = 500;
+                            $scope.closeTimeCalcModal();
+                            $scope.openErrorModal();
+                        });
+                });
+            }
+        };
+
+
+        $scope.print_after_save = function (invoice_id) {
+            dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_data.current_game.id = data['new_game_id'];
+                        $scope.getAllTodayInvoices();
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
+                        $scope.closeForm();
+                        // printing after saving
+                        var sending_data = {
+                            'invoice_id': data['new_invoice_id'],
+                            'activate_is_print': false
+                        };
+                        dashboardHttpRequest.printAfterSave(sending_data)
+                            .then(function (data) {
+                                if (data['response_code'] === 2) {
+                                    $scope.print_data_info = data['printer_data'];
+                                    $scope.print_data(sending_data['invoice_id'], "NO-CASH", $scope.print_data_info);
+                                }
+                                else if (data['response_code'] === 3) {
+                                    $scope.error_message = data['error_msg'];
+                                    $scope.openErrorModal();
+                                }
+                            }, function (error) {
+                                $scope.error_message = 500;
+                                $scope.closeTimeCalcModal();
+                                $scope.openErrorModal();
+                            });
+
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+
+        $scope.print_cash = function (invoice_id) {
+            var sending_data = {
+                'invoice_id': invoice_id
+            };
+            dashboardHttpRequest.printCash(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.print_data_info = data['printer_data'];
+                        $scope.print_data($scope.print_data_info);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.closeTimeCalcModal();
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.payModalChangeNumber = function () {
+            $scope.new_invoice_data.card = $scope.new_invoice_data.total_price - $scope.new_invoice_data.cash;
+        };
+
+        $scope.openErrorModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#errorModal').modal('show');
+                $('#addInvoiceModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closeErrorModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#errorModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+        };
+
+        $scope.openTimeCalcModal = function () {
+            $scope.calculateTime();
+            jQuery.noConflict();
+            (function ($) {
+                $('#timeCalcModal').modal('show');
+                $('#addInvoiceModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closeTimeCalcModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#timeCalcModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+        };
+
+        $scope.openPermissionModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#closeInvoicePermissionModal').modal('show');
+                $('#addInvoiceModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closePermissionModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#closeInvoicePermissionModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+        };
+
+        $scope.calculateTime = function () {
+            dashboardHttpRequest.timeCalc($scope.new_invoice_data.current_game)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.calcedPoints = data['price'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.closeTimeCalcModal();
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.closeTimeCalcModal();
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.openPayModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_invoice_data.card = $scope.new_invoice_data.total_price;
+                $scope.new_invoice_data.cash = 0;
+                $('#payModal').modal('show');
+                $('#addInvoiceModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closePayModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#payModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+        };
+
+        $scope.openDeleteModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteItemsModal').modal('show');
+                $('#addInvoiceModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closeDeleteModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteItemsModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+            $scope.read_only_mode = false;
+        };
+
+        $scope.delete_items = function () {
+            dashboardHttpRequest.deleteItems($scope.will_delete_items)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.closeDeleteModal();
+                        $scope.closeAddInvoiceModal();
+                        $scope.getAllTodayInvoices();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+            $scope.closeDeleteModal();
+        };
+
+        $scope.will_delete_items_adder = function (deleted_type, p_id) {
+            if (deleted_type === 'shop') {
+                var found = $scope.will_delete_items.shop.findIndex(function (element) {
+                    return element === p_id;
+                });
+                if (found !== -1) {
+                    $scope.will_delete_items.shop.splice(found, 1);
+                }
+                else if (found === -1) {
+                    $scope.will_delete_items.shop.push(p_id);
+                }
+            }
+            else if (deleted_type === 'menu') {
+                var found2 = $scope.will_delete_items.menu.findIndex(function (element) {
+                    return element === p_id;
+                });
+                if (found2 !== -1) {
+                    $scope.will_delete_items.menu.splice(found2, 1);
+                }
+                else if (found2 === -1) {
+                    $scope.will_delete_items.menu.push(p_id);
+                }
+            }
+            else if (deleted_type === 'game') {
+                var found3 = $scope.will_delete_items.game.findIndex(function (element) {
+                    return element === p_id;
+                });
+                if (found3 !== -1) {
+                    $scope.will_delete_items.game.splice(found3, 1);
+                }
+                else if (found3 === -1) {
+                    $scope.will_delete_items.game.push(p_id);
+                }
+            }
+        };
+
+        $scope.get_shop_products = function () {
+            var data = {
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getShopProducts(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.shop_products = data['shop_products'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.changeItemShopNumber = function (item_index) {
+            var new_number = $scope.new_invoice_data.shop_items_new[item_index].nums;
+            var item_price = $scope.new_invoice_data.shop_items_new[item_index].price;
+            $scope.new_invoice_data.shop_items_new[item_index].total = new_number * item_price;
+            var new_total_price = 0;
+            for (var i = 0; i < $scope.new_invoice_data.shop_items_new.length; i++) {
+                var entry = $scope.new_invoice_data.shop_items_new[i];
+                new_total_price += entry.total;
+            }
+            for (var j = 0; j < $scope.new_invoice_data.shop_items_old.length; j++) {
+                var entry2 = $scope.new_invoice_data.shop_items_old[j];
+                new_total_price += entry2.total;
+            }
+            for (var m = 0; m < $scope.new_invoice_data.menu_items_new.length; m++) {
+                var entry3 = $scope.new_invoice_data.menu_items_new[m];
+                new_total_price += entry3.total;
+            }
+            for (var n = 0; n < $scope.new_invoice_data.menu_items_old.length; n++) {
+                var entry4 = $scope.new_invoice_data.menu_items_old[n];
+                new_total_price += entry4.total;
+            }
+            $scope.new_invoice_data.total_price = new_total_price;
+        };
+
+        $scope.add_item_shop = function (id, name, price) {
+            var int_price = parseInt(price);
+            var int_id = parseInt(id);
+            var is_fill = false;
+            if ($scope.new_invoice_data.shop_items_new.length === 0) {
+                $scope.new_invoice_data.shop_items_new.push({
+                    'id': int_id,
+                    'name': name,
+                    'price': int_price,
+                    'sale_price': int_price,
+                    'nums': 1,
+                    'total': int_price,
+                    'description': ''
+                });
+                $scope.new_invoice_data.total_price += int_price;
+            }
+            else {
+                for (var i = 0; i < $scope.new_invoice_data.shop_items_new.length; i++) {
+                    var entry = $scope.new_invoice_data.shop_items_new[i];
+                    if (parseInt(entry.id) === int_id) {
+                        entry.nums += 1;
+                        entry.total += entry.price;
+                        is_fill = true;
+                        $scope.new_invoice_data.total_price += entry.price;
+                        break;
+                    }
+                }
+                if (!is_fill) {
+                    $scope.new_invoice_data.shop_items_new.push({
+                        'id': int_id,
+                        'name': name,
+                        'price': int_price,
+                        'sale_price': int_price,
+                        'nums': 1,
+                        'total': int_price,
+                        'description': ''
+                    });
+                    $scope.new_invoice_data.total_price += int_price;
+                }
+                is_fill = false;
+            }
+        };
+
+        $scope.deleteNewItem = function (item_index) {
+            $scope.new_invoice_data.menu_items_new.splice(item_index, 1);
+
+        };
+
+        $scope.deleteNewItemShop = function (item_index) {
+            $scope.new_invoice_data.shop_items_new.splice(item_index, 1);
+
+        };
+
+        $scope.changeMenuNav = function (name) {
+            if (name === "MENU") {
+                $scope.current_menu_nav = name;
+            }
+            else if (name === "SHOP") {
+                $scope.current_menu_nav = name;
+            }
+        };
+
+        $scope.changeItemNumber = function (item_index) {
+            var new_number = $scope.new_invoice_data.menu_items_new[item_index].nums;
+            var item_price = $scope.new_invoice_data.menu_items_new[item_index].price;
+            $scope.new_invoice_data.menu_items_new[item_index].total = new_number * item_price;
+            var new_total_price = 0;
+            for (var i = 0; i < $scope.new_invoice_data.menu_items_new.length; i++) {
+                var entry = $scope.new_invoice_data.menu_items_new[i];
+                new_total_price += entry.total;
+            }
+            for (var j = 0; j < $scope.new_invoice_data.menu_items_old.length; j++) {
+                var entry2 = $scope.new_invoice_data.menu_items_old[j];
+                new_total_price += entry2.total;
+            }
+            for (var m = 0; m < $scope.new_invoice_data.shop_items_new.length; m++) {
+                var entry3 = $scope.new_invoice_data.shop_items_new[m];
+                new_total_price += entry3.total;
+            }
+            for (var n = 0; n < $scope.new_invoice_data.shop_items_old.length; n++) {
+                var entry4 = $scope.new_invoice_data.shop_items_old[n];
+                new_total_price += entry4.total;
+            }
+
+            $scope.new_invoice_data.total_price = new_total_price;
+        };
+
+        $scope.selectTable = function (table_name) {
+            $scope.selected_table = table_name;
+            $scope.selected_table_data = [];
+            $scope.new_invoice_data.table_id = $filter('filter')($scope.tables, {'table_name': table_name})[0].table_id;
+            $scope.new_invoice_data.table_name = table_name;
+            for (var i = 0; i < $scope.all_today_invoices.length; i++) {
+                if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
+                    $scope.selected_table_data.push($scope.all_today_invoices[i]);
+                }
+            }
+        };
+
+        $scope.check_table_has_invoice = function () {
+            $scope.tables_have_invoice = [];
+            for (var i = 0; i < $scope.all_today_invoices.length; i++) {
+                if ($scope.tables_have_invoice.indexOf($scope.all_today_invoices[i].table_name) === -1 && $scope.all_today_invoices[i].is_settled === 0) {
+                    $scope.tables_have_invoice.push($scope.all_today_invoices[i].table_name);
+                }
+            }
+        };
+
+        $scope.getAllTodayInvoices = function () {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getAllTodayInvoices(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.all_today_invoices = data['all_today_invoices'];
+                        $scope.selectTable($scope.last_table_add);
+                        $scope.check_table_has_invoice();
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.getAllInvoiceGames = function (invoice_id) {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username,
+                "invoice_id": parseInt(invoice_id)
+            };
+            dashboardHttpRequest.getAllInvoiceGames(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_data.games = data['games'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.endCurrentGame = function (game_id) {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username,
+                "game_id": parseInt(game_id)
+            };
+            dashboardHttpRequest.endCurrentGame(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_data.current_game = {
+                            'id': 0,
+                            'numbers': 0,
+                            'start_time': ''
+                        };
+                        $scope.getAllInvoiceGames($scope.new_invoice_data.invoice_sales_id);
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.addGuestNums = function (numbers) {
+            $scope.new_invoice_data.guest_numbers = parseInt(numbers);
+        };
+
+        $scope.add_item = function (id, name, price) {
+            var int_price = parseInt(price);
+            var int_id = parseInt(id);
+            var is_fill = false;
+            $scope.new_invoice_data.total_price += int_price;
+            if ($scope.new_invoice_data.menu_items_new.length === 0) {
+                $scope.new_invoice_data.menu_items_new.push({
+                    'id': int_id,
+                    'name': name,
+                    'price': int_price,
+                    'nums': 1,
+                    'total': int_price,
+                    'description': ''
+                });
+            }
+            else {
+                for (var i = 0; i < $scope.new_invoice_data.menu_items_new.length; i++) {
+                    var entry = $scope.new_invoice_data.menu_items_new[i];
+                    if (parseInt(entry.id) === int_id) {
+                        entry.nums += 1;
+                        entry.total += int_price;
+                        is_fill = true;
+                        break;
+                    }
+                }
+                if (!is_fill) {
+                    $scope.new_invoice_data.menu_items_new.push({
+                        'id': int_id,
+                        'name': name,
+                        'price': int_price,
+                        'nums': 1,
+                        'total': int_price,
+                        'description': ''
+                    });
+                }
+                is_fill = false;
+            }
+        };
+
+        $scope.start_game = function () {
+            var now = new Date();
+            $scope.new_invoice_data.current_game.start_time = now.getHours() + ":" + now.getMinutes()
+        };
+
+        $scope.saveInvoice = function () {
+            dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_data.current_game.id = data['new_game_id'];
+                        $scope.getAllTodayInvoices();
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
+                        $scope.closeForm();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_menu_items_with_categories_data = function (data) {
+            dashboardHttpRequest.getMenuItemsWithCategories(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.menu_items_with_categories = data['menu_items_with_categories'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.get_tables_data = function (data) {
+            dashboardHttpRequest.getTables(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.tables = data['tables'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.get_member_data = function (card_number) {
+            var data = {
+                'username': $rootScope.user_data.username,
+                'member_id': 0,
+                'card_number': card_number
+            };
+            dashboardHttpRequest.getMember(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        var first_name = data['member']['first_name'];
+                        var last_name = data['member']['last_name'];
+                        $scope.new_invoice_data.member_id = data['member']['id'];
+                        $scope.new_invoice_data.member_name = first_name + " " + last_name;
+                        $scope.new_invoice_data.member_data = first_name + " " + last_name;
+
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.showCollapse = function (collapse_id) {
+            jQuery.noConflict();
+            (function ($) {
+                for (var i = 0; i < $scope.menu_items_with_categories.length; i++) {
+                    $("#menuNavCollapse" + i).collapse('hide');
+                }
+                $("#menuNavCollapse" + collapse_id).collapse('toggle');
+            })(jQuery);
+        };
+
+        $scope.get_menu_item_data = function (data) {
+            dashboardHttpRequest.getMenuItems(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.menu_items = data['menu_items'];
+                        console.log(data);
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.search_shop_products = function () {
+            if ($scope.search_data_shop_products.search_word === '') {
+                $scope.get_shop_products();
+            }
+            else {
+                dashboardHttpRequest.searchShopProducts($scope.search_data_shop_products)
+                    .then(function (data) {
+                        if (data['response_code'] === 2) {
+                            $scope.shop_products = data['shop_products'];
+                        }
+                        else if (data['response_code'] === 3) {
+                            $scope.error_message = data['error_msg'];
+                            $scope.openErrorModal();
+                        }
+                    }, function (error) {
+                        $scope.error_message = 500;
+                        $scope.openErrorModal();
+                    });
+            }
+        };
+        $scope.searchMenuItem = function () {
+            if ($scope.search_data_menu_item.search_word === '') {
+                $scope.get_menu_item_data($rootScope.user_data);
+            }
+            else {
+                dashboardHttpRequest.searchMenuItem($scope.search_data_menu_item)
+                    .then(function (data) {
+                        if (data['response_code'] === 2) {
+                            $scope.menu_items = data['menu_items'];
+                        }
+                        else if (data['response_code'] === 3) {
+                            console.log("NOT SUCCESS!");
+                        }
+                    }, function (error) {
+                        console.log(error);
+                    });
+            }
+        };
+
+        $scope.openAddInvoiceModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#addInvoiceModal').modal('show');
+            })(jQuery);
+            if ($scope.new_invoice_data.member_id === 0) {
+                $scope.get_member_data('0000');
+            }
+        };
+
+        $scope.closeAddInvoiceModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#addInvoiceModal').modal('hide');
+                $('#closeInvoicePermissionModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+            $scope.showCollapse(0);
+            $scope.resetFrom();
+            $scope.reset_deleted_items();
+        };
+
+        $scope.openViewInvoiceModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#viewInvoiceModal').modal('show');
+            })(jQuery);
+        };
+
+        $scope.closeViewInvoiceModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#viewInvoiceModal').modal('hide');
+            })(jQuery);
+            $scope.reset_deleted_items();
+        };
+
+        $scope.editInvoice = function (invoice_id) {
+            $scope.is_in_edit_mode_invoice = true;
+            $scope.will_delete_items.invoice_id = invoice_id;
+            var sending_data = {
+                "invoice_id": invoice_id,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getInvoice(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                        $scope.new_invoice_data = {
+                            'invoice_sales_id': data['invoice']['invoice_sales_id'],
+                            'table_id': data['invoice']['table_id'],
+                            'table_name': data['invoice']['table_name'],
+                            'member_id': data['invoice']['member_id'],
+                            'guest_numbers': data['invoice']['guest_numbers'],
+                            'member_name': data['invoice']['member_name'],
+                            'member_data': data['invoice']['member_data'],
+                            'current_game': {
+                                'id': data['invoice']['current_game']['id'],
+                                'numbers': data['invoice']['current_game']['numbers'],
+                                'start_time': data['invoice']['current_game']['start_time']
+                            },
+                            'menu_items_old': data['invoice']['menu_items_old'],
+                            'shop_items_old': data['invoice']['shop_items_old'],
+                            'menu_items_new': [],
+                            'shop_items_new': [],
+                            'games': data['invoice']['games'],
+                            'total_price': data['invoice']['total_price'],
+                            'branch_id': $rootScope.user_data.branch,
+                            'cash_id': $rootScope.cash_data.cash_id,
+                            'username': $rootScope.user_data.username
+                        };
+                        $scope.openAddInvoiceModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.showInvoice = function (invoice_id) {
+            $scope.is_in_edit_mode_invoice = true;
+            $scope.will_delete_items.invoice_id = invoice_id;
+            var sending_data = {
+                "invoice_id": invoice_id,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getInvoice(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                        $scope.new_invoice_data = {
+                            'invoice_sales_id': data['invoice']['invoice_sales_id'],
+                            'table_id': data['invoice']['table_id'],
+                            'table_name': data['invoice']['table_name'],
+                            'member_id': data['invoice']['member_id'],
+                            'guest_numbers': data['invoice']['guest_numbers'],
+                            'member_name': data['invoice']['member_name'],
+                            'member_data': data['invoice']['member_data'],
+                            'current_game': {
+                                'id': data['invoice']['current_game']['id'],
+                                'numbers': data['invoice']['current_game']['numbers'],
+                                'start_time': data['invoice']['current_game']['start_time']
+                            },
+                            'menu_items_old': data['invoice']['menu_items_old'],
+                            'shop_items_old': data['invoice']['shop_items_old'],
+                            'menu_items_new': [],
+                            'shop_items_new': [],
+                            'games': data['invoice']['games'],
+                            'total_price': data['invoice']['total_price'],
+                            'branch_id': $rootScope.user_data.branch,
+                            'cash_id': $rootScope.cash_data.cash_id,
+                            'username': $rootScope.user_data.username
+                        };
+                        $scope.openViewInvoiceModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.resetFrom = function () {
+            $scope.new_invoice_data = {
+                'invoice_sales_id': 0,
+                'table_id': 0,
+                'table_name': '',
+                'member_id': 0,
+                'guest_numbers': 0,
+                'member_name': '',
+                'member_data': '',
+                'current_game': {
+                    'id': 0,
+                    'numbers': 0,
+                    'start_time': ''
+                },
+                'menu_items_old': [],
+                'menu_items_new': [],
+                'shop_items_old': [],
+                'shop_items_new': [],
+                'games': [],
+                'total_price': 0,
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id,
+                'username': $rootScope.user_data.username
+            };
+        };
+
+        $scope.reset_deleted_items = function () {
+            $scope.will_delete_items = {
+                'invoice_id': 0,
+                'shop': [],
+                'menu': [],
+                'game': [],
+                "message": '',
+                'username': $rootScope.user_data.username
+            };
+        };
+
+        $scope.closeForm = function () {
+            $scope.resetFrom();
+            $scope.closeAddInvoiceModal();
+        };
+        initialize();
+    });

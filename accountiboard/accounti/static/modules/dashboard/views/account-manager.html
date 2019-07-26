@@ -1,0 +1,11 @@
+<div ng-controller="managerCtrl" class="pageSubMenu">
+    <nav class=" nav nav-justified">
+        <a ui-sref="account_manager.buy" ng-class="isActive('/account_manager/buy') ? 'nav-link active' : 'nav-link'">خرید</a>
+        <a ui-sref="account_manager.pay"  ng-class="isActive('/account_manager/pay') ? 'nav-link active' : 'nav-link'">پرداخت</a>
+        <a ui-sref="account_manager.expense"  ng-class="isActive('/account_manager/expense') ? 'nav-link active' : 'nav-link'">هزینه</a>
+        <a ui-sref="account_manager.return"  ng-class="isActive('/account_manager/return') ? 'nav-link active' : 'nav-link'">مرجوعی</a>
+        <a ui-sref="account_manager.suppliers"  ng-class="isActive('/account_manager/suppliers') ? 'nav-link active' : 'nav-link'">تامین‌کنندگان</a>
+        <a ui-sref="account_manager.manage_cash"  ng-class="isActive('/account_manager/manage_cash') ? 'nav-link active' : 'nav-link'">مدیریت صندوق روز</a>
+    </nav>
+</div>
+<ui-view></ui-view>

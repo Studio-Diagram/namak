@@ -1,0 +1,147 @@
+<main ng-controller="statusCtrl" class="pageContent container-fluid">
+    <div class="row saloonPageContent">
+        <main class="col-sm-12 ">
+            <div class="tableButtons clearfix">
+                <a class="addUser mainButton greenButton" href="" data-toggle="modal"><i
+                        class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>گزارش فروش</h3>
+                        <div class="tableWrapper">
+                            <table class="cashTable">
+                                <tbody>
+                                <tr>
+                                    <td class="mainValue">
+                                        <h4><i class="fas fa-cash-register"></i> کل فروش</h4>
+                                        <span class="">{{ status.all_sales_price | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-money-bill"></i> نقد</h4>
+                                        <span class="">{{ status.all_cash | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="far fa-credit-card"></i> کارت‌خوان</h4>
+                                        <span class="">{{ status.all_pos | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-users"></i> تعداد مهمانان</h4>
+                                        <span class="">{{ status.all_guests | persianNumber }}</span>
+                                        <small>نفر</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-file-invoice-dollar"></i> مالیات</h4>
+                                        <span class="">{{ status.all_tax | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-hand-holding-usd"></i> انعام</h4>
+                                        <span class="">{{ status.all_tip | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-file-invoice"></i> تخفیف</h4>
+                                        <span class="">{{ status.all_discount | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-show="0" class="col-sm-12">
+                        <h3>گزارش تفکیکی</h3>
+                        <div class="tableWrapper">
+                            <table class="cashTable">
+                                <tbody>
+                                <tr>
+                                    <td class="">
+                                        <h4><i class="fas fa-coffee"></i> فروش بار</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-chess-rook"></i> هزینه بازی</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-users"></i> تعداد بازیکنان</h4>
+                                        <span class="">۱۱۳</span>
+                                        <small>نفر</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-ticket-alt"></i> بلیت استفاده‌شده</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-users"></i> شرکت کنندگان</h4>
+                                        <span class="">۲۴</span>
+                                        <small>نفر</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-credit-card"></i> اعتبار استفاده‌شده</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-show="0" class="col-sm-12">
+                        <h3>گزارش هزینه‌ها</h3>
+                        <div class="tableWrapper">
+                            <table class="cashTable">
+                                <tbody>
+                                <tr>
+                                    <td class="">
+                                        <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-hammer"></i> هزینه</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-file-invoice-dollar"></i> پرداختی</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-user-tie"></i> مصرف مدیران</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-user-friends"></i> مصرفی استف</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-percentage"></i> تخفیف استف</h4>
+                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <small>ریال</small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</main>

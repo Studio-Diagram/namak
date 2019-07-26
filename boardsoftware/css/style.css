@@ -1,0 +1,927 @@
+@import url(fontiran.css); /* لینک فایلی که وظیفه بارگذاری فونت ها را برعهده دارد */
+:root {
+    --myBlack: #2B2D32;
+    --myBlackBorder: #5D616B;
+    --myRed: #DB4D54;
+    --myRedBorder: #CE4249;
+    --myGreen: #80AB51;
+    --myGreenBorder: #658B3B;
+    --myYellow: #E7C764;
+    --myYellowBorder: #CCA835;
+    --myBlue: #35BBCC;
+    --myBlueBorder: #289FAE;
+    --myGray: #f4f5f8;
+    --myGrayBorder: darkgray;
+    --pageBorder: #d8d8d8;
+    --pageBG: #f4f5f8;
+    --pageBGHover: #e8e9ef;
+}
+body {
+    padding: 0 !important;
+    min-height: 0px;
+    text-align: right;
+    font-size: 13px;
+    font-family: 'IRANSans', tahoma, serif;
+    font-weight: normal;
+    direction: rtl;
+    min-height: 0 !important;
+    color: var(--myBlack);
+    min-width:360px;
+    background: var(--pageBG);
+}
+.masterWrapper {
+    margin-top: 30px;
+}
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+h3 {
+    font-size: 1.2em;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+input::placeholder {
+    font-weight: 100;
+    color: var(--myGrayBorder);
+    font-size: .8em;
+    font-family: FontAwesome, 'IRANSans';
+}
+.input-group>.input-group-append:last-child>.btn:not(:last-child):not(.dropdown-toggle), .input-group>.input-group-append:last-child>.input-group-text:not(:last-child), .input-group>.input-group-append:not(:last-child)>.btn, .input-group>.input-group-append:not(:last-child)>.input-group-text, .input-group>.input-group-prepend>.btn, .input-group>.input-group-prepend>.input-group-text {
+    border-radius: 0;
+    
+}
+.input-group>.custom-select:not(:first-child), .input-group>.form-control:not(:first-child) {
+    border-radius: 0;
+}
+i {
+    vertical-align: baseline;
+}
+a {
+    color: var(--myBlack);
+}
+a:hover {
+    color: var(--myBlack);
+    text-decoration: none;
+    
+}
+a:hover i {
+    color: var(--myRed);
+}
+.greenText {
+    color: var(--myGreen);
+}
+.yellowText {
+    color: var(--myYellow);
+}
+.redText {
+    color: var(--myRed);
+}
+.lefty {
+    float: left;
+    text-align: left;
+}
+.righty {
+    float: right;
+    text-align: right;
+}
+.iconic {
+    font-size: 1.1em;
+    margin-top: 20px;
+    color: var(--myGreen);
+}
+.iconic i {
+    font-size: 1.2em;
+}
+.iconic.lefty i {
+    padding-right: 10px;
+}
+.iconic.righty i {
+    padding-left: 10px;
+}
+.paymentMethod {
+    width: 20%;
+    margin-top: 10px;
+}
+.pageContent .container-fluid {
+    padding: 0;
+}
+.topHeader {
+    padding: 5px 30px;
+    background: var(--myBlack);
+    height: 55px;
+    border-top: 5px solid var(--myRed);
+}
+.topHeader .mainLogo {
+    padding-top: 6px;
+}
+.topHeader .userInfo {
+    padding: 0;
+}
+
+.topHeader .userInfo span{
+    color: white;
+    padding-left: 30px;
+    font-size: 1.2em;
+    font-weight: 100;
+}
+.topHeader time {
+    color: darkgrey;
+    padding: 10px 50px 0 0;
+}
+main.pageWrapper {
+    padding: 0;
+}
+
+.pageSubMenu {
+    border-bottom: 1px solid var(--pageBorder);
+    
+}
+.pageSubMenu a{
+    font-size: 1.1em;
+    font-weight: 200;
+}
+.pageSubMenu a.active{
+    color: var(--myRed);
+    border-bottom: 3px solid var(--myRed);
+    font-weight: 400;
+}
+.pageSubMenu a:hover{
+
+    font-weight: 400;
+}
+main a.bigLogo {
+    display: block;
+    width: 111px;
+    margin: 70px auto;
+}
+a.smallLink {
+    color: var(--myBlack);
+    font-style: italic;
+    font-weight: 100;
+}
+
+aside.mainAside {
+    padding: 0;
+    padding-left: 25px;
+    height: calc(100vh - 85px);
+}
+
+form#systemLogin {
+    border: 5px solid #BFD5A8;
+    width: 450px;
+    text-align: center;
+    margin: auto;
+    background: #eeeeee;
+    padding: 25px;
+}
+form#systemLogin .form-group {
+    margin-bottom: 10px;
+}
+
+form#systemLogin .submitButton {
+    width: 100%;
+    background: var(--myGreen);
+    border: none;
+    margin-bottom: 15px;
+}
+form#systemLogin .submitButton:hover {
+    background: var(--myGreen);
+}
+.mainAside nav {
+    
+}
+.mainAside nav ul {
+    padding: 0;
+}
+.mainAside nav ul li {
+    list-style-type: none;
+}
+.mainAside nav ul li a {
+    padding: 15px 0;
+    padding-right: 30px;
+    font-size: 1em;
+    display: block;
+    font-weight: 100;
+}
+.mainAside nav ul li a:hover {
+    background: var(--pageBGHover);
+    font-weight: 400;
+}
+.mainAside nav ul li a.active {
+    border-right: 5px solid var(--myRed);
+    background: var(--pageBGHover);
+    font-weight: 400;
+}
+.mainAside nav ul li a.active i{
+    color: var(--myRed);
+}
+.mainAside nav ul li a i{
+    padding-left: 30px;
+}
+main.pageContent {
+    padding: 0;
+    padding-left: 25px;
+    margin: 0;
+    position: absolute;
+    top: 41px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: auto;
+    width: 100%;
+}
+main.pageContent a:hover {
+
+}
+main.pageContent a:hover i {
+}
+main.pageContent .userPageContent {
+    margin: 0;
+}
+a.mainButton {
+    display: inline-block;
+    text-align: center;
+    padding: 9px 15px;
+    color: white;
+    font-size: 1em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+a.mainButton:hover {
+    
+}
+a.mainButton i {
+    color: white;
+}
+a.greenButton {
+    background: var(--myGreen);
+    border-color: var(--myGreenBorder);
+}
+a.greenButton:hover {
+    background: var(--myGreenBorder);
+    color: white;
+}
+a.redButton {
+    background: var(--myRed);
+    border-color: var(--myRedBorder);
+}
+a.redButton:hover {
+    background: var(--myRedBorder);
+    color: white;
+}
+a.yellowButton {
+    background: var(--myYellow);
+    border-color: var(--myYellowBorder);
+}
+a.yellowButton:hover {
+    background: var(--myYellowBorder);
+    color: white;
+}
+a.blueButton {
+    background: var(--myBlue);
+    border-color: var(--myBlueBorder);
+}
+a.blueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+}
+a.blackButton {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+}
+a.blackButton:hover {
+    background: var(--myBlackBorder);
+    color: white;
+}
+a.grayButton {
+    color: var(--myBlack);
+    background: var(--myGray);
+    border-color: var(--myGrayBorder);
+}
+a.grayButton i {
+    color: var(--myBlack);
+}
+a.grayButton:hover {
+    border-color: var(--myBlack);
+}
+a.iconButton i{
+    color: var(--myGrayBorder);
+    font-size: 1.2em;
+}
+a.iconButton:hover i{
+    color: var(--myGreen);
+}
+a.iconButton.active {
+    border-bottom: 3px solid var(--myGreen);
+}
+a.iconButton.active i {
+    color: var(--myGreen);
+}
+.fullWidthButton {
+    width: 100%;
+}
+.smallButton {
+    font-size: .8em !important;
+    padding: 5px 10px !important;
+}
+.tableLefty {
+    margin: 15px 0 !important;
+    float: left !important;
+    margin-right: 10px !important;
+}
+main.pageContent a.addUser:hover {
+}
+main.pageContent a.addUser:hover i{
+    color: white;
+}
+main.pageContent .listFilter {
+    width: 200px;
+    margin: 15px 0;
+    float: right;
+}
+main.pageContent .userPageContent main{
+    padding: 0;
+}
+main.pageContent .userPageContent main i.overTime {
+    color: var(--myGreen);
+    padding-left: 5px;
+}
+main.pageContent .userPageContent main i.abscense {
+    color: var(--myRed);
+    padding-left: 5px;
+}
+.tableWrapper {
+    background: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--pageBorder);
+    margin-bottom: 30px;
+}
+table {
+    margin-bottom: 0!important;
+}
+thead th{
+    border:none!important;
+    border-bottom: 3px double var(--pageBorder) !important;
+    border-left: 1px dotted var(--pageBorder) !important;
+}
+tr {
+    border-bottom: 1px solid var(--pageBorder) !important;
+}
+tr:last-child {
+    border-bottom: none !important;
+}
+th, td {
+    border: none!important;   
+    border-left: 1px dotted var(--pageBorder) !important;
+}
+tr:hover {
+    background: var(--pageBG);
+}
+
+th:last-child, td:last-child {
+    border-left:none !important;
+}
+tbody {
+    
+}
+
+.pagination {
+    padding: 0;
+    margin-top: 5px;
+}
+.pagination .page-item .page-link {
+    color: var(--myBlack);
+    font-size: 1em;
+    font-weight: 100;
+}
+.pagination .page-item.active .page-link {
+    background: var(--myGreen);
+    color: white;
+    border: 1px solid var(--myGreen);
+}
+.pagination .page-item.disabled .page-link {
+    background: var(--pageBG);
+}
+.pagination .page-item:first-child .page-link {
+    margin-right: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    margin-left: -1px;
+}
+.pagination .page-item:last-child .page-link {
+    margin-left: 0;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.mainModal {
+    background: var(--pageBG);
+    right: 16.66%;
+    bottom: 40px;
+    top: 127px;
+    left: 40px;
+    border: 10px solid var(--myBlack);
+    padding: 0!important;
+    width: inherit;
+    height: inherit;
+    overflow: hidden !important;
+}
+.mainModal .modal-dialog {
+    margin: 0;
+    max-width: inherit;
+    height: 100%;
+}
+.mainModal .modal-dialog .modal-content {
+    border: none;
+    background: var(--pageBG);
+    border-radius: 0;
+    height: 100%;
+}
+.mainModal .modal-dialog .modal-content .modalHeader {
+    border: none;
+    border-bottom: 1px solid var(--pageBorder);
+    padding: 0;
+    height: 55px;
+    width: 100%;
+}
+.mainModal .modal-dialog .modal-content .modalHeader .modalTitle {
+    font-size: 1.3em;
+    padding: 16px;
+    border-bottom: 3px solid var(--myGreen);
+    margin: 0;
+    font-weight: 300;
+    display: inline-block;
+}
+.mainModal .modal-dialog .modal-content .modalHeader .mainButton {
+    float: left;
+    margin-left: 7px;
+    margin-top: 7px;
+}
+.mainModal .modal-dialog .modal-content .modal-header .mainButton .close {
+    
+}
+.mainModal .modal-dialog .modal-content .modal-body {
+    border: none;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: auto;
+    height: calc(100% - 55px);
+}
+.mainModal .modal-dialog .modal-content .modal-body .container-fluid {
+    padding: 0;
+}
+.mainModal .modal-dialog .modal-content .modal-body .container-fluid .row {
+    margin: 0;
+}
+.mainModal .modal-dialog .modal-content .modal-body main {
+    padding-left: 0;
+    padding-right: .5rem;
+}
+.mainModal .modal-dialog .modal-content .modal-body aside {
+    padding-right: 0;
+    padding-left: .5rem;
+}
+.mainModal .modal-dialog .modal-content .modal-body nav {
+    border-bottom: 1px solid var(--pageBorder);
+    margin-top: 10px;
+}
+.mainModal .modal-dialog .modal-content .modal-footer {
+    border: none;
+}
+.mainModal.alertModal {
+    width: 40%;
+    left: 30%;
+    right: 30%;
+    top: 0;
+    border: none;
+    bottom: inherit;
+    padding: 15px !important;
+}
+.mainModal.alertModal .modal-dialog .modal-content .modal-body {
+    position: relative;
+    top: inherit;
+    bottom: inherit;
+    right: inherit;
+    left: inherit;
+    overflow: inherit;
+    height: inherit;
+    padding: 0;
+}
+.mainModal.alertModal .modal-dialog .modal-content .modal-body main {
+    padding-right: 0;
+}
+.mainModal.alertModal .alertText {
+    display: block;
+    margin: 20px 0;
+    font-size: 1em;
+    font-weight: 100;
+}
+.mainModal.alertModal.redAlertModal {
+    border: 10px solid var(--myRed);
+    border-top: 0;
+}
+form {
+    
+}
+form h3 {
+    margin-top: 20px;
+}
+form .row {
+    padding: 0 15px;
+    margin-bottom: 5px;
+}
+
+form .row div {
+    padding: 0;
+    padding-left: 5px;
+}
+form .row div:last-child {
+    padding-left: 0;
+}
+form .row div input {
+    margin-bottom: 5px;
+}
+.mainModal .cafeMenuNav {
+    border: none !important;
+}
+.mainModal .cafeMenuNav ul{
+    padding: 0;
+    border-bottom: none;
+}
+.mainModal .cafeMenuNav li{
+    list-style-type: none;
+}
+.mainModal .cafeMenuNav a{
+    padding: 0;
+    padding-top: 10px;
+    font-size: 1.2em;
+    font-weight: 200;
+}
+.mainModal .cafeMenuNav li li a {
+    padding-right: 20px;
+}
+.mainModal .cafeMenuNav li li a:hover {
+    cursor: copy;
+}
+
+.mainModal .cafeMenuNav a.active{
+    font-weight: 400;
+}
+.mainModal .cafeMenuNav a:hover{
+    font-weight: 400;
+}
+table.invoiceTable {
+    width: 100%;
+    margin-bottom: 5px !important;
+    border-collapse: separate;
+    border-spacing: 0;        
+}
+table.invoiceTable tbody {
+    
+}
+table.invoiceTable tr:hover {
+    background: inherit;
+}
+table.invoiceTable tr td, table.invoiceTable tr th {
+    padding: 10px;
+    background: white;
+    border-bottom: 1px solid var(--pageBorder) !important;
+    border-left: 1px solid var(--pageBorder) !important;
+}
+table.invoiceTable tr:first-child td, table.invoiceTable tr:first-child th {
+    border-top: 1px solid var(--pageBorder) !important;
+}
+table.invoiceTable tr td:first-child, table.invoiceTable tr th:first-child {
+    border-right: 1px solid var(--pageBorder) !important;
+}
+table.invoiceTable tr:first-child td:first-child, table.invoiceTable tr:first-child th:first-child {
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-right-radius: 5px;
+}
+table.invoiceTable tr:first-child td:last-child, table.invoiceTable tr:first-child th:last-child {
+    -webkit-border-top-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    border-top-left-radius: 5px;
+}
+table.invoiceTable tr:last-child td:first-child {
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-bottom-right-radius: 5px;
+}
+table.invoiceTable tr:last-child td:last-child{
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-left-radius: 5px;
+}
+table.invoiceTable tr td a {
+    font-size: 1.2em;
+    display: inline-block;
+}
+table.invoiceTable tr td a:hover {
+    text-decoration: underline;
+}
+
+table.invoiceTable tr td small {
+    display: block;
+    font-size: .9em;
+    font-weight: 200;
+}
+
+table.invoiceTable a.mainButton {
+    font-size: 1em;
+}
+table.invoiceTable a.mainButton:hover {
+    text-decoration: none;
+}
+table.invoiceItem tr {
+    
+}
+table.invoiceTable tbody tr th {
+    font-weight: 200;
+    background: var(--pageBG);
+}
+table.invoiceItem td {
+    
+}
+table.invoiceItem th.first {
+    width: 2%;
+}
+table.invoiceItem th.second {
+    width: 35%;
+}
+table.invoiceItem th.sixth {
+    width: 35%;
+}
+table.invoiceTable tr.newOrder td, table.invoiceTable tr.newOrder th {
+    border-bottom: 3px double var(--pageBorder) !important;
+}
+table.invoiceTotal {
+    width: 35%;
+    float: left;
+}
+table.invoiceTotal th{
+    width: 40%;
+}
+table.invoiceTotal tr:last-child td {
+    font-size: 1.3em;
+    font-weight: 400;
+}
+table.invoiceTotal td {
+    text-align: left;
+}
+table.cashTable {
+    width: 100%;
+}
+table.cashTable tbody{
+
+}
+table.cashTable tbody tr{
+
+}
+table.cashTable tbody tr:hover{
+    background-color: inherit;
+}
+table.cashTable tbody tr td{
+    padding: 20px;
+    text-align: center;
+}
+table.cashTable tbody tr td span {
+    font-size: 1.5em;
+    font-weight: 100;
+}
+table.cashTable tbody tr h4 {
+    font-size: .9em;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: var(--myGrayBorder);
+}
+table.cashTable tbody tr h4 i {
+    
+}
+table.cashTable tbody tr small {
+    display: block;
+    font-weight: 100;
+    color: var(--myGrayBorder);
+}
+table.cashTable tbody tr td.mainValue span{
+    font-weight: 400;
+    color: var(--myGreen);
+}
+table.dimTable td{
+    background: var(--pageBG);
+}
+table.dimTable tr:hover td{
+    background: white;
+}
+.tableWrapper .tableName {
+    width: 100%;
+    margin: 0;
+    border-bottom: 3px double var(--pageBorder);
+    padding: 15px;
+    text-align: center;
+    background: var(--pageBG);
+}
+.saloonPageContent main {
+    
+}
+.saloonPageContent .tableNavigation a{
+    margin-bottom: 10px;
+}
+main.pageContent .tableButtons nav {
+    display: inline-block;
+    margin-top: 15px;
+}
+.pageContent nav ol.breadcrumb{
+    margin-bottom: 15px;
+    background: none;
+    padding: 10px;
+    padding-right: 0;
+}
+.pageContent nav ol.breadcrumb li{
+    padding: 0;
+}
+.pageContent nav ol.breadcrumb li a{
+    font-weight: 300;
+    color: var(--myGreen);
+}
+.pageContent nav ol.breadcrumb li.breadcrumb-item.active{
+    font-weight: 100;
+    color: var(--myGrayBorder);
+}
+.pageContent nav ol.breadcrumb li a:hover{
+    text-decoration: underline;
+}
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: var(--myGrayBorder);
+    content: "/";
+}
+main.pageContent div.tableButtons div.dateFilter span {
+    font-weight: 100;
+    color: var(--myGrayBorder);
+    margin-top: 10px;
+    display: inline-block;
+}
+main.pageContent div.tableButtons div.dateFilter input.listFilter {
+    margin: 0 !important;
+    margin-right: 10px !important;
+    width: 130px;
+}
+tr.tableTotal td, tr.tableTotal th{
+    background: var(--pageBG);
+}
+tr.tableTotal .redText{
+    font-size: 1.2em;
+    font-weight: 500;
+}
+.pageContent .reservationPageContent {
+    margin-bottom: 50px;
+}
+.pageContent .reservationPageContent .reservationTable {
+    display: inline-grid;
+    width: calc(100%/13);
+    float: right;
+}
+.pageContent .reservationPageContent .reservationTable.reservationTableTimes {
+    padding-top: 18px;
+    width: auto;
+}
+
+.pageContent .reservationPageContent .reservationTable .reservationCell {
+    border-left: 1px solid var(--pageBorder);
+    height: 1.312em;
+    border-top: 1px dotted var(--pageBorder);
+}
+.pageContent .reservationPageContent .reservationTable .hour {
+    border-top: 2px solid var(--pageBorder);
+}
+.pageContent .reservationPageContent .reservationTable .minute {
+}
+.pageContent .reservationPageContent .reservationTable .reservationHeaderCell {
+    text-align: center;
+}
+.pageContent .reservationPageContent .reservationTable.reservationTableTimes .reservationCell{
+    margin-top: -10px;
+    padding-left: 10px;
+    border-top: none !important;
+    font-weight: 100;
+    border-color: var(--pageBorder) !important;
+    line-height: 2.5em;
+    font-size: .85em;
+    min-height: 1.312em;
+    height: inherit;
+}
+.pageContent .reservationPageContent .reservationTableTimes .hour {
+    font-weight: 400 !important;
+    font-size: 1em !important;
+    line-height: 2.1em !important;
+}
+.pageContent .reservationPageContent .reservationTableTimes .minute {
+
+    color: var(--myGrayBorder);
+}
+.pageContent .reservationPageContent .reservationTable:last-child .reservationCell {
+    border-left: none;
+}
+.pageContent .reservationPageContent .reservationTable .reservationCell:first-child{
+    border-top: none;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem {
+    position: relative;
+    z-index: 1000;
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: white;
+    margin-top: 2px;
+    overflow: hidden;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem .reservationCount {
+    display: block;
+    padding: 5px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem .reservationCount i {
+    margin-left: 5px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem .reservationName{
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    margin: 10px 0;
+    font-weight: 300;
+    font-size: 1.2em;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.arrived {
+    background: var(--myGreen);
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.arrived .reservationCount {
+    background: var(--myGreenBorder);
+}
+
+.pageContent .reservationPageContent .reservationTable .reservationItem.waiting {
+    background: var(--myYellow);
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.waiting .reservationCount {
+    background: var(--myYellowBorder);
+}
+
+.pageContent .reservationPageContent .reservationTable .reservationItem.walked {
+    background: var(--myBlue);
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.walked .reservationCount {
+    background: var(--myBlueBorder);
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H1M00 {
+    height: 63px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H1M00 .reservationName {
+
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H1M30 {
+    height: 97px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H2M00 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H2M30 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H3M00 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H3M30 {
+    height: 234px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H4M00 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H4M30 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H5M00 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H5M30 {
+    
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H6M00 {
+    
+}

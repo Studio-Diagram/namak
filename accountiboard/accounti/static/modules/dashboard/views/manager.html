@@ -1,0 +1,14 @@
+<div ng-controller="managerCtrl" class="pageSubMenu">
+    <nav class=" nav nav-justified">
+        <a ui-sref="manager.addEmployee" ng-class="isActive('/manager/addEmployee') ? 'nav-link active' : 'nav-link'">کارمندان</a>
+        <a ui-sref="manager.menuCategory"  ng-class="isActive('/manager/menuCategory') ? 'nav-link active' : 'nav-link'">دسته‌های منو</a>
+        <a ui-sref="manager.menuItem"  ng-class="isActive('/manager/menuItem') ? 'nav-link active' : 'nav-link'">آیتم‌های منو</a>
+        <a ui-sref="manager.expenseCat"  ng-class="isActive('/manager/expenseCat') ? 'nav-link active' : 'nav-link'">دسته‌های هزینه</a>
+        <a ui-sref="manager.tables"  ng-class="isActive('/manager/tables') ? 'nav-link active' : 'nav-link'">میز</a>
+        <a ui-sref="manager.stock"  ng-class="isActive('/manager/stock') ? 'nav-link active' : 'nav-link'">انبارها</a>
+        <a ui-sref="manager.branch"  ng-class="isActive('/manager/branch') ? 'nav-link active' : 'nav-link'">شعبه‌ها</a>
+
+    </nav>
+</div>
+
+<ui-view></ui-view>

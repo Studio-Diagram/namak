@@ -1,0 +1,83 @@
+<div ng-controller="supplierCtrl">
+    <main class="pageContent container-fluid">
+        <div class="tableButtons clearfix">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ supplier_name }}</li>
+                </ol>
+            </nav>
+            <a href="" ng-click="filter_data()" class="mainButton grayButton tableLefty">اعمال فیلتر</a>
+            <div class="dateFilter tableLefty">
+                <span>تا تاریخ:</span>
+                <input ng-model="search_data_supplier.to_time" class="form-control listFilter tableLefty" type="text" placeholder="تا الان">
+            </div>
+            <div class="dateFilter tableLefty">
+                <span>نمایش از تاریخ:</span>
+                <input ng-model="search_data_supplier.from_time" class="form-control listFilter tableLefty" type="text" placeholder="از یک‌ماه پیش">
+            </div>
+        </div>
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">عنوان</th>
+                            <th scope="col">تعداد</th>
+                            <th scope="col">ملبغ</th>
+                            <th scope="col">آخرین تاریخ</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">خرید</th>
+                            <td>{{ purchase_count | persianNumber }}</td>
+                            <td class="redText">{{ sum_purchase | number | persianNumber }} ریال</td>
+                            <td>{{ last_buy | persianNumber }}</td>
+                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'buy' })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">هزینه</th>
+                            <td>{{ expense_count | persianNumber }}</td>
+                            <td class="redText">{{ sum_expense | number | persianNumber }} ریال</td>
+                            <td>{{ last_expense | persianNumber }}</td>
+                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'expense' })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">پرداختی</th>
+                            <td>{{ pay_count | persianNumber }}</td>
+                            <td class="greenText">{{ sum_settlement | number | persianNumber }} ریال</td>
+                            <td>{{ last_pay | persianNumber }}</td>
+                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'pay' })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">مرجوعی</th>
+                            <td>{{ return_count | persianNumber }}</td>
+                            <td class="greenText">{{ sum_return | number | persianNumber }} ریال</td>
+                            <td>{{ last_return | persianNumber }}</td>
+                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'return' })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        <tr class="tableTotal">
+                            <th>مانده حساب</th>
+                            <td></td>
+                            <td class="redText">
+                                {{ remainder | number | persianNumber }} ریال
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </main>
+        </div>
+    </main>
+</div>
