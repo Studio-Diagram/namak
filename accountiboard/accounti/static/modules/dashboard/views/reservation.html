@@ -1,4 +1,4 @@
-<div ng-controller="reservationCtrl" id="mainReserve">
+<div ng-controller="reservationCtrl" id="mainReserve" ng-keypress="console.log(1)">
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="completeReserveModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -31,12 +31,14 @@
                             </div>
                             <div class="col">
                                 <label>نام رزروکننده</label>
-                                <input ng-disabled="new_reserve_data.reserve_state === 'walked'" ng-model="new_reserve_data.customer_name" type="text"
+                                <input ng-disabled="new_reserve_data.reserve_state === 'walked'"
+                                       ng-model="new_reserve_data.customer_name" type="text"
                                        class="form-control" placeholder="نام رزروکننده">
                             </div>
                             <div class="col">
                                 <label>شماره تماس</label>
-                                <input ng-disabled="new_reserve_data.reserve_state === 'walked'" ng-model="new_reserve_data.phone" type="text"
+                                <input ng-disabled="new_reserve_data.reserve_state === 'walked'"
+                                       ng-model="new_reserve_data.phone" type="text"
                                        class="form-control" placeholder="شماره تماس">
                             </div>
                             <div class="col">
@@ -55,7 +57,8 @@
                                     </button>
                                     <div style="overflow-y: auto;height: 10rem;width: 100%" class="dropdown-menu"
                                          aria-labelledby="dropdownMenuButton">
-                                        <div style="text-align: right;border-bottom: solid thin lightgray;padding: 7px 10px 7px 0;" ng-repeat="table in tables" class="dropdown-item">
+                                        <div style="text-align: right;border-bottom: solid thin lightgray;padding: 7px 10px 7px 0;"
+                                             ng-repeat="table in tables" class="dropdown-item">
                                             <span style="font-size: 14px">میز {{ table.table_name }}</span>
                                             <input style="width:60%;" ng-checked="table.is_checked"
                                                    type="checkbox"
@@ -130,7 +133,8 @@
                                     </button>
                                     <div style="overflow-y: auto;height: 10rem;width: 100%" class="dropdown-menu"
                                          aria-labelledby="dropdownMenuButton">
-                                        <div style="text-align: right;border-bottom: solid thin lightgray;padding: 7px 10px 7px 0;" ng-repeat="table in tables" class="dropdown-item">
+                                        <div style="text-align: right;border-bottom: solid thin lightgray;padding: 7px 10px 7px 0;"
+                                             ng-repeat="table in tables" class="dropdown-item">
                                             <span style="font-size: 14px">میز {{ table.table_name }}</span>
                                             <input style="width:60%;" ng-checked="table.is_checked"
                                                    type="checkbox"
@@ -216,7 +220,8 @@
                                     </button>
                                     <div style="overflow-y: auto;height: 10rem;width: 100%" class="dropdown-menu"
                                          aria-labelledby="dropdownMenuButton">
-                                        <div style="text-align: right;border-bottom: solid thin lightgray;padding: 7px 10px 7px 0;" ng-repeat="table in tables" class="dropdown-item">
+                                        <div style="text-align: right;border-bottom: solid thin lightgray;padding: 7px 10px 7px 0;"
+                                             ng-repeat="table in tables" class="dropdown-item">
                                             <span style="font-size: 14px">میز {{ table.table_name }}</span>
                                             <input style="width:60%;" ng-checked="table.is_checked"
                                                    type="checkbox"
@@ -308,12 +313,16 @@
                     <div class="reservationCell reservationHeaderCell">
                         {{ table.table_name }}
                     </div>
-                    <div ng-repeat="time in working_times" ng-click="clicking_reserve(time.hour, time.minute, time.is_hour, table, $event)"
+                    <div ng-repeat="time in working_times"
+                         ng-click="clicking_reserve(time.hour, time.minute, time.is_hour, table, $event, $index)"
                          ng-class="time.is_hour === 1 ? 'reservationCell hour H{{ time.hour }}M{{ time.minute }}' : 'reservationCell minute H{{ time.hour }}M{{ time.minute }}' ">
-
                     </div>
                 </div>
             </main>
+        </div>
+        <div style="position: fixed;border-radius: 0.5em;color: white;display: none" class="tooltipM">
+            <button ng-click="openCompleteReserveModal('walked')" class="btn btn-info" style="float: right;border-radius: 0 0.5em 0.5em 0;">حضوری</button>
+            <button ng-click="openCompleteReserveModal('waiting')" class="btn btn-success" style="float: left;border-radius: 0.5em 0 0 0.5em;">رزرو</button>
         </div>
     </main>
 </div>

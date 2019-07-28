@@ -1185,7 +1185,7 @@ tr.tableTotal .redText {
     height: 301px;
 }
 
-.pageContent .reservationPageContent .reservationTable .reservationItem.H4M45 {
+.pageContent .reservationPageContent .reservationTable .reservationItem.H04M45 {
     height: 320px;
 }
 
@@ -1207,6 +1207,18 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent .reservationTable .reservationItem.H06M00 {
     height: 403px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H06M15 {
+    height: 422px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H06M30 {
+    height: 439px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H06M45 {
+    height: 456px;
+}
+.pageContent .reservationPageContent .reservationTable .reservationItem.H07M00 {
+    height: 473px;
 }
 
 .lefty {

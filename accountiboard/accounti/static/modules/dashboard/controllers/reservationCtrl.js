@@ -2,17 +2,22 @@ angular.module("dashboard")
     .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $compile, $stateParams) {
         var initialize = function () {
             $scope.error_message = '';
+            $scope.all_today_reserves = [];
             $scope.starting_selected_time = {
                 "is_hour": 0,
                 "time": 0,
                 "is_fill": 0,
-                'class_name': ''
+                'class_name': '',
+                'table_name': '',
+                'index': ''
             };
             $scope.ending_selected_time = {
                 "is_hour": 0,
                 "time": 0,
                 "is_fill": 0,
-                'class_name': ''
+                'class_name': '',
+                'table_name': '',
+                'index': ''
             };
             $scope.new_reserve_data = {
                 'reserve_id': 0,
@@ -36,55 +41,90 @@ angular.module("dashboard")
             $(document).on('click', '.dropdown-menu', function (e) {
                 e.stopPropagation();
             });
-        };
 
-        $scope.clicking_reserve = function (hour, min, is_hour, table, event) {
-            var class_name = event.target.className;
-            if (class_name.split(" ")[1] === "reservationCell"){
-                if ($scope.ending_selected_time.is_fill === 0) {
-                for (var i = 0; i < $scope.tables.length; i++){
-                    if ($scope.tables[i].table_id === table.table_id){
-                        $scope.tables[i].is_checked = 1;
-                        $scope.new_reserve_data.tables_id.push(table.table_id);
-                        break;
-                    }
-                }
-                if ($scope.starting_selected_time.is_fill === 0) {
-                    if (Number(is_hour) === 0) {
-                        $scope.starting_selected_time.is_hour = 0;
-                        $scope.starting_selected_time.time = hour + ":" + min;
-                        $scope.starting_selected_time.is_fill = 1;
-                        $scope.starting_selected_time.class_name = event.target;
-                    }
-                    else if (Number(is_hour) === 1) {
-                        $scope.starting_selected_time.is_hour = 1;
-                        $scope.starting_selected_time.time = hour + ":" + min;
-                        $scope.starting_selected_time.is_fill = 1;
-                        $scope.starting_selected_time.class_name = event.target;
-                    }
+            $window.onkeyup = function (event) {
+                if (event.keyCode === 27 || event.keyCode === 8) {
                     jQuery.noConflict();
                     (function ($) {
-                        $(event.target).css("background", "aqua");
+                        $($scope.starting_selected_time.class_name).css("background", "none");
+                        $('.tooltipM').fadeOut()
                     })(jQuery);
-                }
-                else if ($scope.starting_selected_time.is_fill === 1) {
-                    if (Number(is_hour) === 0) {
-                        $scope.ending_selected_time.is_hour = 0;
-                        $scope.ending_selected_time.time = hour + ":" + min;
-                        $scope.ending_selected_time.is_fill = 1;
-                        $scope.ending_selected_time.class_name = event.target;
-                    }
-                    else if (Number(is_hour) === 1) {
-                        $scope.ending_selected_time.is_hour = 1;
-                        $scope.ending_selected_time.time = hour + ":" + min;
-                        $scope.ending_selected_time.is_fill = 1;
-                        $scope.ending_selected_time.class_name = event.target;
-                    }
-                    $scope.new_reserve_data.start_time = $scope.starting_selected_time.time;
-                    $scope.new_reserve_data.end_time = $scope.ending_selected_time.time;
-                    $scope.openCompleteReserveModal();
+                    $scope.starting_selected_time = {
+                        "is_hour": 0,
+                        "time": 0,
+                        "is_fill": 0,
+                        'class_name': '',
+                        'table_name': '',
+                        'index': ''
+                    };
+                    $scope.ending_selected_time = {
+                        "is_hour": 0,
+                        "time": 0,
+                        "is_fill": 0,
+                        'class_name': '',
+                        'table_name': '',
+                        'index': ''
+                    };
                 }
             }
+        };
+
+        $scope.clicking_reserve = function (hour, min, is_hour, table, event, index) {
+            var class_name = event.target.className;
+            if (class_name.split(" ")[1] === "reservationCell") {
+                if ($scope.ending_selected_time.is_fill === 0) {
+                    for (var i = 0; i < $scope.tables.length; i++) {
+                        if ($scope.tables[i].table_id === table.table_id) {
+                            $scope.tables[i].is_checked = 1;
+                            $scope.new_reserve_data.tables_id.push(table.table_id);
+                            break;
+                        }
+                    }
+                    if ($scope.starting_selected_time.is_fill === 0) {
+                        if (Number(is_hour) === 0) {
+                            $scope.starting_selected_time.is_hour = 0;
+                            $scope.starting_selected_time.time = hour + ":" + min;
+                            $scope.starting_selected_time.is_fill = 1;
+                            $scope.starting_selected_time.class_name = event.target;
+                            $scope.starting_selected_time.table_name = table.table_name;
+                            $scope.starting_selected_time.index = index;
+                        }
+                        else if (Number(is_hour) === 1) {
+                            $scope.starting_selected_time.is_hour = 1;
+                            $scope.starting_selected_time.time = hour + ":" + min;
+                            $scope.starting_selected_time.is_fill = 1;
+                            $scope.starting_selected_time.class_name = event.target;
+                            $scope.starting_selected_time.table_name = table.table_name;
+                            $scope.starting_selected_time.index = index;
+                        }
+                        jQuery.noConflict();
+                        (function ($) {
+                            $(event.target).css("background", "aqua");
+                        })(jQuery);
+                    }
+                    else if ($scope.starting_selected_time.is_fill === 1) {
+                        if ($scope.starting_selected_time.table_name === table.table_name && index > $scope.starting_selected_time.index) {
+                            if (Number(is_hour) === 0) {
+                                $scope.ending_selected_time.is_hour = 0;
+                                $scope.ending_selected_time.time = hour + ":" + min;
+                                $scope.ending_selected_time.is_fill = 1;
+                                $scope.ending_selected_time.class_name = event.target;
+                            }
+                            else if (Number(is_hour) === 1) {
+                                $scope.ending_selected_time.is_hour = 1;
+                                $scope.ending_selected_time.time = hour + ":" + min;
+                                $scope.ending_selected_time.is_fill = 1;
+                                $scope.ending_selected_time.class_name = event.target;
+                            }
+                            $scope.new_reserve_data.start_time = $scope.starting_selected_time.time;
+                            $scope.new_reserve_data.end_time = $scope.ending_selected_time.time;
+                            jQuery.noConflict();
+                            (function ($) {
+                                $('.tooltipM').fadeIn().css(({ left: event.pageX, top: event.pageY }));
+                            })(jQuery);
+                        }
+                    }
+                }
             }
         };
 
@@ -111,6 +151,13 @@ angular.module("dashboard")
 
 
         $scope.get_today_for_reserve = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $scope.all_today_reserves.forEach(function insert_code(item, index) {
+                    var div_data = "";
+                    $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
+                });
+            })(jQuery);
             var sending_data = {
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
@@ -379,7 +426,8 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.openCompleteReserveModal = function () {
+        $scope.openCompleteReserveModal = function (reserve_kind) {
+            $scope.new_reserve_data.reserve_state = reserve_kind;
             jQuery.noConflict();
             (function ($) {
                 $('#completeReserveModal').modal('show');
@@ -391,6 +439,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#completeReserveModal').modal('hide');
                 $scope.get_tables_data($rootScope.user_data);
+                $('.tooltipM').fadeOut();
                 $scope.resetFrom();
             })(jQuery);
         };

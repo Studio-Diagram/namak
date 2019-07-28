@@ -133,6 +133,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'deleteMenuItem': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/deleteMenuItem/",
+                    'data': data
+                });
+            },
             'searchMenuItem': function (data) {
                 return this.request({
                     'method': "POST",

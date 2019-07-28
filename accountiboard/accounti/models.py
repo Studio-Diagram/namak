@@ -70,6 +70,7 @@ class PrinterToCategory(models.Model):
 class MenuItem(models.Model):
     name = models.CharField(max_length=30, null=True, blank=True)
     price = models.CharField(max_length=30, null=True, blank=True)
+    is_delete = models.SmallIntegerField(default=0, null=False)
     menu_category = models.ForeignKey(MenuCategory, null=True, blank=False, on_delete=models.CASCADE)
 
 

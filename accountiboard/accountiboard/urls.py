@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/getMenuItem/', EmployeeView.get_menu_item),
     path('api/getMenuItems/', EmployeeView.get_menu_items),
     path('api/addMenuItem/', EmployeeView.add_menu_item),
+    path('api/deleteMenuItem/', EmployeeView.delete_menu_item),
     path('api/searchMenuItem/', EmployeeView.search_menu_item),
     path('api/addBoardgame/', boardgameView.add_boardgame),
     path('api/getBoardgames/', boardgameView.get_boardgames),

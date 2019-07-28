@@ -155,6 +155,43 @@ angular.module("dashboard")
 
         };
 
+        $scope.deleteMenuItem = function () {
+            var data = {
+                'username': $rootScope.user_data.username,
+                'menu_item_id': $scope.menu_item_wants_deleted
+            };
+            dashboardHttpRequest.deleteMenuItem(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_menu_item_data($rootScope.user_data);
+                        $scope.closeDeleteConfirmModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.openDeleteConfirmModal = function (menu_item_id) {
+            $scope.menu_item_wants_deleted = menu_item_id;
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteConfirm').modal('show');
+            })(jQuery);
+        };
+
+        $scope.closeDeleteConfirmModal = function () {
+            $scope.menu_item_wants_deleted = 0;
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteConfirm').modal('hide');
+            })(jQuery);
+        };
+
         $scope.openErrorModal = function () {
             jQuery.noConflict();
             (function ($) {

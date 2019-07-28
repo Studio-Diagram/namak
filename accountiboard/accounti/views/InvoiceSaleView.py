@@ -97,7 +97,7 @@ def get_invoice(request):
                     'numbers': game.game.numbers,
                     'start_time': game.game.start_time,
                     'end_time': game.game.end_time,
-                    'points': "%d:%d:%d" % (game_total_secs / 3600, game_total_secs / 60, game_total_secs % 60),
+                    'points': "%d:%d:%d" % (game_total_secs / 3600, (game_total_secs / 60) % 60, game_total_secs % 60),
                     'total': game.game.points * 5000
                 })
             elif str(game.game.end_time) == "00:00:00":
@@ -432,9 +432,17 @@ def end_current_game(request):
 
             t = timedelta_end - timedelta_start
             point = int(round(t.total_seconds() / 225))
+            print(point)
+            print(game_object.member.id)
+            if game_object.member.id == 1:
+                if point % 16 != 0:
+                    print(2222222)
+                    point = (int(point / 16) + 1) * 16
+                    print(point)
             game_numbers = game_object.numbers
 
             game_object.points = point * game_numbers
+            print(point * game_numbers)
             game_object.save()
             invoice_object.total_price += point * game_numbers * 5000
             invoice_object.save()
@@ -458,12 +466,13 @@ def get_all_invoice_games(request):
             games = []
             for game in invoice_games:
                 if str(game.game.end_time) != "00:00:00":
+                    game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
                     games.append({
                         'id': game.game.pk,
                         'numbers': game.game.numbers,
                         'start_time': game.game.start_time,
                         'end_time': game.game.end_time,
-                        'points': game.game.points,
+                        'points': "%d:%d:%d" % (game_total_secs / 3600, (game_total_secs / 60) % 60, game_total_secs % 60),
                         'total': game.game.points * 5000
                     })
             return JsonResponse({"response_code": 2, 'games': games})
