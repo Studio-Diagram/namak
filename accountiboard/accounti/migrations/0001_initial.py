@@ -3,7 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 
-A
+
 class Migration(migrations.Migration):
 
     initial = True
