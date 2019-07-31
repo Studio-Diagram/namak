@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='menuitem',
+            model_name='MenuItem',
             name='is_delete',
             field=models.SmallIntegerField(default=0),
         ),
