@@ -266,9 +266,9 @@
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index | persianNumber }}</td>
                                         <td>بازی {{ game.numbers | persianNumber }} نفره</td>
-                                        <td>{{ game.numbers * 80000 | persianNumber }}</td>
-                                        <td>{{ game.points | persianNumber }}</td>
-                                        <td>{{ game.total | persianNumber }}</td>
+                                        <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
+                                        <td style="direction: ltr">{{ game.points | persianNumber }}</td>
+                                        <td>{{ game.total | number| persianNumber }}</td>
                                         <td></td>
                                     </tr>
 

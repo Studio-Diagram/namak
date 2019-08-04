@@ -19,7 +19,6 @@
 
 body {
     padding: 0 !important;
-    min-height: 0px;
     text-align: right;
     font-size: 13px;
     font-family: 'IRANSans', tahoma, serif;
@@ -29,6 +28,16 @@ body {
     color: var(--myBlack);
     min-width: 360px;
     background: var(--pageBG);
+}
+
+@media screen and (min-width: 1900px) {
+    body {
+        font-size: 1em;
+    }
+
+    .pageContent .reservationPageContent .reservationTable .reservationCell {
+        height: 1.49em;
+    }
 }
 
 .masterWrapper {
@@ -1122,12 +1131,15 @@ tr.tableTotal .redText {
 .pageContent .reservationPageContent .reservationTable .reservationItem.H00M15 {
     height: 14px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H00M30 {
     height: 31px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H00M45 {
     height: 48px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H01M00 {
     height: 62px;
 }
@@ -1139,9 +1151,11 @@ tr.tableTotal .redText {
 .pageContent .reservationPageContent .reservationTable .reservationItem.H01M15 {
     height: 82px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H01M30 {
     height: 96px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H01M45 {
     height: 116px;
 }
@@ -1149,12 +1163,15 @@ tr.tableTotal .redText {
 .pageContent .reservationPageContent .reservationTable .reservationItem.H02M00 {
     height: 131px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H02M15 {
     height: 150px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H02M30 {
     height: 165px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H02M45 {
     height: 184px;
 }
@@ -1162,6 +1179,7 @@ tr.tableTotal .redText {
 .pageContent .reservationPageContent .reservationTable .reservationItem.H03M00 {
     height: 199px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H03M15 {
     height: 218px;
 }
@@ -1169,6 +1187,7 @@ tr.tableTotal .redText {
 .pageContent .reservationPageContent .reservationTable .reservationItem.H03M30 {
     height: 233px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H03M45 {
     height: 252px;
 }
@@ -1208,15 +1227,19 @@ tr.tableTotal .redText {
 .pageContent .reservationPageContent .reservationTable .reservationItem.H06M00 {
     height: 403px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H06M15 {
     height: 422px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H06M30 {
     height: 439px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H06M45 {
     height: 456px;
 }
+
 .pageContent .reservationPageContent .reservationTable .reservationItem.H07M00 {
     height: 473px;
 }

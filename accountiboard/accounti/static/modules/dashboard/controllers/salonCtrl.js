@@ -60,10 +60,25 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username
             };
             $scope.employeeSearchWord = '';
+            $scope.get_today_cash();
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
             $scope.get_tables_data($rootScope.user_data);
-            $scope.getAllTodayInvoices();
             $scope.get_shop_products();
+        };
+
+        $scope.get_today_cash = function () {
+            dashboardHttpRequest.getTodayCash($rootScope.user_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $rootScope.cash_data.cash_id = data['cash_id'];
+                        $scope.getAllTodayInvoices();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $rootScope.cash_data.cash_id = 0;
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
         };
 
         $scope.settleInvoice = function () {
@@ -569,7 +584,10 @@ angular.module("dashboard")
                             'numbers': 0,
                             'start_time': ''
                         };
-                        $scope.getAllInvoiceGames($scope.new_invoice_data.invoice_sales_id);
+                        // $scope.getAllInvoiceGames($scope.new_invoice_data.invoice_sales_id);
+                        $scope.refreshInvoice($scope.new_invoice_data.invoice_sales_id);
+                        $scope.getAllTodayInvoices();
+
                     }
                     else if (data['response_code'] === 3) {
                         console.log("NOT SUCCESS!");
@@ -880,6 +898,51 @@ angular.module("dashboard")
                             'username': $rootScope.user_data.username
                         };
                         $scope.openViewInvoiceModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+
+        $scope.refreshInvoice = function (invoice_id) {
+            $scope.is_in_edit_mode_invoice = true;
+            $scope.will_delete_items.invoice_id = invoice_id;
+            var sending_data = {
+                "invoice_id": invoice_id,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getInvoice(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                        $scope.new_invoice_data = {
+                            'invoice_sales_id': data['invoice']['invoice_sales_id'],
+                            'table_id': data['invoice']['table_id'],
+                            'table_name': data['invoice']['table_name'],
+                            'member_id': data['invoice']['member_id'],
+                            'guest_numbers': data['invoice']['guest_numbers'],
+                            'member_name': data['invoice']['member_name'],
+                            'member_data': data['invoice']['member_data'],
+                            'current_game': {
+                                'id': data['invoice']['current_game']['id'],
+                                'numbers': data['invoice']['current_game']['numbers'],
+                                'start_time': data['invoice']['current_game']['start_time']
+                            },
+                            'menu_items_old': data['invoice']['menu_items_old'],
+                            'shop_items_old': data['invoice']['shop_items_old'],
+                            'menu_items_new': [],
+                            'shop_items_new': [],
+                            'games': data['invoice']['games'],
+                            'total_price': data['invoice']['total_price'],
+                            'branch_id': $rootScope.user_data.branch,
+                            'cash_id': $rootScope.cash_data.cash_id,
+                            'username': $rootScope.user_data.username
+                        };
                     }
                     else if (data['response_code'] === 3) {
                         console.log("NOT SUCCESS!");

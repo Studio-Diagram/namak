@@ -19,6 +19,7 @@
 
         .iranian-number {
             font-family: IRANSansNums;
+            font-size: 12px;
         }
 
         .tableWrapper {
@@ -34,12 +35,12 @@
         }
 
         body {
-            font-size: 1.2em;
-            width: 80mm;
-            margin: auto;
+            font-size: 0.85em;
             font-family: 'IRANSans', tahoma, serif;
             font-weight: normal;
             direction: rtl;
+            width: 80mm;
+            margin: auto;
             text-align: center;
         }
 
@@ -66,7 +67,6 @@
         .table {
 
             width: 100%;
-            margin-bottom: 1rem;
             background-color: transparent;
 
         }
@@ -77,28 +77,40 @@
             border-bottom: 2px solid #dee2e6;
 
         }
+
+        #total-table td{
+            padding: 0.5em;
+        }
+        #total-table table tr td:last-child{
+            border-right: 2px solid #45a3b3;
+            border-top: none;
+        }
     </style>
 </head>
 <body>
+<br>
 <div class="tableWrapper">
     <table class="table">
         <tbody>
         <tr>
-            <td>شماره فاکتور</td>
-            <td class="iranian-number">{{ invoice_data.factor_number }}</td>
+            <td style="border-left: 2px solid #45a3b3;">
+                <p>کافه برد</p>
+                <p>۸۸۹۵۱۲۶۱</p>
+            </td>
+            <td>
+                <p class="iranian-number"> شماره فاکتور: {{ invoice_data.factor_number }}</p>
+                <p class="iranian-number"> تاریخ: {{ invoice_data.date }}</p>
+                <p class="iranian-number"> ساعت: {{ invoice_data.time }}</p>
+            </td>
         </tr>
         <tr>
-            <td>نام مهمان</td>
-            <td>{{ invoice_data.customer_name }}</td>
-        </tr>
-        <tr>
-            <td>نام میز</td>
-            <td>{{ invoice_data.table_name }}</td>
+            <td style="border-top: 2px solid #45a3b3;"> میز: {{ invoice_data.table_name }}</td>
+            <td style="border-top: 2px solid #45a3b3;"> مهمان: {{ invoice_data.customer_name }}</td>
         </tr>
         </tbody>
     </table>
 </div>
-<div class="tableWrapper">
+<div style="margin-bottom:5px;" class="tableWrapper">
     <table class="table">
         <thead style="background: black;color: white;font-size: 0.7em;">
         <tr>
@@ -111,25 +123,37 @@
         <tbody>
         {% for item in invoice_data.items %}
             <tr>
-                <td>{{ item.name }}</td>
-                <td class="iranian-number">{{ item.item_price }}</td>
-                <td class="iranian-number">{{ item.numbers }}</td>
-                <td class="iranian-number">{{ item.price }}</td>
+                <td style="border-top: none;border-left: 2px solid #45a3b3;font-size: 12px" class="iranian-number">{{ item.name }}</td>
+                <td style="border-top: none;border-left: 2px solid #45a3b3;" class="iranian-number">{{ item.item_price }}</td>
+                <td style="border-top: none;border-left: 2px solid #45a3b3;direction: ltr" class="iranian-number">{{ item.numbers }}</td>
+                <td style="border-top: none;" class="iranian-number">{{ item.price }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
-<div class="tableWrapper" style="background: black;color: white;margin: 0;border: none;font-size: 1.5em;font-weight: 800;margin-top: 200px;">
+<div id="total-table" style="float: left;width: 75%" class="tableWrapper">
     <table class="table">
         <tbody>
         <tr>
-            <td scope="col" style="
-    border: none;
-">جمع کل</td>
-            <td class="iranian-number" scope="col" style="
-    border: none;
-">{{ invoice_data.total_price }}</td>
+            <td scope="col" style="border: none;font-size: 12px">جمع کل</td>
+            <td class="iranian-number" scope="col">{{ invoice_data.total_price }}</td>
+        </tr>
+        <tr>
+            <td scope="col" style="border: none;font-size: 12px">سرویس</td>
+            <td class="iranian-number" scope="col">{{ invoice_data.service }}</td>
+        </tr>
+        <tr>
+            <td scope="col" style="border: none;font-size: 12px">مالیات</td>
+            <td class="iranian-number" scope="col">{{ invoice_data.tax }}</td>
+        </tr>
+        <tr>
+            <td scope="col" style="border: none;font-size: 12px">تخفیف</td>
+            <td class="iranian-number" scope="col">{{ invoice_data.discount }}</td>
+        </tr>
+        <tr>
+            <td scope="col" style="border: none;font-size: 12px;border-top: 2px solid #45a3b3;color: white;background: black">قابل پرداخت</td>
+            <td class="iranian-number" scope="col" style="border-top: 2px solid #45a3b3">{{ invoice_data.total_price }} ریال </td>
         </tr>
         </tbody>
     </table>

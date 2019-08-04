@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-import json, base64, random
+import json, base64, random, jdatetime
 from accounti.models import *
 from django.db.models import Q
 import accountiboard.settings as settings
@@ -92,12 +92,24 @@ def get_invoice(request):
         for game in invoice_games:
             if str(game.game.end_time) != "00:00:00":
                 game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
+                hour_points =int(game_total_secs / 3600)
+                min_points = int((game_total_secs / 60) % 60)
+                if len(str(hour_points)) == 1:
+                    hour_points_string = "0" + str(hour_points)
+                else:
+                    hour_points_string = str(hour_points)
+
+                if len(str(min_points)) == 1:
+                    min_points_string = "0" + str(min_points)
+                else:
+                    min_points_string = str(min_points)
+
                 invoice_data['games'].append({
                     'id': game.game.pk,
                     'numbers': game.game.numbers,
                     'start_time': game.game.start_time,
                     'end_time': game.game.end_time,
-                    'points': "%d:%d:%d" % (game_total_secs / 3600, (game_total_secs / 60) % 60, game_total_secs % 60),
+                    'points': "%s:%s'" % (hour_points_string, min_points_string),
                     'total': game.game.points * 5000
                 })
             elif str(game.game.end_time) == "00:00:00":
@@ -467,12 +479,23 @@ def get_all_invoice_games(request):
             for game in invoice_games:
                 if str(game.game.end_time) != "00:00:00":
                     game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
+                    hour_points = int(game_total_secs / 3600)
+                    min_points = int((game_total_secs / 60) % 60)
+                    if len(str(hour_points)) == 1:
+                        hour_points_string = "0" + str(hour_points)
+                    else:
+                        hour_points_string = str(hour_points)
+
+                    if len(str(min_points)) == 1:
+                        min_points_string = "0" + str(min_points)
+                    else:
+                        min_points_string = str(min_points)
                     games.append({
                         'id': game.game.pk,
                         'numbers': game.game.numbers,
                         'start_time': game.game.start_time,
                         'end_time': game.game.end_time,
-                        'points': "%d:%d:%d" % (game_total_secs / 3600, (game_total_secs / 60) % 60, game_total_secs % 60),
+                        'points': "%s:%s'" % (hour_points_string, min_points_string),
                         'total': game.game.points * 5000
                     })
             return JsonResponse({"response_code": 2, 'games': games})
@@ -721,6 +744,7 @@ def print_cash(request):
 
 def print_cash_with_template(request):
     if request.method == "GET":
+        now_time = jdatetime.datetime.now()
         print_data = {
             'is_customer_print': 1,
             'invoice_id': '',
@@ -729,7 +753,12 @@ def print_cash_with_template(request):
             'customer_name': '',
             'printers': ['Cash'],
             'items': [],
-            'total_price': ''
+            'total_price': '',
+            'service': 0,
+            'tax': 0,
+            'discount': 0,
+            'time': now_time.strftime("%H:%M"),
+            'date': now_time.strftime("%Y/%m/%d"),
         }
         invoice_id = request.GET['invoice_id']
         invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
@@ -759,13 +788,26 @@ def print_cash_with_template(request):
 
         all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
         for game in all_game_invoice:
+            game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
+            hour_points = int(game_total_secs / 3600)
+            min_points = int((game_total_secs / 60) % 60)
+            if len(str(hour_points)) == 1:
+                hour_points_string = "0" + str(hour_points)
+            else:
+                hour_points_string = str(hour_points)
+
+            if len(str(min_points)) == 1:
+                min_points_string = "0" + str(min_points)
+            else:
+                min_points_string = str(min_points)
+
             print_data['items'].append({
                 'item_id': game.game.pk,
                 'item_kind': 'GAME',
-                'name': 'بازی',
-                'numbers': game.game.numbers,
-                'item_price': format(int(5000), ',d'),
-                'price': format(int(game.game.points * 500), ',d')
+                'name': 'بازی %d نفره' % game.game.numbers,
+                'numbers': "%s:%s'" % (hour_points_string, min_points_string),
+                'item_price': format(int(80000) * game.game.numbers, ',d'),
+                'price': int(game.game.points * 5000)
             })
         all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
         for shop_p in all_shop_invoice:
@@ -783,14 +825,18 @@ def print_cash_with_template(request):
                     'name': shop_p.shop_product.name,
                     'numbers': shop_p.numbers,
                     'item_price': format(int(shop_p.shop_product.price), ',d'),
-                    'price': format(int(shop_p.numbers * shop_p.shop_product.price), ',d')
+                    'price': int(shop_p.numbers * shop_p.shop_product.price)
                 })
+
+        for price_item in print_data['items']:
+            price_item['price'] = format(price_item['price'], ",d")
         return render(request, "invoice_cash.html", {"invoice_data": print_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
 def print_after_save_template(request):
     if request.method == "GET":
+        now_time = jdatetime.datetime.now()
         invoice_id = request.GET['invoice_id']
         printer_name = request.GET['printer_name']
         invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
@@ -800,6 +846,9 @@ def print_after_save_template(request):
             'factor_number': invoice_obj.pk * 1234,
             'printer_name': printer_name,
             'table_name': invoice_obj.table.name,
+            'customer_name': invoice_obj.member.last_name,
+            'time': now_time.strftime("%H:%M"),
+            'date': now_time.strftime("%Y/%m/%d"),
             'items': []
         }
         all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj, is_print=0)

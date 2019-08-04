@@ -34,7 +34,7 @@
         }
 
         body {
-            font-size: 1.2em;
+            font-size: 0.85em;
             font-family: 'IRANSans', tahoma, serif;
             font-weight: normal;
             direction: rtl;
@@ -45,7 +45,7 @@
 
         .table td, .table th {
 
-            padding: .75rem;
+            padding: .5rem;
             vertical-align: top;
             border-top: 1px solid #dee2e6;
 
@@ -66,7 +66,6 @@
         .table {
 
             width: 100%;
-            margin-bottom: 1rem;
             background-color: transparent;
 
         }
@@ -77,6 +76,10 @@
             border-bottom: 2px solid #dee2e6;
 
         }
+
+        .table td {
+            border-top: 2px solid #45a3b3;
+        }
     </style>
 </head>
 <body>
@@ -85,16 +88,27 @@
     <table class="table">
         <tbody>
         <tr>
-            <td>شماره فاکتور</td>
-            <td class="iranian-number">{{ invoice_data.factor_number }}</td>
+
         </tr>
         <tr>
             <td>نام میز</td>
-            <td>{{ invoice_data.table_name }}</td>
+            <td>نام مشتری</td>
+        </tr>
+        <tr>
+            <td style="border-top: none;">{{ invoice_data.table_name }}</td>
+            <td style="border-top: none;">{{ invoice_data.customer_name }}</td>
         </tr>
         <tr>
             <td>محل پرینت</td>
-            <td>{{ invoice_data.printer_name }}</td>
+            <td>شماره فاکتور</td>
+        </tr>
+        <tr>
+            <td style="border-top: none;">{{ invoice_data.printer_name }}</td>
+            <td style="border-top: none;" class="iranian-number">{{ invoice_data.factor_number }}</td>
+        </tr>
+        <tr>
+            <td class="iranian-number">{{ invoice_data.date }}</td>
+            <td class="iranian-number">{{ invoice_data.time }}</td>
         </tr>
         </tbody>
     </table>
@@ -111,12 +125,12 @@
         {% for item in invoice_data.items %}
             <tr>
                 <td style="text-align: right">{{ item.name }}</td>
-                <td style="text-align: left" class="iranian-number">{{ item.numbers }}</td>
+                <td style="text-align: left;border-right: 2px solid #45a3b3;" class="iranian-number">{{ item.numbers }}</td>
             </tr>
             {% if item.description %}
                 <tr>
-                    <td style="text-align: right">{{ item.description }}</td>
-                    <td></td>
+                    <td style="text-align: right;border-top: none;">{{ item.description }}</td>
+                    <td style="border-top: none;border-right: 2px solid #45a3b3;"></td>
                 </tr>
             {% endif %}
         {% endfor %}
