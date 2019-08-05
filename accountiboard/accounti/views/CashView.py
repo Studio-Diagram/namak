@@ -24,7 +24,7 @@ def get_all_cash(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_obj = Branch.objects.get(pk=branch_id)
@@ -72,7 +72,7 @@ def close_cash(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_obj = Branch.objects.get(pk=branch_id)
@@ -104,7 +104,7 @@ def open_cash(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_obj = Branch.objects.get(pk=branch_id)
@@ -126,7 +126,7 @@ def check_cash_exist(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_obj = Branch.objects.get(pk=branch_id)

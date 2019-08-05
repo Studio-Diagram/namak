@@ -55,7 +55,7 @@
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
 <header class="topHeader">
-    <a href="index.html"><img src="{% static 'img/boardlogowhite.svg' %}" alt=""></a>
+    <a href="index.html"><img src="{% static 'img/boardlogowhite.svg' %}" ></a>
     <time ng-bind="clock | date:'HH:mm:ss' | persianNumber"></time>
     <time ng-bind="get_today_var | persianNumber"></time>
 </header>
@@ -66,117 +66,117 @@
         <div class="userAvatar">
             <i class="fas fa-user-circle"></i>
         </div>
-        <a href="" alt="" class="userTitle">علی مهری <i class="fas fa-angle-down"></i></a>
+        <a href=""  class="userTitle">علی مهری <i class="fas fa-angle-down"></i></a>
     </div>
     <nav class=" nav flex-column myNav">
         <ul>
             <li class="nav-item">
-                <a href="" alt="" class="nav-link"><i class="fas fa-user-circle"></i>داشبورد</a>
+                <a href=""  class="nav-link"><i class="fas fa-user-circle"></i>داشبورد</a>
             </li>
             <li class="nav-item">
-                <a href="#cashNav" alt="" class="nav-link" data-toggle="collapse"><i class="fas fa-cash-register"></i>صندوق</a>
+                <a href="#cashNav"  class="nav-link" data-toggle="collapse"><i class="fas fa-cash-register"></i>صندوق</a>
                 <div class="collapse" id="cashNav">
                     <ul>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link"><i class="fas fa-chair"></i>سالن</a>
+                            <a href=""  class="nav-link"><i class="fas fa-chair"></i>سالن</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-clipboard-check"></i>صندوق روزانه</a>
+                            <a href=""  class="nav-link "><i class="fas fa-clipboard-check"></i>صندوق روزانه</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#bookingNav" alt="" class="nav-link" data-toggle="collapse"><i class="fas fa-table"></i>رزرواسیون</a>
+                <a href="#bookingNav"  class="nav-link" data-toggle="collapse"><i class="fas fa-table"></i>رزرواسیون</a>
                 <div class="collapse" id="bookingNav">
                     <ul>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link"><i class="fas fa-sun"></i>امروز</a>
+                            <a href=""  class="nav-link"><i class="fas fa-sun"></i>امروز</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-calendar-alt"></i>تقویم</a>
+                            <a href=""  class="nav-link "><i class="fas fa-calendar-alt"></i>تقویم</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item endOfCat">
-                <a href="#memberNav" alt="" class=" nav-link" data-toggle="collapse"><i class="fas fa-id-card"></i>عضویت</a>
+                <a href="#memberNav"  class=" nav-link" data-toggle="collapse"><i class="fas fa-id-card"></i>عضویت</a>
                 <div class="collapse" id="memberNav">
                     <ul>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link"><i class="fas fa-users"></i>اعضا</a>
+                            <a href=""  class="nav-link"><i class="fas fa-users"></i>اعضا</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-user-plus"></i>عضو جدید</a>
+                            <a href=""  class="nav-link "><i class="fas fa-user-plus"></i>عضو جدید</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-certificate"></i>بج‌ها</a>
+                            <a href=""  class="nav-link "><i class="fas fa-certificate"></i>بج‌ها</a>
                         </li>
                     </ul>
                 </div>
             </li>
 
             <li class="nav-item">
-                <a href="#libraryNav" alt="" class="nav-link" data-toggle="collapse"><i class="fas fa-chess"></i>قفسه
+                <a href="#libraryNav"  class="nav-link" data-toggle="collapse"><i class="fas fa-chess"></i>قفسه
                     بازی‌ها</a>
                 <div class="collapse" id="libraryNav">
                     <ul>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link"><i class="fas fa-list-ol"></i>لیست بازی‌ها</a>
+                            <a href=""  class="nav-link"><i class="fas fa-list-ol"></i>لیست بازی‌ها</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-puzzle-piece"></i>بازی جدید</a>
+                            <a href=""  class="nav-link "><i class="fas fa-puzzle-piece"></i>بازی جدید</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item endOfCat">
-                <a href="#eventNav" alt="" class=" nav-link" data-toggle="collapse"><i class="fas fa-calendar-day"></i>رویدادها</a>
+                <a href="#eventNav"  class=" nav-link" data-toggle="collapse"><i class="fas fa-calendar-day"></i>رویدادها</a>
                 <div class="collapse" id="eventNav">
                     <ul>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link"><i class="fas fa-calendar-alt"></i>لیست رویدادها</a>
+                            <a href=""  class="nav-link"><i class="fas fa-calendar-alt"></i>لیست رویدادها</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-calendar-plus"></i>رویداد جدید</a>
+                            <a href=""  class="nav-link "><i class="fas fa-calendar-plus"></i>رویداد جدید</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#accNav" alt="" class="nav-link" data-toggle="collapse"><i class="fas fa-calculator"></i>حسابداری</a>
+                <a href="#accNav"  class="nav-link" data-toggle="collapse"><i class="fas fa-calculator"></i>حسابداری</a>
                 <div class="collapse" id="accNav">
                     <ul>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link"><i class="fas fa-shopping-cart"></i>خرید</a>
+                            <a href=""  class="nav-link"><i class="fas fa-shopping-cart"></i>خرید</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-user-injured"></i>هزینه</a>
+                            <a href=""  class="nav-link "><i class="fas fa-user-injured"></i>هزینه</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-money-bill-alt"></i>فروش</a>
+                            <a href=""  class="nav-link "><i class="fas fa-money-bill-alt"></i>فروش</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-chart-bar"></i>گزارشات</a>
+                            <a href=""  class="nav-link "><i class="fas fa-chart-bar"></i>گزارشات</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item" class="nav-link">
-                <a href="" alt=""><i class="fas fa-code"></i>پشتیبانی فنی</a>
+                <a href="" ><i class="fas fa-code"></i>پشتیبانی فنی</a>
             </li>
             <li class="nav-item" class="nav-link">
-                <a href="#adminNav" alt="" class="  active" data-toggle="collapse"><i class="fas fa-cogs"></i>مدیریت</a>
+                <a href="#adminNav"  class="  active" data-toggle="collapse"><i class="fas fa-cogs"></i>مدیریت</a>
                 <div class="collapse show" id="adminNav">
                     <ul>
                         <li class="nav-item">
                             <a ui-sref="registerEmployee" class="nav-link active"><i class="fas fa-hand-holding-heart"></i>کارمندان</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-store"></i>تامین‌کننده</a>
+                            <a href=""  class="nav-link "><i class="fas fa-store"></i>تامین‌کننده</a>
                         </li>
                         <li class="nav-item">
-                            <a href="" alt="" class="nav-link "><i class="fas fa-utensils"></i>منو</a>
+                            <a href=""  class="nav-link "><i class="fas fa-utensils"></i>منو</a>
                         </li>
                     </ul>
                 </div>

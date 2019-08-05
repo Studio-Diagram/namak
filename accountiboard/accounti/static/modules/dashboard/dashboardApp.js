@@ -1,7 +1,4 @@
-var myApp = angular.module('dashboard', ['ui.router', 'ngCookies', 'satellizer', 'xeditable']);
-myApp.run(function (editableOptions) {
-    editableOptions.theme = 'bs3';
-});
+var myApp = angular.module('dashboard', ['ui.router', 'ngCookies', 'satellizer']);
 
 myApp.directive('ngEnter', function () {
     return function (scope, element, attrs) {

@@ -18,6 +18,45 @@ angular.module("dashboard")
             };
             $scope.branchSearchWord = '';
             $scope.get_branches_data($rootScope.user_data);
+            $scope.config_clock();
+        };
+
+        $scope.config_clock = function () {
+            var choices = ["00", "15", "30", "45"];
+            $('#start-time-clock').clockpicker({
+                donetext: 'تایید',
+                afterShow: function () {
+                    $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                        return !($.inArray($(element).text(), choices) != -1)
+                    }).remove();
+                },
+                afterDone: function () {
+                    var seleceted_min = $('#start-time-clock').val().split(":")[1];
+                    if (!choices.includes(seleceted_min)) {
+                        $('#start-time-clock').val("");
+                    }
+                    else {
+                        $scope.new_branch_data.start_time = $('#start-time-clock').val();
+                    }
+                }
+            });
+            $('#end-time-clock').clockpicker({
+                donetext: 'تایید',
+                afterShow: function () {
+                    $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                        return !($.inArray($(element).text(), choices) != -1)
+                    }).remove();
+                },
+                afterDone: function () {
+                    var seleceted_min = $('#end-time-clock').val().split(":")[1];
+                    if (!choices.includes(seleceted_min)) {
+                        $('#end-time-clock').val("");
+                    }
+                    else {
+                        $scope.new_branch_data.end_time = $('#end-time-clock').val();
+                    }
+                }
+            });
         };
 
         $scope.get_branches_data = function (data) {
@@ -74,7 +113,7 @@ angular.module("dashboard")
                         if (data['response_code'] === 2) {
                             $scope.get_branches_data($rootScope.user_data);
                             $scope.resetFrom();
-                            $scope.closeAddEmployeeModal();
+                            $scope.closeAddBranchModal();
                         }
                         else if (data['response_code'] === 3) {
                             $scope.error_message = data['error_msg'];

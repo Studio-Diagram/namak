@@ -27,7 +27,7 @@ def settle_invoice_sale(request):
         invoice_id = rec_data['invoice_id']
         cash = rec_data['cash']
         pos = rec_data['card']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id or (not pos and not pos == 0) or (not cash and not cash == 0):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -65,7 +65,7 @@ def get_invoice(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         invoice_id = rec_data['invoice_id']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -148,7 +148,7 @@ def get_all_today_invoices(request):
         branch_id = rec_data['branch_id']
         cash_id = rec_data['cash_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -368,7 +368,7 @@ def search_member(request):
         search_word = rec_data['search_word']
         username = rec_data['username']
         branch_id = rec_data['branch']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -390,7 +390,7 @@ def get_member(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             member_id = rec_data['member_id']
@@ -426,7 +426,7 @@ def end_current_game(request):
         username = rec_data['username']
         game_id = rec_data['game_id']
         end_time = datetime.now().time()
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not game_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -468,7 +468,7 @@ def get_all_invoice_games(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         invoice_id = rec_data['invoice_id']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -507,7 +507,7 @@ def delete_items(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         invoice_id = rec_data['invoice_id']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -588,7 +588,7 @@ def get_today_status(request):
 
         yesterday = date.today() - timedelta(1)
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})

@@ -277,6 +277,17 @@ a.greenButton:hover {
     color: white;
 }
 
+button.greenButton {
+    background: var(--myGreen);
+    border-color: var(--myGreenBorder);
+}
+
+button.greenButton:hover {
+    background: var(--myGreenBorder);
+    color: white;
+    cursor: pointer;
+}
+
 a.redButton {
     background: var(--myRed);
     border-color: var(--myRedBorder);
@@ -1348,4 +1359,19 @@ tr.tableTotal .redText {
 
 .reservationCell:hover {
     background: aqua;
+}
+
+.popover {
+    z-index: 1060 !important;
+}
+.arrow {
+    border-bottom-color: transparent !important;
+}
+
+.popover-title {
+    direction: ltr !important;
+}
+
+.clockpicker-button {
+    font-family: IRANSans;
 }

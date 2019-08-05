@@ -26,7 +26,7 @@ def create_new_invoice_settlement(request):
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not request.session['is_logged_in'] == username:
+            if not request.session.get('is_logged_in', None) == username:
                 return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -64,7 +64,7 @@ def get_all_invoices(request):
         username = rec_data['username']
         branch_id = rec_data['branch_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -93,7 +93,7 @@ def search_pays(request):
         search_word = rec_data['search_word']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -119,7 +119,7 @@ def delete_invoice_settlement(request):
         invoice_id = rec_data['invoice_id']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})

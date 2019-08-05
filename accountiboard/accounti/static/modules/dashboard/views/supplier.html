@@ -10,11 +10,11 @@
             <a href="" ng-click="filter_data()" class="mainButton grayButton tableLefty">اعمال فیلتر</a>
             <div class="dateFilter tableLefty">
                 <span>تا تاریخ:</span>
-                <input ng-model="search_data_supplier.to_time" class="form-control listFilter tableLefty" type="text" placeholder="تا الان">
+                <input ng-model="search_data_supplier.to_time" id="datepicker" class="form-control listFilter tableLefty" placeholder="تا الان" type="text">
             </div>
             <div class="dateFilter tableLefty">
                 <span>نمایش از تاریخ:</span>
-                <input ng-model="search_data_supplier.from_time" class="form-control listFilter tableLefty" type="text" placeholder="از یک‌ماه پیش">
+                <input ng-model="search_data_supplier.from_time" id="datepicker1" class="form-control listFilter tableLefty" placeholder="از یک‌ماه پیش" type="text">
             </div>
         </div>
         <div class="row userPageContent">
@@ -65,7 +65,7 @@
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         <tr class="tableTotal">
-                            <th>مانده حساب</th>
+                            <th>تراز مالی</th>
                             <td></td>
                             <td class="redText">
                                 {{ remainder | number | persianNumber }} ریال

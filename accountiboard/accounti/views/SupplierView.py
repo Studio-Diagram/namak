@@ -22,7 +22,7 @@ def add_supplier(request):
         salesman_phone = rec_data['salesman_phone']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not name:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -60,7 +60,7 @@ def get_suppliers(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         suppliers = Supplier.objects.all()
@@ -90,7 +90,7 @@ def search_supplier(request):
         search_word = rec_data['search_word']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -120,7 +120,7 @@ def get_supplier(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             supplier_id = rec_data['supplier_id']
@@ -147,7 +147,7 @@ def get_sum_invoice_purchases_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -196,7 +196,7 @@ def get_sum_invoice_settlements_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -246,7 +246,7 @@ def get_sum_invoice_expenses_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -296,7 +296,7 @@ def get_sum_invoice_return_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -347,7 +347,7 @@ def get_detail_invoice_purchases_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -416,7 +416,7 @@ def get_detail_invoice_expenses_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -485,7 +485,7 @@ def get_detail_invoice_settlements_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -554,7 +554,7 @@ def get_detail_invoice_returns_from_supplier(request):
         to_time = rec_data['to_time']
         supplier_id = rec_data['supplier_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not supplier_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})

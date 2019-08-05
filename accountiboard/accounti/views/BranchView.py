@@ -15,17 +15,20 @@ NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
+WRONG_TIME_REGEX = "زمان را با شکل مضارب ۱۵ دقیقه وارد کنید."
 
 
 def add_branch(request):
     if request.method == "POST":
+        correct_mins = ["00", "15", "30", "45"]
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch_id']
         name = rec_data['name']
         address = rec_data['address']
         start_time = rec_data['start_time']
         end_time = rec_data['end_time']
-
+        if start_time.split(":")[1] not in correct_mins or end_time.split(":")[1] not in correct_mins:
+            return JsonResponse({"response_code": 3, "error_msg": WRONG_TIME_REGEX})
         if not name:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not address:
@@ -61,7 +64,7 @@ def get_branches(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         branches = Branch.objects.all()
         branches_data = []
@@ -70,8 +73,8 @@ def get_branches(request):
                 'id': branch.pk,
                 'name': branch.name,
                 'address': branch.address,
-                'start_time': branch.start_working_time,
-                'end_time': branch.end_working_time
+                'start_time': branch.start_working_time.strftime("%H:%M"),
+                'end_time': branch.end_working_time.strftime("%H:%M")
             })
         return JsonResponse({"response_code": 2, 'branches': branches_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -82,7 +85,7 @@ def search_branch(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -93,8 +96,8 @@ def search_branch(request):
                 "id": branch.pk,
                 "name": branch.name,
                 'address': branch.address,
-                'start_time': branch.start_working_time,
-                'end_time': branch.end_working_time
+                'start_time': branch.start_working_time.strftime("%H:%M"),
+                'end_time': branch.end_working_time.strftime("%H:%M")
             })
         return JsonResponse({"response_code": 2, 'branches': branches})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -104,7 +107,7 @@ def get_branch(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_id = rec_data['branch_id']
@@ -113,8 +116,8 @@ def get_branch(request):
             'id': branch.pk,
             'name': branch.name,
             'address': branch.address,
-            'start_time': branch.start_working_time,
-            'end_time': branch.end_working_time
+            'start_time': branch.start_working_time.strftime("%H:%M"),
+            'end_time': branch.end_working_time.strftime("%H:%M")
         }
         return JsonResponse({"response_code": 2, 'branch': branch_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -130,7 +133,7 @@ def get_working_time_for_reserve(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch = Branch.objects.get(pk=branch_id)

@@ -1,4 +1,20 @@
 <div ng-controller="accountManagerCtrl">
+    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
+                    <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
+                        می‌رود.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -7,12 +23,12 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت تامین‌کننده جدید</h2>
-                    <a class="mainButton redButton" ng-click="closeAddModal()" href="" aria-label="Close">
+                    <a class="mainButton redButton" ng-click="openPermissionModal()" href="" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="addSupplier()" href="" alt="" class="mainButton greenButton"><i
+                    <a ng-click="addSupplier()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" alt="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
                 </div>
                 <div class="modal-body">
@@ -95,7 +111,7 @@
                             <th scope="col">مسول فروش</th>
                             <th scope="col">شماره تماس</th>
                             <th scope="col">تاریخ آخرین پرداختی</th>
-                            <th scope="col">مانده حساب</th>
+                            <th scope="col">تراز مالی</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
@@ -109,7 +125,8 @@
                             <td class="redText">{{ supplier.remainder | number | persianNumber }} ریال</td>
                             <td><a ng-click="editSupplier(supplier.id)" href=""
                                    class="mainButton fullWidthButton smallButton grayButton">ویرایش</a>
-                            <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })" class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>
                         </tbody>

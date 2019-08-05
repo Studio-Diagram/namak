@@ -29,12 +29,12 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت شعبه جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()" alt="" aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()"  aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="addBranch()" href="" alt="" class="mainButton greenButton"><i
+                    <a ng-click="addBranch()" href=""  class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" alt="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="resetFrom()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
                 </div>
                 <div class="modal-body">
@@ -48,13 +48,11 @@
                             </div>
                             <div class="col">
                                 <label>ساعت شروع کاری<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_branch_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع کاری">
+                                <input ng-model="new_branch_data.start_time" class="form-control" id="start-time-clock" placeholder="ساعت شروع کاری">
                             </div>
                             <div class="col">
                                 <label>ساعت پایان کاری<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_branch_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان کاری">
+                                <input ng-model="new_branch_data.end_time" class="form-control" id="end-time-clock" placeholder="ساعت پایان کاری">
                             </div>
                         </div>
                         <div class="row">
@@ -97,7 +95,7 @@
                             <th scope="row">{{ branch.name }}</th>
                             <th scope="row">{{ branch.start_time | persianNumber }}</th>
                             <th scope="row">{{ branch.end_time | persianNumber }}</th>
-                            <td><a ng-click="editBranch(branch.id)" href="" alt=""><i
+                            <td><a ng-click="editBranch(branch.id)" href="" ><i
                                     class="fas fa-user-cog"></i></a></td>
                         </tr>
                         </tbody>

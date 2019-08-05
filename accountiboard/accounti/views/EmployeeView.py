@@ -198,7 +198,7 @@ def check_login(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if request.session['is_logged_in'] == username:
+        if request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 2})
         else:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
@@ -209,7 +209,7 @@ def log_out(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if request.session['is_logged_in'] == username:
+        if request.session.get('is_logged_in', None) == username:
             request.session['is_logged_in'] = {}
             return JsonResponse({"response_code": 2})
         else:
@@ -221,7 +221,7 @@ def get_employees(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             branch = rec_data['branch']
@@ -242,7 +242,7 @@ def get_employee(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             employee_id = rec_data['employee_id']
@@ -272,7 +272,7 @@ def get_menu_categories(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             all_menu_categories = MenuCategory.objects.all()
@@ -290,7 +290,7 @@ def get_menu_category(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             menu_category_id = rec_data['menu_category_id']
@@ -332,7 +332,7 @@ def add_menu_category(request):
         kind = rec_data['kind']
         printers_id = rec_data['printers_id']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not name:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -376,7 +376,7 @@ def search_menu_category(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -394,7 +394,7 @@ def get_menu_items(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             all_menu_items = MenuItem.objects.filter(is_delete=0).order_by('menu_category__name')
@@ -415,7 +415,7 @@ def get_menu_item(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
             menu_item_id = rec_data['menu_item_id']
@@ -439,7 +439,7 @@ def add_menu_item(request):
         name = rec_data['name']
         price = rec_data['price']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         if not name:
@@ -472,7 +472,7 @@ def delete_menu_item(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         menu_item_id = rec_data['menu_item_id']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         if not menu_item_id:
@@ -490,7 +490,7 @@ def search_menu_item(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -522,7 +522,7 @@ def get_menu_items_with_categories(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         menu_items_with_categories_data = []
         menu_categories = MenuCategory.objects.all()
@@ -547,7 +547,7 @@ def get_tables(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         tables = Table.objects.all().order_by('id')
@@ -566,7 +566,7 @@ def get_printers(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         printers = Printer.objects.all()
@@ -586,7 +586,7 @@ def get_today_cash(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         branch_id = rec_data['branch']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_obj = Branch.objects.get(pk=branch_id)

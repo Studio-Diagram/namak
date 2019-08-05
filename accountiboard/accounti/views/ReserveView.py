@@ -114,7 +114,7 @@ def get_reserves(request):
         username = rec_data['username']
         branch_id = rec_data['branch']
         date = rec_data['date']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -154,7 +154,7 @@ def arrive_reserve(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         reserve_id = rec_data['reserve_id']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not reserve_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -170,7 +170,7 @@ def delete_reserve(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         reserve_id = rec_data['reserve_id']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not reserve_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -185,7 +185,7 @@ def get_reserve(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         reserve_id = rec_data['reserve_id']
         username = rec_data['username']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not reserve_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -235,7 +235,7 @@ def get_today_for_reserve(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch = Branch.objects.get(pk=branch_id)

@@ -32,7 +32,8 @@
                     <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
-<p style="margin: 5px 15px 0 0">                   آیا اطمینان به خروج دارید؟ نمام اطلاعات ذخیره نشده شما از بین می‌رود.</p>
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
+                        می‌رود.</p>
                 </div>
             </div>
         </div>
@@ -73,16 +74,24 @@
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div class="accordion">
-                                            <li><a ng-click="add_material_to_data_base_after_search(search_data_material.search_word)" href="" class="nav-link"
-                                                   ng-show="can_add_material">{{ search_data_material.search_word }}<i style="float: left;color: #00ff05" class="fas fa-plus-square"></i></a>
+                                            <li>
+                                                <a ng-click="add_material_to_data_base_after_search(search_data_material.search_word)"
+                                                   href="" class="nav-link"
+                                                   ng-show="can_add_material">{{ search_data_material.search_word }}<i
+                                                        style="float: left;color: #00ff05"
+                                                        class="fas fa-plus-square"></i></a>
                                             </li>
                                             <li ng-show="current_menu_nav === 'MAT'" ng-repeat="material in materials">
                                                 <a ng-click="add_item(material.id, material.name, 0)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ material.name }}</a>
                                             </li>
-                                            <li><a ng-click="add_shop_product_to_data_base_after_search(search_data_shop_products.search_word)" href="" class="nav-link"
-                                                   ng-show="can_add_shop_product">{{ search_data_shop_products.search_word }}<i style="float: left;color: #00ff05" class="fas fa-plus-square"></i></a>
+                                            <li>
+                                                <a ng-click="add_shop_product_to_data_base_after_search(search_data_shop_products.search_word)"
+                                                   href="" class="nav-link"
+                                                   ng-show="can_add_shop_product">{{ search_data_shop_products.search_word }}<i
+                                                        style="float: left;color: #00ff05"
+                                                        class="fas fa-plus-square"></i></a>
                                             </li>
                                             <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
@@ -188,7 +197,8 @@
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_purchase_data.total_price | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ new_invoice_purchase_data.total_price | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

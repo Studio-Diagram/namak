@@ -1,5 +1,5 @@
 <main ng-controller="loginCtrl">
-    <a class="bigLogo" alt="" href=""><img src="static/img/boardlogored.svg" alt=""></a>
+    <a class="bigLogo"  href=""><img src="static/img/boardlogored.svg" ></a>
     <form id="systemLogin">
         <h2>ورود به سیستم</h2>
         <div ng-show="is_error" class="alert alert-danger alert-dismissible">
@@ -22,6 +22,6 @@
 
         <button ng-click="send_login_data()" type="submit" class="submitButton btn btn-primary">
             <span><i ng-class="{'fa fa-spinner fa-spin': is_loading}"></i></span>{{ buttonText }}</button>
-        <a class="smallLink" href="users.html" alt="">رمز عبور خود را فراموش کرده‌اید؟</a>
+        <a class="smallLink" href="users.html" >رمز عبور خود را فراموش کرده‌اید؟</a>
     </form>
 </main>

@@ -1,8 +1,16 @@
 angular.module("dashboard")
     .controller("supplierCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $stateParams) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#datepicker").datepicker();
+                    $("#datepicker1").datepicker();
+                });
+
+            })(jQuery);
             $scope.error_message = '';
-            $scope.supplier_id  = $stateParams.supplier;
+            $scope.supplier_id = $stateParams.supplier;
             $rootScope.search_data_supplier = {
                 'from_time': '',
                 'to_time': '',
@@ -10,14 +18,16 @@ angular.module("dashboard")
             };
             $scope.get_supplier();
             $scope.get_sum_invoice_purchases();
-            $scope.get_sum_invoice_settlements()    ;
+            $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
             $scope.get_sum_invoice_returns();
         };
 
         $scope.filter_data = function () {
+            $rootScope.search_data_supplier.to_time = $("#datepicker").val();
+            $rootScope.search_data_supplier.from_time = $("#datepicker1").val();
             $scope.get_sum_invoice_purchases();
-            $scope.get_sum_invoice_settlements()    ;
+            $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
             $scope.get_sum_invoice_returns();
         };

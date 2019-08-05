@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("boardgameCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
+            $scope.adding_boardgame = false;
             $scope.new_boardgame_data = {
                 'boardgame_id': 0,
                 'name': '',
@@ -33,7 +34,6 @@ angular.module("dashboard")
             var reader = new FileReader();
             var $img = $("#customFile")[0];
             reader.onload = function (e) {
-                console.log(e);
                 $scope.new_boardgame_data.image_path = e.target.result;
                 $scope.new_boardgame_data.image_name = $img.files[0].name;
             };
@@ -71,10 +71,12 @@ angular.module("dashboard")
         };
 
         $scope.addBoardgame = function () {
+            $scope.adding_boardgame = true;
             if ($scope.is_in_edit_mode) {
                 $scope.is_in_edit_mode = false;
                 dashboardHttpRequest.addBoardgame($scope.new_boardgame_data)
                     .then(function (data) {
+                        $scope.adding_boardgame = false;
                         if (data['response_code'] === 2) {
                             $scope.get_boardgames_data($rootScope.user_data);
                             $scope.closeAddBoardgameModal();
@@ -84,6 +86,7 @@ angular.module("dashboard")
                             $scope.openErrorModal();
                         }
                     }, function (error) {
+                        $scope.adding_boardgame = false;
                         $scope.error_message = error;
                         $scope.openErrorModal();
                     });
@@ -91,16 +94,18 @@ angular.module("dashboard")
             else {
                 dashboardHttpRequest.addBoardgame($scope.new_boardgame_data)
                     .then(function (data) {
+                        $scope.adding_boardgame = false;
                         if (data['response_code'] === 2) {
-                            $scope.get_employees_data($rootScope.user_data);
+                            $scope.get_boardgames_data($rootScope.user_data);
                             $scope.resetFrom();
-                            $scope.closeAddEmployeeModal();
+                            $scope.closeAddBoardgameModal();
                         }
                         else if (data['response_code'] === 3) {
                             $scope.error_message = data['error_msg'];
                             $scope.openErrorModal();
                         }
                     }, function (error) {
+                        $scope.adding_boardgame = false;
                         $scope.error_message = error;
                         $scope.openErrorModal();
                     });

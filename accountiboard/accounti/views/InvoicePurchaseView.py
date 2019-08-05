@@ -18,7 +18,7 @@ def get_invoice(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         invoice_id = rec_data['invoice_id']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -78,7 +78,7 @@ def create_new_invoice_purchase(request):
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not request.session['is_logged_in'] == username:
+            if not request.session.get('is_logged_in', None) == username:
                 return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -148,7 +148,7 @@ def get_all_invoices(request):
         username = rec_data['username']
         branch_id = rec_data['branch_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -178,7 +178,7 @@ def get_all_invoice_games(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         invoice_id = rec_data['invoice_id']
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -205,7 +205,7 @@ def get_materials(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         materials = Material.objects.all()
@@ -224,7 +224,7 @@ def get_shop_products(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         shop_products = ShopProduct.objects.all()
@@ -245,7 +245,7 @@ def get_last_buy_price(request):
         username = rec_data['username']
         shop_product_id = rec_data['shop_product_id']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not shop_product_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -262,7 +262,7 @@ def search_materials(request):
         search_word = rec_data['search_word']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -284,7 +284,7 @@ def search_shop_products(request):
         search_word = rec_data['search_word']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -307,7 +307,7 @@ def add_material(request):
         material_name = rec_data['material_name']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not material_name:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -325,7 +325,7 @@ def add_shop_product(request):
         shop_product_name = rec_data['shop_product_name']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not shop_product_name:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -343,7 +343,7 @@ def delete_invoice_purchase(request):
         invoice_id = rec_data['invoice_id']
         username = rec_data['username']
 
-        if not request.session['is_logged_in'] == username:
+        if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})

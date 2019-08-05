@@ -1,7 +1,6 @@
 angular.module("dashboard")
     .controller("accountManagerCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
-            console.log($location.search().sp_id);
             $scope.is_in_edit_mode_supplier = false;
             $scope.error_message = '';
             $scope.new_supplier_data = {
@@ -45,9 +44,27 @@ angular.module("dashboard")
         };
 
         $scope.closeAddModal = function () {
+            $scope.closePermissionModal();
             jQuery.noConflict();
             (function ($) {
                 $('#addModal').modal('hide');
+                $scope.resetFrom();
+            })(jQuery);
+        };
+
+        $scope.openPermissionModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#closeInvoicePermissionModal').modal('show');
+                $('#addModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closePermissionModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#closeInvoicePermissionModal').modal('hide');
+                $('#addModal').css('z-index', "");
             })(jQuery);
         };
 

@@ -29,12 +29,12 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت کارمند جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()" alt="" aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()"  aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="registerEmployee()" href="" alt="" class="mainButton greenButton"><i
+                    <a ng-click="registerEmployee()" href=""  class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" alt="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="resetFrom()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
                 </div>
                 <div class="modal-body">
@@ -178,7 +178,7 @@
                             <td>{{ employee.position }}</td>
                             <td>{{ employee.auth_lvl | persianNumber }}</td>
                             <td></td>
-                            <td><a ng-click="editEmployee(employee.id)" href="" alt=""><i
+                            <td><a ng-click="editEmployee(employee.id)" href="" ><i
                                     class="fas fa-user-cog"></i></a></td>
                         </tr>
                         </tbody>
