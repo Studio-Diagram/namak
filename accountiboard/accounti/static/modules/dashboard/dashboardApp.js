@@ -1,4 +1,4 @@
-var myApp = angular.module('dashboard', ['ui.router', 'ngCookies', 'satellizer']);
+var myApp = angular.module('dashboard', ['ui.router', 'ngCookies', 'satellizer', 'ui.select']);
 
 myApp.directive('ngEnter', function () {
     return function (scope, element, attrs) {

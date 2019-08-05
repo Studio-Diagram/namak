@@ -123,12 +123,14 @@
                                         </td>
                                         <td>
                                             <small>تامین کننده</small>
-                                            <select ng-model="new_invoice_purchase_data.supplier_id"
-                                                    class="form-control">
-                                                <option ng-repeat="supplier in suppliers"
-                                                        value="{{ supplier.id }}"
-                                                        ng-selected="supplier.id == new_invoice_purchase_data.supplier_id">{{ supplier.name }}</option>
-                                            </select>
+                                            <ui-select ng-model="new_invoice_purchase_data.supplier_id">
+                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
+                                                    {{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                    <div ng-bind="supplier.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </td>
                                     </tr>
                                     </tbody>

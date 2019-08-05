@@ -1364,6 +1364,7 @@ tr.tableTotal .redText {
 .popover {
     z-index: 1060 !important;
 }
+
 .arrow {
     border-bottom-color: transparent !important;
 }
@@ -1374,4 +1375,25 @@ tr.tableTotal .redText {
 
 .clockpicker-button {
     font-family: IRANSans;
+}
+
+ul.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu.ng-scope {
+    display: block;
+    text-align: right;
+}
+
+.ui-select-match.ng-scope {
+    border: thin solid lightgrey;
+    border-radius: 7px;
+}
+
+i.fas.fa-caret-down{
+    top: 10px;
+    position: absolute;
+    left: 10px;
+    color: #727272;
+}
+
+span.btn.btn-default.form-control.ui-select-toggle{
+    padding-top: 6px;
 }

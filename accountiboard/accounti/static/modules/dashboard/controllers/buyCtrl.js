@@ -33,6 +33,7 @@ angular.module("dashboard")
             $scope.get_suppliers();
             $scope.get_materials();
             $scope.get_shop_products();
+
         };
 
         $scope.showInvoicePurchase = function (invoice_id) {
