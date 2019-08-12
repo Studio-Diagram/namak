@@ -84,6 +84,7 @@ def get_invoice(request):
                 'start_time': ''
             },
             'total_price': invoice_object.total_price,
+            "discount": invoice_object.discount,
             'menu_items_old': [],
             'shop_items_old': [],
             'games': [],
@@ -171,6 +172,7 @@ def get_all_today_invoices(request):
                 "table_name": invoice.table.name,
                 "guest_nums": invoice.guest_numbers,
                 "total_price": invoice.total_price,
+                "discount": invoice.discount,
                 "settle_time": st_time,
                 "is_settled": invoice.is_settled,
                 "has_game": InvoicesSalesToGame.objects.filter(invoice_sales=invoice,
@@ -228,6 +230,7 @@ def create_new_invoice_sales(request):
             shop_items_new = rec_data['shop_items_new']
             branch_id = rec_data['branch_id']
             cash_id = rec_data['cash_id']
+            discount = rec_data['discount']
 
             if not table_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -249,7 +252,8 @@ def create_new_invoice_sales(request):
                 guest_numbers=guest_numbers,
                 member=member_obj,
                 created_time=datetime.now(),
-                cash_desk=cash_obj
+                cash_desk=cash_obj,
+                discount=discount
             )
             new_invoice.save()
             new_invoice_id = new_invoice.pk
@@ -302,6 +306,7 @@ def create_new_invoice_sales(request):
             menu_items_new = rec_data['menu_items_new']
             shop_items_new = rec_data['shop_items_new']
             branch_id = rec_data['branch_id']
+            discount = rec_data['discount']
 
             branch_obj = Branch.objects.get(pk=branch_id)
             table_obj = Table.objects.get(pk=table_id)
@@ -355,6 +360,7 @@ def create_new_invoice_sales(request):
                 new_item_to_invoice.save()
                 old_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
+            old_invoice.discount = discount
             old_invoice.save()
             new_invoice_id = old_invoice.pk
         return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
@@ -561,7 +567,7 @@ def delete_items(request):
                     employee=employee
                 )
                 new_deleted.save()
-                invoice_object.total_price -= int(game_obj.game.points) * 500
+                invoice_object.total_price -= int(game_obj.game.points) * 5000
                 invoice_object.save()
                 game_obj.delete()
 
@@ -728,7 +734,7 @@ def print_cash(request):
                 'name': 'بازی',
                 'numbers': game.game.numbers,
                 'item_price': 5000,
-                'price': game.game.points * 500
+                'price': game.game.points * 5000
             })
         all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
         for shop_p in all_shop_invoice:
@@ -757,6 +763,7 @@ def print_cash_with_template(request):
             'service': 0,
             'tax': 0,
             'discount': 0,
+            'payable': 0,
             'time': now_time.strftime("%H:%M"),
             'date': now_time.strftime("%Y/%m/%d"),
         }
@@ -767,6 +774,8 @@ def print_cash_with_template(request):
         print_data['factor_number'] = invoice_obj.pk * 1234
         print_data['table_name'] = invoice_obj.table.name
         print_data['total_price'] = format(int(invoice_obj.total_price), ',d')
+        print_data['discount'] = format(int(invoice_obj.discount), ',d')
+        print_data['payable'] = format(int(invoice_obj.total_price - invoice_obj.discount), ',d')
         all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj)
         for menu_item in all_menu_item_invoice:
             is_append = False

@@ -286,11 +286,13 @@
                                     </tr>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <td><input ng-model="new_invoice_data.discount" type="text" class="form-control"
+                                                   aria-label="" format>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_data.total_price | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -348,7 +350,7 @@
                                     <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
                                     <input ng-change="payModalChangeNumber()" type="range" class="form-control-range"
                                            ng-model="new_invoice_data.cash" min="0"
-                                           max="{{ new_invoice_data.total_price }}" step="5000">
+                                           max="{{ new_invoice_data.total_price - new_invoice_data.discount }}" step="5000">
                                     <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
                                            class="form-control paymentMethod righty"
                                            ng-model="new_invoice_data.card" format>
@@ -466,7 +468,7 @@
                                     </tr>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
@@ -546,7 +548,7 @@
                             <td ng-show="s_invoice.is_settled" class="greenText">تسویه شده</td>
                             <td ng-show="s_invoice.has_game" class="redText">در حال بازی است</td>
                             <td ng-hide="s_invoice.has_game" class="greenText">-</td>
-                            <td>{{ s_invoice.total_price | number:fractionSize | persianNumber }} ریال</td>
+                            <td>{{ s_invoice.total_price - s_invoice.discount | number:fractionSize | persianNumber }} ریال</td>
                             <td ng-hide="s_invoice.is_settled" ng-click="editInvoice(s_invoice.invoice_id)"><a href=""
                                                                                 class="mainButton grayButton smallButton fullWidthButton">جزییات</a>
                         </tr>

@@ -356,11 +356,13 @@
                                     </tr>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <td><input ng-model="new_invoice_data.discount" type="text" class="form-control"
+                                                   aria-label="" format>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_data.total_price | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -477,11 +479,11 @@
                                     </tr>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_data.total_price | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -517,7 +519,7 @@
                         <tr ng-repeat="invoice in all_today_invoices">
                             <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.table_name }}</td>
-                            <td>{{ invoice.total_price | number:fractionSize | persianNumber }} ریال</td>
+                            <td>{{ invoice.total_price - invoice.discount | number:fractionSize | persianNumber }} ریال</td>
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
                             <td>{{ invoice.settle_time | persianNumber }}</td>
                             <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href=""><i

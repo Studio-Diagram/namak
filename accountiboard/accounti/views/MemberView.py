@@ -16,7 +16,7 @@ NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-
+DUPLICATE_MEMBER_ENTRY = "شماره تلفن یا کارت تکراری است."
 
 def add_member(request):
     if request.method == "POST":
@@ -49,30 +49,37 @@ def add_member(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         if member_id == 0:
-            new_member = Member(
-                first_name=first_name,
-                last_name=last_name,
-                card_number=card_number,
-                year_of_birth=year_of_birth,
-                month_of_birth=month_of_birth,
-                day_of_birth=day_of_birth,
-                phone=phone,
-                intro=intro
-            )
-            new_member.save()
+            try:
+                new_member = Member(
+                    first_name=first_name,
+                    last_name=last_name,
+                    card_number=card_number,
+                    year_of_birth=year_of_birth,
+                    month_of_birth=month_of_birth,
+                    day_of_birth=day_of_birth,
+                    phone=phone,
+                    intro=intro
+                )
+                new_member.save()
+            except Exception as e:
+                return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
 
             return JsonResponse({"response_code": 2})
         else:
-            old_member = Member.objects.get(pk=member_id)
-            old_member.first_name = first_name
-            old_member.last_name = last_name
-            old_member.card_number = card_number
-            old_member.year_of_birth = year_of_birth
-            old_member.month_of_birth = month_of_birth
-            old_member.day_of_birth = day_of_birth
-            old_member.phone = phone
-            old_member.intro = intro
-            old_member.save()
+            try:
+                old_member = Member.objects.get(pk=member_id)
+                old_member.first_name = first_name
+                old_member.last_name = last_name
+                old_member.card_number = card_number
+                old_member.year_of_birth = year_of_birth
+                old_member.month_of_birth = month_of_birth
+                old_member.day_of_birth = day_of_birth
+                old_member.phone = phone
+                old_member.intro = intro
+                old_member.save()
+            except Exception as e:
+                return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
+
             return JsonResponse({"response_code": 2})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -148,4 +155,47 @@ def get_member(request):
                     'last_name': member.last_name,
                 }
                 return JsonResponse({"response_code": 2, 'member': member_data})
+    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+
+def add_old_member(request):
+    import sqlite3
+    if request.method == "POST":
+        try:
+            conn = sqlite3.connect("../db.sqlite3")
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM cmanager_user")
+
+            rows = cur.fetchall()
+
+            for row in rows:
+                try:
+                    print(row)
+                    first_name = row[1]
+                    last_name = row[2]
+                    card_number = row[3]
+                    phone = row[4]
+                    birth_year = row[5]
+                    birth_month = row[6]
+                    birth_day = row[7]
+                    intro = row[8]
+                    new_member = Member(
+                        first_name=first_name,
+                        last_name=last_name,
+                        card_number=card_number,
+                        phone=phone,
+                        year_of_birth=birth_year,
+                        month_of_birth=birth_month,
+                        day_of_birth=birth_day,
+                        intro=intro,
+                    )
+                    new_member.save()
+                except Exception as e:
+                    print(e)
+
+            return JsonResponse({"response_code": 2})
+
+        except Exception as e:
+            print(e)
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
