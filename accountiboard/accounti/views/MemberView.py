@@ -132,11 +132,8 @@ def get_member(request):
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
-            member_id = rec_data['member_id']
-            card_number = rec_data['card_number']
-            card_number = card_number.replace("%", "")
-            card_number = card_number.replace("?", "")
-            if member_id:
+            if rec_data['member_id']:
+                member_id = rec_data['member_id']
                 member = Member.objects.get(pk=member_id)
                 member_data = {
                     'id': member.pk,
@@ -150,7 +147,11 @@ def get_member(request):
                     'card_number': member.card_number,
                 }
                 return JsonResponse({"response_code": 2, 'member': member_data})
-            if card_number:
+
+            if rec_data['card_number']:
+                card_number = rec_data['card_number']
+                card_number = card_number.replace("%", "")
+                card_number = card_number.replace("?", "")
                 member = Member.objects.filter(card_number=card_number).first()
                 if member:
                     member_data = {
