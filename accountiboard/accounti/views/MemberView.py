@@ -88,7 +88,7 @@ def add_member(request):
 def get_members(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
-        members = Member.objects.all()
+        members = Member.objects.all().order_by("-id")[:100]
         members_data = []
         for member in members:
             members_data.append({
