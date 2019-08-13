@@ -517,6 +517,8 @@
                    ng-class="selected_table === 'C2' ? 'mainButton greenButton fullWidthButton' : 'mainButton grayButton fullWidthButton'">C2</a>
                 <a href="" ng-click="selectTable('C3')" ng-style="tables_have_invoice.indexOf('C3') != -1 && {'background': 'white','color': 'var(--myRed)','font-weight': '600'}"
                    ng-class="selected_table === 'C3' ? 'mainButton greenButton fullWidthButton' : 'mainButton grayButton fullWidthButton'">C3</a>
+                <a href="" ng-click="selectTable('سایر')" ng-style="tables_have_invoice.indexOf('سایر') != -1 && {'background': 'white','color': 'var(--myRed)','font-weight': '600'}"
+                   ng-class="selected_table === 'سایر' ? 'mainButton greenButton fullWidthButton' : 'mainButton grayButton fullWidthButton'">سایر</a>
             </main>
             <main class="col-sm-10 ">
                 <div ng-show="selected_table" class="tableWrapper">
