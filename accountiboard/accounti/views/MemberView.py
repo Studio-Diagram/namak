@@ -26,6 +26,9 @@ def add_member(request):
         first_name = rec_data['first_name']
         last_name = rec_data['last_name']
         card_number = rec_data['card_number']
+        card_number = card_number.replace("؟", "")
+        card_number = card_number.replace("?", "")
+        card_number = card_number.replace("%", "")
         year_of_birth = rec_data['year_of_birth']
         month_of_birth = rec_data['month_of_birth']
         day_of_birth = rec_data['day_of_birth']
@@ -150,8 +153,9 @@ def get_member(request):
 
             if rec_data['card_number']:
                 card_number = rec_data['card_number']
-                card_number = card_number.replace("%", "")
+                card_number = card_number.replace("؟", "")
                 card_number = card_number.replace("?", "")
+                card_number = card_number.replace("%", "")
                 member = Member.objects.filter(card_number=card_number).first()
                 if member:
                     member_data = {
