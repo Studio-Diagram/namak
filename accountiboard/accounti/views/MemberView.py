@@ -158,6 +158,7 @@ def get_member(request):
                 card_number = card_number.replace("٪", "")
                 card_number = card_number.replace("?", "")
                 card_number = card_number.replace("%", "")
+                print(card_number)
                 member = Member.objects.filter(card_number=card_number).first()
                 if member:
                     member_data = {
