@@ -17,6 +17,7 @@ DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 DUPLICATE_MEMBER_ENTRY = "شماره تلفن یا کارت تکراری است."
+MEMBER_NOT_FOUND = "عضوی یافت نشد."
 
 def add_member(request):
     if request.method == "POST":
@@ -133,6 +134,8 @@ def get_member(request):
         else:
             member_id = rec_data['member_id']
             card_number = rec_data['card_number']
+            card_number = card_number.replace("%", "")
+            card_number = card_number.replace("?", "")
             if member_id:
                 member = Member.objects.get(pk=member_id)
                 member_data = {
@@ -148,13 +151,16 @@ def get_member(request):
                 }
                 return JsonResponse({"response_code": 2, 'member': member_data})
             if card_number:
-                member = Member.objects.get(card_number=card_number)
-                member_data = {
-                    'id': member.pk,
-                    'first_name': member.first_name,
-                    'last_name': member.last_name,
-                }
-                return JsonResponse({"response_code": 2, 'member': member_data})
+                member = Member.objects.filter(card_number=card_number).first()
+                if member:
+                    member_data = {
+                        'id': member.pk,
+                        'first_name': member.first_name,
+                        'last_name': member.last_name,
+                    }
+                    return JsonResponse({"response_code": 2, 'member': member_data})
+                else:
+                    return JsonResponse({"response_code": 3, 'error_msg': MEMBER_NOT_FOUND})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 

@@ -710,10 +710,12 @@ angular.module("dashboard")
 
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
                 });
         };
 
