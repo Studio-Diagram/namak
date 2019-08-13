@@ -1056,8 +1056,7 @@ tr.tableTotal .redText {
     border-color: var(--pageBorder) !important;
     line-height: 2.5em;
     font-size: .85em;
-    min-height: 2.385em;
-    height: inherit;
+    min-height: 2.18em;
 }
 
 .pageContent .reservationPageContent .reservationTableTimes .hour {
