@@ -949,6 +949,7 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
                         };
+                        $scope.last_table_add = data['invoice']['table_name'];
                     }
                     else if (data['response_code'] === 3) {
                         console.log("NOT SUCCESS!");
@@ -959,6 +960,7 @@ angular.module("dashboard")
         };
 
         $scope.resetFrom = function () {
+            var last_table_id = $scope.new_invoice_data.table_id;
             $scope.new_invoice_data = {
                 'invoice_sales_id': 0,
                 'table_id': 0,
@@ -983,6 +985,8 @@ angular.module("dashboard")
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username
             };
+            $scope.new_invoice_data.table_id = last_table_id;
+            $scope.new_invoice_data.table_name = $scope.last_table_add;
         };
 
         $scope.reset_deleted_items = function () {
