@@ -974,6 +974,16 @@ angular.module("dashboard")
             }
         };
 
+        $scope.table_factor_counts = function (table_name) {
+            var count = 0;
+            for (var i = 0; i < $scope.all_today_invoices.length; i++) {
+                if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
+                    count += 1;
+                }
+            }
+            return count;
+        };
+
         $scope.resetFrom = function () {
             var last_table_id = $scope.new_invoice_data.table_id;
             $scope.new_invoice_data = {

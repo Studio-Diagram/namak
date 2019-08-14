@@ -299,7 +299,7 @@ a.whiteButton {
 }
 
 a.whiteButton:hover {
-    background: var(--myRedBorder);
+    background: var(--myGreenBorder);
     color: white;
 }
 
@@ -1391,13 +1391,28 @@ ul.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu.
     border-radius: 7px;
 }
 
-i.fas.fa-caret-down{
+i.fas.fa-caret-down {
     top: 10px;
     position: absolute;
     left: 10px;
     color: #727272;
 }
 
-span.btn.btn-default.form-control.ui-select-toggle{
+span.btn.btn-default.form-control.ui-select-toggle {
     padding-top: 6px;
+}
+
+span.badge.badge-pill.badge-warning {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 20px;
+    padding: 5px;
+    background: white;
+    color: var(--myGreen);
+    border: 1px solid var(--myGreen);
+}
+
+.tableNavigation a{
+    position: relative;
 }
