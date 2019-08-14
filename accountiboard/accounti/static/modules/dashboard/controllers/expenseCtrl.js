@@ -95,6 +95,7 @@ angular.module("dashboard")
                 $('#addModal').modal('hide');
                 $('#addModal').css('z-index', "");
             })(jQuery);
+            $scope.resetFrom();
         };
 
         $scope.addExpense = function () {
@@ -205,10 +206,24 @@ angular.module("dashboard")
                 'total_price': 0,
                 'settlement_type': 'CASH',
                 'tax': 0,
+                'services': [
+                    {
+                        'service_name': '',
+                        'price': 0,
+                        'description': ''
+                    }
+                ],
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+        };
+
+        $scope.change_total_price = function () {
+            $scope.new_invoice_expense_data.total_price = 0;
+            for (var i = 0; i < $scope.new_invoice_expense_data.services.length; i++){
+                $scope.new_invoice_expense_data.total_price += Number($scope.new_invoice_expense_data.services[i].price);
+            }
         };
 
         $scope.add_new_row_to_services = function () {

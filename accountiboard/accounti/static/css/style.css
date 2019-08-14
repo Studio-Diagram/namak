@@ -31,9 +31,7 @@ body {
 }
 
 @media screen and (min-width: 1900px) {
-    body {
-        font-size: 1em;
-    }
+
 }
 
 .masterWrapper {
