@@ -76,13 +76,14 @@
         }
 
         #total-table td {
-            padding: .5rem;
+            padding: 0rem;
         }
 
         .total_table {
             float: left;
             width: 60%;
             border: 2px solid black;
+            padding: .5em;
         }
 
         .info {
@@ -100,7 +101,7 @@
         }
 
         .small-text {
-            font-size: 0.7em;
+            font-size: 0.7em !important;
         }
 
         .black-border-bottom {
@@ -178,10 +179,10 @@
         <tbody>
         {% for item in invoice_data.items %}
             <tr>
-                <td class="iranian-number normal-text no-border-top">{{ item.name }}</td>
+                <td class="iranian-number no-border-top">{{ item.name }}</td>
                 <td class="iranian-number no-border-top">{{ item.item_price }}</td>
                 <td class="iranian-number no-border-top left-direction">{{ item.numbers }}</td>
-                <td class="iranian-number no-border-top normal-text">{{ item.price }}</td>
+                <td class="iranian-number no-border-top">{{ item.price }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -213,11 +214,11 @@
     <table class="table">
         <tbody>
         <tr>
-            <td scope="col">
-                قابل پرداخت
+            <td class="small-text" scope="col">
+                قابل پرداخت (ریال)
             </td>
             <td class="iranian-number" scope="col">{{ invoice_data.payable }}
-                ریال
+
             </td>
         </tr>
         </tbody>
