@@ -215,7 +215,7 @@ def get_reserve(request):
             'start_time': "%s:%s" % (old_reserve.start_time.hour, old_reserve.start_time.minute),
             'end_time': "%s:%s" % (old_reserve.end_time.hour, old_reserve.end_time.minute),
             'customer_name': old_reserve.customer_name,
-            'phone': old_reserve.customer_name,
+            'phone': old_reserve.phone,
             'reserve_state': old_reserve.reserve_state,
             'tables_id': reserve_tables_id,
             'tables': tables_data,
