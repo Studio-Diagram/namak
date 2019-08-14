@@ -72,7 +72,7 @@ angular.module("dashboard")
                         if (data['response_code'] === 2) {
                             $scope.get_tables_data($rootScope.user_data);
                             $scope.resetFrom();
-                            $scope.closeAddEmployeeModal();
+                            $scope.closeAddTableModal();
                         }
                         else if (data['response_code'] === 3) {
                             $scope.error_message = data['error_msg'];

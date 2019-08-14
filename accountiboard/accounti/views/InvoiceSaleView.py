@@ -93,7 +93,7 @@ def get_invoice(request):
         for game in invoice_games:
             if str(game.game.end_time) != "00:00:00":
                 game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
-                hour_points =int(game_total_secs / 3600)
+                hour_points = int(game_total_secs / 3600)
                 min_points = int((game_total_secs / 60) % 60)
                 if len(str(hour_points)) == 1:
                     hour_points_string = "0" + str(hour_points)
@@ -860,7 +860,8 @@ def print_after_save_template(request):
             'date': now_time.strftime("%Y/%m/%d"),
             'items': []
         }
-        all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj, is_print=0)
+        all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj, is_print=0).order_by(
+            'menu_item__menu_category__kind')
         for menu_item in all_menu_item_invoice:
             printer_obj = PrinterToCategory.objects.filter(menu_category=menu_item.menu_item.menu_category)
             for printer in printer_obj:

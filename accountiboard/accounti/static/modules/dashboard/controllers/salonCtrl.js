@@ -961,10 +961,10 @@ angular.module("dashboard")
 
         $scope.set_class_name = function (table_name) {
             if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1){
-                return  'mainButton redButton fullWidthButton';
+                return  'mainButton greenButton fullWidthButton';
             }
             else if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
-                return  'mainButton greenButton fullWidthButton';
+                return  'mainButton blackButton fullWidthButton';
             }
             else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1){
                 return  'mainButton whiteButton fullWidthButton';

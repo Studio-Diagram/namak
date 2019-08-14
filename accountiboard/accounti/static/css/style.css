@@ -294,8 +294,8 @@ a.redButton:hover {
 
 a.whiteButton {
     background: white;
-    color: var(--myRed);
-    border-color: var(--myRedBorder);
+    color: var(--myGreen);
+    border-color: var(--myGreenBorder);
 }
 
 a.whiteButton:hover {
