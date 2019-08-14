@@ -959,6 +959,21 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.set_class_name = function (table_name) {
+            if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1){
+                return  'mainButton redButton fullWidthButton';
+            }
+            else if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
+                return  'mainButton greenButton fullWidthButton';
+            }
+            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1){
+                return  'mainButton whiteButton fullWidthButton';
+            }
+            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) === -1){
+                return 'mainButton grayButton fullWidthButton';
+            }
+        };
+
         $scope.resetFrom = function () {
             var last_table_id = $scope.new_invoice_data.table_id;
             $scope.new_invoice_data = {
