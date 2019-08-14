@@ -65,6 +65,7 @@ angular.module("dashboard")
                         'table_name': '',
                         'index': ''
                     };
+                    $scope.new_reserve_data.tables_id = [];
                 }
             }
         };
@@ -73,14 +74,14 @@ angular.module("dashboard")
             var class_name = event.target.className;
             if (class_name.split(" ")[1] === "reservationCell") {
                 if ($scope.ending_selected_time.is_fill === 0) {
-                    for (var i = 0; i < $scope.tables.length; i++) {
-                        if ($scope.tables[i].table_id === table.table_id) {
-                            $scope.tables[i].is_checked = 1;
-                            $scope.new_reserve_data.tables_id.push(table.table_id);
-                            break;
-                        }
-                    }
                     if ($scope.starting_selected_time.is_fill === 0) {
+                        for (var i = 0; i < $scope.tables.length; i++) {
+                            if ($scope.tables[i].table_id === table.table_id) {
+                                $scope.tables[i].is_checked = 1;
+                                $scope.new_reserve_data.tables_id.push(table.table_id);
+                                break;
+                            }
+                        }
                         if (Number(is_hour) === 0) {
                             $scope.starting_selected_time.is_hour = 0;
                             $scope.starting_selected_time.time = hour + ":" + min;
@@ -120,7 +121,7 @@ angular.module("dashboard")
                             $scope.new_reserve_data.end_time = $scope.ending_selected_time.time;
                             jQuery.noConflict();
                             (function ($) {
-                                $('.tooltipM').fadeIn().css(({ left: event.pageX, top: event.pageY }));
+                                $('.tooltipM').fadeIn().css(({left: event.pageX, top: event.pageY}));
                             })(jQuery);
                         }
                     }
@@ -178,15 +179,17 @@ angular.module("dashboard")
         };
 
         $scope.changeTableCheckBox = function (is_checked, table_id) {
-            if (is_checked) {
+            var index_of_table_id = $scope.new_reserve_data.tables_id.indexOf(table_id);
+            if (index_of_table_id === -1) {
                 $scope.new_reserve_data.tables_id.push(table_id);
             }
             else {
-                for (var i = 0; i < $scope.new_reserve_data.tables_id.length; i++) {
-                    if ($scope.new_reserve_data.tables_id[i] === table_id) {
-                        $scope.new_reserve_data.tables_id.splice(i, 1);
-                    }
-                }
+                // for (var i = 0; i < $scope.new_reserve_data.tables_id.length; i++) {
+                //     if ($scope.new_reserve_data.tables_id[i] === table_id) {
+                //         $scope.new_reserve_data.tables_id.splice(i, 1);
+                //     }
+                // }
+                $scope.new_reserve_data.tables_id.splice(index_of_table_id, 1);
             }
         };
 

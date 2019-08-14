@@ -22,19 +22,16 @@
         }
 
         .tableWrapper {
-
             background: white;
             -webkit-border-radius: 5px;
             -moz-border-radius: 5px;
             border-radius: 5px;
             overflow: hidden;
-            border: 1px solid black;
-            margin-bottom: 30px;
-
+            margin-bottom: 20px;
         }
 
         body {
-            font-size: 1.1em;
+            font-size: 1.3em;
             font-family: 'IRANSans', tahoma, serif;
             font-weight: normal;
             direction: rtl;
@@ -45,9 +42,9 @@
 
         .table td, .table th {
 
-            padding: .5rem;
+            padding: .3rem;
             vertical-align: top;
-            border-top: 1px solid #dee2e6;
+            border-top: 2px solid black;
 
         }
 
@@ -73,12 +70,44 @@
         .table thead th {
 
             vertical-align: bottom;
-            border-bottom: 2px solid #dee2e6;
 
         }
 
-        .table td {
-            border-top: 2px solid #45a3b3;
+        .small-text {
+            font-size: 0.7em;
+        }
+
+        .right-text {
+            text-align: right;
+        }
+
+        .left-text {
+            text-align: left;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .no-border {
+            border: none !important;
+        }
+
+        .item-numbers {
+            text-align: center;
+            border-right: 2px solid black;
+        }
+
+        .item-description {
+            text-align: right;
+            border-top: none !important;
+            border-bottom: 2px solid black;
+        }
+
+        .item-description-null-section {
+            border-top: none !important;
+            border-right: 2px solid black;
+            border-bottom: 2px solid black;
         }
     </style>
 </head>
@@ -91,20 +120,12 @@
 
         </tr>
         <tr>
-            <td>نام میز</td>
-            <td>نام مشتری</td>
+            <td class="small-text">نام میز</td>
+            <td class="small-text">نام مشتری</td>
         </tr>
         <tr>
-            <td style="border-top: none;">{{ invoice_data.table_name }}</td>
-            <td style="border-top: none;">{{ invoice_data.customer_name }}</td>
-        </tr>
-        <tr>
-            <td>محل پرینت</td>
-            <td>شماره فاکتور</td>
-        </tr>
-        <tr>
-            <td style="border-top: none;">{{ invoice_data.printer_name }}</td>
-            <td style="border-top: none;" class="iranian-number">{{ invoice_data.factor_number }}</td>
+            <td class="no-border">{{ invoice_data.table_name }}</td>
+            <td class="no-border">{{ invoice_data.customer_name }}</td>
         </tr>
         <tr>
             <td class="iranian-number">{{ invoice_data.date }}</td>
@@ -115,22 +136,22 @@
 </div>
 <div class="tableWrapper">
     <table class="table">
-        <thead style="font-size: 0.7em;">
+        <thead class="small-text">
         <tr>
-            <th style="text-align: right">نام</th>
-            <th style="text-align: left">تعداد</th>
+            <th class="right-text">نام</th>
+            <th class="center-text">تعداد</th>
         </tr>
         </thead>
         <tbody>
         {% for item in invoice_data.items %}
             <tr>
-                <td style="text-align: right">{{ item.name }}</td>
-                <td style="text-align: left;border-right: 2px solid #45a3b3;" class="iranian-number">{{ item.numbers }}</td>
+                <td class="right-text">{{ item.name }}</td>
+                <td class="iranian-number item-numbers">{{ item.numbers }}</td>
             </tr>
             {% if item.description %}
                 <tr>
-                    <td style="text-align: right;border-top: none;">{{ item.description }}</td>
-                    <td style="border-top: none;border-right: 2px solid #45a3b3;"></td>
+                    <td class="item-description">{{ item.description }}</td>
+                    <td class="item-description-null-section"></td>
                 </tr>
             {% endif %}
         {% endfor %}
