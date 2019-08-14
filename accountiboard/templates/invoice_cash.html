@@ -141,6 +141,9 @@
             width: 60%;
             color: white;
         }
+        .text-right{
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -179,7 +182,7 @@
         <tbody>
         {% for item in invoice_data.items %}
             <tr>
-                <td class="iranian-number no-border-top">{{ item.name }}</td>
+                <td class="iranian-number no-border-top text-right">{{ item.name }}</td>
                 <td class="iranian-number no-border-top">{{ item.item_price }}</td>
                 <td class="iranian-number no-border-top left-direction">{{ item.numbers }}</td>
                 <td class="iranian-number no-border-top">{{ item.price }}</td>
