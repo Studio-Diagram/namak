@@ -960,28 +960,30 @@ angular.module("dashboard")
         };
 
         $scope.set_class_name = function (table_name) {
-            if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1){
-                return  'mainButton greenButton fullWidthButton';
+            if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
+                return 'mainButton greenButton fullWidthButton';
             }
             else if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
-                return  'mainButton blackButton fullWidthButton';
+                return 'mainButton blackButton fullWidthButton';
             }
-            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1){
-                return  'mainButton whiteButton fullWidthButton';
+            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
+                return 'mainButton whiteButton fullWidthButton';
             }
-            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) === -1){
+            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
                 return 'mainButton grayButton fullWidthButton';
             }
         };
 
         $scope.table_factor_counts = function (table_name) {
-            var count = 0;
-            for (var i = 0; i < $scope.all_today_invoices.length; i++) {
-                if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
-                    count += 1;
+            if ($scope.all_today_invoices) {
+                var count = 0;
+                for (var i = 0; i < $scope.all_today_invoices.length; i++) {
+                    if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
+                        count += 1;
+                    }
                 }
+                return count;
             }
-            return count;
         };
 
         $scope.resetFrom = function () {
