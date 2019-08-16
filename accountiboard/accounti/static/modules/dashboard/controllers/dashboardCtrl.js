@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $interval, $http, $location, $timeout, dashboardHttpRequest, $window) {
+    .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $interval, $http, $location, $timeout, dashboardHttpRequest, $window) {
         var initialize = function () {
             if (localStorage.user && localStorage.branch) {
                 $rootScope.user_data = {
@@ -16,6 +16,38 @@ angular.module("dashboard")
             }
             else {
                 window.location.replace("/");
+            }
+
+            console.log(1);
+
+            $window.onkeyup = function (event) {
+                if (event.ctrlKey && event.keyCode === 49) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 50) {
+                    $state.go('cash_manager.salon');
+                }
+                if (event.ctrlKey && event.keyCode === 51) {
+                    $state.go('reservation');
+                }
+                if (event.ctrlKey && event.keyCode === 52) {
+                    $state.go('member');
+                }
+                if (event.ctrlKey && event.keyCode === 53) {
+                    $state.go('boardgame');
+                }
+                if (event.ctrlKey && event.keyCode === 54) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 55) {
+                    $state.go('account_manager.buy');
+                }
+                if (event.ctrlKey && event.keyCode === 56) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 57) {
+                    $state.go('manager.addEmployee');
+                }
             }
         };
 

@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $compile, $stateParams) {
+    .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $state, $http, $timeout, $window, dashboardHttpRequest, $compile, $stateParams) {
         var initialize = function () {
             $scope.error_message = '';
             $scope.all_today_reserves = [];
@@ -66,6 +66,33 @@ angular.module("dashboard")
                         'index': ''
                     };
                     $scope.new_reserve_data.tables_id = [];
+                }
+                if (event.ctrlKey && event.keyCode === 49) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 50) {
+                    $state.go('cash_manager.salon');
+                }
+                if (event.ctrlKey && event.keyCode === 51) {
+                    $state.go('reservation');
+                }
+                if (event.ctrlKey && event.keyCode === 52) {
+                    $state.go('member');
+                }
+                if (event.ctrlKey && event.keyCode === 53) {
+                    $state.go('boardgame');
+                }
+                if (event.ctrlKey && event.keyCode === 54) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 55) {
+                    $state.go('account_manager.buy');
+                }
+                if (event.ctrlKey && event.keyCode === 56) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 57) {
+                    $state.go('manager.addEmployee');
                 }
             }
         };

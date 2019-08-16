@@ -141,7 +141,7 @@
 
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="reservation" class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                        <a ui-sref="reservation" ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'" class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
                         <a ui-sref="member" href="" ng-class="isActive('/member') ? 'nav-link active' : 'nav-link'"><i
