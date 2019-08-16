@@ -315,7 +315,9 @@
                     </div>
                     <div ng-repeat="time in working_times"
                          ng-click="clicking_reserve(time.hour, time.minute, time.is_hour, table, $event, $index)"
-                         ng-class="time.is_hour === 1 ? 'reservationCell hour H{{ time.hour }}M{{ time.minute }}' : 'reservationCell minute H{{ time.hour }}M{{ time.minute }}' ">
+                         ng-class="time.is_hour === 1 ? 'reservationCell hour H{{ time.hour }}M{{ time.minute }}' : 'reservationCell minute H{{ time.hour }}M{{ time.minute }}' "
+                         ng-mouseover="cross_hover(time.hour, time.minute, table, $event)"
+                    >
                     </div>
                 </div>
             </main>

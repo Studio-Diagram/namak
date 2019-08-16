@@ -1362,7 +1362,7 @@ tr.tableTotal .redText {
 }
 
 .reservationCell:hover {
-    background: aqua;
+    background: var(--myGreen) !important;
 }
 
 .popover {

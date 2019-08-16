@@ -18,8 +18,6 @@ angular.module("dashboard")
                 window.location.replace("/");
             }
 
-            console.log(1);
-
             $window.onkeyup = function (event) {
                 if (event.ctrlKey && event.keyCode === 49) {
 

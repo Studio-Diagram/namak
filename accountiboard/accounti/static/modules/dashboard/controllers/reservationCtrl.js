@@ -97,6 +97,34 @@ angular.module("dashboard")
             }
         };
 
+        $scope.cross_hover = function (hour, min, table, event) {
+            if ($scope.last_table_hover) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#tablename-' + $scope.last_table_hover.table_name).css("background", "none");
+                })(jQuery);
+            }
+            if ($scope.last_row_hover) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('.' + $scope.last_row_hover).css("background", "none");
+                })(jQuery);
+            }
+            $scope.last_row_hover = 'H' + hour + 'M' + min;
+            $scope.last_table_hover = table;
+            jQuery.noConflict();
+            (function ($) {
+                $('#tablename-' + table.table_name).css("background", "#bdf5bd");
+                $('.' + 'H' + hour + 'M' + min).css("background", "#bdf5bd");
+            })(jQuery);
+            if ($scope.starting_selected_time.class_name) {
+                jQuery.noConflict();
+                (function ($) {
+                    $($scope.starting_selected_time.class_name).css("background", "#80AB51");
+                })(jQuery);
+            }
+        };
+
         $scope.clicking_reserve = function (hour, min, is_hour, table, event, index) {
             var class_name = event.target.className;
             if (class_name.split(" ")[1] === "reservationCell") {
@@ -127,7 +155,7 @@ angular.module("dashboard")
                         }
                         jQuery.noConflict();
                         (function ($) {
-                            $(event.target).css("background", "aqua");
+                            $(event.target).css("background", "#80AB51");
                         })(jQuery);
                     }
                     else if ($scope.starting_selected_time.is_fill === 1) {
