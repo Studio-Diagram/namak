@@ -27,6 +27,7 @@ def create_new_invoice_return(request):
             buy_price = rec_data['buy_price']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
+            invoice_date = rec_data['date']
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -46,17 +47,23 @@ def create_new_invoice_return(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not buy_price:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not invoice_date:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
             shop_obj = ShopProduct.objects.get(pk=shop_id)
-            now_time = datetime.now()
 
             total_price = int(numbers) * int(buy_price)
 
+            invoice_date_split = invoice_date.split('/')
+            invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
+                                                int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
+                                                datetime.now().second).togregorian()
+
             new_invoice = InvoiceReturn(
                 branch=branch_obj,
-                created_time=now_time,
+                created_time=invoice_date_g,
                 supplier=supplier_obj,
                 buy_price=buy_price,
                 shop_product=shop_obj,
@@ -133,7 +140,7 @@ def search_return(request):
             jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                        year=invoice_date.year)
             returns.append({
-                'id': invoice.pk,
+                'id': invoice_return.pk,
                 'supplier_name': invoice_return.supplier.name,
                 'shop_name': invoice_return.shop_product.name,
                 'buy_price': invoice_return.buy_price,

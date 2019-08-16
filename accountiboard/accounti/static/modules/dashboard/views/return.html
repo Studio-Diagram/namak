@@ -9,7 +9,8 @@
                     <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
-<p style="margin: 5px 15px 0 0">                   آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین می‌رود.</p>
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
+                        می‌رود.</p>
                 </div>
             </div>
         </div>
@@ -42,6 +43,12 @@
                                             <small>شماره فاکتور</small>
                                             <a href=""
                                                class="">{{ new_invoice_return_data.id | persianNumber }}</a>
+                                        </td>
+                                        <td>
+                                            <small>تاریخ فاکتور</small>
+                                            <input ng-model="new_invoice_return_data.date" id="datepicker"
+                                                   class="form-control listFilter tableLefty" placeholder="تاریخ"
+                                                   type="text">
                                         </td>
                                         <td>
                                             <small>نوع پرداخت</small>
@@ -80,7 +87,8 @@
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ 1 | persianNumber }}</td>
                                         <td>
-                                            <select ng-change="get_last_buy_price(new_invoice_return_data.shop_id)" ng-model="new_invoice_return_data.shop_id"
+                                            <select ng-change="get_last_buy_price(new_invoice_return_data.shop_id)"
+                                                    ng-model="new_invoice_return_data.shop_id"
                                                     class="form-control">
                                                 <option ng-repeat="shop in shops"
                                                         value="{{ shop.id }}"
@@ -88,9 +96,11 @@
                                             </select>
                                         </td>
                                         <td>{{ new_invoice_return_data.buy_price | number | persianNumber }}</td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="text" min="0"
+                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="text"
+                                                   min="0"
                                                    ng-model="new_invoice_return_data.numbers" format></td>
-                                        <td>{{ new_invoice_return_data.buy_price * new_invoice_return_data.numbers | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ new_invoice_return_data.buy_price * new_invoice_return_data.numbers | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-model="new_invoice_return_data.description"></td>
                                     </tr>
@@ -101,7 +111,8 @@
                                     <tbody>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_return_data.buy_price * new_invoice_return_data.numbers | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ new_invoice_return_data.buy_price * new_invoice_return_data.numbers | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

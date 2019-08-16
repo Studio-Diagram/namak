@@ -26,6 +26,7 @@ def create_new_invoice_expense(request):
             tax = rec_data['tax']
             services = rec_data['services']
             discount = rec_data['discount']
+            invoice_date = rec_data['date']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
 
@@ -47,17 +48,23 @@ def create_new_invoice_expense(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if services[0]['service_name'] == '':
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not invoice_date:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
-            now_time = datetime.now()
 
             expense_cat_obj = ExpenseCategory.objects.get(pk=expense_cat_id)
+
+            invoice_date_split = invoice_date.split('/')
+            invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
+                                                int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
+                                                datetime.now().second).togregorian()
 
             new_invoice = InvoiceExpense(
                 branch=branch_obj,
                 expense_category=expense_cat_obj,
-                created_time=now_time,
+                created_time=invoice_date_g,
                 supplier=supplier_obj,
                 price=total_price,
                 tax=tax,

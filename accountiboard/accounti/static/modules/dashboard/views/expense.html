@@ -9,7 +9,8 @@
                     <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
-<p style="margin: 5px 15px 0 0">                   آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین می‌رود.</p>
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
+                        می‌رود.</p>
                 </div>
             </div>
         </div>
@@ -27,8 +28,9 @@
                     </a>
                     <a ng-hide="read_only_mode" href="" ng-click="addExpense()" class="mainButton grayButton"><i
                             class="fas fa-save"></i> ذخیره</a>
-                    <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-اضافه کردن سطر جدید</a>
+                    <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton"><i
+                            class="fas fa-eraser"></i>
+                        اضافه کردن سطر جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
 
@@ -44,6 +46,12 @@
                                             <small>شماره فاکتور</small>
                                             <a href=""
                                                class="">{{ new_invoice_expense_data.id | persianNumber }}</a>
+                                        </td>
+                                        <td>
+                                            <small>تاریخ فاکتور</small>
+                                            <input ng-model="new_invoice_expense_data.date" id="datepicker"
+                                                   class="form-control listFilter tableLefty" placeholder="تاریخ"
+                                                   type="text">
                                         </td>
                                         <td>
                                             <small>نوع پرداخت</small>
@@ -90,7 +98,8 @@
                                         <td>{{ $index + 1 | persianNumber }}</td>
                                         <td><input class="form-control" type="text"
                                                    ng-model="service.service_name"></td>
-                                        <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'" class="form-control" type="text"
+                                        <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                   class="form-control" type="text"
                                                    ng-model="service.price" format></td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-model="service.description"></td>
@@ -110,7 +119,8 @@
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_expense_data.total_price | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ new_invoice_expense_data.total_price | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

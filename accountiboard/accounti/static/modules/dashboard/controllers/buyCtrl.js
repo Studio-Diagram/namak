@@ -1,6 +1,12 @@
 angular.module("dashboard")
     .controller("buyCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#datepicker").datepicker();
+                });
+            })(jQuery);
             $scope.is_in_edit_mode_supplier = false;
             $scope.error_message = '';
             $scope.current_menu_nav = "MAT";
@@ -16,6 +22,7 @@ angular.module("dashboard")
                 'settlement_type': 'CASH',
                 'tax': 0,
                 'discount': 0,
+                'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
@@ -79,6 +86,7 @@ angular.module("dashboard")
         };
 
         $scope.addInvoicePurchase = function () {
+            $scope.new_invoice_purchase_data.date = $("#datepicker").val();
             dashboardHttpRequest.addInvoicePurchase($scope.new_invoice_purchase_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -498,6 +506,7 @@ angular.module("dashboard")
                 'settlement_type': 'CASH',
                 'tax': 0,
                 'discount': 0,
+                'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };

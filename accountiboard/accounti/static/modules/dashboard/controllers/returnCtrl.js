@@ -1,6 +1,12 @@
 angular.module("dashboard")
     .controller("returnCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#datepicker").datepicker();
+                });
+            })(jQuery);
             $scope.error_message = '';
             $scope.new_invoice_return_data = {
                 'id': 0,
@@ -114,6 +120,7 @@ angular.module("dashboard")
         };
 
         $scope.addReturn = function () {
+            $scope.new_invoice_return_data.date = $("#datepicker").val();
             dashboardHttpRequest.addReturn($scope.new_invoice_return_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

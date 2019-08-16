@@ -1,6 +1,12 @@
 angular.module("dashboard")
     .controller("expenseCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#datepicker").datepicker();
+                });
+            })(jQuery);
             $scope.error_message = '';
             $scope.new_invoice_expense_data = {
                 'id': 0,
@@ -99,6 +105,7 @@ angular.module("dashboard")
         };
 
         $scope.addExpense = function () {
+            $scope.new_invoice_expense_data.date = $("#datepicker").val();
             for(var i in $scope.new_invoice_expense_data.services) {
                 $scope.new_invoice_expense_data.total_price += Number($scope.new_invoice_expense_data.services[i].price);
             }

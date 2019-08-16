@@ -73,6 +73,7 @@ def create_new_invoice_purchase(request):
             settlement_type = rec_data['settlement_type']
             tax = rec_data['tax']
             discount = rec_data['discount']
+            invoice_date = rec_data['date']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
 
@@ -88,13 +89,20 @@ def create_new_invoice_purchase(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if supplier_id == 0:
                 return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
+            if not invoice_date:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
 
+            invoice_date_split = invoice_date.split('/')
+            invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
+                                                int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
+                                                datetime.now().second).togregorian()
+
             new_invoice = InvoicePurchase(
                 branch=branch_obj,
-                created_time=datetime.now(),
+                created_time=invoice_date_g,
                 supplier=supplier_obj,
                 settlement_type=settlement_type,
                 tax=tax,
@@ -364,4 +372,3 @@ def delete_invoice_purchase(request):
 
         return JsonResponse({"response_code": 2})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-

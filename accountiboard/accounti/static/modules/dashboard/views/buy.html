@@ -113,6 +113,10 @@
                                                class="">{{ new_invoice_purchase_data.id | persianNumber }}</a>
                                         </td>
                                         <td>
+                                            <small>تاریخ فاکتور</small>
+                                            <input ng-model="new_invoice_purchase_data.date" id="datepicker" class="form-control listFilter tableLefty" placeholder="تاریخ" type="text">
+                                        </td>
+                                        <td>
                                             <small>نوع پرداخت</small>
                                             <select ng-model="new_invoice_purchase_data.settlement_type"
                                                     class="form-control">

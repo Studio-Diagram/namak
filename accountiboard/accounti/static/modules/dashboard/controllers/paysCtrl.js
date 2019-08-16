@@ -1,6 +1,12 @@
 angular.module("dashboard")
     .controller("paysCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#datepicker").datepicker();
+                });
+            })(jQuery);
             $scope.error_message = '';
             $scope.new_pay_data = {
                 'id': 0,
@@ -70,6 +76,7 @@ angular.module("dashboard")
         };
 
         $scope.addPay = function () {
+            $scope.new_pay_data.date = $("#datepicker").val();
             dashboardHttpRequest.addPay($scope.new_pay_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
