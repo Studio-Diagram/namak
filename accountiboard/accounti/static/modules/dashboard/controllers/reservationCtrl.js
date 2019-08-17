@@ -114,8 +114,8 @@ angular.module("dashboard")
             $scope.last_table_hover = table;
             jQuery.noConflict();
             (function ($) {
-                $('#tablename-' + table.table_name).css("background", "#bdf5bd");
-                $('.' + 'H' + hour + 'M' + min).css("background", "#bdf5bd");
+                $('#tablename-' + table.table_name).css("background", "#fff");
+                $('.' + 'H' + hour + 'M' + min).css("background", "#fff");
             })(jQuery);
             if ($scope.starting_selected_time.class_name) {
                 jQuery.noConflict();
