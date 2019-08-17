@@ -43,7 +43,7 @@ angular.module("dashboard")
             });
 
             $window.onkeyup = function (event) {
-                if (event.keyCode === 27 || event.keyCode === 8) {
+                if (event.keyCode === 27) {
                     jQuery.noConflict();
                     (function ($) {
                         $($scope.starting_selected_time.class_name).css("background", "none");
@@ -107,7 +107,7 @@ angular.module("dashboard")
             if ($scope.last_row_hover) {
                 jQuery.noConflict();
                 (function ($) {
-                    $('.' + $scope.last_row_hover).css("background", "none");
+                    $('.reservationCell.' + $scope.last_row_hover).css("background", "none");
                 })(jQuery);
             }
             $scope.last_row_hover = 'H' + hour + 'M' + min;
@@ -239,11 +239,6 @@ angular.module("dashboard")
                 $scope.new_reserve_data.tables_id.push(table_id);
             }
             else {
-                // for (var i = 0; i < $scope.new_reserve_data.tables_id.length; i++) {
-                //     if ($scope.new_reserve_data.tables_id[i] === table_id) {
-                //         $scope.new_reserve_data.tables_id.splice(i, 1);
-                //     }
-                // }
                 $scope.new_reserve_data.tables_id.splice(index_of_table_id, 1);
             }
         };
