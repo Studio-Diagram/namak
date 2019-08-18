@@ -219,10 +219,15 @@ def get_materials(request):
         materials = Material.objects.all()
         materials_data = []
         for material in materials:
+            last_material_price = 0
+            last_material = PurchaseToMaterial.objects.filter(material=material).last()
+            if last_material:
+                last_material_price = last_material.base_unit_price
             materials_data.append({
                 'id': material.pk,
                 'name': material.name,
-                'unit': material.unit
+                'unit': material.unit,
+                'price': last_material_price
             })
         return JsonResponse({"response_code": 2, 'materials': materials_data})
 
@@ -238,10 +243,15 @@ def get_shop_products(request):
         shop_products = ShopProduct.objects.all()
         shop_products_data = []
         for shop in shop_products:
+            last_shop_price = 0
+            last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
+            if last_shop:
+                last_shop_price = last_shop.base_unit_price
             shop_products_data.append({
                 'id': shop.pk,
                 'name': shop.name,
                 'price': shop.price,
+                'buy_price': last_shop_price,
                 'real_numbers': shop.real_numbers
             })
         return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})

@@ -62,8 +62,8 @@ def add_reserve(request):
         end_time_obj = datetime.strptime(end_time, "%H:%M")
 
         reserve_date_split = reserve_date.split('/')
-        reserve_date_g = jdatetime.date(int(reserve_date_split[0]), int(reserve_date_split[1]),
-                                        int(reserve_date_split[2])).togregorian()
+        reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                        int(reserve_date_split[0])).togregorian()
 
         if reserve_id == 0:
             branch_obj = Branch.objects.get(pk=branch_id)
@@ -121,8 +121,8 @@ def get_reserves(request):
 
         branch_obj = Branch.objects.get(pk=branch_id)
         reserve_date_split = date.split('/')
-        reserve_date_g = jdatetime.date(int(reserve_date_split[0]), int(reserve_date_split[1]),
-                                        int(reserve_date_split[2])).togregorian()
+        reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                        int(reserve_date_split[0])).togregorian()
         all_today_reserves = Reservation.objects.filter(branch=branch_obj, reserve_date=reserve_date_g)
         reserves_data = []
         for reserve in all_today_reserves:
@@ -140,7 +140,7 @@ def get_reserves(request):
                     'start_time_hour': reserve.start_time.strftime('%H'),
                     'start_time_min': reserve.start_time.strftime('%M'),
                     'duration_class_name': 'H%sM%s' % (
-                    reserve_duration.strftime("%H"), reserve_duration.strftime("%M")),
+                        reserve_duration.strftime("%H"), reserve_duration.strftime("%M")),
                     'numbers': reserve.numbers,
                     'table_name': table_reserve.table.name,
                     'reserve_state': reserve.reserve_state
@@ -252,11 +252,16 @@ def get_today_for_reserve(request):
             yesterday = now_date - timedelta(1)
             today = jdatetime.date.fromgregorian(day=yesterday.day, month=yesterday.month,
                                                  year=yesterday.year)
-            today = today.strftime("%Y/%m/%d")
+            tomorrow = today + timedelta(days=1)
+            tomorrow = tomorrow.strftime("%d/%m/%Y")
+            today = today.strftime("%d/%m/%Y")
         else:
             today = jdatetime.date.fromgregorian(day=now_date.day, month=now_date.month,
                                                  year=now_date.year)
-            today = today.strftime("%Y/%m/%d")
 
-        return JsonResponse({"response_code": 2, 'today_for_reserve': today})
+            tomorrow = today + timedelta(days=1)
+            tomorrow = tomorrow.strftime("%d/%m/%Y")
+            today = today.strftime("%d/%m/%Y")
+
+        return JsonResponse({"response_code": 2, 'today_for_reserve': today, 'tomorrow_for_reserve': tomorrow})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})

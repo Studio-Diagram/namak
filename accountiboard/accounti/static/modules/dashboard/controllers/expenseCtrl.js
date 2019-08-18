@@ -203,6 +203,10 @@ angular.module("dashboard")
             })(jQuery);
         };
 
+        $scope.deleteNewItem = function (item_index) {
+            $scope.new_invoice_expense_data.services.splice(item_index, 1);
+        };
+
         $scope.resetFrom = function () {
             $scope.new_invoice_expense_data = {
                 'id': 0,

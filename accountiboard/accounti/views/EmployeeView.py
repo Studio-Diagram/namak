@@ -6,13 +6,27 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
+USERNAME_ERROR = 'نام کاربری خود را وارد کنید.'
 PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
 NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
+PHONE_ERROR = 'شماره تلفن خود را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 CASH_ERROR = "خطای صندوق"
+FIRST_NAME_REQUIRED = 'نام را وارد کنید.'
+LAST_NAME_REQUIRED = 'نام خانوادگی را وارد کنید.'
+FATHER_NAME_REQUIRED = 'نام پدر را وارد کنید.'
+NATIONAL_ID_REQUIRED = 'شماره شناسنامه را وارد کنید.'
+ADDRESS_REQUIRED = 'آدرس را وارد کنید.'
+BANK_NAME_REQUIRED = 'نام بانک را وارد کنید.'
+CREDIT_CARD_REQUIRED = 'شماره کارت اعتباری را وارد کنید.'
+SHABA_REQUIRED = 'شماره شبا را وارد کنید.'
+POSITION_REQUIRED = 'سمت را وارد کنید.'
+SHIFT_SALARY_REQUIRED = 'حقوق شیفت پایه را وارد کنید.'
+SHIFT_NUMBER_REQUIRED = 'تعداد شیفت پایه را وارد کنید.'
+AUTH_LEVEL_REQUIRED = 'سطح دسترسی را وارد کنید.'
+MEMBER_CARD_REQUIRED = 'شماره کارت عضویت را وارد کنید.'
+BRANCH_REQUIRED = 'شعبه وارد نشده است.'
 
 
 def login(request):
@@ -76,46 +90,51 @@ def register_employee(request):
             return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
 
         if not base_worksheet_salary:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": SHIFT_SALARY_REQUIRED})
 
         if not base_worksheet_count:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": SHIFT_NUMBER_REQUIRED})
 
         if not first_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": FIRST_NAME_REQUIRED})
 
         if not last_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": LAST_NAME_REQUIRED})
 
         if not father_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": FATHER_NAME_REQUIRED})
 
         if not national_code:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": NATIONAL_ID_REQUIRED})
 
         if not home_address:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": ADDRESS_REQUIRED})
 
         if not bank_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": BANK_NAME_REQUIRED})
 
         if not bank_card_number:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": CREDIT_CARD_REQUIRED})
 
         if not shaba:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": SHABA_REQUIRED})
 
         if not position:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": POSITION_REQUIRED})
 
         if not membership_card_number:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": MEMBER_CARD_REQUIRED})
 
         if auth_level == "":
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": AUTH_LEVEL_REQUIRED})
 
         if not branch_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"response_code": 3, "error_msg": BRANCH_REQUIRED})
+
+        membership_card_number = membership_card_number.replace("؟", "")
+        membership_card_number = membership_card_number.replace("٪", "")
+        membership_card_number = membership_card_number.replace("?", "")
+        membership_card_number = membership_card_number.replace("%", "")
 
         if employee_id == 0:
             new_employee = Employee(

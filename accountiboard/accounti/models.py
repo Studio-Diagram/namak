@@ -224,8 +224,18 @@ class Visitor(models.Model):
 
 
 class InvoiceSettlement(models.Model):
+    SETTLE_TYPES = (
+        ('NOT_DEFINED', 'تعریف نشده'),
+        ('CASH', 'نقدی'),
+        ('CARD', 'کارت به کارت'),
+        ('PAYA', 'پایا'),
+        ('CHECK', 'چک'),
+        ('SATNA', 'ساتنا'),
+    )
     created_time = models.DateTimeField(null=False)
     payment_amount = models.IntegerField(null=False)
+    backup_code = models.CharField(max_length=150, null=False, default=0)
+    settle_type = models.CharField(max_length=50, null=False, choices=SETTLE_TYPES, default="NOT_DEFINED")
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     tax = models.IntegerField(null=False, default=0)

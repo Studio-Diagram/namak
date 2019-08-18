@@ -236,15 +236,16 @@ angular.module("dashboard")
             }
         };
 
-        $scope.add_item_shop = function (id, name, price) {
+        $scope.add_item_shop = function (id, name, price, buy_price) {
             var int_price = parseInt(price);
+            var int_buy_price = parseInt(buy_price);
             var int_id = parseInt(id);
             var is_fill = false;
             if ($scope.new_invoice_purchase_data.shop_product_items.length === 0) {
                 $scope.new_invoice_purchase_data.shop_product_items.push({
                     'id': int_id,
                     'name': name,
-                    'price': int_price,
+                    'price': int_buy_price,
                     'sale_price': int_price,
                     'nums': 1,
                     'total': int_price,
@@ -267,7 +268,7 @@ angular.module("dashboard")
                     $scope.new_invoice_purchase_data.shop_product_items.push({
                         'id': int_id,
                         'name': name,
-                        'price': int_price,
+                        'price': int_buy_price,
                         'sale_price': int_price,
                         'nums': 1,
                         'total': int_price,
@@ -496,6 +497,15 @@ angular.module("dashboard")
                 $('#closeInvoicePermissionModal').modal('hide');
                 $('#addModal').css('z-index', "");
             })(jQuery);
+        };
+
+        $scope.deleteNewItem = function (type, item_index) {
+            if (type === 'material'){
+                $scope.new_invoice_purchase_data.material_items.splice(item_index, 1);
+            }
+            else {
+                $scope.new_invoice_purchase_data.shop_product_items.splice(item_index, 1);
+            }
         };
 
         $scope.resetFrom = function () {

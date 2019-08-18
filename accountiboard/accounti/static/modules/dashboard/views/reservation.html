@@ -1,4 +1,20 @@
 <div ng-controller="reservationCtrl" id="mainReserve">
+    <div class="modal fade mainModal alertModal redAlertModal" id="permissionModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
+                    <a ng-click="delete_reserve(reserve_will_delete)" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ اطلاعات رزرو از بین
+                        می‌رود.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="completeReserveModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -78,12 +94,12 @@
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع">
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-2" >
                             </div>
                             <div class="col">
                                 <label>ساعت پایان</label>
                                 <input ng-model="new_reserve_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان">
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-2" >
                             </div>
                         </div>
                     </form>
@@ -110,8 +126,9 @@
                             class="fas fa-save"></i> ثبت</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
-                    <a ng-click="delete_reserve(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
+                    <a ng-click="openPermissionModal(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
                             class="fas fa-save"></i> پاک کردن</a>
+                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو رفت!</a>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -154,12 +171,12 @@
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع">
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-3" >
                             </div>
                             <div class="col">
                                 <label>ساعت پایان</label>
                                 <input ng-model="new_reserve_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان">
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-3" >
                             </div>
                         </div>
                     </form>
@@ -187,8 +204,9 @@
                         پاک کردن صفحه</a>
                     <a ng-click="arrive_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton"><i
                             class="fas fa-save"></i> ثبت حضور</a>
-                    <a ng-click="delete_reserve(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
+                    <a ng-click="openPermissionModal(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
                             class="fas fa-save"></i> پاک کردن</a>
+                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو رفت!</a>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -241,12 +259,12 @@
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع">
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-1" >
                             </div>
                             <div class="col">
                                 <label>ساعت پایان</label>
                                 <input ng-model="new_reserve_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان">
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-1" >
                             </div>
                         </div>
                     </form>
@@ -291,16 +309,19 @@
                        data-toggle="modal"><i
                             class="fas fa-user-plus"></i> مشتری حضوری جدید</a>
 
-                    <input style="width: 20%;float: right;margin-left: 10px" ng-model="fixed_date" type="text"
-                           class="form-control" placeholder="تاریخ">
-                    <a style="float: right !important;margin: 0 !important;" ng-click="change_date()"
-                       class="tableLefty mainButton blueButton" href=""
-                       data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> روز را تغییر بده !</a>
+
                     <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_today_for_reserve()"
                        class="tableLefty mainButton blueButton" href=""
-                       data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> رزروهای شیفت امروز </a>
+                       data-toggle="modal"> امروز </a>
+                    <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_tomorrow_reserves()"
+                       class="tableLefty mainButton blueButton" href=""
+                       data-toggle="modal"> فردا </a>
+
+                    <input style="width: 20%;float: right;margin-left: 10px;margin-right: 10px" ng-model="fixed_date" type="text"
+                           class="form-control" placeholder="تاریخ" id="datepicker">
+                    <a style="float: right !important;margin: 0 !important;" ng-click="change_date()"
+                       class="tableLefty mainButton blueButton" href=""
+                       data-toggle="modal"> روز را تغییر بده !</a>
                 </div>
                 <div class="reservationTable reservationTableTimes">
                     <div ng-repeat="time in working_times"

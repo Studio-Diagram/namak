@@ -56,6 +56,25 @@
                                        class="form-control" placeholder="میزان پرداختی" format>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>نوع پرداخت</label>
+                                <select ng-model="new_pay_data.settle_type"
+                                        class="form-control">
+                                    <option value="">نوع پرداخت را انتخاب کنید...</option>
+                                    <option value="CARD">کارت به کارت</option>
+                                    <option value="CASH">نقدی</option>
+                                    <option value="PAYA">پایا</option>
+                                    <option value="CHECK">چک</option>
+                                    <option value="SATNA">ساتنا</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label>شماره ارجاع</label>
+                                <input style="font-family: 'B Yekan'" ng-model="new_pay_data.backup_code" type="text"
+                                       class="form-control" placeholder="شماره ارجاع">
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -105,6 +124,8 @@
                             <th scope="col">شماره پرداختی</th>
                             <th scope="col">تامین‌کننده</th>
                             <th scope="col">میزان پرداختی</th>
+                            <th scope="col">نوع پرداخت</th>
+                            <th scope="col">شماره ارجاع</th>
                             <th scope="col">تاریخ</th>
                             <th scope="col"></th>
                         </tr>
@@ -114,6 +135,8 @@
                             <td>{{ pay.id | persianNumber }}</td>
                             <td>{{ pay.supplier_name }}</td>
                             <td class="redText">{{ pay.payment_amount | number | persianNumber }} ریال</td>
+                            <td>{{ pay.settle_type }}</td>
+                            <td>{{ pay.backup_code | persianNumber }}</td>
                             <td>{{ pay.created_time | persianNumber }}</td>
                             <td><a ng-click="delete_invoice_pay(pay.id)" href=""
                                    class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>

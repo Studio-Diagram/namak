@@ -22,6 +22,8 @@ def create_new_invoice_settlement(request):
             supplier_id = rec_data['supplier_id']
             payment_amount = rec_data['payment_amount']
             username = rec_data['username']
+            settle_type = rec_data['settle_type']
+            backup_code = rec_data['backup_code']
             branch_id = rec_data['branch_id']
             invoice_date = rec_data['date']
 
@@ -37,6 +39,8 @@ def create_new_invoice_settlement(request):
                 return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
             if not invoice_date:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not settle_type:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
@@ -50,6 +54,8 @@ def create_new_invoice_settlement(request):
             new_invoice = InvoiceSettlement(
                 branch=branch_obj,
                 payment_amount=payment_amount,
+                settle_type=settle_type,
+                backup_code=backup_code,
                 supplier=supplier_obj,
                 created_time=invoice_date_g,
             )
@@ -88,6 +94,8 @@ def get_all_invoices(request):
                 'id': invoice.pk,
                 'supplier_name': invoice.supplier.name,
                 'payment_amount': invoice.payment_amount,
+                'settle_type': invoice.get_settle_type_display(),
+                'backup_code': invoice.backup_code,
                 'created_time': jalali_date.strftime("%Y/%m/%d")
             })
 
@@ -115,6 +123,8 @@ def search_pays(request):
                 'id': pay.pk,
                 'supplier_name': pay.supplier.name,
                 'payment_amount': pay.payment_amount,
+                'settle_type': invoice.get_settle_type_display,
+                'backup_code': invoice.backup_code,
                 'created_time': jalali_date.strftime("%Y/%m/%d")
             })
         return JsonResponse({"response_code": 2, 'pays': pays})

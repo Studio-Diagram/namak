@@ -22,41 +22,48 @@ angular.module("dashboard")
         };
 
         $scope.config_clock = function () {
-            var choices = ["00", "15", "30", "45"];
-            $('#start-time-clock').clockpicker({
-                donetext: 'تایید',
-                afterShow: function () {
-                    $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                        return !($.inArray($(element).text(), choices) != -1)
-                    }).remove();
-                },
-                afterDone: function () {
-                    var seleceted_min = $('#start-time-clock').val().split(":")[1];
-                    if (!choices.includes(seleceted_min)) {
-                        $('#start-time-clock').val("");
+            jQuery.noConflict();
+            (function ($) {
+                var choices = ["00", "15", "30", "45"];
+                $('#start-time-clock').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        console.log(1);
+                        var seleceted_min = $('#start-time-clock').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start-time-clock').val("");
+                        }
+                        else {
+                            $scope.new_branch_data.start_time = $('#start-time-clock').val();
+                        }
                     }
-                    else {
-                        $scope.new_branch_data.start_time = $('#start-time-clock').val();
+                });
+                $('#end-time-clock').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterHide: function () {
+                        console.log($('#end-time-clock').val());
+                        var seleceted_min = $('#end-time-clock').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#end-time-clock').val("");
+                        }
+                        else {
+                            $scope.new_branch_data.end_time = $('#end-time-clock').val();
+                        }
                     }
-                }
-            });
-            $('#end-time-clock').clockpicker({
-                donetext: 'تایید',
-                afterShow: function () {
-                    $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                        return !($.inArray($(element).text(), choices) != -1)
-                    }).remove();
-                },
-                afterDone: function () {
-                    var seleceted_min = $('#end-time-clock').val().split(":")[1];
-                    if (!choices.includes(seleceted_min)) {
-                        $('#end-time-clock').val("");
-                    }
-                    else {
-                        $scope.new_branch_data.end_time = $('#end-time-clock').val();
-                    }
-                }
-            });
+                });
+            })(jQuery);
         };
 
         $scope.get_branches_data = function (data) {

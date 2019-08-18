@@ -110,8 +110,7 @@
                             <th scope="row">{{ item.name }}</th>
                             <th scope="row">{{ item.price | number | persianNumber }}</th>
                             <th scope="row">{{ item.category_name }}</th>
-                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""><i
-                                    class="fas fa-user-cog"></i></a></td>
+                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                             <td style="text-align: center"><a ng-click="openDeleteConfirmModal(item.id)" href=""><i
                                     class="fas fa-trash"></i></a></td>
                         </tr>

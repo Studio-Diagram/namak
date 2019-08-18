@@ -11,7 +11,7 @@ DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-
+OTHER_SUPPLIER_REQUIRE = "در صورت خالی بودن تامین کننده باید تامین‌کننده‌ای با نام سایر در تامین کنندگان وارد نمایید."
 
 def create_new_invoice_expense(request):
     if request.method == "POST":
@@ -40,8 +40,6 @@ def create_new_invoice_expense(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not total_price:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if supplier_id == 0:
-                return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
             if not settlement_type:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not expense_cat_id:
@@ -51,8 +49,15 @@ def create_new_invoice_expense(request):
             if not invoice_date:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
+            if supplier_id == 0:
+                supplier_obj = Supplier.objects.filter(name="سایر").first()
+                if not supplier_obj:
+                    return JsonResponse({"response_code": 3, "error_msg": OTHER_SUPPLIER_REQUIRE})
+            else:
+                supplier_obj = Supplier.objects.get(pk=supplier_id)
+
             branch_obj = Branch.objects.get(pk=branch_id)
-            supplier_obj = Supplier.objects.get(pk=supplier_id)
+
 
             expense_cat_obj = ExpenseCategory.objects.get(pk=expense_cat_id)
 

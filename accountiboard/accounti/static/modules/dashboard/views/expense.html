@@ -26,8 +26,8 @@
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-hide="read_only_mode" href="" ng-click="addExpense()" class="mainButton grayButton"><i
-                            class="fas fa-save"></i> ذخیره</a>
+                    <a ng-hide="read_only_mode" href="" ng-click="addExpense()" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
                     <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton"><i
                             class="fas fa-eraser"></i>
                         اضافه کردن سطر جدید</a>
@@ -67,7 +67,7 @@
                                                     class="form-control">
                                                 <option ng-repeat="supplier in suppliers"
                                                         value="{{ supplier.id }}"
-                                                        ng-selected="supplier.id == new_invoice_expense_data.supplier_id">{{ supplier.name }}</option>
+                                                        ng-selected="supplier.name === 'سایر'">{{ supplier.name }}</option>
                                             </select>
                                         </td>
                                         <td>
@@ -93,8 +93,8 @@
                                         <th style="width: 25%;" class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="service in new_invoice_expense_data.services">
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
+                                                class="fas fa-trash"></i></a></th>
                                         <td>{{ $index + 1 | persianNumber }}</td>
                                         <td><input class="form-control" type="text"
                                                    ng-model="service.service_name"></td>

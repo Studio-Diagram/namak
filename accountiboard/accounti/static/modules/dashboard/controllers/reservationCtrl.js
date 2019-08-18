@@ -1,6 +1,12 @@
 angular.module("dashboard")
     .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $state, $http, $timeout, $window, dashboardHttpRequest, $compile, $stateParams) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#datepicker").datepicker();
+                });
+            })(jQuery);
             $scope.error_message = '';
             $scope.all_today_reserves = [];
             $scope.starting_selected_time = {
@@ -32,6 +38,7 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username,
                 'branch': $rootScope.user_data.branch
             };
+            $scope.config_clock();
             $scope.get_today_for_reserve();
             $scope.get_tables_data($rootScope.user_data);
             $scope.get_tables_data_for_main_page($rootScope.user_data);
@@ -123,7 +130,7 @@ angular.module("dashboard")
             if ($scope.starting_selected_time.class_name) {
                 jQuery.noConflict();
                 (function ($) {
-                    $($scope.starting_selected_time.class_name).css("background", "#80AB51");
+                    $($scope.starting_selected_time.class_name).css("background", "rgb(197, 197, 197)");
                 })(jQuery);
             }
         };
@@ -158,10 +165,13 @@ angular.module("dashboard")
                         }
                         jQuery.noConflict();
                         (function ($) {
-                            $(event.target).css("background", "#80AB51");
+                            $(event.target).css("background", "rgb(197, 197, 197)");
                         })(jQuery);
                     }
                     else if ($scope.starting_selected_time.is_fill === 1) {
+                        hour = $scope.working_times[index + 1].hour;
+                        min = $scope.working_times[index + 1].minute;
+                        is_hour = $scope.working_times[index + 1].is_hour;
                         if ($scope.starting_selected_time.table_name === table.table_name && index > $scope.starting_selected_time.index) {
                             if (Number(is_hour) === 0) {
                                 $scope.ending_selected_time.is_hour = 0;
@@ -225,6 +235,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.fixed_date = data['today_for_reserve'];
+                        $scope.tomorrow_date = data['tomorrow_for_reserve'];
                         $scope.new_reserve_data.reserve_date = $scope.fixed_date;
                         $scope.get_reserves_data($rootScope.user_data, $scope.fixed_date);
                     }
@@ -279,6 +290,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.change_date();
+                        $scope.closePermissionModal();
                         $scope.closeAddModal();
                         $scope.closeAddWalkedModal();
                     }
@@ -293,6 +305,7 @@ angular.module("dashboard")
         };
 
         $scope.change_date = function () {
+            $scope.fixed_date = $("#datepicker").val()
             $scope.new_reserve_data.reserve_date = $scope.fixed_date;
             jQuery.noConflict();
             (function ($) {
@@ -302,6 +315,19 @@ angular.module("dashboard")
                 });
             })(jQuery);
             $scope.get_reserves_data($rootScope.user_data, $scope.fixed_date);
+        };
+
+        $scope.get_tomorrow_reserves = function () {
+            $scope.fixed_date = $scope.tomorrow_date;
+            $scope.new_reserve_data.reserve_date = $scope.tomorrow_date;
+            jQuery.noConflict();
+            (function ($) {
+                $scope.all_today_reserves.forEach(function insert_code(item, index) {
+                    var div_data = "";
+                    $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
+                });
+            })(jQuery);
+            $scope.get_reserves_data($rootScope.user_data, $scope.tomorrow_date);
         };
 
 
@@ -497,6 +523,151 @@ angular.module("dashboard")
                 $scope.get_tables_data($rootScope.user_data);
                 $('.tooltipM').fadeOut();
                 $scope.resetFrom();
+            })(jQuery);
+        };
+
+        $scope.openPermissionModal = function (will_be_deleted) {
+            $scope.reserve_will_delete = will_be_deleted;
+            jQuery.noConflict();
+            (function ($) {
+                $('#permissionModal').modal('show');
+                $('#addReservationModal').css('z-index', 1000);
+                $('#completeReserveModal').css('z-index', 1000);
+                $('#addWalkedModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closePermissionModal = function () {
+            $scope.reserve_will_delete = 0;
+            jQuery.noConflict();
+            (function ($) {
+                $('#permissionModal').modal('hide');
+                $('#addReservationModal').css('z-index', "");
+                $('#completeReserveModal').css('z-index', "");
+                $('#addWalkedModal').css('z-index', "");
+            })(jQuery);
+        };
+
+        $scope.gone_reserve = function () {
+            var diff = 1000 * 60 * 15;
+            var date = new Date();
+            var rounded = new Date(Math.round(date.getTime() / diff) * diff);
+            $scope.new_reserve_data.end_time = rounded.getHours() + ":" + rounded.getMinutes();
+            $scope.add_reserve();
+        };
+
+        $scope.config_clock = function () {
+            jQuery.noConflict();
+            (function ($) {
+                var choices = ["00", "15", "30", "45"];
+                $('#start-time-clock-1').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#start-time-clock-1').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start-time-clock-1').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.start_time = $('#start-time-clock-1').val();
+                        }
+                    }
+                });
+                $('#end-time-clock-1').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#end-time-clock-1').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#end-time-clock-1').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.end_time = $('#end-time-clock-1').val();
+                        }
+                    }
+                });
+                $('#start-time-clock-2').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#start-time-clock-2').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start-time-clock-2').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.start_time = $('#start-time-clock-2').val();
+                        }
+                    }
+                });
+                $('#end-time-clock-2').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#end-time-clock-2').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#end-time-clock-2').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.end_time = $('#end-time-clock-2').val();
+                        }
+                    }
+                });
+                $('#start-time-clock-3').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#start-time-clock-3').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start-time-clock-3').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.start_time = $('#start-time-clock-3').val();
+                        }
+                    }
+                });
+                $('#end-time-clock-3').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#end-time-clock-3').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#end-time-clock-3').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.end_time = $('#end-time-clock-3').val();
+                        }
+                    }
+                });
             })(jQuery);
         };
 

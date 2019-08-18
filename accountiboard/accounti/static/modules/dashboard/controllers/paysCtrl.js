@@ -12,6 +12,8 @@ angular.module("dashboard")
                 'id': 0,
                 'supplier_id': 0,
                 'payment_amount': 0,
+                'backup_code': '',
+                'settle_type': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };

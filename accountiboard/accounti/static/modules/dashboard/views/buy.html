@@ -49,8 +49,8 @@
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-hide="read_only_mode" href="" ng-click="addInvoicePurchase()" class="mainButton grayButton"><i
-                            class="fas fa-save"></i> ذخیره</a>
+                    <a ng-hide="read_only_mode" href="" ng-click="addInvoicePurchase()" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
 
                 </div>
                 <div class="modal-body">
@@ -75,7 +75,7 @@
                                     <ul>
                                         <div class="accordion">
                                             <li ng-show="current_menu_nav === 'MAT'" ng-repeat="material in materials">
-                                                <a ng-click="add_item(material.id, material.name, 0)"
+                                                <a ng-click="add_item(material.id, material.name, material.price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ material.name }}</a>
                                             </li>
@@ -88,7 +88,7 @@
                                             </li>
 
                                             <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
-                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
+                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.buy_price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ shop.name }}</a>
                                             </li>
@@ -115,7 +115,9 @@
                                         </td>
                                         <td>
                                             <small>تاریخ فاکتور</small>
-                                            <input ng-model="new_invoice_purchase_data.date" id="datepicker" class="form-control listFilter tableLefty" placeholder="تاریخ" type="text">
+                                            <input ng-model="new_invoice_purchase_data.date" id="datepicker"
+                                                   class="form-control listFilter tableLefty" placeholder="تاریخ"
+                                                   type="text">
                                         </td>
                                         <td>
                                             <small>نوع پرداخت</small>
@@ -153,8 +155,8 @@
                                         <th style="width: 25%;" class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="item in new_invoice_purchase_data.material_items">
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first"><a ng-click="deleteNewItem('material', $index)" style="cursor: pointer"><i
+                                                class="fas fa-trash"></i></a></th>
                                         <td>{{ $index | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
                                         <td><input style="font-family: 'B Yekan'" class="form-control" type="text"
@@ -169,8 +171,8 @@
                                     </tr>
 
                                     <tr ng-repeat="item in new_invoice_purchase_data.shop_product_items">
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first"><a ng-click="deleteNewItem('shop', $index)" style="cursor: pointer"><i
+                                                class="fas fa-trash"></i></a></th>
                                         <td>{{ $index | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
                                         <td>

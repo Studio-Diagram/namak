@@ -728,7 +728,7 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            '2': function (data) {
+            'deleteInvoiceExpense': function (data) {
                 return this.request({
                     'method': "POST",
                     'url': "/api/deleteInvoiceExpense/",

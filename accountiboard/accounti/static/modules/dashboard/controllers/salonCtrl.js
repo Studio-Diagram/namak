@@ -643,7 +643,10 @@ angular.module("dashboard")
 
         $scope.start_game = function () {
             var now = new Date();
-            $scope.new_invoice_data.current_game.start_time = now.getHours() + ":" + now.getMinutes()
+            $scope.new_invoice_data.current_game.start_time = now.getHours() + ":" + now.getMinutes();
+            if ($scope.new_invoice_data.guest_numbers === 0){
+                $scope.new_invoice_data.guest_numbers = $scope.new_invoice_data.current_game.numbers;
+            }
         };
 
         $scope.saveInvoice = function () {

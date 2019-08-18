@@ -1210,11 +1210,11 @@ tr.tableTotal .redText {
     height: 19.4em;
 }
 
-.pageContent .reservationPageContent .reservationTable .reservationItem.H4M00 {
+.pageContent .reservationPageContent .reservationTable .reservationItem.H04M00 {
     height: 20.8em;
 }
 
-.pageContent .reservationPageContent .reservationTable .reservationItem.H4M15 {
+.pageContent .reservationPageContent .reservationTable .reservationItem.H04M15 {
     height: 22.1em;
 }
 
@@ -1434,4 +1434,8 @@ span.badge.badge-pill.badge-warning {
 .tableWrapper span.badge.badge-danger.ng-binding{
     font-size: 0.85em;
     padding: 0.8em;
+}
+
+.ui-widget-content{
+    z-index: 1100 !important;
 }
