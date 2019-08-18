@@ -196,6 +196,9 @@ class InvoicesSalesToShopProducts(models.Model):
     numbers = models.IntegerField(null=False)
     description = models.CharField(max_length=60, blank=True)
 
+    def __str__(self):
+        return str(self.shop_product) + "+" + str(self.numbers) + "+" + str(self.id)
+
 
 class InvoicesSalesToGame(models.Model):
     invoice_sales = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
