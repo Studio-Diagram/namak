@@ -21,6 +21,7 @@ angular.module("dashboard")
             $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
             $scope.get_sum_invoice_returns();
+            $scope.get_sum_invoice_amani_sales();
         };
 
         $scope.filter_data = function () {
@@ -30,6 +31,7 @@ angular.module("dashboard")
             $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
             $scope.get_sum_invoice_returns();
+            $scope.get_sum_invoice_amani_sales();
         };
         $scope.get_supplier = function () {
             var data = {
@@ -154,6 +156,30 @@ angular.module("dashboard")
                         $scope.sum_return = data['all_invoice_returns_sum']['total_price__sum'];
                         $scope.last_return = data['last_return'];
                         $scope.return_count = data['return_count'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_sum_invoice_amani_sales = function () {
+            var data = {
+                'username': $rootScope.user_data.username,
+                'from_time': $rootScope.search_data_supplier.from_time,
+                'to_time': $rootScope.search_data_supplier.to_time,
+                'supplier_id': $scope.supplier_id
+            };
+            dashboardHttpRequest.getSumInAmaniSales(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.sum_amani_sales = data['all_amani_sales_sum'];
+                        $scope.last_amani_sales = '-';
+                        $scope.amani_sales_count = data['all_amani_sales_buy'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];

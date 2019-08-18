@@ -339,6 +339,52 @@ def get_sum_invoice_return_from_supplier(request):
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
+def get_sum_amani_sales_from_supplier(request):
+    if request.method == "POST":
+        rec_data = json.loads(request.read().decode('utf-8'))
+        username = rec_data['username']
+        from_time = rec_data['from_time']
+        to_time = rec_data['to_time']
+        supplier_id = rec_data['supplier_id']
+
+        if not request.session.get('is_logged_in', None) == username:
+            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+        if not supplier_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        supplier = Supplier.objects.get(pk=supplier_id)
+        if from_time == "" or to_time == "":
+            all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier)
+            all_amani_sum = 0
+            all_amani_buy = 0
+            for amani_sale in all_amani_sales_from_supplier:
+                all_amani_buy += amani_sale.numbers
+                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+
+            return JsonResponse(
+                {"response_code": 2, 'all_amani_sales_sum': all_amani_sum, 'all_amani_sales_buy': all_amani_buy})
+
+        elif from_time and to_time:
+            from_time_split = from_time.split('/')
+            from_time_g = jdatetime.date(int(from_time_split[2]), int(from_time_split[1]),
+                                         int(from_time_split[0])).togregorian()
+            to_time_split = to_time.split('/')
+            to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
+                                       int(to_time_split[0]) + 1).togregorian()
+            all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier,
+                                                                     created_date__range=(from_time_g, to_time_g))
+            all_amani_sum = 0
+            all_amani_buy = 0
+            for amani_sale in all_amani_sales_from_supplier:
+                all_amani_buy += amani_sale.numbers
+                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+
+            return JsonResponse(
+                {"response_code": 2, 'all_amani_sales_sum': all_amani_sum, 'all_amani_sales_buy': all_amani_buy})
+
+    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
 def get_detail_invoice_purchases_from_supplier(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -612,5 +658,75 @@ def get_detail_invoice_returns_from_supplier(request):
                 all_invoice_returns_sum['total_price__sum'] = 0
             return JsonResponse({"response_code": 2, 'invoices_data': invoices_data,
                                  'all_invoice_returns_sum': all_invoice_returns_sum['total_price__sum']})
+
+    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+def get_detail_amani_sales_from_supplier(request):
+    if request.method == "POST":
+        rec_data = json.loads(request.read().decode('utf-8'))
+        username = rec_data['username']
+        from_time = rec_data['from_time']
+        to_time = rec_data['to_time']
+        supplier_id = rec_data['supplier_id']
+
+        if not request.session.get('is_logged_in', None) == username:
+            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+        if not supplier_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        supplier = Supplier.objects.get(pk=supplier_id)
+
+        if from_time == "" or to_time == "":
+            all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier)
+            all_amani_sum = 0
+
+            invoices_data = []
+            for amani_sale in all_amani_sales_from_supplier:
+                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+                date = amani_sale.created_date.date()
+                jalali_date = jdatetime.date.fromgregorian(day=date.day, month=date.month,
+                                                           year=date.year)
+                invoices_data.append({
+                    'invoice_id': amani_sale.invoice_sale_to_shop.invoice_sales.pk,
+                    'price': amani_sale.numbers * amani_sale.buy_price,
+                    'numbers': amani_sale.numbers,
+                    'name': amani_sale.invoice_sale_to_shop.shop_product.name,
+                    'sale_price': amani_sale.sale_price,
+                    'buy_price': amani_sale.buy_price,
+                    'date': jalali_date.strftime("%Y/%m/%d")
+                })
+
+            return JsonResponse(
+                {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data})
+
+        elif from_time and to_time:
+            from_time_split = from_time.split('/')
+            from_time_g = jdatetime.date(int(from_time_split[2]), int(from_time_split[1]),
+                                         int(from_time_split[0])).togregorian()
+            to_time_split = to_time.split('/')
+            to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
+                                       int(to_time_split[0]) + 1).togregorian()
+            all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier,
+                                                                     created_date__range=(from_time_g, to_time_g))
+            all_amani_sum = 0
+            invoices_data = []
+            for amani_sale in all_amani_sales_from_supplier:
+                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+                date = amani_sale.created_date.date()
+                jalali_date = jdatetime.date.fromgregorian(day=date.day, month=date.month,
+                                                           year=date.year)
+                invoices_data.append({
+                    'invoice_id': amani_sale.invoice_sale_to_shop.invoice_sales.pk,
+                    'price': amani_sale.numbers * amani_sale.buy_price,
+                    'numbers': amani_sale.numbers,
+                    'name': amani_sale.invoice_sale_to_shop.shop_product.name,
+                    'sale_price': amani_sale.sale_price,
+                    'buy_price': amani_sale.buy_price,
+                    'date': jalali_date.strftime("%Y/%m/%d")
+                })
+
+            return JsonResponse(
+                {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})

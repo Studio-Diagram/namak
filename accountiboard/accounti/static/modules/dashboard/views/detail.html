@@ -20,7 +20,7 @@
                     <div class="row userPageContent">
                         <main class="col-sm-12 ">
 
-                            <div class="tableWrapper">
+                            <div ng-hide="detailState === 'amani_sales'" class="tableWrapper">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -40,6 +40,40 @@
                                             <td>{{ invoice.discount | number | persianNumber }} ریال</td>
                                             <td>{{ invoice.tax | number | persianNumber }} ریال</td>
                                             <td><a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                                        </tr>
+                                        <tr class="tableTotal">
+                                            <th>جمع کل</th>
+                                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">تاریخ</th>
+                                            <th scope="col">محصول</th>
+                                            <th scope="col">تعداد</th>
+                                            <th scope="col">مبلغ</th>
+                                            <th scope="col">قیمت خرید</th>
+                                            <th scope="col">قیمت فروش</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="invoice in invoices_data">
+                                            <td>{{ invoice.date | persianNumber }}</td>
+                                            <td>{{ invoice.name }}</td>
+                                            <td>{{ invoice.numbers | persianNumber }}</td>
+                                            <td>{{ invoice.price | number | persianNumber }} ریال</td>
+                                            <td>{{ invoice.buy_price | number | persianNumber }} ریال</td>
+                                            <td>{{ invoice.sale_price | number | persianNumber }} ریال</td>
                                         </tr>
                                         <tr class="tableTotal">
                                             <th>جمع کل</th>

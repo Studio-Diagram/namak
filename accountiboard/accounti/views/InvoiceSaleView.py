@@ -23,6 +23,8 @@ END_GAME = "بازی تمام شده"
 WAIT_GAME = "منتظر بازی"
 ORDERED = "سفارش داده"
 NOT_ORDERED = "سفارش نداده"
+NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
+
 
 def settle_invoice_sale(request):
     if request.method == "POST":
@@ -40,16 +42,21 @@ def settle_invoice_sale(request):
         invoice_object.cash = int(cash)
         invoice_object.pos = int(pos)
         invoice_object.settle_time = datetime.now()
-        invoice_object.save()
+
         shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
         for shop_p in shop_products:
+            if shop_p.shop_product.real_numbers < shop_p.numbers:
+                return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
+
             shop_p.shop_product.real_numbers -= shop_p.numbers
             shop_p.save()
             shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
             unit_count = shop_p.numbers
             for purchase_to_shop in shop_to_purchases:
                 if purchase_to_shop.buy_numbers < purchase_to_shop.unit_numbers and unit_count != 0:
+                    buy_counter = 0
                     for i in range(0, unit_count):
+                        buy_counter += 1
                         purchase_to_shop.buy_numbers += 1
                         purchase_to_shop.invoice_purchase.supplier.remainder += purchase_to_shop.base_unit_price
                         unit_count -= 1
@@ -57,8 +64,18 @@ def settle_invoice_sale(request):
                         purchase_to_shop.invoice_purchase.supplier.save()
                         if purchase_to_shop.buy_numbers == purchase_to_shop.unit_numbers:
                             break
+
+                    new_amani_sale = AmaniSale(invoice_sale_to_shop=shop_p,
+                                               supplier=purchase_to_shop.invoice_purchase.supplier,
+                                               sale_price=shop_p.shop_product.price,
+                                               buy_price=purchase_to_shop.base_unit_price, created_date=datetime.now(),
+                                               numbers=buy_counter)
+                    new_amani_sale.save()
+
                 elif unit_count == 0:
                     break
+
+        invoice_object.save()
 
         return JsonResponse({"response_code": 2})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -550,6 +567,8 @@ def delete_items(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             for shop_id in shops:
                 shop_product_obj = InvoicesSalesToShopProducts.objects.get(pk=shop_id)
+                shop_product_obj.shop_product.real_numbers += shop_product_obj.numbers
+                shop_product_obj.save()
                 new_deleted = DeletedItemsInvoiceSales(
                     created_time=datetime.now(),
                     item_type="SHOP",

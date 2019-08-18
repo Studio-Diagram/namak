@@ -37,6 +37,10 @@ angular.module("dashboard")
                 $scope.is_return = true;
                 $scope.get_detail_invoice_returns();
             }
+            else if ($scope.detailState === "amani_sales") {
+                $scope.state_word = 'فروش امانی';
+                $scope.get_detail_invoice_amani_sales();
+            }
         };
 
         $scope.get_supplier = function () {
@@ -176,6 +180,29 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_returns_sum'];
+                        $scope.invoices_data = data['invoices_data'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_detail_invoice_amani_sales = function () {
+            var data = {
+                'username': $rootScope.user_data.username,
+                'from_time': $scope.search_data_supplier.from_time,
+                'to_time': $scope.search_data_supplier.to_time,
+                'supplier_id': $scope.supplier_id
+            };
+            dashboardHttpRequest.getDetailInAmaniSales(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.sum_invoices = data['all_invoice_amani_sales_sum'];
                         $scope.invoices_data = data['invoices_data'];
                     }
                     else if (data['response_code'] === 3) {

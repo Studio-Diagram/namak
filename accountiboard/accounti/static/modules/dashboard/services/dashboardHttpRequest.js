@@ -469,6 +469,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'getSumInAmaniSales': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getSumInAmaniSales/",
+                    'data': data
+                });
+            },
             'getDetailInPurchase': function (data) {
                 return this.request({
                     'method': "POST",
@@ -494,6 +501,13 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/getDetailInReturn/",
+                    'data': data
+                });
+            },
+            'getDetailInAmaniSales': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getDetailInAmaniSales/",
                     'data': data
                 });
             },

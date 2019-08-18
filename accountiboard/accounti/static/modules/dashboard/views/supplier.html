@@ -64,6 +64,16 @@
                             <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'return' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
+
+                        <tr>
+                            <th scope="row">فروش امانی</th>
+                            <td>{{ amani_sales_count | persianNumber }}</td>
+                            <td class="greenText">{{ sum_amani_sales | number | persianNumber }} ریال</td>
+                            <td>{{ last_amani_sales | persianNumber }}</td>
+                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'amani_sales' })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+
                         <tr class="tableTotal">
                             <th>تراز مالی</th>
                             <td></td>

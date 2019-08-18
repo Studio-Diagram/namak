@@ -370,3 +370,12 @@ class ReserveToTables(models.Model):
     reserve = models.ForeignKey(to=Reservation, on_delete=models.CASCADE)
     table = models.ForeignKey(to=Table, on_delete=models.CASCADE)
 
+
+class AmaniSale(models.Model):
+    invoice_sale_to_shop = models.ForeignKey(to=InvoicesSalesToShopProducts, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False)
+    sale_price = models.IntegerField(null=False)
+    buy_price = models.IntegerField(null=False)
+    created_date = models.DateTimeField(null=True, blank=True)
+
