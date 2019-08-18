@@ -107,8 +107,11 @@ a:hover i {
 }
 
 .topHeader time {
-    color: darkgrey;
-    padding: 10px 50px 0 0;
+    color: #ffffff;
+    border: 1px solid var(--myBlackBorder);
+    margin-left: 30px;
+    padding: 9px 16px 9px 16px;
+    border-radius: 4px;
 }
 
 main.pageWrapper {
@@ -1413,6 +1416,22 @@ span.badge.badge-pill.badge-warning {
     border: 1px solid var(--myGreen);
 }
 
-.tableNavigation a{
+.tableNavigation a {
     position: relative;
+}
+
+.modal-body .badge.badge-pill {
+    line-height: 15px;
+    display: inline-block;
+    height: 20px;
+}
+
+.tableWrapper span.badge.badge-info.ng-binding{
+    font-size: 0.85em;
+    padding: 0.8em;
+}
+
+.tableWrapper span.badge.badge-danger.ng-binding{
+    font-size: 0.85em;
+    padding: 0.8em;
 }

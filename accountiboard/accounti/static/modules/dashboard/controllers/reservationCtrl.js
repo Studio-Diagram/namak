@@ -66,6 +66,9 @@ angular.module("dashboard")
                         'index': ''
                     };
                     $scope.new_reserve_data.tables_id = [];
+                    $scope.closeAddModal();
+                    $scope.closeCompleteReserveModal();
+                    $scope.closeAddWalkedModal();
                 }
                 if (event.ctrlKey && event.keyCode === 49) {
 

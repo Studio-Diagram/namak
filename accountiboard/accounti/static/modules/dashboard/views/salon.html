@@ -143,7 +143,8 @@
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ shop.name }}
-                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span> </a>
+                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span>
+                                                </a>
                                             </li>
                                         </div>
                                     </ul>
@@ -576,13 +577,9 @@
                         <tr ng-repeat="s_invoice in selected_table_data">
                             <th scope="row">{{ s_invoice.guest_name }}</th>
                             <td>{{ s_invoice.guest_nums | persianNumber }} نفر</td>
-                            <td ng-hide="s_invoice.is_settled" class="redText">سفارش داده</td>
-                            <td ng-show="s_invoice.is_settled" class="greenText">تسویه شده</td>
-                            <td ng-show="s_invoice.has_game" class="redText">در حال بازی است</td>
-                            <td ng-hide="s_invoice.has_game" class="greenText">-</td>
-                            <td>{{ s_invoice.total_price - s_invoice.discount | number:fractionSize | persianNumber }}
-                                ریال
-                            </td>
+                            <td><span ng-class="s_invoice.invoice_status.status === 'ORDERED' ? 'badge badge-info' : 'badge badge-danger'">{{ s_invoice.invoice_status.text }}</span></td>
+                            <td><span ng-class="s_invoice.game_status.status === 'WAIT_GAME' ? 'badge badge-danger' : 'badge badge-info'">{{ s_invoice.game_status.text }}</span></td>
+                            <td>{{ s_invoice.total_price - s_invoice.discount | number:fractionSize | persianNumber }}ریال</td>
                             <td ng-hide="s_invoice.is_settled" ng-click="editInvoice(s_invoice.invoice_id)"><a href=""
                                                                                                                class="mainButton grayButton smallButton fullWidthButton">جزییات</a>
                         </tr>

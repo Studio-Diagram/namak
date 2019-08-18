@@ -18,7 +18,11 @@ NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-
+IN_GAME = "در حال بازی"
+END_GAME = "بازی تمام شده"
+WAIT_GAME = "منتظر بازی"
+ORDERED = "سفارش داده"
+NOT_ORDERED = "سفارش نداده"
 
 def settle_invoice_sale(request):
     if request.method == "POST":
@@ -166,6 +170,22 @@ def get_all_today_invoices(request):
                 st_time = invoice.settle_time.time()
             else:
                 st_time = 0
+
+            all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
+            if all_invoice_games.count():
+                if all_invoice_games.filter(game__end_time="00:00:00").count():
+                    game_status = {"status": "IN_GAME", "text": IN_GAME}
+                else:
+                    game_status = {"status": "END_GAME", "text": END_GAME}
+            else:
+                game_status = {"status": "WAIT_GAME", "text": WAIT_GAME}
+
+            invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice)
+            if invoice_to_menu_items.count():
+                invoice_status = {"status": "ORDERED", "text": ORDERED}
+            else:
+                invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
+
             all_invoices_list.append({
                 "invoice_id": invoice.pk,
                 "guest_name": invoice.member.last_name,
@@ -175,8 +195,8 @@ def get_all_today_invoices(request):
                 "discount": invoice.discount,
                 "settle_time": st_time,
                 "is_settled": invoice.is_settled,
-                "has_game": InvoicesSalesToGame.objects.filter(invoice_sales=invoice,
-                                                               game__end_time="00:00:00").count()
+                "game_status": game_status,
+                "invoice_status": invoice_status
             })
 
         return JsonResponse({"response_code": 2, "all_today_invoices": all_invoices_list})
