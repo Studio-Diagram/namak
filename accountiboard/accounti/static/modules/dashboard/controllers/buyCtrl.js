@@ -374,8 +374,9 @@ angular.module("dashboard")
                     .then(function (data) {
                         if (data['response_code'] === 2) {
                             $scope.materials = data['materials'];
-                            if ($scope.materials.length === 0) {
-                                $scope.can_add_material = true;
+                            $scope.can_add_material = true;
+                            if ($scope.materials.length === 1 && $scope.materials[0].name === $scope.search_data_material.search_word) {
+                                $scope.can_add_material = false;
                             }
                         }
                         else if (data['response_code'] === 3) {
@@ -422,8 +423,9 @@ angular.module("dashboard")
                     .then(function (data) {
                         if (data['response_code'] === 2) {
                             $scope.shop_products = data['shop_products'];
-                            if ($scope.shop_products.length === 0) {
-                                $scope.can_add_shop_product = true;
+                            $scope.can_add_shop_product = true;
+                            if ($scope.shop_products.length === 1 && $scope.shop_products[0].name === $scope.search_data_shop_products.search_word) {
+                                $scope.can_add_shop_product = false;
                             }
                         }
                         else if (data['response_code'] === 3) {

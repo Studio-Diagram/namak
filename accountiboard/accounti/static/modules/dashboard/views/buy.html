@@ -74,6 +74,11 @@
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div class="accordion">
+                                            <li ng-show="current_menu_nav === 'MAT'" ng-repeat="material in materials">
+                                                <a ng-click="add_item(material.id, material.name, 0)"
+                                                   style="cursor: copy;" href=""
+                                                   class="nav-link">{{ material.name }}</a>
+                                            </li>
                                             <li>
                                                 <a ng-click="add_material_to_data_base_after_search(search_data_material.search_word)"
                                                    href="" class="nav-link"
@@ -81,10 +86,11 @@
                                                         style="float: left;color: #00ff05"
                                                         class="fas fa-plus-square"></i></a>
                                             </li>
-                                            <li ng-show="current_menu_nav === 'MAT'" ng-repeat="material in materials">
-                                                <a ng-click="add_item(material.id, material.name, 0)"
+
+                                            <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
+                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
                                                    style="cursor: copy;" href=""
-                                                   class="nav-link">{{ material.name }}</a>
+                                                   class="nav-link">{{ shop.name }}</a>
                                             </li>
                                             <li>
                                                 <a ng-click="add_shop_product_to_data_base_after_search(search_data_shop_products.search_word)"
@@ -92,11 +98,6 @@
                                                    ng-show="can_add_shop_product">{{ search_data_shop_products.search_word }}<i
                                                         style="float: left;color: #00ff05"
                                                         class="fas fa-plus-square"></i></a>
-                                            </li>
-                                            <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
-                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
-                                                   style="cursor: copy;" href=""
-                                                   class="nav-link">{{ shop.name }}</a>
                                             </li>
                                         </div>
                                     </ul>
