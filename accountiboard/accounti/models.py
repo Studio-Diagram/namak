@@ -26,8 +26,8 @@ class Employee(models.Model):
     password = models.TextField(null=False, blank=False)
     birthday_date = models.DateField(null=True, blank=True)
     membership_card_number = models.CharField(max_length=50, null=False, blank=True)
-    base_worksheet_salary = models.IntegerField(null=False, blank=False)
-    base_worksheet_count = models.IntegerField(null=False, blank=False)
+    base_worksheet_salary = models.FloatField(null=False, blank=False)
+    base_worksheet_count = models.FloatField(null=False, blank=False)
     discount_percentage = models.FloatField(default=0)
     created_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     last_login = models.DateTimeField(null=True, verbose_name='last login', blank=True)
@@ -111,7 +111,7 @@ class Member(models.Model):
     first_name = models.CharField(max_length=30, null=False)
     last_name = models.CharField(max_length=50, null=False)
     card_number = models.CharField(max_length=20, null=False, unique=True)
-    credit = models.IntegerField(default=0, null=False)
+    credit = models.FloatField(default=0, null=False)
     phone = models.CharField(max_length=15, null=False, unique=True)
     intro = models.CharField(max_length=50, choices=INTRO_CHOICES, default='other')
     year_of_birth = models.IntegerField(null=False)
@@ -131,7 +131,7 @@ class Table(models.Model):
 
 class Game(models.Model):
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE)
-    credit_used = models.IntegerField(default=0, null=False)
+    credit_used = models.FloatField(default=0, null=False)
     start_time = models.TimeField(null=False)
     end_time = models.TimeField(null=True, default="00:00:00")
     numbers = models.IntegerField(null=False)
@@ -144,7 +144,7 @@ class Game(models.Model):
 
 class ShopProduct(models.Model):
     name = models.CharField(max_length=50, null=False)
-    price = models.IntegerField(null=False, default=0)
+    price = models.FloatField(null=False, default=0)
     real_numbers = models.IntegerField(null=False, default=0)
 
     def __str__(self):
@@ -166,16 +166,16 @@ class InvoiceSales(models.Model):
     )
     created_time = models.DateTimeField(null=False)
     settle_time = models.DateTimeField(null=True, blank=True)
-    cash = models.IntegerField(null=False, default=0)
-    pos = models.IntegerField(null=False, default=0)
-    discount = models.IntegerField(null=False, default=0)
-    employee_discount = models.IntegerField(null=False, default=0)
-    tax = models.IntegerField(null=False, default=0)
-    tip = models.IntegerField(null=False, default=0)
+    cash = models.FloatField(null=False, default=0)
+    pos = models.FloatField(null=False, default=0)
+    discount = models.FloatField(null=False, default=0)
+    employee_discount = models.FloatField(null=False, default=0)
+    tax = models.FloatField(null=False, default=0)
+    tip = models.FloatField(null=False, default=0)
     settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_CHOICES, default='CASH')
     guest_numbers = models.IntegerField(null=False)
     is_settled = models.IntegerField(null=False, default=0)
-    total_price = models.IntegerField(default=0)
+    total_price = models.FloatField(default=0)
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE, default=0)
     table = models.ForeignKey(to=Table, on_delete=models.CASCADE)
     cash_desk = models.ForeignKey(Cash, null=True, blank=True, on_delete=models.CASCADE)
@@ -214,7 +214,7 @@ class Supplier(models.Model):
     last_buy = models.DateField(blank=True, null=True)
     last_expense = models.DateField(blank=True, null=True)
     last_return = models.DateField(blank=True, null=True)
-    remainder = models.IntegerField(default=0)
+    remainder = models.FloatField(default=0)
 
     def __str__(self):
         return self.name + ":" + self.phone
@@ -236,13 +236,13 @@ class InvoiceSettlement(models.Model):
         ('SATNA', 'ساتنا'),
     )
     created_time = models.DateTimeField(null=False)
-    payment_amount = models.IntegerField(null=False)
+    payment_amount = models.FloatField(null=False)
     backup_code = models.CharField(max_length=150, null=False, default=0)
     settle_type = models.CharField(max_length=50, null=False, choices=SETTLE_TYPES, default="NOT_DEFINED")
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
-    tax = models.IntegerField(null=False, default=0)
-    discount = models.IntegerField(null=False, default=0)
+    tax = models.FloatField(null=False, default=0)
+    discount = models.FloatField(null=False, default=0)
 
 
 class Material(models.Model):
@@ -272,9 +272,9 @@ class InvoicePurchase(models.Model):
     )
     created_time = models.DateTimeField(null=False)
     settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_TYPES)
-    tax = models.IntegerField(null=False)
-    discount = models.IntegerField(null=False)
-    total_price = models.IntegerField(default=0)
+    tax = models.FloatField(null=False)
+    discount = models.FloatField(null=False)
+    total_price = models.FloatField(default=0)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
@@ -282,18 +282,18 @@ class InvoicePurchase(models.Model):
 class PurchaseToMaterial(models.Model):
     material = models.ForeignKey(to=Material, on_delete=models.CASCADE)
     invoice_purchase = models.ForeignKey(to=InvoicePurchase, on_delete=models.CASCADE)
-    base_unit_price = models.IntegerField(null=False)
-    unit_numbers = models.IntegerField(null=False)
+    base_unit_price = models.FloatField(null=False)
+    unit_numbers = models.FloatField(null=False)
     description = models.TextField(null=True, blank=True)
 
 
 class PurchaseToShopProduct(models.Model):
     shop_product = models.ForeignKey(to=ShopProduct, on_delete=models.CASCADE)
     invoice_purchase = models.ForeignKey(to=InvoicePurchase, on_delete=models.CASCADE)
-    base_unit_price = models.IntegerField(null=False)
+    base_unit_price = models.FloatField(null=False)
     unit_numbers = models.IntegerField(null=False)
     buy_numbers = models.IntegerField(null=False, default=0)
-    sale_price = models.IntegerField(null=False, default=0)
+    sale_price = models.FloatField(null=False, default=0)
     description = models.TextField(null=True, blank=True)
 
 
@@ -307,10 +307,10 @@ class InvoiceExpense(models.Model):
         ('CREDIT', 'اعتباری'),
     )
     created_time = models.DateTimeField(null=False)
-    price = models.IntegerField(null=False)
+    price = models.FloatField(null=False)
     settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_TYPES)
-    tax = models.IntegerField(null=False)
-    discount = models.IntegerField(null=False)
+    tax = models.FloatField(null=False)
+    discount = models.FloatField(null=False)
     expense_category = models.ForeignKey(to=ExpenseCategory, on_delete=models.CASCADE, null=True, blank=True)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
@@ -319,7 +319,7 @@ class InvoiceExpense(models.Model):
 class InvoiceExpenseToService(models.Model):
     service_name = models.CharField(max_length=50, null=False, blank=False, default="NOT DEFINED")
     description = models.TextField(null=True, blank=True)
-    price = models.IntegerField(null=False)
+    price = models.FloatField(null=False)
     invoice_expense = models.ForeignKey(to=InvoiceExpense, on_delete=models.CASCADE)
 
 
@@ -330,8 +330,8 @@ class InvoiceReturn(models.Model):
     )
     created_time = models.DateTimeField(null=False)
     return_type = models.CharField(max_length=50, choices=RETURN_TYPES)
-    buy_price = models.IntegerField(null=False)
-    total_price = models.IntegerField(null=False)
+    buy_price = models.FloatField(null=False)
+    total_price = models.FloatField(null=False)
     numbers = models.IntegerField(null=False)
     shop_product = models.ForeignKey(to=ShopProduct, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
@@ -378,7 +378,7 @@ class AmaniSale(models.Model):
     invoice_sale_to_shop = models.ForeignKey(to=InvoicesSalesToShopProducts, on_delete=models.CASCADE)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     numbers = models.IntegerField(null=False)
-    sale_price = models.IntegerField(null=False)
-    buy_price = models.IntegerField(null=False)
+    sale_price = models.FloatField(null=False)
+    buy_price = models.FloatField(null=False)
     created_date = models.DateTimeField(null=True, blank=True)
 
