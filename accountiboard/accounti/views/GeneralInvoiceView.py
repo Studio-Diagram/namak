@@ -33,6 +33,26 @@ def get_invoice_number(request):
     branch_obj = Branch.objects.filter(id=branch_id).first()
 
     if invoice_type == "BUY":
-        last_purchase_id = InvoicePurchase.objects.filter(branch=branch_obj).order_by('id').last().factor_number
+        last_invoice_object = InvoicePurchase.objects.filter(branch=branch_obj).order_by('id').last()
 
-        return JsonResponse({"response_code": 2, "next_factor_number": last_purchase_id + 1})
+    elif invoice_type == "SALE":
+        last_invoice_object = InvoiceSales.objects.filter(branch=branch_obj).order_by('id').last()
+
+    elif invoice_type == "RETURN":
+        last_invoice_object = InvoiceReturn.objects.filter(branch=branch_obj).order_by('id').last()
+
+    elif invoice_type == "PAY":
+        last_invoice_object = InvoiceSettlement.objects.filter(branch=branch_obj).order_by('id').last()
+
+    elif invoice_type == "EXPENSE":
+        last_invoice_object = InvoiceExpense.objects.filter(branch=branch_obj).order_by('id').last()
+
+    else:
+        return JsonResponse({"response_code": 3, "error_msg": "ERROR 500"})
+
+    if last_invoice_object:
+        last_number = last_invoice_object.factor_number
+    else:
+        last_number = 0
+
+    return JsonResponse({"response_code": 2, "next_factor_number": last_number + 1})

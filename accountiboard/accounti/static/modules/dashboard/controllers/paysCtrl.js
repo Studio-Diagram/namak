@@ -10,6 +10,7 @@ angular.module("dashboard")
             $scope.error_message = '';
             $scope.new_pay_data = {
                 'id': 0,
+                'factor_number': 0,
                 'supplier_id': 0,
                 'payment_amount': 0,
                 'backup_code': '',
@@ -24,6 +25,27 @@ angular.module("dashboard")
             $scope.get_pays();
             $scope.get_suppliers();
 
+        };
+
+        $scope.getNextFactorNumber = function (invoice_type) {
+            var sending_data = {
+                'invoice_type': invoice_type,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getNextFactorNumber(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_purchase_data.factor_number = data['next_factor_number'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.get_suppliers = function () {
@@ -176,6 +198,7 @@ angular.module("dashboard")
         $scope.resetFrom = function () {
             $scope.new_pay_data = {
                 'id': 0,
+                'factor_number': 0,
                 'supplier_id': '',
                 'payment_amount': '',
                 'branch_id': $rootScope.user_data.branch,

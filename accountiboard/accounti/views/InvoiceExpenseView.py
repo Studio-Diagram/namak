@@ -12,6 +12,8 @@ SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 OTHER_SUPPLIER_REQUIRE = "در صورت خالی بودن تامین کننده باید تامین‌کننده‌ای با نام سایر در تامین کنندگان وارد نمایید."
+FACTOR_NUMBER_INVALID = "شماره فاکتور تطابق ندارد."
+
 
 def create_new_invoice_expense(request):
     if request.method == "POST":
@@ -29,6 +31,7 @@ def create_new_invoice_expense(request):
             invoice_date = rec_data['date']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
+            factor_number = rec_data['factor_number']
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -48,6 +51,8 @@ def create_new_invoice_expense(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not invoice_date:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not factor_number:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             if supplier_id == 0:
                 supplier_obj = Supplier.objects.filter(name="سایر").first()
@@ -66,6 +71,15 @@ def create_new_invoice_expense(request):
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
                                                 datetime.now().second).togregorian()
 
+            last_invoice_obj = InvoiceExpense.objects.filter(branch=branch_obj).order_by('id').last()
+            if last_invoice_obj:
+                new_factor_number = last_invoice_obj.factor_number + 1
+            else:
+                new_factor_number = 1
+
+            if new_factor_number != factor_number:
+                return JsonResponse({"response_code": 3, "error_msg": FACTOR_NUMBER_INVALID})
+
             new_invoice = InvoiceExpense(
                 branch=branch_obj,
                 expense_category=expense_cat_obj,
@@ -74,7 +88,8 @@ def create_new_invoice_expense(request):
                 price=total_price,
                 tax=tax,
                 discount=discount,
-                settlement_type=settlement_type
+                settlement_type=settlement_type,
+                factor_number=new_factor_number
             )
             new_invoice.save()
 
@@ -118,6 +133,7 @@ def get_all_invoices(request):
                                                        year=invoice_date.year)
             invoices.append({
                 'id': invoice.pk,
+                'factor_number': invoice.factor_number,
                 'supplier_name': invoice.supplier.name,
                 'settlement_type': invoice.get_settlement_type_display(),
                 'expense_category': invoice.expense_category.name,

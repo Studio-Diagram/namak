@@ -10,6 +10,7 @@ angular.module("dashboard")
             $scope.error_message = '';
             $scope.new_invoice_expense_data = {
                 'id': 0,
+                'factor_number': 0,
                 'expense_id': 0,
                 'expense_cat_id': 0,
                 'supplier_id': 0,
@@ -207,9 +208,31 @@ angular.module("dashboard")
             $scope.new_invoice_expense_data.services.splice(item_index, 1);
         };
 
+        $scope.getNextFactorNumber = function (invoice_type) {
+            var sending_data = {
+                'invoice_type': invoice_type,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getNextFactorNumber(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_expense_data.factor_number = data['next_factor_number'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.resetFrom = function () {
             $scope.new_invoice_expense_data = {
                 'id': 0,
+                'factor_number': 0,
                 'expense_id': 0,
                 'expense_cat_id': 0,
                 'service_name': '',

@@ -105,7 +105,11 @@ def create_new_invoice_purchase(request):
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
                                                 datetime.now().second).togregorian()
 
-            new_factor_number = InvoicePurchase.objects.filter(branch=branch_obj).order_by('id').last().factor_number + 1
+            last_invoice_obj = InvoicePurchase.objects.filter(branch=branch_obj).order_by('id').last()
+            if last_invoice_obj:
+                new_factor_number = last_invoice_obj.factor_number + 1
+            else:
+                new_factor_number = 1
             if new_factor_number != factor_number:
                 return JsonResponse({"response_code": 3, "error_msg": FACTOR_NUMBER_INVALID})
 

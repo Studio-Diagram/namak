@@ -110,7 +110,7 @@
 
     <main class="pageContent container-fluid">
         <div class="tableButtons clearfix">
-            <a ng-click="openAddModal()" href="" class="mainButton greenButton tableLefty">پرداختی جدید</a>
+            <a ng-click="openAddModal();getNextFactorNumber('PAY')" href="" class="mainButton greenButton tableLefty">پرداختی جدید</a>
             <input ng-keyup="searchPay()" ng-model="search_data_pay.search_word"
                    class="form-control listFilter" type="search" placeholder="فیلتر کن">
         </div>
@@ -132,7 +132,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="pay in pays">
-                            <td>{{ pay.id | persianNumber }}</td>
+                            <td>{{ pay.factor_number | persianNumber }}</td>
                             <td>{{ pay.supplier_name }}</td>
                             <td class="redText">{{ pay.payment_amount | number | persianNumber }} ریال</td>
                             <td>{{ pay.settle_type }}</td>

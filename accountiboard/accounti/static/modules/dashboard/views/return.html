@@ -42,7 +42,7 @@
                                         <td>
                                             <small>شماره فاکتور</small>
                                             <a href=""
-                                               class="">{{ new_invoice_return_data.id | persianNumber }}</a>
+                                               class="">{{ new_invoice_return_data.factor_number | persianNumber }}</a>
                                         </td>
                                         <td>
                                             <small>تاریخ فاکتور</small>
@@ -158,7 +158,7 @@
                     <li class="breadcrumb-item active" aria-current="page">مرجوعی‌ها</li>
                 </ol>
             </nav>
-            <a ng-click="openAddModal()" href="" class="mainButton greenButton tableLefty">مرجوعی جدید</a>
+            <a ng-click="openAddModal();getNextFactorNumber('RETURN')" href="" class="mainButton greenButton tableLefty">مرجوعی جدید</a>
             <input ng-keyup="searchReturn()" ng-model="search_data_return.search_word"
                    class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
         </div>
@@ -181,7 +181,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="invoice_return in returns">
-                            <th>{{ invoice_return.id | persianNumber }}</th>
+                            <th>{{ invoice_return.factor_number | persianNumber }}</th>
                             <th scope="row">{{ invoice_return.supplier_name }}</th>
                             <th scope="row">{{ invoice_return.shop_name }}</th>
                             <td>{{ invoice_return.buy_price | number | persianNumber }} ریال</td>

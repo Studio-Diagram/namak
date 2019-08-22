@@ -45,7 +45,7 @@
                                         <td>
                                             <small>شماره فاکتور</small>
                                             <a href=""
-                                               class="">{{ new_invoice_expense_data.id | persianNumber }}</a>
+                                               class="">{{ new_invoice_expense_data.factor_number | persianNumber }}</a>
                                         </td>
                                         <td>
                                             <small>تاریخ فاکتور</small>
@@ -166,7 +166,7 @@
                     <li class="breadcrumb-item active" aria-current="page">هزینه‌ها</li>
                 </ol>
             </nav>
-            <a ng-click="openAddModal()" href="" class="mainButton greenButton tableLefty">هزینه جدید</a>
+            <a ng-click="openAddModal();getNextFactorNumber('EXPENSE')" href="" class="mainButton greenButton tableLefty">هزینه جدید</a>
             <input ng-keyup="searchExpense()" ng-model="search_data_expense.search_word"
                    class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
         </div>
@@ -188,7 +188,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="expense in expenses">
-                            <th scope="row">{{ expense.id | persianNumber }}</th>
+                            <th scope="row">{{ expense.factor_number | persianNumber }}</th>
                             <th scope="row">{{ expense.supplier_name }}</th>
                             <th scope="row">{{ expense.expense_category }}</th>
                             <th scope="row">{{ expense.settlement_type }}</th>
