@@ -111,7 +111,7 @@
                                         <td>
                                             <small>شماره فاکتور</small>
                                             <a href=""
-                                               class="">{{ new_invoice_purchase_data.id | persianNumber }}</a>
+                                               class="">{{ new_invoice_purchase_data.factor_number | persianNumber }}</a>
                                         </td>
                                         <td>
                                             <small>تاریخ فاکتور</small>
@@ -228,7 +228,7 @@
                     <li class="breadcrumb-item active" aria-current="page">فاکتورهای خرید</li>
                 </ol>
             </nav>
-            <a ng-click="openAddModal()" href="" class="mainButton greenButton tableLefty">فاکتور خرید جدید</a>
+            <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton tableLefty">فاکتور خرید جدید</a>
         </div>
         <div class="row userPageContent">
             <main class="col-sm-12 ">
@@ -248,7 +248,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="invoice in invoice_purchases">
-                            <th scope="row">{{ invoice.id | persianNumber }}</th>
+                            <th scope="row">{{ invoice.factor_number | persianNumber }}</th>
                             <td>{{ invoice.supplier_name }}</td>
                             <td class="redText">{{ invoice.total_price | number | persianNumber }} ریال</td>
                             <td>{{ invoice.kind }}</td>

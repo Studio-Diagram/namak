@@ -164,6 +164,7 @@ class InvoiceSales(models.Model):
         ('BANK_CARD', 'کارت بانکی'),
         ('CASH', 'نقدی'),
     )
+    factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     settle_time = models.DateTimeField(null=True, blank=True)
     cash = models.FloatField(null=False, default=0)
@@ -235,6 +236,7 @@ class InvoiceSettlement(models.Model):
         ('CHECK', 'چک'),
         ('SATNA', 'ساتنا'),
     )
+    factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     payment_amount = models.FloatField(null=False)
     backup_code = models.CharField(max_length=150, null=False, default=0)
@@ -270,6 +272,7 @@ class InvoicePurchase(models.Model):
         ('CREDIT', 'اعتباری'),
         ('AMANi', 'امانی'),
     )
+    factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_TYPES)
     tax = models.FloatField(null=False)
@@ -306,6 +309,7 @@ class InvoiceExpense(models.Model):
         ('CASH', 'نقدی'),
         ('CREDIT', 'اعتباری'),
     )
+    factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     price = models.FloatField(null=False)
     settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_TYPES)
@@ -328,6 +332,7 @@ class InvoiceReturn(models.Model):
         ('CUSTOMER_TO_CAFE', 'مشتری به کافه'),
         ('CAFE_TO_SUPPLIER', 'کافه به تامین‌کننده'),
     )
+    factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     return_type = models.CharField(max_length=50, choices=RETURN_TYPES)
     buy_price = models.FloatField(null=False)

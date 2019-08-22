@@ -25,6 +25,7 @@ angular.module("dashboard")
                 'cash': 0,
                 'card': 0,
                 'discount': 0,
+                'tip': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username
@@ -220,7 +221,7 @@ angular.module("dashboard")
         };
 
         $scope.payModalChangeNumber = function () {
-            $scope.new_invoice_data.card = $scope.new_invoice_data.total_price - $scope.new_invoice_data.cash - $scope.new_invoice_data.discount;
+            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.cash) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip);
         };
 
         $scope.openErrorModal = function () {
@@ -291,13 +292,27 @@ angular.module("dashboard")
         };
 
         $scope.openPayModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $scope.new_invoice_data.card = $scope.new_invoice_data.total_price - $scope.new_invoice_data.discount;
-                $scope.new_invoice_data.cash = 0;
-                $('#payModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
+            dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_data.current_game.id = data['new_game_id'];
+                        $scope.getAllTodayInvoices();
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
+                        // open pay modal after saving the invoice
+                        jQuery.noConflict();
+                        (function ($) {
+                            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip);
+                            $scope.new_invoice_data.cash = 0;
+                            $('#payModal').modal('show');
+                            $('#addInvoiceModal').css('z-index', 1000);
+                        })(jQuery);
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
         };
 
         $scope.closePayModal = function () {
@@ -644,7 +659,7 @@ angular.module("dashboard")
         $scope.start_game = function () {
             var now = new Date();
             $scope.new_invoice_data.current_game.start_time = now.getHours() + ":" + now.getMinutes();
-            if ($scope.new_invoice_data.guest_numbers === 0){
+            if ($scope.new_invoice_data.guest_numbers === 0) {
                 $scope.new_invoice_data.guest_numbers = $scope.new_invoice_data.current_game.numbers;
             }
         };
@@ -855,6 +870,7 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
+                            'tip': data['invoice']['tip'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
@@ -901,6 +917,7 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
+                            'tip': data['invoice']['tip'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
@@ -948,6 +965,7 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
+                            'tip': data['invoice']['tip'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
@@ -1011,6 +1029,7 @@ angular.module("dashboard")
                 'games': [],
                 'total_price': 0,
                 'discount': 0,
+                'tip': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username

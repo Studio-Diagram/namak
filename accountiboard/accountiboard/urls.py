@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
-    ExpenseCategoryView, ReserveView, CashView, TableView
+    ExpenseCategoryView, ReserveView, CashView, TableView, GeneralInvoiceView
 
 urlpatterns = [
     path('api/login/', EmployeeView.login),
@@ -125,6 +125,7 @@ urlpatterns = [
     path('api/deleteInvoiceReturn/', InvoiceReturnView.delete_invoice_return),
     path('api/deleteInvoiceSettlement/', InvoiceSettlementView.delete_invoice_settlement),
     path('api/addOldMembers/', MemberView.add_old_member),
+    path('api/getNextFactorNumber/', GeneralInvoiceView.get_invoice_number),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),

@@ -762,6 +762,13 @@ angular.module('dashboard')
                     'url': "/api/deleteInvoiceSettlement/",
                     'data': data
                 });
+            },
+            'getNextFactorNumber': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getNextFactorNumber/",
+                    'data': data
+                });
             }
 
 

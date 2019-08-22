@@ -45,9 +45,6 @@ def settle_invoice_sale(request):
 
         shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
         for shop_p in shop_products:
-            if shop_p.shop_product.real_numbers < shop_p.numbers:
-                return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
-
             shop_p.shop_product.real_numbers -= shop_p.numbers
             shop_p.save()
             shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
@@ -106,6 +103,7 @@ def get_invoice(request):
             },
             'total_price': invoice_object.total_price,
             "discount": invoice_object.discount,
+            "tip": invoice_object.tip,
             'menu_items_old': [],
             'shop_items_old': [],
             'games': [],
@@ -210,6 +208,7 @@ def get_all_today_invoices(request):
                 "guest_nums": invoice.guest_numbers,
                 "total_price": invoice.total_price,
                 "discount": invoice.discount,
+                "tip": invoice.tip,
                 "settle_time": st_time,
                 "is_settled": invoice.is_settled,
                 "game_status": game_status,
@@ -268,9 +267,15 @@ def create_new_invoice_sales(request):
             branch_id = rec_data['branch_id']
             cash_id = rec_data['cash_id']
             discount = rec_data['discount']
+            tip = rec_data['tip']
 
             if not table_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+            for shop_p in shop_items_new:
+                shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
+                if shop_obj.real_numbers < int(shop_p['nums']):
+                    return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
             cash_obj = Cash.objects.get(pk=cash_id)
 
@@ -290,7 +295,8 @@ def create_new_invoice_sales(request):
                 member=member_obj,
                 created_time=datetime.now(),
                 cash_desk=cash_obj,
-                discount=discount
+                discount=discount,
+                tip=tip,
             )
             new_invoice.save()
             new_invoice_id = new_invoice.pk
@@ -344,9 +350,15 @@ def create_new_invoice_sales(request):
             shop_items_new = rec_data['shop_items_new']
             branch_id = rec_data['branch_id']
             discount = rec_data['discount']
+            tip = rec_data['tip']
 
             branch_obj = Branch.objects.get(pk=branch_id)
             table_obj = Table.objects.get(pk=table_id)
+
+            for shop_p in shop_items_new:
+                shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
+                if shop_obj.real_numbers < int(shop_p['nums']):
+                    return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
             if member_id == 0:
                 # HardCode for Guest member
@@ -395,9 +407,12 @@ def create_new_invoice_sales(request):
                 )
 
                 new_item_to_invoice.save()
+                shop_obj.real_numbers -= int(shop['nums'])
+                shop_obj.save()
                 old_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
             old_invoice.discount = discount
+            old_invoice.tip = tip
             old_invoice.save()
             new_invoice_id = old_invoice.pk
         return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})

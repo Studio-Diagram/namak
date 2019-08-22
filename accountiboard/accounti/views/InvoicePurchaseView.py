@@ -11,6 +11,7 @@ DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
+FACTOR_NUMBER_INVALID = "شماره فاکتور تطابق ندارد."
 
 
 def get_invoice(request):
@@ -25,6 +26,7 @@ def get_invoice(request):
         invoice_object = InvoicePurchase.objects.get(pk=invoice_id)
         invoice_data = {
             'id': invoice_object.pk,
+            'factor_number': invoice_object.factor_number,
             'supplier_id': invoice_object.supplier.id,
             'material_items': [],
             'shop_product_items': [],
@@ -74,6 +76,7 @@ def create_new_invoice_purchase(request):
             tax = rec_data['tax']
             discount = rec_data['discount']
             invoice_date = rec_data['date']
+            factor_number = rec_data['factor_number']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
 
@@ -91,6 +94,8 @@ def create_new_invoice_purchase(request):
                 return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
             if not invoice_date:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not factor_number:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
@@ -100,6 +105,10 @@ def create_new_invoice_purchase(request):
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
                                                 datetime.now().second).togregorian()
 
+            new_factor_number = InvoicePurchase.objects.filter(branch=branch_obj).order_by('id').last().factor_number + 1
+            if new_factor_number != factor_number:
+                return JsonResponse({"response_code": 3, "error_msg": FACTOR_NUMBER_INVALID})
+
             new_invoice = InvoicePurchase(
                 branch=branch_obj,
                 created_time=invoice_date_g,
@@ -107,7 +116,8 @@ def create_new_invoice_purchase(request):
                 settlement_type=settlement_type,
                 tax=tax,
                 discount=discount,
-                total_price=total_price
+                total_price=total_price,
+                factor_number=new_factor_number
             )
             new_invoice.save()
 
@@ -170,6 +180,7 @@ def get_all_invoices(request):
                                                        year=invoice_date.year)
             invoices.append({
                 'id': invoice.pk,
+                'factor_number': invoice.factor_number,
                 'supplier_id': invoice.supplier.pk,
                 'supplier_name': invoice.supplier.name,
                 'total_price': invoice.total_price,

@@ -15,6 +15,7 @@ angular.module("dashboard")
             $scope.can_add_shop_product = false;
             $scope.new_invoice_purchase_data = {
                 'id': 0,
+                'factor_number': 0,
                 'supplier_id': 0,
                 'material_items': [],
                 'shop_product_items': [],
@@ -54,6 +55,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.new_invoice_purchase_data = {
                             'id': data['invoice']['id'],
+                            'factor_number': data['invoice']['factor_number'],
                             'supplier_id': data['invoice']['supplier_id'],
                             'material_items': data['invoice']['material_items'],
                             'shop_product_items': data['invoice']['shop_product_items'],
@@ -93,6 +95,27 @@ angular.module("dashboard")
                         $scope.get_all_invoice_purchases();
                         $scope.resetFrom();
                         $scope.closeAddModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.getNextFactorNumber = function (invoice_type) {
+            var sending_data = {
+                'invoice_type': invoice_type,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getNextFactorNumber(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_purchase_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -511,6 +534,7 @@ angular.module("dashboard")
         $scope.resetFrom = function () {
             $scope.new_invoice_purchase_data = {
                 'id': 0,
+                'factor_number': 0,
                 'supplier_id': 0,
                 'material_items': [],
                 'shop_product_items': [],
