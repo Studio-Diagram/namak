@@ -531,6 +531,13 @@ angular.module("dashboard")
             }
         };
 
+        $scope.save_and_open_modal = function () {
+            $scope.addInvoicePurchase();
+            $timeout(function () {
+                $scope.openAddModal();
+            }, 1000);
+        };
+
         $scope.resetFrom = function () {
             $scope.new_invoice_purchase_data = {
                 'id': 0,

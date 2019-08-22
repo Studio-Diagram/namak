@@ -36,7 +36,7 @@ angular.module("dashboard")
             dashboardHttpRequest.getNextFactorNumber(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.new_invoice_purchase_data.factor_number = data['next_factor_number'];
+                        $scope.new_pay_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -193,6 +193,13 @@ angular.module("dashboard")
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.save_and_open_modal = function () {
+            $scope.addPay();
+            $timeout(function () {
+                $scope.openAddModal();
+            }, 1000);
         };
 
         $scope.resetFrom = function () {

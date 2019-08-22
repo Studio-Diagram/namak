@@ -217,6 +217,13 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.save_and_open_modal = function () {
+            $scope.addReturn();
+            $timeout(function () {
+                $scope.openAddModal();
+            }, 1000);
+        };
+
         $scope.resetFrom = function () {
             $scope.new_invoice_return_data = {
                 'id': 0,

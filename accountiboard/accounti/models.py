@@ -11,14 +11,14 @@ class Branch(models.Model):
 
 class Employee(models.Model):
     # Personal Data
-    first_name = models.CharField(max_length=30, null=True, blank=True)
-    last_name = models.CharField(max_length=30, null=True, blank=True)
-    father_name = models.CharField(max_length=30, null=True, blank=True)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    father_name = models.CharField(max_length=255, null=True, blank=True)
     national_code = models.CharField(max_length=30, null=True, blank=True)
     phone = models.CharField(max_length=30, null=False, blank=False)
-    home_address = models.CharField(max_length=500, null=False, blank=True)
+    home_address = models.CharField(max_length=2500, null=False, blank=True)
     # Banking Data
-    bank_name = models.CharField(max_length=30, null=True, blank=True)
+    bank_name = models.CharField(max_length=255, null=True, blank=True)
     bank_card_number = models.CharField(max_length=30, null=True, blank=True)
     shaba_number = models.CharField(max_length=255, null=True, blank=True)
     # Employee Data
@@ -108,12 +108,12 @@ class Member(models.Model):
         ('events', 'شرکت در رویدادها'),
         ('other', 'سایر'),
     )
-    first_name = models.CharField(max_length=30, null=False)
-    last_name = models.CharField(max_length=50, null=False)
+    first_name = models.CharField(max_length=255, null=False)
+    last_name = models.CharField(max_length=255, null=False)
     card_number = models.CharField(max_length=20, null=False, unique=True)
     credit = models.FloatField(default=0, null=False)
-    phone = models.CharField(max_length=15, null=False, unique=True)
-    intro = models.CharField(max_length=50, choices=INTRO_CHOICES, default='other')
+    phone = models.CharField(max_length=30, null=False, unique=True)
+    intro = models.CharField(max_length=255, choices=INTRO_CHOICES, default='other')
     year_of_birth = models.IntegerField(null=False)
     month_of_birth = models.IntegerField(null=False)
     day_of_birth = models.IntegerField(null=False)
@@ -122,8 +122,16 @@ class Member(models.Model):
         return self.first_name + " " + self.last_name
 
 
+class TableCategory(models.Model):
+    name = models.CharField(max_length=255, null=False)
+
+    def __str__(self):
+        return str(self.name)
+
+
 class Table(models.Model):
-    name = models.CharField(max_length=30, null=False)
+    name = models.CharField(max_length=255, null=False)
+    category = models.ForeignKey(to=TableCategory, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return str(self.name)

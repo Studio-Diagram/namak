@@ -575,6 +575,7 @@ def get_tables(request):
             tables_data.append({
                 'table_id': table.pk,
                 'table_name': table.name,
+                'table_category_name': table.category.name,
                 'is_checked': 0
             })
         return JsonResponse({"response_code": 2, 'tables': tables_data})

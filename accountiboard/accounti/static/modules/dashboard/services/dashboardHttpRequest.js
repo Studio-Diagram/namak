@@ -769,6 +769,27 @@ angular.module('dashboard')
                     'url': "/api/getNextFactorNumber/",
                     'data': data
                 });
+            },
+            'addTableCategory': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/addTableCategory/",
+                    'data': data
+                });
+            },
+            'getTableCategory': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getTableCategory/",
+                    'data': data
+                });
+            },
+            'getTableCategories': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getTableCategories/",
+                    'data': data
+                });
             }
 
 

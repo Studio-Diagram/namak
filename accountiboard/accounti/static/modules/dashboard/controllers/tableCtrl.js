@@ -4,6 +4,13 @@ angular.module("dashboard")
             $scope.is_in_edit_mode = false;
             $scope.new_table_data = {
                 'table_id': 0,
+                'table_cat_id': 0,
+                'name': '',
+                'branch': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            $scope.new_table_category_data = {
+                'id': 0,
                 'name': '',
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
@@ -15,6 +22,7 @@ angular.module("dashboard")
             };
             $scope.tableSearchWord = '';
             $scope.get_tables_data($rootScope.user_data);
+            $scope.get_table_categories_data($rootScope.user_data);
         };
 
         $scope.get_tables_data = function (data) {
@@ -22,6 +30,22 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.tables = data['tables'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_table_categories_data = function (data) {
+            dashboardHttpRequest.getTableCategories(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.table_categories = data['table_categories'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -45,6 +69,21 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $('#addModal').modal('hide');
+            })(jQuery);
+        };
+
+        $scope.openAddTableCategoryModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#addModalTableCategory').modal('show');
+            })(jQuery);
+        };
+
+        $scope.closeAddTableCategoryModal = function () {
+            $scope.resetFrom();
+            jQuery.noConflict();
+            (function ($) {
+                $('#addModalTableCategory').modal('hide');
             })(jQuery);
         };
 
@@ -83,6 +122,24 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     });
             }
+        };
+
+        $scope.addTableCategory = function () {
+            dashboardHttpRequest.addTableCategory($scope.new_table_category_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_table_categories_data($rootScope.user_data);
+                        $scope.get_tables_data($rootScope.user_data);
+                        $scope.closeAddTableCategoryModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.searchTable = function () {
@@ -127,6 +184,27 @@ angular.module("dashboard")
         };
 
 
+        $scope.getTableCategory = function (table_category_id) {
+            var data = {
+                'username': $rootScope.user_data.username,
+                'table_cat_id': table_category_id
+            };
+            dashboardHttpRequest.getTableCategory(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        return data['table_category'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+
         $scope.editTable = function (table_id) {
             $scope.is_in_edit_mode = true;
             var data = {
@@ -139,8 +217,32 @@ angular.module("dashboard")
                         $scope.new_table_data = {
                             'table_id': data['table']['table_id'],
                             'name': data['table']['table_name'],
+                            'table_cat_id': data['table']['table_cat_id']
                         };
                         $scope.openAddTableModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+
+        };
+
+        $scope.editTableCategory = function (table_id) {
+            var data = {
+                'username': $rootScope.user_data.username,
+                'table_cat_id': table_id
+            };
+            dashboardHttpRequest.getTableCategory(data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_table_category_data['id'] = data['table_category']['id'];
+                        $scope.new_table_category_data['name'] = data['table_category']['name'];
+                        $scope.openAddTableCategoryModal();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -160,11 +262,18 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            $scope.new_table_category_data = {
+                'id': 0,
+                'name': '',
+                'branch': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
         };
 
         $scope.closeForm = function () {
             $scope.resetFrom();
             $scope.closeAddTableModal();
+            $scope.closeAddTableCategoryModal();
         };
 
         $scope.openErrorModal = function () {
@@ -172,6 +281,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('show');
                 $('#addModal').css('z-index', 1000);
+                $('#addModalTableCategory').css('z-index', 1000);
             })(jQuery);
         };
 
@@ -180,6 +290,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('hide');
                 $('#addModal').css('z-index', "");
+                $('#addModalTableCategory').css('z-index', "");
             })(jQuery);
         };
 

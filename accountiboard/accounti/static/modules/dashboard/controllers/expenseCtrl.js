@@ -107,9 +107,6 @@ angular.module("dashboard")
 
         $scope.addExpense = function () {
             $scope.new_invoice_expense_data.date = $("#datepicker").val();
-            for(var i in $scope.new_invoice_expense_data.services) {
-                $scope.new_invoice_expense_data.total_price += Number($scope.new_invoice_expense_data.services[i].price);
-            }
             dashboardHttpRequest.addExpense($scope.new_invoice_expense_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -266,6 +263,13 @@ angular.module("dashboard")
                 'price': 0,
                 'description': ''
             });
+        };
+
+        $scope.save_and_open_modal = function () {
+            $scope.addExpense();
+            $timeout(function () {
+                $scope.openAddModal();
+            }, 1000);
         };
 
         initialize();
