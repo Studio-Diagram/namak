@@ -57,9 +57,14 @@ class MenuCategory(models.Model):
     KIND = (
         ('KITCHEN', 'آشپزخانه'),
         ('BAR', 'بار'),
+        ('OTHER', 'سایر'),
     )
     name = models.CharField(max_length=30, null=True, blank=True)
     kind = models.CharField(max_length=50, choices=KIND, blank=False, null=False)
+    list_order = models.IntegerField(default=0, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class PrinterToCategory(models.Model):

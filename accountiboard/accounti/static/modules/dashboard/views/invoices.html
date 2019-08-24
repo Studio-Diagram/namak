@@ -53,7 +53,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal alertModal" id="payModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal" id="payModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -127,24 +127,25 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal" id="addInvoiceModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addInvoiceModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور فروش </h2>
-                    <a ng-click="openPermissionModal()" class="mainButton redButton" href="" aria-label="Close">
+                    <button ng-click="openPermissionModal()" class="mainButton redButton" ng-disabled="disable_print_after_save_all_buttons"
+                       aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="openPayModal()" href="" class="mainButton greenButton"><i
-                            class="fas fa-dollar-sign"></i> تسویه</a>
-                    <a href="" class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری</a>
-                    <a href="" class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش</a>
+                    </button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="openPayModal()" class="mainButton greenButton"><i
+                            class="fas fa-dollar-sign"></i> تسویه</button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_data(new_invoice_data.invoice_sales_id, 'CASH')"
+                       class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری</button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
+                       class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش</button>
                     <a href="" class="mainButton grayButton"><i class="fas fa-cut"></i> تفکیک فاکتور</a>
-                    <a href="" ng-click="openDeleteModal()" class="mainButton grayButton"><i class="fas fa-trash"></i>
-                        پاک کردن</a>
-                    <a href="" ng-click="saveInvoice()" class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره</a>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()" class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره</button>
 
                 </div>
                 <div class="modal-body">
@@ -334,7 +335,7 @@
                                                                  type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index | persianNumber }}</td>
-                                        <td>بازی {{ game.numbers | persianNumber }} نفره</td>
+                                        <td>بازی {{ game.numbers | persianNumber }} نفره ( {{ game.start_time | persianNumber }} تا {{ game.end_time | persianNumber }} )</td>
                                         <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
                                         <td  style="direction: ltr">{{ game.points | persianNumber }}</td>
                                         <td>{{ game.total | number | persianNumber }}</td>
@@ -463,7 +464,7 @@
                                                                  type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index | persianNumber }}</td>
-                                        <td>بازی {{ game.numbers | persianNumber }} نفره</td>
+                                        <td>بازی {{ game.numbers | persianNumber }} نفره ( {{ game.start_time | persianNumber }} تا {{ game.end_time | persianNumber }} )</td>
                                         <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
                                         <td  style="direction: ltr">{{ game.points | persianNumber }}</td>
                                         <td>{{ game.total | number | persianNumber }}</td>
@@ -519,6 +520,8 @@
                         <tr>
                             <th scope="col">نام مهمان</th>
                             <th scope="col">میز</th>
+                            <th>وضعیت سفارش</th>
+                            <th>وضعیت بازی</th>
                             <th scope="col">مبلغ فاکتور</th>
                             <th scope="col">تعداد مهمانان</th>
                             <th scope="col">ساعت تسویه</th>
@@ -526,9 +529,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="invoice in all_today_invoices">
+                        <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
                             <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.table_name }}</td>
+                            <td><span ng-hide="invoice.is_settled" ng-class="invoice.invoice_status.status === 'ORDERED' ? 'badge badge-info' : 'badge badge-danger'">{{ invoice.invoice_status.text }}</span></td>
+                            <td><span ng-hide="invoice.is_settled" ng-class="invoice.game_status.status === 'WAIT_GAME' ? 'badge badge-danger' : 'badge badge-info'">{{ invoice.game_status.text }}</span></td>
                             <td>{{ invoice.total_price - invoice.discount | number:fractionSize | persianNumber }} ریال</td>
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
                             <td>{{ invoice.settle_time | persianNumber }}</td>

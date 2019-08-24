@@ -127,8 +127,8 @@ def get_invoice(request):
                 invoice_data['games'].append({
                     'id': game.game.pk,
                     'numbers': game.game.numbers,
-                    'start_time': game.game.start_time,
-                    'end_time': game.game.end_time,
+                    'start_time': game.game.start_time.strftime('%H:%M'),
+                    'end_time': game.game.end_time.strftime('%H:%M'),
                     'points': "%s:%s'" % (hour_points_string, min_points_string),
                     'total': game.game.points * 5000
                 })
@@ -195,7 +195,8 @@ def get_all_today_invoices(request):
             else:
                 game_status = {"status": "WAIT_GAME", "text": WAIT_GAME}
 
-            invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice)
+            invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
+                menu_item__menu_category__kind='OTHER')
             if invoice_to_menu_items.count():
                 invoice_status = {"status": "ORDERED", "text": ORDERED}
             else:

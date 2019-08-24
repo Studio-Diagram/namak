@@ -4,7 +4,10 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $(document).ready(function () {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                     $("#datepicker").datepicker();
+                    $('#datepicker').datepicker('setDate', today);
                 });
             })(jQuery);
             $scope.error_message = '';
@@ -269,6 +272,7 @@ angular.module("dashboard")
             $scope.addExpense();
             $timeout(function () {
                 $scope.openAddModal();
+                $scope.getNextFactorNumber('EXPENSE');
             }, 1000);
         };
 

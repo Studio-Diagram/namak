@@ -790,6 +790,13 @@ angular.module('dashboard')
                     'url': "/api/getTableCategories/",
                     'data': data
                 });
+            },
+            'changeMenuCategoryOrder': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/changeMenuCategoryOrder/",
+                    'data': data
+                });
             }
 
 

@@ -3,6 +3,7 @@ angular.module("dashboard")
         var initialize = function () {
             $scope.is_in_edit_mode = false;
             $scope.current_menu_nav = "MENU";
+            $scope.disable_print_after_save_all_buttons = false;
             $scope.new_invoice_data = {
                 'invoice_sales_id': 0,
                 'table_id': 0,
@@ -111,6 +112,7 @@ angular.module("dashboard")
         };
 
         $scope.print_data = function (invoice_id, print_kind, invoice_data) {
+            $scope.disable_print_after_save_all_buttons = true;
             if (print_kind === "CASH") {
                 var sending_data = {
                     'is_customer_print': 1,
@@ -121,7 +123,13 @@ angular.module("dashboard")
                     url: 'http://127.0.0.1:8000/printData',
                     data: sending_data,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                })
+                }).then(function successCallback(response) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                }, function errorCallback(response) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                    $scope.error_message = "Printer Server not connected.";
+                    $scope.openErrorModal();
+                });
             }
             else if (print_kind === "NO-CASH") {
                 var sending_data = {
@@ -135,8 +143,6 @@ angular.module("dashboard")
                     data: sending_data,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(function successCallback(response) {
-
-                }, function errorCallback(response) {
                     var sending_data_2 = {
                         'invoice_id': invoice_id,
                         'activate_is_print': true
@@ -144,23 +150,29 @@ angular.module("dashboard")
                     dashboardHttpRequest.printAfterSave(sending_data_2)
                         .then(function (data) {
                             if (data['response_code'] === 2) {
-
+                                $scope.disable_print_after_save_all_buttons = false;
                             }
                             else if (data['response_code'] === 3) {
+                                $scope.disable_print_after_save_all_buttons = false;
                                 $scope.error_message = data['error_msg'];
                                 $scope.openErrorModal();
                             }
                         }, function (error) {
+                            $scope.disable_print_after_save_all_buttons = false;
                             $scope.error_message = 500;
                             $scope.closeTimeCalcModal();
                             $scope.openErrorModal();
                         });
+                }, function errorCallback(response) {
+                    $scope.error_message = "Printer Server not connected.";
+                    $scope.openErrorModal();
                 });
             }
         };
 
 
         $scope.print_after_save = function (invoice_id) {
+            $scope.disable_print_after_save_all_buttons = true;
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -482,13 +494,13 @@ angular.module("dashboard")
         };
 
         $scope.deleteNewItem = function (item_index) {
+            $scope.new_invoice_data.total_price -= $scope.new_invoice_data.menu_items_new[item_index].price * $scope.new_invoice_data.menu_items_new[item_index].nums;
             $scope.new_invoice_data.menu_items_new.splice(item_index, 1);
-
         };
 
         $scope.deleteNewItemShop = function (item_index) {
+            $scope.new_invoice_data.total_price -= $scope.new_invoice_data.shop_items_new[item_index].price * $scope.new_invoice_data.shop_items_new[item_index].nums;
             $scope.new_invoice_data.shop_items_new.splice(item_index, 1);
-
         };
 
         $scope.changeMenuNav = function (name) {

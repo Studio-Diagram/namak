@@ -134,6 +134,7 @@
                         <tr>
                             <th scope="col">نام مشتری</th>
                             <th scope="col">شماره تلفن</th>
+                            <th scope="col">شماره عضویت</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -141,6 +142,7 @@
                         <tr ng-repeat="member in members">
                             <th scope="row">{{ member.first_name + " " + member.last_name }}</th>
                             <th scope="row">{{ member.phone }}</th>
+                            <th scope="row">{{ member.card_number }}</th>
                             <td><a ng-click="editMember(member.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>

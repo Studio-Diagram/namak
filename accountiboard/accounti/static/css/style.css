@@ -295,6 +295,17 @@ a.redButton:hover {
     color: white;
 }
 
+button.redButton {
+    background: var(--myRed);
+    border-color: var(--myRedBorder);
+}
+
+button.redButton:hover {
+    background: var(--myRedBorder);
+    color: white;
+    cursor: pointer;
+}
+
 a.whiteButton {
     background: white;
     color: var(--myGreen);
@@ -316,6 +327,17 @@ a.yellowButton:hover {
     color: white;
 }
 
+button.yellowButton {
+    background: var(--myYellow);
+    border-color: var(--myYellowBorder);
+}
+
+button.yellowButton:hover {
+    background: var(--myYellowBorder);
+    color: white;
+    cursor: pointer;
+}
+
 a.blueButton {
     background: var(--myBlue);
     border-color: var(--myBlueBorder);
@@ -324,6 +346,17 @@ a.blueButton {
 a.blueButton:hover {
     background: var(--myBlueBorder);
     color: white;
+}
+
+button.blueButton {
+    background: var(--myBlue);
+    border-color: var(--myBlueBorder);
+}
+
+button.blueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
 }
 
 a.blackButton {
@@ -1438,4 +1471,12 @@ span.badge.badge-pill.badge-warning {
 
 .ui-widget-content{
     z-index: 1100 !important;
+}
+
+.settled_row{
+    background: var(--pageBG);
+}
+
+.ui-state-default{
+    font-family: 'IRANSansNums';
 }
