@@ -92,7 +92,7 @@
                             </table>
                         </div>
                     </div>
-                    <div ng-show="0" class="col-sm-12">
+                    <div class="col-sm-12">
                         <h3>گزارش تفکیکی</h3>
                         <div class="tableWrapper">
                             <table class="cashTable">
@@ -100,78 +100,37 @@
                                 <tr>
                                     <td class="">
                                         <h4><i class="fas fa-coffee"></i> فروش بار</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <span class="">{{ status.all_bar | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
                                     <td>
                                         <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                    <td>
+                                        <h4><i class="fas fa-file-invoice-dollar"></i>فروش سایر</h4>
+                                        <span class="">{{ status.all_other | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
                                     <td>
                                         <h4><i class="fas fa-chess-rook"></i> هزینه بازی</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <span class="">{{ status.all_games | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
-                                    <td>
-                                        <h4><i class="fas fa-users"></i> تعداد بازیکنان</h4>
-                                        <span class="">۱۱۳</span>
-                                        <small>نفر</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-ticket-alt"></i> بلیت استفاده‌شده</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-users"></i> شرکت کنندگان</h4>
-                                        <span class="">۲۴</span>
-                                        <small>نفر</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-credit-card"></i> اعتبار استفاده‌شده</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
-                                        <small>ریال</small>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div ng-show="0" class="col-sm-12">
-                        <h3>گزارش هزینه‌ها</h3>
-                        <div class="tableWrapper">
-                            <table class="cashTable">
-                                <tbody>
-                                <tr>
                                     <td class="">
                                         <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <span class="">{{ status.all_purchase | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
                                     <td>
                                         <h4><i class="fas fa-hammer"></i> هزینه</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <span class="">{{ status.all_expense | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
                                     <td>
                                         <h4><i class="fas fa-file-invoice-dollar"></i> پرداختی</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-user-tie"></i> مصرف مدیران</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-user-friends"></i> مصرفی استف</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-percentage"></i> تخفیف استف</h4>
-                                        <span class="">۲۱.۶۵۰.۰۰۰</span>
+                                        <span class="">{{ status.all_pays | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
                                 </tr>

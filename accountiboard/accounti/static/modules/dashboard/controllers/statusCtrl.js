@@ -1,13 +1,19 @@
 angular.module("dashboard")
     .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
-            $scope.get_status_data();
+            if ($rootScope.cash_data.cash_id !== 0){
+                $scope.get_status_data();
+            }
+            else {
+                $scope.get_today_cash();
+            }
         };
 
         $scope.get_status_data = function (data) {
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id,
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
@@ -16,6 +22,21 @@ angular.module("dashboard")
                     }
                     else if (data['response_code'] === 3) {
                         console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.get_today_cash = function () {
+            dashboardHttpRequest.getTodayCash($rootScope.user_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $rootScope.cash_data.cash_id = data['cash_id'];
+                        $scope.get_status_data();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $rootScope.cash_data.cash_id = 0;
                     }
                 }, function (error) {
                     console.log(error);

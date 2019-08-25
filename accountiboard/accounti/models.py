@@ -309,6 +309,7 @@ class PurchaseToShopProduct(models.Model):
     base_unit_price = models.FloatField(null=False)
     unit_numbers = models.IntegerField(null=False)
     buy_numbers = models.IntegerField(null=False, default=0)
+    return_numbers = models.IntegerField(null=False, default=0)
     sale_price = models.FloatField(null=False, default=0)
     description = models.TextField(null=True, blank=True)
 
@@ -348,12 +349,11 @@ class InvoiceReturn(models.Model):
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     return_type = models.CharField(max_length=50, choices=RETURN_TYPES)
-    buy_price = models.FloatField(null=False)
-    total_price = models.FloatField(null=False)
+    total_price = models.FloatField(null=False, default=0)
     numbers = models.IntegerField(null=False)
     shop_product = models.ForeignKey(to=ShopProduct, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
-    supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE, blank=True, null=True)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
 
@@ -398,5 +398,28 @@ class AmaniSale(models.Model):
     numbers = models.IntegerField(null=False)
     sale_price = models.FloatField(null=False)
     buy_price = models.FloatField(null=False)
+    is_amani = models.BooleanField(default=True)
+    return_numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(null=True, blank=True)
+
+
+class AmaniSaleToInvoiceReturn(models.Model):
+    amani_sale = models.ForeignKey(to=AmaniSale, on_delete=models.CASCADE)
+    invoice_return = models.ForeignKey(to=InvoiceReturn, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+
+class AmaniSaleToInvoicePurchaseShopProduct(models.Model):
+    amani_sale = models.ForeignKey(to=AmaniSale, on_delete=models.CASCADE)
+    invoice_purchase_to_shop_product = models.ForeignKey(to=PurchaseToShopProduct, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+
+class PurchaseToInvoiceReturn(models.Model):
+    invoice_purchase_to_shop_product = models.ForeignKey(to=PurchaseToShopProduct, on_delete=models.CASCADE)
+    invoice_return = models.ForeignKey(to=InvoiceReturn, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
 

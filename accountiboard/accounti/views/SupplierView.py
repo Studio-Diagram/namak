@@ -359,7 +359,7 @@ def get_sum_amani_sales_from_supplier(request):
             all_amani_buy = 0
             for amani_sale in all_amani_sales_from_supplier:
                 all_amani_buy += amani_sale.numbers
-                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+                all_amani_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
 
             return JsonResponse(
                 {"response_code": 2, 'all_amani_sales_sum': all_amani_sum, 'all_amani_sales_buy': all_amani_buy})
@@ -619,7 +619,7 @@ def get_detail_invoice_returns_from_supplier(request):
                     'tax': 0,
                     'discount': 0,
                     'kind': 'مرجوعی',
-                    'price': invoice.numbers * invoice.buy_price,
+                    'price': invoice.total_price,
                     'date': jalali_date.strftime("%Y/%m/%d")
                 })
 
@@ -683,7 +683,7 @@ def get_detail_amani_sales_from_supplier(request):
 
             invoices_data = []
             for amani_sale in all_amani_sales_from_supplier:
-                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+                all_amani_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
                 date = amani_sale.created_date.date()
                 jalali_date = jdatetime.date.fromgregorian(day=date.day, month=date.month,
                                                            year=date.year)
@@ -694,6 +694,7 @@ def get_detail_amani_sales_from_supplier(request):
                     'name': amani_sale.invoice_sale_to_shop.shop_product.name,
                     'sale_price': amani_sale.sale_price,
                     'buy_price': amani_sale.buy_price,
+                    'return_numbers': amani_sale.return_numbers,
                     'date': jalali_date.strftime("%Y/%m/%d")
                 })
 

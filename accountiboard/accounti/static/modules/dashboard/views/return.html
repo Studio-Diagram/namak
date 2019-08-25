@@ -79,9 +79,7 @@
                                                                  aria-label="Checkbox for following text input"></th>
                                         <th class="first">#</th>
                                         <th style="width: 30%" class="second">محصول</th>
-                                        <th class="fifth">قیمت واحد</th>
                                         <th class="fifth">تعداد</th>
-                                        <th class="fifth">قیمت کل</th>
                                         <th style="width: 25%;" class="sixth">توضیحات</th>
                                     </tr>
                                     <tr>
@@ -97,25 +95,13 @@
                                                         ng-selected="shop.id == new_invoice_return_data.shop_id">{{ shop.name }}</option>
                                             </select>
                                         </td>
-                                        <td>{{ new_invoice_return_data.buy_price | number | persianNumber }}</td>
                                         <td><input style="font-family: 'B Yekan'" class="form-control" type="text"
                                                    min="0"
                                                    ng-model="new_invoice_return_data.numbers" format></td>
-                                        <td>
-                                            {{ new_invoice_return_data.buy_price * new_invoice_return_data.numbers | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-model="new_invoice_return_data.description"></td>
                                     </tr>
 
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable invoiceTotal">
-                                    <tbody>
-                                    <tr>
-                                        <th>جمع کل</th>
-                                        <td>
-                                            {{ new_invoice_return_data.buy_price * new_invoice_return_data.numbers | number:fractionSize | persianNumber }}</td>
-                                    </tr>
                                     </tbody>
                                 </table>
                             </main>
@@ -174,7 +160,6 @@
                             <th scope="col">شماره فاکتور</th>
                             <th scope="col">تامین‌کننده</th>
                             <th scope="col">نام محصول</th>
-                            <th scope="col">قیمت واحد</th>
                             <th scope="col">تعداد</th>
                             <th scope="col">قیمت کل</th>
                             <th scope="col">توضیحات</th>
@@ -186,7 +171,6 @@
                             <th>{{ invoice_return.factor_number | persianNumber }}</th>
                             <th scope="row">{{ invoice_return.supplier_name }}</th>
                             <th scope="row">{{ invoice_return.shop_name }}</th>
-                            <td>{{ invoice_return.buy_price | number | persianNumber }} ریال</td>
                             <td>{{ invoice_return.numbers | persianNumber }}</td>
                             <td>{{ invoice_return.total_price | number | persianNumber }} ریال</td>
                             <td>{{ invoice_return.description }}</td>

@@ -25,7 +25,6 @@ def create_new_invoice_return(request):
             description = rec_data['description']
             numbers = rec_data['numbers']
             return_type = rec_data['return_type']
-            buy_price = rec_data['buy_price']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
             invoice_date = rec_data['date']
@@ -39,15 +38,11 @@ def create_new_invoice_return(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not shop_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if supplier_id == 0:
-                return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
             if not numbers:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not description:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not return_type:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not buy_price:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not invoice_date:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -55,10 +50,10 @@ def create_new_invoice_return(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
-            supplier_obj = Supplier.objects.get(pk=supplier_id)
             shop_obj = ShopProduct.objects.get(pk=shop_id)
 
-            total_price = int(numbers) * int(buy_price)
+            if shop_obj.real_numbers < int(numbers):
+                return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Stock!"})
 
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
@@ -76,25 +71,115 @@ def create_new_invoice_return(request):
             new_invoice = InvoiceReturn(
                 branch=branch_obj,
                 created_time=invoice_date_g,
-                supplier=supplier_obj,
-                buy_price=buy_price,
                 shop_product=shop_obj,
                 description=description,
                 numbers=numbers,
-                total_price=total_price,
                 return_type=return_type,
                 factor_number=new_factor_number
             )
             new_invoice.save()
-            
+
             if return_type == "CUSTOMER_TO_CAFE":
                 shop_obj.real_numbers += int(numbers)
                 shop_obj.save()
+                return_number_count = int(numbers)
+                all_amani_sales = AmaniSale.objects.filter(invoice_sale_to_shop__shop_product=shop_obj).order_by(
+                    '-created_date')
+                print(all_amani_sales)
+                for amani_sale in all_amani_sales:
+                    real_number_in_amani_sale = amani_sale.numbers - amani_sale.return_numbers
+                    if real_number_in_amani_sale != 0:
+                        if return_number_count == real_number_in_amani_sale or return_number_count < real_number_in_amani_sale:
+                            amani_sale.return_numbers += return_number_count
+                            amani_sale.save()
+                            amani_sale.supplier.remainder -= amani_sale.buy_price * return_number_count
+                            amani_sale.supplier.save()
+                            new_amani_to_return = AmaniSaleToInvoiceReturn(
+                                amani_sale=amani_sale,
+                                invoice_return=new_invoice,
+                                numbers=return_number_count
+                            )
+                            new_amani_to_return.save()
+                            new_invoice.total_price += amani_sale.buy_price * return_number_count
+                            new_invoice.save()
+                            amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct.objects.filter(
+                                amani_sale=amani_sale)
+                            if amani_to_purchase:
+                                amani_to_purchase[0].invoice_purchase_to_shop_product.buy_numbers -= return_number_count
+                                amani_to_purchase[0].invoice_purchase_to_shop_product.save()
+                            else:
+                                return JsonResponse({"response_code": 3, "error_msg": "HOLY S***!"})
+
+                            return_number_count = 0
+                            break
+                        else:
+                            amani_sale.return_numbers += real_number_in_amani_sale
+                            amani_sale.supplier.remainder -= amani_sale.buy_price * real_number_in_amani_sale
+                            amani_sale.supplier.save()
+                            new_amani_to_return = AmaniSaleToInvoiceReturn(
+                                amani_sale=amani_sale,
+                                invoice_return=new_invoice,
+                                numbers=real_number_in_amani_sale
+                            )
+                            new_amani_to_return.save()
+                            new_invoice.total_price += amani_sale.buy_price * real_number_in_amani_sale
+                            new_invoice.save()
+                            amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct.objects.filter(
+                                amani_sale=amani_sale)
+                            if amani_to_purchase:
+                                amani_to_purchase[
+                                    0].invoice_purchase_to_shop_product.buy_numbers -= real_number_in_amani_sale
+                                amani_to_purchase[0].invoice_purchase_to_shop_product.save()
+                            else:
+                                return JsonResponse({"response_code": 3, "error_msg": "HOLY S***!"})
+                            return_number_count -= real_number_in_amani_sale
+                            amani_sale.save()
+
             elif return_type == 'CAFE_TO_SUPPLIER':
-                supplier_obj.remainder -= total_price
-                supplier_obj.save()
+                want_to_rerurn = int(numbers)
+                if not supplier_id:
+                    return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
+                supplier_obj = Supplier.objects.get(pk=supplier_id)
+                new_invoice.supplier = supplier_obj
+                new_invoice.save()
+
+                can_returned_nums = 0
+                all_purchase_to_shop_p = PurchaseToShopProduct.objects.filter(shop_product=shop_obj)
+                for purchase in all_purchase_to_shop_p:
+                    can_returned_nums += purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
+
+                if can_returned_nums < int(numbers):
+                    return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Supplier!"})
+
                 shop_obj.real_numbers -= int(numbers)
                 shop_obj.save()
+
+                for purchase in all_purchase_to_shop_p:
+                    can_return_num_in_purchase = purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
+                    if want_to_rerurn <= can_return_num_in_purchase != 0:
+                        purchase.return_numbers += want_to_rerurn
+                        purchase.save()
+                        new_return_to_purchase = PurchaseToInvoiceReturn(
+                            invoice_return=new_invoice,
+                            invoice_purchase_to_shop_product=purchase,
+                            numbers=want_to_rerurn
+                        )
+                        new_return_to_purchase.save()
+                        new_invoice.total_price += want_to_rerurn * purchase.base_unit_price
+                        new_invoice.save()
+                        break
+                    else:
+                        purchase.return_numbers += can_return_num_in_purchase
+                        purchase.save()
+                        new_return_to_purchase = PurchaseToInvoiceReturn(
+                            invoice_return=new_invoice,
+                            invoice_purchase_to_shop_product=purchase,
+                            numbers=can_return_num_in_purchase
+                        )
+                        new_return_to_purchase.save()
+                        new_invoice.total_price += can_return_num_in_purchase * purchase.base_unit_price
+                        new_invoice.save()
+                        want_to_rerurn -= can_return_num_in_purchase
 
             return JsonResponse({"response_code": 2})
 
@@ -121,14 +206,18 @@ def get_all_invoices(request):
             invoice_date = invoice.created_time.date()
             jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                        year=invoice_date.year)
+
+            if invoice.supplier:
+                supplier_name = invoice.supplier.name
+            else:
+                supplier_name = ""
             invoices.append({
                 'id': invoice.pk,
                 'factor_number': invoice.factor_number,
-                'supplier_name': invoice.supplier.name,
+                'supplier_name': supplier_name,
                 'shop_name': invoice.shop_product.name,
-                'buy_price': invoice.buy_price,
                 'numbers': invoice.numbers,
-                'total_price': invoice.numbers * invoice.buy_price,
+                'total_price': invoice.total_price,
                 'description': invoice.description,
                 'date': jalali_date.strftime("%Y/%m/%d")
             })
@@ -157,9 +246,8 @@ def search_return(request):
                 'id': invoice_return.pk,
                 'supplier_name': invoice_return.supplier.name,
                 'shop_name': invoice_return.shop_product.name,
-                'buy_price': invoice_return.buy_price,
                 'numbers': invoice_return.numbers,
-                'total_price': invoice_return.price,
+                'total_price': invoice_return.total_price,
                 'description': invoice_return.description,
                 'date': jalali_date.strftime("%Y/%m/%d")
             })
