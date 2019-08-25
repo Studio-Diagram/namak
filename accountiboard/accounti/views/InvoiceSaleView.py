@@ -24,6 +24,7 @@ WAIT_GAME = "منتظر بازی"
 ORDERED = "سفارش داده"
 NOT_ORDERED = "سفارش نداده"
 NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
+WAIT_FOR_SETTLE = "منتظر تسویه"
 
 
 def settle_invoice_sale(request):
@@ -206,10 +207,14 @@ def get_all_today_invoices(request):
 
             invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
                 menu_item__menu_category__kind='OTHER')
-            if invoice_to_menu_items.count():
-                invoice_status = {"status": "ORDERED", "text": ORDERED}
+
+            if invoice.ready_for_settle:
+                invoice_status = {"status": "WAIT_FOR_SETTLE", "text": WAIT_FOR_SETTLE}
             else:
-                invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
+                if invoice_to_menu_items.count():
+                    invoice_status = {"status": "ORDERED", "text": ORDERED}
+                else:
+                    invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
 
             all_invoices_list.append({
                 "invoice_id": invoice.pk,
@@ -980,3 +985,22 @@ def print_after_save_template(request):
 
         return render(request, 'invoice_not_cash.html', {'invoice_data': print_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+def ready_for_settle(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    invoice_id = rec_data['invoice_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
+    invoice_obj.ready_for_settle = True
+    invoice_obj.save()
+    return JsonResponse({"response_code": 2})

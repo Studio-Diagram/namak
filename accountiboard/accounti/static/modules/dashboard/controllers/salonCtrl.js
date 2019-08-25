@@ -74,6 +74,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
+                        $scope.new_invoice_data.cash_id = data['cash_id'];
                         $scope.getAllTodayInvoices();
                     }
                     else if (data['response_code'] === 3) {
@@ -114,6 +115,7 @@ angular.module("dashboard")
         $scope.print_data = function (invoice_id, print_kind, invoice_data) {
             $scope.disable_print_after_save_all_buttons = true;
             if (print_kind === "CASH") {
+                $scope.read_for_settle();
                 var sending_data = {
                     'is_customer_print': 1,
                     'invoice_id': invoice_id
@@ -211,24 +213,21 @@ angular.module("dashboard")
         };
 
 
-        $scope.print_cash = function (invoice_id) {
-            var sending_data = {
-                'invoice_id': invoice_id
-            };
-            dashboardHttpRequest.printCash(sending_data)
+        $scope.print_cash = function () {
+            $scope.disable_print_after_save_all_buttons = true;
+            dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.print_data_info = data['printer_data'];
-                        $scope.print_data($scope.print_data_info);
+                        $scope.new_invoice_data.current_game.id = data['new_game_id'];
+                        $scope.getAllTodayInvoices();
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
+                        $scope.print_data($scope.new_invoice_data.invoice_sales_id, 'CASH');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        console.log("NOT SUCCESS!");
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.closeTimeCalcModal();
-                    $scope.openErrorModal();
+                    console.log(error);
                 });
         };
 
@@ -1048,6 +1047,29 @@ angular.module("dashboard")
             };
             $scope.new_invoice_data.table_id = last_table_id;
             $scope.new_invoice_data.table_name = $scope.last_table_add;
+        };
+
+        $scope.read_for_settle = function () {
+            var sending_data = {
+                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.readyForSettle(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.getAllTodayInvoices();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                    $scope.error_message = 500;
+                    $scope.closeTimeCalcModal();
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.reset_deleted_items = function () {

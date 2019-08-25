@@ -130,6 +130,7 @@ urlpatterns = [
     path('api/getTableCategory/', TableView.get_table_category),
     path('api/getTableCategories/', TableView.get_table_categories),
     path('api/changeMenuCategoryOrder/', MenuCategoryView.change_list_order),
+    path('api/readyForSettle/', InvoiceSaleView.ready_for_settle),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),

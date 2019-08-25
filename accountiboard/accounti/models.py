@@ -192,6 +192,7 @@ class InvoiceSales(models.Model):
     total_price = models.FloatField(default=0)
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE, default=0)
     table = models.ForeignKey(to=Table, on_delete=models.CASCADE)
+    ready_for_settle = models.BooleanField(default=False)
     cash_desk = models.ForeignKey(Cash, null=True, blank=True, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 

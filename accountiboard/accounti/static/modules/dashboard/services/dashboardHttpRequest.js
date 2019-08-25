@@ -797,6 +797,13 @@ angular.module('dashboard')
                     'url': "/api/changeMenuCategoryOrder/",
                     'data': data
                 });
+            },
+            'readyForSettle': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/readyForSettle/",
+                    'data': data
+                });
             }
 
 
