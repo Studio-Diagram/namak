@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("expenseCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
+            $scope.tags = [];
             jQuery.noConflict();
             (function ($) {
                 $(document).ready(function () {
@@ -38,6 +39,24 @@ angular.module("dashboard")
             $scope.get_expenses();
             $scope.get_suppliers();
             $scope.get_expense_cats_data($rootScope.user_data);
+        };
+
+        $scope.loadTags = function ($query) {
+            var countries = [
+                {"name": "Algeria", "flag": "Algeria.png", "confederation": "CAF", "rank": 21},
+                {"name": "Argentina", "flag": "Argentina.png", "confederation": "CONMEBOL", "rank": 5},
+                {"name": "Australia", "flag": "Australia.png", "confederation": "AFC", "rank": 32},
+                {"name": "Belgium", "flag": "Belgium.png", "confederation": "UEFA", "rank": 11},
+                {
+                    "name": "Bosnia and Herzegovina",
+                    "flag": "Bosnia-and-Herzegovina.png",
+                    "confederation": "UEFA",
+                    "rank": 20
+                }
+            ];
+            return countries.filter(function (country) {
+                return country.name.toLowerCase().indexOf($query.toLowerCase()) !== -1;
+            });
         };
 
         $scope.get_expense_cats_data = function (data) {
@@ -255,7 +274,7 @@ angular.module("dashboard")
 
         $scope.change_total_price = function () {
             $scope.new_invoice_expense_data.total_price = 0;
-            for (var i = 0; i < $scope.new_invoice_expense_data.services.length; i++){
+            for (var i = 0; i < $scope.new_invoice_expense_data.services.length; i++) {
                 $scope.new_invoice_expense_data.total_price += Number($scope.new_invoice_expense_data.services[i].price);
             }
         };
