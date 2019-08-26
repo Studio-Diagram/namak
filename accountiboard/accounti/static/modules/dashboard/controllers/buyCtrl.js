@@ -276,10 +276,10 @@ angular.module("dashboard")
                     'price': int_buy_price,
                     'sale_price': int_price,
                     'nums': 1,
-                    'total': int_price,
+                    'total': int_buy_price,
                     'description': ''
                 });
-                $scope.new_invoice_purchase_data.total_price += int_price;
+                $scope.new_invoice_purchase_data.total_price += int_buy_price;
             }
             else {
                 for (var i = 0; i < $scope.new_invoice_purchase_data.shop_product_items.length; i++) {
@@ -299,10 +299,10 @@ angular.module("dashboard")
                         'price': int_buy_price,
                         'sale_price': int_price,
                         'nums': 1,
-                        'total': int_price,
+                        'total': int_buy_price,
                         'description': ''
                     });
-                    $scope.new_invoice_purchase_data.total_price += int_price;
+                    $scope.new_invoice_purchase_data.total_price += int_buy_price;
                 }
                 is_fill = false;
             }
