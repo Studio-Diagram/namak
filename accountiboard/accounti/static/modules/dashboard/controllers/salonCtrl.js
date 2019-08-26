@@ -66,6 +66,38 @@ angular.module("dashboard")
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
             $scope.get_tables_data($rootScope.user_data);
             $scope.get_shop_products();
+            $window.onkeyup = function (event) {
+                if (event.keyCode === 27) {
+                    $scope.closeAddInvoiceModal();
+                }
+                if (event.ctrlKey && event.keyCode === 49) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 50) {
+                    $state.go('cash_manager.salon');
+                }
+                if (event.ctrlKey && event.keyCode === 51) {
+                    $state.go('reservation');
+                }
+                if (event.ctrlKey && event.keyCode === 52) {
+                    $state.go('member');
+                }
+                if (event.ctrlKey && event.keyCode === 53) {
+                    $state.go('boardgame');
+                }
+                if (event.ctrlKey && event.keyCode === 54) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 55) {
+                    $state.go('account_manager.buy');
+                }
+                if (event.ctrlKey && event.keyCode === 56) {
+
+                }
+                if (event.ctrlKey && event.keyCode === 57) {
+                    $state.go('manager.addEmployee');
+                }
+            }
         };
 
         $scope.get_today_cash = function () {
