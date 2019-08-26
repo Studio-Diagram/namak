@@ -315,7 +315,7 @@ class PurchaseToShopProduct(models.Model):
     description = models.TextField(null=True, blank=True)
 
 
-class ExpenseCategory(models.Model):
+class ExpenseTag(models.Model):
     name = models.CharField(max_length=50, null=False, blank=False)
 
 
@@ -324,15 +324,26 @@ class InvoiceExpense(models.Model):
         ('CASH', 'نقدی'),
         ('CREDIT', 'اعتباری'),
     )
+    EXPENSE_KIND = (
+        ("JARI_MASRAFI", "جاری مصرفی"),
+        ("JARI_NOT_MASRAFI", "جاری غیر مصرفی"),
+        ("NOT_JARI_MASRAFI", "غیر جاری مصرفی"),
+        ("NOT_JARI_NOT_MASRAFI", "غیر جاری غیر مصرفی")
+    )
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     price = models.FloatField(null=False)
-    settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_TYPES)
+    settlement_type = models.CharField(max_length=255, choices=SETTLEMENT_TYPES)
+    expense_kind = models.CharField(max_length=255, choices=EXPENSE_KIND)
     tax = models.FloatField(null=False)
     discount = models.FloatField(null=False)
-    expense_category = models.ForeignKey(to=ExpenseCategory, on_delete=models.CASCADE, null=True, blank=True)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+
+
+class ExpenseToTag(models.Model):
+    invoice_expense = models.ForeignKey(to=InvoiceExpense, on_delete=models.CASCADE)
+    tag = models.ForeignKey(to=ExpenseTag, on_delete=models.CASCADE)
 
 
 class InvoiceExpenseToService(models.Model):
@@ -423,4 +434,3 @@ class PurchaseToInvoiceReturn(models.Model):
     invoice_return = models.ForeignKey(to=InvoiceReturn, on_delete=models.CASCADE)
     numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
-

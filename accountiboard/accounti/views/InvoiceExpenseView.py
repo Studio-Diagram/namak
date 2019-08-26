@@ -13,6 +13,7 @@ PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 OTHER_SUPPLIER_REQUIRE = "در صورت خالی بودن تامین کننده باید تامین‌کننده‌ای با نام سایر در تامین کنندگان وارد نمایید."
 FACTOR_NUMBER_INVALID = "شماره فاکتور تطابق ندارد."
+METHOD_NOT_ALLOWED = "Method not allowed."
 
 
 def create_new_invoice_expense(request):
@@ -22,7 +23,8 @@ def create_new_invoice_expense(request):
 
         if invoice_expense_id == 0:
             supplier_id = rec_data['supplier_id']
-            expense_cat_id = rec_data['expense_cat_id']
+            expense_tags = rec_data['expense_tags']
+            expense_kind = rec_data['expense_kind']
             total_price = rec_data['total_price']
             settlement_type = rec_data['settlement_type']
             tax = rec_data['tax']
@@ -35,17 +37,19 @@ def create_new_invoice_expense(request):
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            
+
             if not request.session.get('is_logged_in', None) == username:
                 return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-            
+
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not total_price:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not settlement_type:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not expense_cat_id:
+            if not expense_kind:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not expense_tags:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if services[0]['service_name'] == '':
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -63,9 +67,6 @@ def create_new_invoice_expense(request):
 
             branch_obj = Branch.objects.get(pk=branch_id)
 
-
-            expense_cat_obj = ExpenseCategory.objects.get(pk=expense_cat_id)
-
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
@@ -82,8 +83,8 @@ def create_new_invoice_expense(request):
 
             new_invoice = InvoiceExpense(
                 branch=branch_obj,
-                expense_category=expense_cat_obj,
                 created_time=invoice_date_g,
+                expense_kind=expense_kind,
                 supplier=supplier_obj,
                 price=total_price,
                 tax=tax,
@@ -93,6 +94,22 @@ def create_new_invoice_expense(request):
             )
             new_invoice.save()
 
+            for tag in expense_tags:
+                print(tag)
+                if "id" in tag:
+                    tag_obj = ExpenseTag.objects.filter(id=tag['id']).first()
+                else:
+                    tag_obj = ExpenseTag(
+                        name=tag['name']
+                    )
+                    tag_obj.save()
+
+                new_tag_to_expense = ExpenseToTag(
+                    invoice_expense=new_invoice,
+                    tag=tag_obj
+                )
+                new_tag_to_expense.save()
+
             for service in services:
                 new_service = InvoiceExpenseToService(
                     service_name=service['service_name'],
@@ -101,7 +118,7 @@ def create_new_invoice_expense(request):
                     invoice_expense=new_invoice
                 )
                 new_service.save()
-            
+
             if settlement_type == "CREDIT":
                 supplier_obj.remainder += int(total_price)
                 supplier_obj.save()
@@ -110,7 +127,7 @@ def create_new_invoice_expense(request):
 
         return JsonResponse({"response_code": 3, "error_msg": "Wrong ID!"})
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_all_invoices(request):
@@ -136,13 +153,13 @@ def get_all_invoices(request):
                 'factor_number': invoice.factor_number,
                 'supplier_name': invoice.supplier.name,
                 'settlement_type': invoice.get_settlement_type_display(),
-                'expense_category': invoice.expense_category.name,
+                'expense_category': invoice.get_expense_kind_display(),
                 'total_price': invoice.price,
                 'date': jalali_date.strftime("%Y/%m/%d")
             })
 
         return JsonResponse({"response_code": 2, 'invoices': invoices})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def search_expense(request):
@@ -169,7 +186,7 @@ def search_expense(request):
                 'date': jalali_date.strftime("%Y/%m/%d")
             })
         return JsonResponse({"response_code": 2, 'expenses': expenses})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def delete_invoice_expense(request):
@@ -195,4 +212,25 @@ def delete_invoice_expense(request):
             invoice_obj.delete()
 
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+
+
+def get_all_tags(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    all_tags = ExpenseTag.objects.all().order_by("name")
+    all_tags_data = []
+    for tag in all_tags:
+        all_tags_data.append({
+            "id": tag.pk,
+            "name": tag.name
+        })
+
+    return JsonResponse({"response_code": 2, 'tags': all_tags_data})

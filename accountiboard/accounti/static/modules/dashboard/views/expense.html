@@ -72,11 +72,12 @@
                                         </td>
                                         <td>
                                             <small>دسته‌بندی</small>
-                                            <select ng-model="new_invoice_expense_data.expense_cat_id"
+                                            <select ng-model="new_invoice_expense_data.expense_kind"
                                                     class="form-control">
-                                                <option ng-repeat="cat in expense_cats"
-                                                        value="{{ cat.id }}"
-                                                        ng-selected="cat.id == new_invoice_expense_data.expense_cat_id">{{ cat.name }}</option>
+                                                <option value="JARI_MASRAFI">جاری مصرفی</option>
+                                                <option value="JARI_NOT_MASRAFI">جاری غیر مصرفی</option>
+                                                <option value="NOT_JARI_MASRAFI">غیر جاری مصرفی</option>
+                                                <option value="NOT_JARI_NOT_MASRAFI">غیر جاری غیر مصرفی</option>
                                             </select>
                                         </td>
                                     </tr>

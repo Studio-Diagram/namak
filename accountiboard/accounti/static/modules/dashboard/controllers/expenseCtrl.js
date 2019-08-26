@@ -16,7 +16,8 @@ angular.module("dashboard")
                 'id': 0,
                 'factor_number': 0,
                 'expense_id': 0,
-                'expense_cat_id': 0,
+                'expense_kind': '',
+                'expense_tags': [],
                 'supplier_id': 0,
                 'services': [
                     {
@@ -36,34 +37,19 @@ angular.module("dashboard")
                 'search_word': '',
                 'username': $rootScope.user_data.username
             };
+            $scope.get_all_expense_tags();
             $scope.get_expenses();
             $scope.get_suppliers();
-            $scope.get_expense_cats_data($rootScope.user_data);
         };
 
-        $scope.loadTags = function ($query) {
-            var countries = [
-                {"name": "Algeria", "flag": "Algeria.png", "confederation": "CAF", "rank": 21},
-                {"name": "Argentina", "flag": "Argentina.png", "confederation": "CONMEBOL", "rank": 5},
-                {"name": "Australia", "flag": "Australia.png", "confederation": "AFC", "rank": 32},
-                {"name": "Belgium", "flag": "Belgium.png", "confederation": "UEFA", "rank": 11},
-                {
-                    "name": "Bosnia and Herzegovina",
-                    "flag": "Bosnia-and-Herzegovina.png",
-                    "confederation": "UEFA",
-                    "rank": 20
-                }
-            ];
-            return countries.filter(function (country) {
-                return country.name.toLowerCase().indexOf($query.toLowerCase()) !== -1;
-            });
-        };
-
-        $scope.get_expense_cats_data = function (data) {
-            dashboardHttpRequest.getAllExpenseCategories(data)
+        $scope.get_all_expense_tags = function () {
+            var sending_data = {
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getAllExpenseTags(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.expense_cats = data['all_expense_categories'];
+                        $scope.expense_tags = data['tags'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -73,6 +59,12 @@ angular.module("dashboard")
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.loadTags = function ($query) {
+            return $scope.expense_tags.filter(function (tag) {
+                return tag.name.toLowerCase().indexOf($query.toLowerCase()) !== -1;
+            });
         };
 
         $scope.get_suppliers = function () {
@@ -128,11 +120,13 @@ angular.module("dashboard")
         };
 
         $scope.addExpense = function () {
+            $scope.new_invoice_expense_data.expense_tags = $scope.tags;
             $scope.new_invoice_expense_data.date = $("#datepicker").val();
             dashboardHttpRequest.addExpense($scope.new_invoice_expense_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.get_expenses();
+                        $scope.get_all_expense_tags();
                         $scope.resetFrom();
                         $scope.closeAddModal();
                     }
@@ -249,11 +243,13 @@ angular.module("dashboard")
         };
 
         $scope.resetFrom = function () {
+            $scope.tags = [];
             $scope.new_invoice_expense_data = {
                 'id': 0,
                 'factor_number': 0,
                 'expense_id': 0,
-                'expense_cat_id': 0,
+                'expense_tags': [],
+                'expense_kind': '',
                 'service_name': '',
                 'description': '',
                 'total_price': 0,
