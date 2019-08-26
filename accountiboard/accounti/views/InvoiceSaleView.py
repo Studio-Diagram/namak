@@ -188,7 +188,7 @@ def get_all_today_invoices(request):
         branch_obj = Branch.objects.get(pk=branch_id)
         cash_obj = Cash.objects.get(pk=cash_id)
 
-        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj).order_by("is_settled")
+        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj, is_deleted=False).order_by("is_settled")
         all_invoices_list = []
         for invoice in all_invoices:
             if invoice.settle_time:
@@ -689,7 +689,7 @@ def get_today_status(request):
             "all_games": 0,
         }
 
-        all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj)
+        all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False)
         for invoice in all_invoices:
             status['all_sales_price'] += invoice.total_price
             status['all_cash'] += invoice.cash
@@ -1002,5 +1002,37 @@ def ready_for_settle(request):
 
     invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
     invoice_obj.ready_for_settle = True
+    invoice_obj.save()
+    return JsonResponse({"response_code": 2})
+
+
+def delete_invoice(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    invoice_id = rec_data['invoice_id']
+    description = rec_data['description']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
+    invoice_obj.is_deleted = True
+
+    all_shop_to_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
+    for shop_p in all_shop_to_invoice:
+        shop_p.shop_product.real_numbers += shop_p.numbers
+        shop_p.shop_product.save()
+
+    new_invoice_deleted = DeletedInvoiceSale(
+        invoice_sale=invoice_obj,
+        description=description,
+    )
+    new_invoice_deleted.save()
     invoice_obj.save()
     return JsonResponse({"response_code": 2})

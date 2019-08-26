@@ -195,6 +195,7 @@ class InvoiceSales(models.Model):
     ready_for_settle = models.BooleanField(default=False)
     cash_desk = models.ForeignKey(Cash, null=True, blank=True, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
 
 
 class InvoicesSalesToMenuItem(models.Model):
@@ -433,4 +434,10 @@ class PurchaseToInvoiceReturn(models.Model):
     invoice_purchase_to_shop_product = models.ForeignKey(to=PurchaseToShopProduct, on_delete=models.CASCADE)
     invoice_return = models.ForeignKey(to=InvoiceReturn, on_delete=models.CASCADE)
     numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+
+class DeletedInvoiceSale(models.Model):
+    invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
+    description = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)

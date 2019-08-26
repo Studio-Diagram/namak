@@ -30,6 +30,38 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade mainModal alertModal redAlertModal" id="deleteInvoiceModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">حذف فاکتور</h2>
+                    <a ng-click="closeDeleteInvoiceModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="delete_invoice()" href="" class="mainButton greenButton"><i class="fas fa-save"></i> حذف فاکتور</a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">دلیل حذف فاکتور را توضیح دهید</span>
+                                <label>توضیحات</label>
+                                <form>
+                                    <div class="form-group">
+                                        <textarea ng-model="invoice_delete_description" class="form-control"
+                                                  rows="3"></textarea>
+                                    </div>
+                                </form>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
          data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -145,6 +177,10 @@
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
                        class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش</button>
                     <a href="" class="mainButton grayButton"><i class="fas fa-cut"></i> تفکیک فاکتور</a>
+                    <a href="" ng-click="openDeleteModal()" class="mainButton grayButton"><i class="fas fa-trash"></i>
+                        پاک کردن</a>
+                    <a href="" ng-click="openDeleteInvoiceModal()" class="mainButton grayButton"><i class="fas fa-trash"></i>
+                        پاک کردن فاکتور</a>
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()" class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره</button>
 
                 </div>

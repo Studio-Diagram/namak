@@ -783,6 +783,13 @@ angular.module('dashboard')
                     'url': "/api/getAllExpenseTags/",
                     'data': data
                 });
+            },
+            'deleteInvoiceSale': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/deleteInvoiceSale/",
+                    'data': data
+                });
             }
 
 
