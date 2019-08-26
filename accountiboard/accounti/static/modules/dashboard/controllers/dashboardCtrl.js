@@ -11,7 +11,7 @@ angular.module("dashboard")
                 };
                 $rootScope.get_today_var = $scope.get_today();
                 $scope.is_user_login($rootScope.user_data);
-                $scope.check_cash($rootScope.user_data);
+                //$scope.check_cash($rootScope.user_data);
                 $scope.get_today_cash();
             }
             else {

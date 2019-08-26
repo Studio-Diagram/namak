@@ -72,6 +72,7 @@
     <script src="{% static 'modules/dashboard/controllers/reservationCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
+    <script src="{% static 'modules/dashboard/controllers/cashDisableCtrl.js' %}"></script>
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
@@ -135,7 +136,7 @@
                     </li>
                     <li class="nav-item">
                         <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager.salon"
+                           ui-sref="cash_manager"
                            href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
                     </li>
