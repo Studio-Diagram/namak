@@ -201,7 +201,7 @@ angular.module("dashboard")
 
         $scope.resetFrom = function () {
             $scope.new_employee_data = {
-                'employee_id': '',
+                'employee_id': 0,
                 'first_name': '',
                 'last_name': '',
                 'father_name': '',
