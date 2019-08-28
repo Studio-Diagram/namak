@@ -931,9 +931,9 @@ def print_cash_with_template(request):
         for shop_p in all_shop_invoice:
             is_append = False
             for item in print_data['items']:
-                if menu_item.menu_item.pk == item['item_id'] and item['item_kind'] == "SHOP":
-                    item['numbers'] += menu_item.numbers
-                    item['price'] += int(menu_item.menu_item.price) * int(menu_item.numbers)
+                if shop_p.shop_product.pk == item['item_id'] and item['item_kind'] == "SHOP":
+                    item['numbers'] += shop_p.numbers
+                    item['price'] += int(shop_p.shop_product.price) * int(shop_p.numbers)
                     is_append = True
                     break
             if not is_append:
