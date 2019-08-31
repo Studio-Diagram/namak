@@ -397,7 +397,7 @@ def delete_invoice_purchase(request):
         if invoice_type == "CASH":
             invoice_obj.delete()
 
-        elif invoice_type == "AMANI":
+        elif invoice_type == "AMANi":
             pass
 
         elif invoice_type == "CREDIT":

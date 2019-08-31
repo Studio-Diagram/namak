@@ -57,9 +57,14 @@ class MenuCategory(models.Model):
     KIND = (
         ('KITCHEN', 'آشپزخانه'),
         ('BAR', 'بار'),
+        ('OTHER', 'سایر'),
     )
     name = models.CharField(max_length=30, null=True, blank=True)
     kind = models.CharField(max_length=50, choices=KIND, blank=False, null=False)
+    list_order = models.IntegerField(default=0, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class PrinterToCategory(models.Model):
@@ -187,8 +192,10 @@ class InvoiceSales(models.Model):
     total_price = models.FloatField(default=0)
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE, default=0)
     table = models.ForeignKey(to=Table, on_delete=models.CASCADE)
+    ready_for_settle = models.BooleanField(default=False)
     cash_desk = models.ForeignKey(Cash, null=True, blank=True, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    is_deleted = models.BooleanField(default=False)
 
 
 class InvoicesSalesToMenuItem(models.Model):
@@ -304,11 +311,12 @@ class PurchaseToShopProduct(models.Model):
     base_unit_price = models.FloatField(null=False)
     unit_numbers = models.IntegerField(null=False)
     buy_numbers = models.IntegerField(null=False, default=0)
+    return_numbers = models.IntegerField(null=False, default=0)
     sale_price = models.FloatField(null=False, default=0)
     description = models.TextField(null=True, blank=True)
 
 
-class ExpenseCategory(models.Model):
+class ExpenseTag(models.Model):
     name = models.CharField(max_length=50, null=False, blank=False)
 
 
@@ -317,15 +325,26 @@ class InvoiceExpense(models.Model):
         ('CASH', 'نقدی'),
         ('CREDIT', 'اعتباری'),
     )
+    EXPENSE_KIND = (
+        ("JARI_MASRAFI", "جاری مصرفی"),
+        ("JARI_NOT_MASRAFI", "جاری غیر مصرفی"),
+        ("NOT_JARI_MASRAFI", "غیر جاری مصرفی"),
+        ("NOT_JARI_NOT_MASRAFI", "غیر جاری غیر مصرفی")
+    )
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     price = models.FloatField(null=False)
-    settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_TYPES)
+    settlement_type = models.CharField(max_length=255, choices=SETTLEMENT_TYPES)
+    expense_kind = models.CharField(max_length=255, choices=EXPENSE_KIND)
     tax = models.FloatField(null=False)
     discount = models.FloatField(null=False)
-    expense_category = models.ForeignKey(to=ExpenseCategory, on_delete=models.CASCADE, null=True, blank=True)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+
+
+class ExpenseToTag(models.Model):
+    invoice_expense = models.ForeignKey(to=InvoiceExpense, on_delete=models.CASCADE)
+    tag = models.ForeignKey(to=ExpenseTag, on_delete=models.CASCADE)
 
 
 class InvoiceExpenseToService(models.Model):
@@ -343,12 +362,11 @@ class InvoiceReturn(models.Model):
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     return_type = models.CharField(max_length=50, choices=RETURN_TYPES)
-    buy_price = models.FloatField(null=False)
-    total_price = models.FloatField(null=False)
+    total_price = models.FloatField(null=False, default=0)
     numbers = models.IntegerField(null=False)
     shop_product = models.ForeignKey(to=ShopProduct, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
-    supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE, blank=True, null=True)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
 
@@ -393,5 +411,33 @@ class AmaniSale(models.Model):
     numbers = models.IntegerField(null=False)
     sale_price = models.FloatField(null=False)
     buy_price = models.FloatField(null=False)
+    is_amani = models.BooleanField(default=True)
+    return_numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(null=True, blank=True)
 
+
+class AmaniSaleToInvoiceReturn(models.Model):
+    amani_sale = models.ForeignKey(to=AmaniSale, on_delete=models.CASCADE)
+    invoice_return = models.ForeignKey(to=InvoiceReturn, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+
+class AmaniSaleToInvoicePurchaseShopProduct(models.Model):
+    amani_sale = models.ForeignKey(to=AmaniSale, on_delete=models.CASCADE)
+    invoice_purchase_to_shop_product = models.ForeignKey(to=PurchaseToShopProduct, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+
+class PurchaseToInvoiceReturn(models.Model):
+    invoice_purchase_to_shop_product = models.ForeignKey(to=PurchaseToShopProduct, on_delete=models.CASCADE)
+    invoice_return = models.ForeignKey(to=InvoiceReturn, on_delete=models.CASCADE)
+    numbers = models.IntegerField(null=False, default=0)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+
+class DeletedInvoiceSale(models.Model):
+    invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
+    description = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)

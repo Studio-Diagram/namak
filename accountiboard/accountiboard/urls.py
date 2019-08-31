@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
-    ExpenseCategoryView, ReserveView, CashView, TableView, GeneralInvoiceView
+    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView
 
 urlpatterns = [
     path('api/login/', EmployeeView.login),
@@ -99,10 +99,6 @@ urlpatterns = [
     path('api/settleInvoiceSale/', InvoiceSaleView.settle_invoice_sale),
     path('api/getTodayStatus/', InvoiceSaleView.get_today_status),
     path('api/timeCalc/', InvoiceSaleView.calec_time),
-    path('api/addExpenseCategory/', ExpenseCategoryView.add_expense_category),
-    path('api/getAllExpenseCategories/', ExpenseCategoryView.get_all_expense_categories),
-    path('api/searchExpenseCategory/', ExpenseCategoryView.search_expense_category),
-    path('api/getExpenseCategory/', ExpenseCategoryView.get_expense_category),
     path('api/addReserve/', ReserveView.add_reserve),
     path('api/getAllReserves/', ReserveView.get_reserves),
     path('api/arriveReserve/', ReserveView.arrive_reserve),
@@ -129,6 +125,10 @@ urlpatterns = [
     path('api/addTableCategory/', TableView.add_table_category),
     path('api/getTableCategory/', TableView.get_table_category),
     path('api/getTableCategories/', TableView.get_table_categories),
+    path('api/changeMenuCategoryOrder/', MenuCategoryView.change_list_order),
+    path('api/readyForSettle/', InvoiceSaleView.ready_for_settle),
+    path('api/getAllExpenseTags/', InvoiceExpenseView.get_all_tags),
+    path('api/deleteInvoiceSale/', InvoiceSaleView.delete_invoice),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),

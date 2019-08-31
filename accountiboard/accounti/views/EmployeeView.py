@@ -294,7 +294,7 @@ def get_menu_categories(request):
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
-            all_menu_categories = MenuCategory.objects.all()
+            all_menu_categories = MenuCategory.objects.all().order_by('list_order')
             menu_categories = []
             for category in all_menu_categories:
                 menu_categories.append({
@@ -544,7 +544,7 @@ def get_menu_items_with_categories(request):
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         menu_items_with_categories_data = []
-        menu_categories = MenuCategory.objects.all()
+        menu_categories = MenuCategory.objects.all().order_by('list_order')
         for cat in menu_categories:
             menu_items = MenuItem.objects.filter(menu_category=cat, is_delete=0)
             menu_items_data = []

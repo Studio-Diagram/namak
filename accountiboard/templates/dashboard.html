@@ -12,7 +12,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="manifest.json">
     <link rel="mask-icon" href="safari-pinned-tab.svg" color="#e38b5a">
     <meta name="theme-color" content="#ffffff">
 
@@ -73,6 +72,7 @@
     <script src="{% static 'modules/dashboard/controllers/reservationCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
+    <script src="{% static 'modules/dashboard/controllers/cashDisableCtrl.js' %}"></script>
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
@@ -136,12 +136,13 @@
                     </li>
                     <li class="nav-item">
                         <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager.salon"
+                           ui-sref="cash_manager"
                            href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="reservation" ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'" class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                        <a ui-sref="reservation" ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
+                           class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
                         <a ui-sref="member" href="" ng-class="isActive('/member') ? 'nav-link active' : 'nav-link'"><i
@@ -190,5 +191,8 @@
 <script src="{% static 'js/angular-sanitize.js' %}"></script>
 <script src="{% static 'js/select.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
+
+<link rel="stylesheet" href="http://mbenford.github.io/ngTagsInput/css/ng-tags-input.min.css"/>
+<script src="http://mbenford.github.io/ngTagsInput/js/ng-tags-input.min.js"></script>
 </body>
 </html>

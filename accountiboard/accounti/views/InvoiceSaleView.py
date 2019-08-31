@@ -24,6 +24,7 @@ WAIT_GAME = "منتظر بازی"
 ORDERED = "سفارش داده"
 NOT_ORDERED = "سفارش نداده"
 NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
+WAIT_FOR_SETTLE = "منتظر تسویه"
 
 
 def settle_invoice_sale(request):
@@ -45,8 +46,6 @@ def settle_invoice_sale(request):
 
         shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
         for shop_p in shop_products:
-            shop_p.shop_product.real_numbers -= shop_p.numbers
-            shop_p.save()
             shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
             unit_count = shop_p.numbers
             for purchase_to_shop in shop_to_purchases:
@@ -55,10 +54,11 @@ def settle_invoice_sale(request):
                     for i in range(0, unit_count):
                         buy_counter += 1
                         purchase_to_shop.buy_numbers += 1
-                        purchase_to_shop.invoice_purchase.supplier.remainder += purchase_to_shop.base_unit_price
+                        if purchase_to_shop.invoice_purchase.settlement_type == "AMANi":
+                            purchase_to_shop.invoice_purchase.supplier.remainder += purchase_to_shop.base_unit_price
+                            purchase_to_shop.invoice_purchase.supplier.save()
                         unit_count -= 1
                         purchase_to_shop.save()
-                        purchase_to_shop.invoice_purchase.supplier.save()
                         if purchase_to_shop.buy_numbers == purchase_to_shop.unit_numbers:
                             break
 
@@ -68,6 +68,16 @@ def settle_invoice_sale(request):
                                                buy_price=purchase_to_shop.base_unit_price, created_date=datetime.now(),
                                                numbers=buy_counter)
                     new_amani_sale.save()
+                    new_amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct(
+                        amani_sale=new_amani_sale,
+                        invoice_purchase_to_shop_product=purchase_to_shop,
+                        numbers=buy_counter,
+                    )
+                    new_amani_to_purchase.save()
+
+                    if purchase_to_shop.invoice_purchase.settlement_type != "AMANi":
+                        new_amani_sale.is_amani = False
+                        new_amani_sale.save()
 
                 elif unit_count == 0:
                     break
@@ -127,8 +137,8 @@ def get_invoice(request):
                 invoice_data['games'].append({
                     'id': game.game.pk,
                     'numbers': game.game.numbers,
-                    'start_time': game.game.start_time,
-                    'end_time': game.game.end_time,
+                    'start_time': game.game.start_time.strftime('%H:%M'),
+                    'end_time': game.game.end_time.strftime('%H:%M'),
                     'points': "%s:%s'" % (hour_points_string, min_points_string),
                     'total': game.game.points * 5000
                 })
@@ -178,7 +188,7 @@ def get_all_today_invoices(request):
         branch_obj = Branch.objects.get(pk=branch_id)
         cash_obj = Cash.objects.get(pk=cash_id)
 
-        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj).order_by("is_settled")
+        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj, is_deleted=False).order_by("is_settled")
         all_invoices_list = []
         for invoice in all_invoices:
             if invoice.settle_time:
@@ -195,11 +205,16 @@ def get_all_today_invoices(request):
             else:
                 game_status = {"status": "WAIT_GAME", "text": WAIT_GAME}
 
-            invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice)
-            if invoice_to_menu_items.count():
-                invoice_status = {"status": "ORDERED", "text": ORDERED}
+            invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
+                menu_item__menu_category__kind='OTHER')
+
+            if invoice.ready_for_settle:
+                invoice_status = {"status": "WAIT_FOR_SETTLE", "text": WAIT_FOR_SETTLE}
             else:
-                invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
+                if invoice_to_menu_items.count():
+                    invoice_status = {"status": "ORDERED", "text": ORDERED}
+                else:
+                    invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
 
             all_invoices_list.append({
                 "invoice_id": invoice.pk,
@@ -634,8 +649,10 @@ def get_today_status(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
         branch_id = rec_data['branch_id']
+        cash_id = rec_data['cash_id']
 
         branch_obj = Branch.objects.get(pk=branch_id)
+        cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
 
         now_date = datetime.now().date()
         now_time = datetime.now().time()
@@ -652,6 +669,8 @@ def get_today_status(request):
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not cash_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         status = {
             "all_sales_price": 0,
@@ -661,44 +680,80 @@ def get_today_status(request):
             "all_tax": 0,
             "all_discount": 0,
             "all_tip": 0,
+            "all_bar": 0,
+            "all_kitchen": 0,
+            "all_other": 0,
+            "all_purchase": 0,
+            "all_expense": 0,
+            "all_pays": 0,
+            "all_games": 0,
         }
 
+        all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False)
+        for invoice in all_invoices:
+            status['all_sales_price'] += invoice.total_price
+            status['all_cash'] += invoice.cash
+            status['all_pos'] += invoice.pos
+            status['all_guests'] += invoice.guest_numbers
+            status['all_tax'] += invoice.tax
+            status['all_discount'] += invoice.discount
+            status['all_tip'] += invoice.tip
+            all_invoice_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice)
+            for invoice_to_menu_item in all_invoice_menu_items:
+                if invoice_to_menu_item.menu_item.menu_category.kind == "BAR":
+                    status['all_bar'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+                elif invoice_to_menu_item.menu_item.menu_category.kind == "KITCHEN":
+                    status['all_kitchen'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+                elif invoice_to_menu_item.menu_item.menu_category.kind == "OTHER":
+                    status['all_other'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+
+            all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
+            for invoice_to_game in all_invoice_games:
+                status['all_games'] += invoice_to_game.game.points * 5000
+
         if now_time > time3am:
-            all_invoices = InvoiceSales.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoices:
+            all_invoice_purchase = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
+            for invoice in all_invoice_purchase:
                 if invoice.created_time.time() > time3am:
-                    status['all_sales_price'] += invoice.total_price
-                    status['all_cash'] += invoice.cash
-                    status['all_pos'] += invoice.pos
-                    status['all_guests'] += invoice.guest_numbers
-                    status['all_tax'] += invoice.tax
-                    status['all_discount'] += invoice.discount
-                    status['all_tip'] += invoice.tip
+                    status['all_purchase'] += invoice.total_price
+
+            all_invoice_expense = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=now_date)
+            for invoice in all_invoice_expense:
+                if invoice.created_time.time() > time3am:
+                    status['all_expense'] += invoice.price
+
+            all_invoice_pays = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=now_date)
+            for invoice in all_invoice_pays:
+                if invoice.created_time.time() > time3am:
+                    status['all_pays'] += invoice.payment_amount
 
         elif time0am < now_time < time3am:
-            all_invoices_yesterday = InvoiceSales.objects.filter(branch=branch_obj, created_time__date=yesterday)
-            for invoice in all_invoices_yesterday:
+            all_invoice_purchase_y = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=yesterday)
+            for invoice in all_invoice_purchase_y:
                 if invoice.created_time.time() > time3am:
-                    status['all_sales_price'] += invoice.total_price
-                    status['all_cash'] += invoice.cash
-                    status['all_pos'] += invoice.pos
-                    status['all_guests'] += invoice.guest_numbers
-                    status['all_tax'] += invoice.tax
-                    status['all_discount'] += invoice.discount
-                    status['all_tip'] += invoice.tip
+                    status['all_purchase'] += invoice.total_price
 
-            all_invoices_today = InvoiceSales.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoices_today:
-                status['all_sales_price'] += invoice.total_price
-                status['all_cash'] += invoice.cash
-                status['all_pos'] += invoice.pos
-                status['all_guests'] += invoice.guest_numbers
-                status['all_tax'] += invoice.tax
-                status['all_discount'] += invoice.discount
-                status['all_tip'] += invoice.tip
+            all_invoice_purchase_t = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
+            for invoice in all_invoice_purchase_t:
+                status['all_purchase'] += invoice.total_price
 
-        else:
-            pass
+            all_invoice_expense_y = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=yesterday)
+            for invoice in all_invoice_expense_y:
+                if invoice.created_time.time() > time3am:
+                    status['all_expense'] += invoice.price
+
+            all_invoice_expense_t = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=now_date)
+            for invoice in all_invoice_expense_t:
+                status['all_expense'] += invoice.price
+
+            all_invoice_pays_y = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=yesterday)
+            for invoice in all_invoice_pays_y:
+                if invoice.created_time.time() > time3am:
+                    status['all_pays'] += invoice.payment_amount
+
+            all_invoice_pays_t = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=now_date)
+            for invoice in all_invoice_pays_t:
+                status['all_pays'] += invoice.payment_amount
 
         return JsonResponse({"response_code": 2, "all_today_status": status})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -930,3 +985,54 @@ def print_after_save_template(request):
 
         return render(request, 'invoice_not_cash.html', {'invoice_data': print_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+def ready_for_settle(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    invoice_id = rec_data['invoice_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
+    invoice_obj.ready_for_settle = True
+    invoice_obj.save()
+    return JsonResponse({"response_code": 2})
+
+
+def delete_invoice(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    invoice_id = rec_data['invoice_id']
+    description = rec_data['description']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
+    invoice_obj.is_deleted = True
+
+    all_shop_to_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
+    for shop_p in all_shop_to_invoice:
+        shop_p.shop_product.real_numbers += shop_p.numbers
+        shop_p.shop_product.save()
+
+    new_invoice_deleted = DeletedInvoiceSale(
+        invoice_sale=invoice_obj,
+        description=description,
+    )
+    new_invoice_deleted.save()
+    invoice_obj.save()
+    return JsonResponse({"response_code": 2})

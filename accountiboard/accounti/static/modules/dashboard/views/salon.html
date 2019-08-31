@@ -69,25 +69,25 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal" id="addInvoiceModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addInvoiceModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور فروش </h2>
-                    <a ng-click="openPermissionModal()" class="mainButton redButton" href=""
+                    <button ng-click="openPermissionModal()" class="mainButton redButton" ng-disabled="disable_print_after_save_all_buttons"
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="openPayModal()" href="" class="mainButton greenButton"><i
-                            class="fas fa-dollar-sign"></i> تسویه</a>
-                    <a href="" ng-click="print_data(new_invoice_data.invoice_sales_id, 'CASH')"
-                       class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری</a>
-                    <a href="" ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
-                       class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش</a>
+                    </button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="openPayModal()" class="mainButton greenButton"><i
+                            class="fas fa-dollar-sign"></i> تسویه</button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_cash()"
+                       class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری</button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
+                       class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش</button>
                     <a href="" class="mainButton grayButton"><i class="fas fa-cut"></i> تفکیک فاکتور</a>
-                    <a href="" ng-click="saveInvoice()" class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره</a>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()" class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره</button>
 
                 </div>
                 <div class="modal-body">
@@ -284,7 +284,7 @@
                                         <th class="first"><input type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index | persianNumber }}</td>
-                                        <td>بازی {{ game.numbers | persianNumber }} نفره</td>
+                                        <td>بازی {{ game.numbers | persianNumber }} نفره ( {{ game.start_time | persianNumber }} تا {{ game.end_time | persianNumber }} )</td>
                                         <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
                                         <td style="direction: ltr">{{ game.points | persianNumber }}</td>
                                         <td>{{ game.total | number| persianNumber }}</td>
@@ -355,7 +355,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal alertModal" id="payModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal" id="payModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -393,7 +393,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal" id="viewInvoiceModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="viewInvoiceModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">

@@ -4,8 +4,13 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $(document).ready(function () {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                     $("#datepicker").datepicker();
+                    $('#datepicker').datepicker('setDate', today);
                 });
+                console.log(today);
+
             })(jQuery);
             $scope.is_in_edit_mode_supplier = false;
             $scope.error_message = '';
@@ -199,7 +204,7 @@ angular.module("dashboard")
                 new_total_price += entry2.total;
             }
 
-            $scope.new_invoice_purchase_data.total_price = new_total_price;
+            $scope.new_invoice_purchase_data.total_price = Math.round(new_total_price);
         };
 
         $scope.changeItemPrice = function (item_index) {
@@ -215,7 +220,7 @@ angular.module("dashboard")
                 var entry2 = $scope.new_invoice_purchase_data.material_items[j];
                 new_total_price += entry2.total;
             }
-            $scope.new_invoice_purchase_data.total_price = new_total_price;
+            $scope.new_invoice_purchase_data.total_price = Math.round(new_total_price);
         };
 
         $scope.add_item = function (id, name, price) {
@@ -271,10 +276,10 @@ angular.module("dashboard")
                     'price': int_buy_price,
                     'sale_price': int_price,
                     'nums': 1,
-                    'total': int_price,
+                    'total': int_buy_price,
                     'description': ''
                 });
-                $scope.new_invoice_purchase_data.total_price += int_price;
+                $scope.new_invoice_purchase_data.total_price += int_buy_price;
             }
             else {
                 for (var i = 0; i < $scope.new_invoice_purchase_data.shop_product_items.length; i++) {
@@ -294,10 +299,10 @@ angular.module("dashboard")
                         'price': int_buy_price,
                         'sale_price': int_price,
                         'nums': 1,
-                        'total': int_price,
+                        'total': int_buy_price,
                         'description': ''
                     });
-                    $scope.new_invoice_purchase_data.total_price += int_price;
+                    $scope.new_invoice_purchase_data.total_price += int_buy_price;
                 }
                 is_fill = false;
             }
@@ -316,7 +321,7 @@ angular.module("dashboard")
                 var entry2 = $scope.new_invoice_purchase_data.material_items[j];
                 new_total_price += entry2.total;
             }
-            $scope.new_invoice_purchase_data.total_price = new_total_price;
+            $scope.new_invoice_purchase_data.total_price = Math.round(new_total_price);
         };
 
         $scope.changeItemShopNumber = function (item_index) {
@@ -332,7 +337,7 @@ angular.module("dashboard")
                 var entry2 = $scope.new_invoice_purchase_data.material_items[j];
                 new_total_price += entry2.total;
             }
-            $scope.new_invoice_purchase_data.total_price = new_total_price;
+            $scope.new_invoice_purchase_data.total_price = Math.round(new_total_price);
         };
 
         $scope.get_materials = function () {
@@ -523,7 +528,7 @@ angular.module("dashboard")
         };
 
         $scope.deleteNewItem = function (type, item_index) {
-            if (type === 'material'){
+            if (type === 'material') {
                 $scope.new_invoice_purchase_data.material_items.splice(item_index, 1);
             }
             else {
@@ -535,6 +540,7 @@ angular.module("dashboard")
             $scope.addInvoicePurchase();
             $timeout(function () {
                 $scope.openAddModal();
+                $scope.getNextFactorNumber('BUY');
             }, 1000);
         };
 

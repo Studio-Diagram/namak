@@ -3,6 +3,8 @@ angular.module("dashboard")
         var initialize = function () {
             $scope.is_in_edit_mode = false;
             $scope.current_menu_nav = "MENU";
+            $scope.invoice_delete_description = "";
+            $scope.disable_print_after_save_all_buttons = false;
             $scope.new_invoice_data = {
                 'invoice_sales_id': 0,
                 'table_id': 0,
@@ -105,6 +107,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
+                        $scope.new_invoice_data.cash_id = data['cash_id'];
                         $scope.getAllTodayInvoices();
                     }
                     else if (data['response_code'] === 3) {
@@ -143,7 +146,9 @@ angular.module("dashboard")
         };
 
         $scope.print_data = function (invoice_id, print_kind, invoice_data) {
+            $scope.disable_print_after_save_all_buttons = true;
             if (print_kind === "CASH") {
+                $scope.read_for_settle();
                 var sending_data = {
                     'is_customer_print': 1,
                     'invoice_id': invoice_id
@@ -153,7 +158,13 @@ angular.module("dashboard")
                     url: 'http://127.0.0.1:8000/printData',
                     data: sending_data,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                })
+                }).then(function successCallback(response) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                }, function errorCallback(response) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                    $scope.error_message = "Printer Server not connected.";
+                    $scope.openErrorModal();
+                });
             }
             else if (print_kind === "NO-CASH") {
                 var sending_data = {
@@ -167,8 +178,6 @@ angular.module("dashboard")
                     data: sending_data,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(function successCallback(response) {
-
-                }, function errorCallback(response) {
                     var sending_data_2 = {
                         'invoice_id': invoice_id,
                         'activate_is_print': true
@@ -176,26 +185,34 @@ angular.module("dashboard")
                     dashboardHttpRequest.printAfterSave(sending_data_2)
                         .then(function (data) {
                             if (data['response_code'] === 2) {
-
+                                $scope.disable_print_after_save_all_buttons = false;
                             }
                             else if (data['response_code'] === 3) {
+                                $scope.disable_print_after_save_all_buttons = false;
                                 $scope.error_message = data['error_msg'];
                                 $scope.openErrorModal();
                             }
                         }, function (error) {
+                            $scope.disable_print_after_save_all_buttons = false;
                             $scope.error_message = 500;
                             $scope.closeTimeCalcModal();
                             $scope.openErrorModal();
                         });
+                }, function errorCallback(response) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                    $scope.error_message = "Printer Server not connected.";
+                    $scope.openErrorModal();
                 });
             }
         };
 
 
         $scope.print_after_save = function (invoice_id) {
+            $scope.disable_print_after_save_all_buttons = true;
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
                         $scope.last_table_add = $scope.new_invoice_data.table_name;
@@ -231,24 +248,23 @@ angular.module("dashboard")
         };
 
 
-        $scope.print_cash = function (invoice_id) {
-            var sending_data = {
-                'invoice_id': invoice_id
-            };
-            dashboardHttpRequest.printCash(sending_data)
+        $scope.print_cash = function () {
+            $scope.disable_print_after_save_all_buttons = true;
+            dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.print_data_info = data['printer_data'];
-                        $scope.print_data($scope.print_data_info);
+                        $scope.get_shop_products();
+                        $scope.new_invoice_data.current_game.id = data['new_game_id'];
+                        $scope.getAllTodayInvoices();
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
+                        $scope.print_data($scope.new_invoice_data.invoice_sales_id, 'CASH');
+                        $scope.refreshInvoice(data['new_invoice_id']);
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        console.log("NOT SUCCESS!");
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.closeTimeCalcModal();
-                    $scope.openErrorModal();
+                    console.log(error);
                 });
         };
 
@@ -327,17 +343,11 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
+                        $scope.refreshInvoiceInPayModal(data['new_invoice_id']);
                         $scope.getAllTodayInvoices();
                         $scope.last_table_add = $scope.new_invoice_data.table_name;
-                        // open pay modal after saving the invoice
-                        jQuery.noConflict();
-                        (function ($) {
-                            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip);
-                            $scope.new_invoice_data.cash = 0;
-                            $('#payModal').modal('show');
-                            $('#addInvoiceModal').css('z-index', 1000);
-                        })(jQuery);
                     }
                     else if (data['response_code'] === 3) {
                         console.log("NOT SUCCESS!");
@@ -370,6 +380,48 @@ angular.module("dashboard")
                 $('#addInvoiceModal').css('z-index', "");
             })(jQuery);
             $scope.read_only_mode = false;
+        };
+
+        $scope.openDeleteInvoiceModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteInvoiceModal').modal('show');
+                $('#addInvoiceModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closeDeleteInvoiceModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteInvoiceModal').modal('hide');
+                $('#addInvoiceModal').css('z-index', "");
+            })(jQuery);
+        };
+
+        $scope.delete_invoice = function () {
+            var sending_data = {
+                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
+                "description": $scope.invoice_delete_description,
+                "username": $rootScope.user_data.username,
+                "branch_id": $rootScope.user_data.branch
+            };
+            dashboardHttpRequest.deleteInvoiceSale(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.invoice_delete_description = "";
+                        $scope.closeDeleteInvoiceModal();
+                        $scope.closeAddInvoiceModal();
+                        $scope.getAllTodayInvoices();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+            $scope.closeDeleteModal();
         };
 
         $scope.delete_items = function () {
@@ -514,13 +566,13 @@ angular.module("dashboard")
         };
 
         $scope.deleteNewItem = function (item_index) {
+            $scope.new_invoice_data.total_price -= $scope.new_invoice_data.menu_items_new[item_index].price * $scope.new_invoice_data.menu_items_new[item_index].nums;
             $scope.new_invoice_data.menu_items_new.splice(item_index, 1);
-
         };
 
         $scope.deleteNewItemShop = function (item_index) {
+            $scope.new_invoice_data.total_price -= $scope.new_invoice_data.shop_items_new[item_index].price * $scope.new_invoice_data.shop_items_new[item_index].nums;
             $scope.new_invoice_data.shop_items_new.splice(item_index, 1);
-
         };
 
         $scope.changeMenuNav = function (name) {
@@ -700,6 +752,7 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
                         $scope.last_table_add = $scope.new_invoice_data.table_name;
@@ -998,10 +1051,68 @@ angular.module("dashboard")
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
+                            'cash': 0,
+                            'card': 0,
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
                         };
+                        $scope.last_table_add = data['invoice']['table_name'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        console.log("NOT SUCCESS!");
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
+        };
+
+        $scope.refreshInvoiceInPayModal = function (invoice_id) {
+            $scope.is_in_edit_mode_invoice = true;
+            $scope.will_delete_items.invoice_id = invoice_id;
+            var sending_data = {
+                "invoice_id": invoice_id,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getInvoice(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                        $scope.new_invoice_data = {
+                            'invoice_sales_id': data['invoice']['invoice_sales_id'],
+                            'table_id': data['invoice']['table_id'],
+                            'table_name': data['invoice']['table_name'],
+                            'member_id': data['invoice']['member_id'],
+                            'guest_numbers': data['invoice']['guest_numbers'],
+                            'member_name': data['invoice']['member_name'],
+                            'member_data': data['invoice']['member_data'],
+                            'current_game': {
+                                'id': data['invoice']['current_game']['id'],
+                                'numbers': data['invoice']['current_game']['numbers'],
+                                'start_time': data['invoice']['current_game']['start_time']
+                            },
+                            'menu_items_old': data['invoice']['menu_items_old'],
+                            'shop_items_old': data['invoice']['shop_items_old'],
+                            'menu_items_new': [],
+                            'shop_items_new': [],
+                            'games': data['invoice']['games'],
+                            'total_price': data['invoice']['total_price'],
+                            'discount': data['invoice']['discount'],
+                            'tip': data['invoice']['tip'],
+                            'cash': 0,
+                            'card': 0,
+                            'branch_id': $rootScope.user_data.branch,
+                            'cash_id': $rootScope.cash_data.cash_id,
+                            'username': $rootScope.user_data.username
+                        };
+                        jQuery.noConflict();
+                        (function ($) {
+                            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip);
+                            $scope.new_invoice_data.cash = 0;
+                            $('#payModal').modal('show');
+                            $('#addInvoiceModal').css('z-index', 1000);
+                        })(jQuery);
                         $scope.last_table_add = data['invoice']['table_name'];
                     }
                     else if (data['response_code'] === 3) {
@@ -1068,6 +1179,29 @@ angular.module("dashboard")
             };
             $scope.new_invoice_data.table_id = last_table_id;
             $scope.new_invoice_data.table_name = $scope.last_table_add;
+        };
+
+        $scope.read_for_settle = function () {
+            var sending_data = {
+                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.readyForSettle(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.getAllTodayInvoices();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.disable_print_after_save_all_buttons = false;
+                    $scope.error_message = 500;
+                    $scope.closeTimeCalcModal();
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.reset_deleted_items = function () {

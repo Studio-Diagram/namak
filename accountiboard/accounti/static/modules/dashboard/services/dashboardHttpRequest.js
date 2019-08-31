@@ -567,34 +567,6 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addExpenseCategory': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/addExpenseCategory/",
-                    'data': data
-                });
-            },
-            'getAllExpenseCategories': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getAllExpenseCategories/",
-                    'data': data
-                });
-            },
-            'searchExpenseCategory': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/searchExpenseCategory/",
-                    'data': data
-                });
-            },
-            'getExpenseCategory': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getExpenseCategory/",
-                    'data': data
-                });
-            },
             'addReserve': function (data) {
                 return this.request({
                     'method': "POST",
@@ -788,6 +760,34 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/getTableCategories/",
+                    'data': data
+                });
+            },
+            'changeMenuCategoryOrder': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/changeMenuCategoryOrder/",
+                    'data': data
+                });
+            },
+            'readyForSettle': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/readyForSettle/",
+                    'data': data
+                });
+            },
+            'getAllExpenseTags': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getAllExpenseTags/",
+                    'data': data
+                });
+            },
+            'deleteInvoiceSale': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/deleteInvoiceSale/",
                     'data': data
                 });
             }

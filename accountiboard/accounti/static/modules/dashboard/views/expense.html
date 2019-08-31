@@ -28,7 +28,8 @@
                     </a>
                     <a ng-hide="read_only_mode" href="" ng-click="addExpense()" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();" class="mainButton greenButton"><i
+                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
+                       class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
@@ -71,12 +72,30 @@
                                         </td>
                                         <td>
                                             <small>دسته‌بندی</small>
-                                            <select ng-model="new_invoice_expense_data.expense_cat_id"
+                                            <select ng-model="new_invoice_expense_data.expense_kind"
                                                     class="form-control">
-                                                <option ng-repeat="cat in expense_cats"
-                                                        value="{{ cat.id }}"
-                                                        ng-selected="cat.id == new_invoice_expense_data.expense_cat_id">{{ cat.name }}</option>
+                                                <option value="JARI_MASRAFI">جاری مصرفی</option>
+                                                <option value="JARI_NOT_MASRAFI">جاری غیر مصرفی</option>
+                                                <option value="NOT_JARI_MASRAFI">غیر جاری مصرفی</option>
+                                                <option value="NOT_JARI_NOT_MASRAFI">غیر جاری غیر مصرفی</option>
                                             </select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="invoiceTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <small>تگ‌های هزینه</small>
+                                            <tags-input ng-model="tags" display-property="name"
+                                                        placeholder="تگ خود را اضافه کنید." replace-spaces-with-dashes="false">
+                                                <auto-complete source="loadTags($query)"
+                                                               min-length="0"
+                                                               load-on-focus="true"
+                                                               load-on-empty="true"
+                                                               max-results-to-show="32"></auto-complete>
+                                            </tags-input>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -107,8 +126,8 @@
                                     </tbody>
                                 </table>
                                 <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton"><i
-                            class="fas fa-eraser"></i>
-                        اضافه کردن سطر جدید</a>
+                                        class="fas fa-eraser"></i>
+                                    اضافه کردن سطر جدید</a>
                                 <table class="invoiceTable invoiceTotal">
                                     <tbody>
                                     <tr>
@@ -168,7 +187,8 @@
                     <li class="breadcrumb-item active" aria-current="page">هزینه‌ها</li>
                 </ol>
             </nav>
-            <a ng-click="openAddModal();getNextFactorNumber('EXPENSE')" href="" class="mainButton greenButton tableLefty">هزینه جدید</a>
+            <a ng-click="openAddModal();getNextFactorNumber('EXPENSE')" href=""
+               class="mainButton greenButton tableLefty">هزینه جدید</a>
             <input ng-keyup="searchExpense()" ng-model="search_data_expense.search_word"
                    class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
         </div>

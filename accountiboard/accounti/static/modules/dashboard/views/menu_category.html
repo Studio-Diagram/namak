@@ -34,6 +34,9 @@
                                     <option ng-selected="new_menu_category_data.kind === 'BAR'" value="BAR">
                                         بار
                                     </option>
+                                    <option ng-selected="new_menu_category_data.kind === 'OTHER'" value="OTHER">
+                                        سایر
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -87,14 +90,19 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th style="width: 2em;" scope="col"></th>
                             <th scope="col">نام دسته‌بندی</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="category in menu_categories">
-                            <th scope="row">{{ category.name }}</th>
-                            <td><a ng-click="editMenuCategory(category.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            <td scope="row">
+                                <a ng-click="change_order(category.id, 'UP')"><i class="fas fa-sort-up"></i></a>
+                                <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-sort-down"></i></a>
+                            </td>
+                            <td style="vertical-align: middle" scope="row">{{ category.name }}</td>
+                            <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>
                         </tbody>

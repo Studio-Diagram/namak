@@ -1,4 +1,4 @@
-var myApp = angular.module('dashboard', ['ui.router', 'ngCookies', 'satellizer', 'ui.select']);
+var myApp = angular.module('dashboard', ['ui.router', 'ngCookies', 'satellizer', 'ui.select', 'ngTagsInput']);
 
 myApp.directive('ngEnter', function () {
     return function (scope, element, attrs) {
@@ -143,6 +143,12 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html/'
     };
 
+    var cash_disable = {
+        name: 'cash_disable',
+        url: '/cash_disable/:state',
+        templateUrl: 'static/modules/dashboard/views/cash-disable.html/'
+    };
+
     $stateProvider.state(registerEmployee);
     $stateProvider.state(addEmployee);
     $stateProvider.state(menuCategory);
@@ -167,6 +173,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(reservation);
     $stateProvider.state(open_close_cash);
     $stateProvider.state(tables);
+    $stateProvider.state(cash_disable);
 });
 
 angular.module("dashboard")

@@ -101,6 +101,7 @@ def get_members(request):
                 'first_name': member.first_name,
                 'last_name': member.last_name,
                 'phone': member.phone,
+                'card_number': member.card_number,
             })
         return JsonResponse({"response_code": 2, 'members': members_data})
 
@@ -124,6 +125,7 @@ def search_member(request):
                 'first_name': member.first_name,
                 'last_name': member.last_name,
                 'phone': member.phone,
+                'card_number': member.card_number,
             })
         return JsonResponse({"response_code": 2, 'members': members})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
