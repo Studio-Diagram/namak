@@ -333,6 +333,7 @@ angular.module("dashboard")
                     jQuery.noConflict();
                     (function ($) {
                         $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("background", "none");
+                        $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("border-color", "var(--pageBorder)");
                     })(jQuery);
                 }
             }
