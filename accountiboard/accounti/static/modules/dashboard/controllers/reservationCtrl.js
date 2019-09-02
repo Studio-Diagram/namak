@@ -104,6 +104,26 @@ angular.module("dashboard")
                 if (event.ctrlKey && event.keyCode === 57) {
                     $state.go('manager.addEmployee');
                 }
+            };
+            $timeout(function () {
+                $scope.grey_past_hours();
+            }, 1000);
+        };
+
+        $scope.grey_past_hours = function () {
+            if ($scope.today_date === $scope.fixed_date) {
+                var diff = 1000 * 60 * 15;
+                var date = new Date();
+                var rounded = new Date(Math.round(date.getTime() / diff) * diff);
+                for (var i = 0; i < $scope.working_times.length; i++) {
+                    if (Number($scope.working_times[i].hour) === rounded.getHours() && Number($scope.working_times[i].minute) === rounded.getMinutes()) {
+                        break
+                    }
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("background", "rgb(255, 171, 171)");
+                    })(jQuery);
+                }
             }
         };
 
@@ -133,6 +153,7 @@ angular.module("dashboard")
                     $($scope.starting_selected_time.class_name).css("background", "rgb(197, 197, 197)");
                 })(jQuery);
             }
+            $scope.grey_past_hours();
         };
 
         $scope.clicking_reserve = function (hour, min, is_hour, table, event, index) {
@@ -235,6 +256,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.fixed_date = data['today_for_reserve'];
+                        $scope.today_date = data['today_for_reserve'];
                         $scope.tomorrow_date = data['tomorrow_for_reserve'];
                         $scope.new_reserve_data.reserve_date = $scope.fixed_date;
                         $scope.get_reserves_data($rootScope.user_data, $scope.fixed_date);
@@ -304,8 +326,19 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.kill_grey_background = function () {
+            if ($scope.today_date !== $scope.fixed_date) {
+                for (var i = 0; i < $scope.working_times.length; i++) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("background", "none");
+                    })(jQuery);
+                }
+            }
+        };
+
         $scope.change_date = function () {
-            $scope.fixed_date = $("#datepicker").val()
+            $scope.fixed_date = $("#datepicker").val();
             $scope.new_reserve_data.reserve_date = $scope.fixed_date;
             jQuery.noConflict();
             (function ($) {
@@ -314,6 +347,8 @@ angular.module("dashboard")
                     $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                 });
             })(jQuery);
+            $scope.grey_past_hours();
+            $scope.kill_grey_background();
             $scope.get_reserves_data($rootScope.user_data, $scope.fixed_date);
         };
 
@@ -327,6 +362,7 @@ angular.module("dashboard")
                     $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                 });
             })(jQuery);
+            $scope.kill_grey_background();
             $scope.get_reserves_data($rootScope.user_data, $scope.tomorrow_date);
         };
 
@@ -385,6 +421,7 @@ angular.module("dashboard")
                                 $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                             });
                         })(jQuery);
+                        $scope.grey_past_hours();
                     }
                     else if (data['response_code'] === 3) {
                         console.log("NOT SUCCESS!");
