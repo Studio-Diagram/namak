@@ -1,17 +1,7 @@
 angular.module("dashboard")
     .controller("buyCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $(document).ready(function () {
-                    var date = new Date();
-                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                    $("#datepicker").datepicker();
-                    $('#datepicker').datepicker('setDate', today);
-                });
-                console.log(today);
-
-            })(jQuery);
+            $scope.set_today_for_invoice();
             $scope.is_in_edit_mode_supplier = false;
             $scope.error_message = '';
             $scope.current_menu_nav = "MAT";
@@ -47,6 +37,20 @@ angular.module("dashboard")
             $scope.get_materials();
             $scope.get_shop_products();
 
+        };
+
+        $scope.set_today_for_invoice = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    $("#datepicker").datepicker();
+                    $('#datepicker').datepicker('setDate', today);
+                });
+                console.log(today);
+
+            })(jQuery);
         };
 
         $scope.showInvoicePurchase = function (invoice_id) {
@@ -376,6 +380,7 @@ angular.module("dashboard")
         };
 
         $scope.openAddModal = function () {
+            $scope.set_today_for_invoice();
             jQuery.noConflict();
             (function ($) {
                 $('#addModal').modal('show');
@@ -529,9 +534,11 @@ angular.module("dashboard")
 
         $scope.deleteNewItem = function (type, item_index) {
             if (type === 'material') {
+                $scope.new_invoice_purchase_data.total_price -= $scope.new_invoice_purchase_data.material_items[item_index].total;
                 $scope.new_invoice_purchase_data.material_items.splice(item_index, 1);
             }
             else {
+                $scope.new_invoice_purchase_data.total_price -= $scope.new_invoice_purchase_data.shop_product_items[item_index].total;
                 $scope.new_invoice_purchase_data.shop_product_items.splice(item_index, 1);
             }
         };
@@ -542,6 +549,20 @@ angular.module("dashboard")
                 $scope.openAddModal();
                 $scope.getNextFactorNumber('BUY');
             }, 1000);
+        };
+
+        $scope.change_total_price = function () {
+            var new_total_price = 0;
+            for (var i = 0; i < $scope.new_invoice_purchase_data.shop_product_items.length; i++) {
+                var entry = $scope.new_invoice_purchase_data.shop_product_items[i];
+                new_total_price += entry.total;
+            }
+            for (var j = 0; j < $scope.new_invoice_purchase_data.material_items.length; j++) {
+                var entry2 = $scope.new_invoice_purchase_data.material_items[j];
+                new_total_price += entry2.total;
+            }
+            $scope.new_invoice_purchase_data.total_price = Number(new_total_price) + Number($scope.new_invoice_purchase_data.tax) - Number($scope.new_invoice_purchase_data.discount);
+            $scope.new_invoice_purchase_data.total_price = Math.round($scope.new_invoice_purchase_data.total_price);
         };
 
         $scope.resetFrom = function () {
@@ -559,6 +580,20 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            if ($scope.search_data_material.search_word) {
+                $scope.search_data_material = {
+                    'search_word': '',
+                    'username': $rootScope.user_data.username
+                };
+                $scope.get_materials();
+            }
+            if ($scope.search_data_shop_products.search_word) {
+                $scope.search_data_shop_products = {
+                    'search_word': '',
+                    'username': $rootScope.user_data.username
+                };
+                $scope.get_shop_products();
+            }
         };
         initialize();
     });

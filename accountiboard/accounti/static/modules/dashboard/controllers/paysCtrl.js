@@ -1,15 +1,7 @@
 angular.module("dashboard")
     .controller("paysCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $(document).ready(function () {
-                    var date = new Date();
-                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                    $("#datepicker").datepicker();
-                    $('#datepicker').datepicker('setDate', today);
-                });
-            })(jQuery);
+            $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.new_pay_data = {
                 'id': 0,
@@ -28,6 +20,20 @@ angular.module("dashboard")
             $scope.get_pays();
             $scope.get_suppliers();
 
+        };
+
+        $scope.set_today_for_invoice = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    $("#datepicker").datepicker();
+                    $('#datepicker').datepicker('setDate', today);
+                });
+                console.log(today);
+
+            })(jQuery);
         };
 
         $scope.getNextFactorNumber = function (invoice_type) {
@@ -87,6 +93,7 @@ angular.module("dashboard")
         };
 
         $scope.openAddModal = function () {
+            $scope.set_today_for_invoice();
             jQuery.noConflict();
             (function ($) {
                 $('#addModal').modal('show');

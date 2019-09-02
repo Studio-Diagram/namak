@@ -1,13 +1,8 @@
 from django.http import JsonResponse
-import json, base64, random
+import json
 from accounti.models import *
-from django.db.models import Q
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
+from django.db.models.functions import Concat
+from django.db.models import CharField, Value as V
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -18,6 +13,7 @@ PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 DUPLICATE_MEMBER_ENTRY = "شماره تلفن یا کارت تکراری است."
 MEMBER_NOT_FOUND = "عضوی یافت نشد."
+
 
 def add_member(request):
     if request.method == "POST":
@@ -116,8 +112,9 @@ def search_member(request):
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = Member.objects.filter(first_name__contains=search_word) | Member.objects.filter(
-            last_name__contains=search_word)
+        items_searched = Member.objects.annotate(
+            full_name=Concat('first_name', V(' '), 'last_name')).filter(
+            full_name__contains=search_word)
         members = []
         for member in items_searched:
             members.append({
@@ -171,7 +168,6 @@ def get_member(request):
                 else:
                     return JsonResponse({"response_code": 3, 'error_msg': MEMBER_NOT_FOUND})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-
 
 
 def add_old_member(request):

@@ -55,15 +55,10 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username
             };
 
-            $scope.serach_data_employee = {
-                'search_word': '',
-                'branch_id': $rootScope.user_data.branch
-            };
             $scope.search_data_shop_products = {
                 'search_word': '',
                 'username': $rootScope.user_data.username
             };
-            $scope.employeeSearchWord = '';
             $scope.get_today_cash();
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
             $scope.get_tables_data($rootScope.user_data);
@@ -71,6 +66,11 @@ angular.module("dashboard")
             $window.onkeyup = function (event) {
                 if (event.keyCode === 27) {
                     $scope.closeAddInvoiceModal();
+                    $scope.closePayModal();
+                    $scope.closeTimeCalcModal();
+                    $scope.closeDeleteModal();
+                    $scope.closeErrorModal();
+                    $scope.closeDeleteInvoiceModal();
                 }
                 if (event.ctrlKey && event.keyCode === 49) {
 
@@ -1177,6 +1177,24 @@ angular.module("dashboard")
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username
             };
+            if ($scope.search_data_menu_item.search_word) {
+                $scope.search_data_menu_item = {
+                    'search_word': '',
+                    'branch_id': $rootScope.user_data.branch,
+                    'username': $rootScope.user_data.username
+                };
+                $scope.get_menu_items_with_categories_data($rootScope.user_data);
+            }
+            if ($scope.search_data_shop_products.search_word) {
+                $scope.search_data_shop_products = {
+                    'search_word': '',
+                    'username': $rootScope.user_data.username
+                };
+
+                $scope.get_shop_products();
+
+            }
+
             $scope.new_invoice_data.table_id = last_table_id;
             $scope.new_invoice_data.table_name = $scope.last_table_add;
         };

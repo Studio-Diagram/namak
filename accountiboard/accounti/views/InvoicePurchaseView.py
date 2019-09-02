@@ -120,7 +120,7 @@ def create_new_invoice_purchase(request):
                 settlement_type=settlement_type,
                 tax=tax,
                 discount=discount,
-                total_price=total_price,
+                total_price=0,
                 factor_number=new_factor_number
             )
             new_invoice.save()
@@ -153,8 +153,12 @@ def create_new_invoice_purchase(request):
                 new_item_to_invoice.save()
                 new_invoice.total_price += item['total']
 
+            new_invoice.total_price = int(new_invoice.total_price) + int(new_invoice.tax) - int(new_invoice.discount)
+
+            new_invoice.save()
+
             if settlement_type == "CREDIT":
-                supplier_obj.remainder += total_price
+                supplier_obj.remainder += int(new_invoice.total_price)
                 supplier_obj.save()
 
             return JsonResponse({"response_code": 2})
@@ -326,7 +330,7 @@ def search_shop_products(request):
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = ShopProduct.objects.filter(name__contains=search_word)
+        items_searched = ShopProduct.objects.filter(name__icontains=search_word)
         shops = []
         for shop in items_searched:
             last_shop_price = 0

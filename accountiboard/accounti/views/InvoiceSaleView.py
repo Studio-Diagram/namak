@@ -1,15 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-import json, base64, random, jdatetime
+import json, jdatetime
 from accounti.models import *
-from django.db.models import Q
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta, date
-from pytz import timezone
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -188,7 +181,8 @@ def get_all_today_invoices(request):
         branch_obj = Branch.objects.get(pk=branch_id)
         cash_obj = Cash.objects.get(pk=cash_id)
 
-        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj, is_deleted=False).order_by("is_settled")
+        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj, is_deleted=False).order_by(
+            "is_settled")
         all_invoices_list = []
         for invoice in all_invoices:
             if invoice.settle_time:
@@ -432,30 +426,6 @@ def create_new_invoice_sales(request):
             new_invoice_id = old_invoice.pk
         return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-
-
-def search_member(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        username = rec_data['username']
-        branch_id = rec_data['branch']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not search_word:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = Member.objects.filter(first_name__contains=search_word) | Member.objects.filter(
-            last_name__contains=search_word)
-        members = []
-        for member in items_searched:
-            members.append({
-                'id': member.pk,
-                'first_name': member.first_name,
-                'last_name': member.last_name,
-                'phone': member.phone,
-            })
-        return JsonResponse({"response_code": 2, 'members': members})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 

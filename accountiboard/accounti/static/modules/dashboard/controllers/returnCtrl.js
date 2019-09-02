@@ -1,15 +1,7 @@
 angular.module("dashboard")
     .controller("returnCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $(document).ready(function () {
-                    var date = new Date();
-                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                    $("#datepicker").datepicker();
-                    $('#datepicker').datepicker('setDate', today);
-                });
-            })(jQuery);
+            $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.new_invoice_return_data = {
                 'id': 0,
@@ -30,6 +22,20 @@ angular.module("dashboard")
             $scope.get_returns();
             $scope.get_suppliers();
             $scope.get_shop_products();
+        };
+
+        $scope.set_today_for_invoice = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    $("#datepicker").datepicker();
+                    $('#datepicker').datepicker('setDate', today);
+                });
+                console.log(today);
+
+            })(jQuery);
         };
 
         $scope.get_last_buy_price = function (shop_product_id) {
@@ -108,6 +114,7 @@ angular.module("dashboard")
         };
 
         $scope.openAddModal = function () {
+            $scope.set_today_for_invoice();
             jQuery.noConflict();
             (function ($) {
                 $('#addModal').modal('show');
