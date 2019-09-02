@@ -22,16 +22,20 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-            <img style="width: 50%;margin-top: 8em;margin-right: 25%" class="img img-responsive" src="static/img/lock.png">
-            <button ng-show="cash_state === 'NO_CASH'" ng-click="open_cash()" class="mainButton greenButton"
-                    id="open-cash-button">باز کردن صندوق
-            </button>
-            <button ng-show="cash_state === 'OLD_CASH'" ng-click="close_then_open_cash()" class="mainButton redButton"
-                    id="close-cash-button">بستن صندوق قدیمی و باز کردن صندوق جدید
-            </button>
+    <main class="pageContent container-fluid">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <img style="width: 50%;margin-top: 8em;margin-right: 25%" class="img img-responsive"
+                     src="static/img/lock.png">
+                <button ng-show="cash_state === 'NO_CASH'" ng-click="open_cash()" class="mainButton greenButton"
+                        id="open-cash-button">باز کردن صندوق
+                </button>
+                <button ng-show="cash_state === 'OLD_CASH'" ng-click="close_then_open_cash()"
+                        class="mainButton redButton"
+                        id="close-cash-button">بستن صندوق قدیمی و باز کردن صندوق جدید
+                </button>
+            </div>
         </div>
-    </div>
+    </main>
 </div>
