@@ -568,8 +568,8 @@
                         <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
                             <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.table_name }}</td>
-                            <td><span ng-hide="invoice.is_settled" ng-class="invoice.invoice_status.status === 'ORDERED' ? 'badge badge-info' : 'badge badge-danger'">{{ invoice.invoice_status.text }}</span></td>
-                            <td><span ng-hide="invoice.is_settled" ng-class="invoice.game_status.status === 'WAIT_GAME' ? 'badge badge-danger' : 'badge badge-info'">{{ invoice.game_status.text }}</span></td>
+                            <td><span ng-hide="invoice.is_settled" ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span></td>
+                            <td><span ng-hide="invoice.is_settled" ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span></td>
                             <td>{{ invoice.total_price - invoice.discount | number:fractionSize | persianNumber }} ریال</td>
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
                             <td>{{ invoice.settle_time | persianNumber }}</td>
