@@ -1462,11 +1462,26 @@ span.badge.badge-pill.badge-warning {
 .tableWrapper span.badge.badge-info.ng-binding {
     font-size: 0.85em;
     padding: 0.8em;
+    background-color: var(--myBlue);
 }
 
 .tableWrapper span.badge.badge-danger.ng-binding {
     font-size: 0.85em;
     padding: 0.8em;
+    background-color: var(--myRed);
+}
+
+.tableWrapper span.badge.badge-success.ng-binding {
+    font-size: 0.85em;
+    padding: 0.8em;
+    background-color: var(--myGreen);
+}
+
+.tableWrapper span.badge.badge-warning.ng-binding {
+    font-size: 0.85em;
+    padding: 0.8em;
+    color: white;
+    background-color: var(--myYellow);
 }
 
 .ui-widget-content {

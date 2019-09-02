@@ -1219,5 +1219,29 @@ angular.module("dashboard")
             $scope.resetFrom();
             $scope.closeAddInvoiceModal();
         };
+        $scope.return_status_badge_class_invoice = function (status) {
+            if (status === "ORDERED") {
+                return "badge badge-success";
+            }
+            else if (status === "NOT_ORDERED") {
+                return "badge badge-danger";
+            }
+            else if (status === "WAIT_FOR_SETTLE") {
+                return "badge badge-warning";
+            }
+        };
+
+        $scope.return_status_badge_class_game = function (status) {
+            if (status === "END_GAME") {
+                return "badge badge-success";
+            }
+            else if (status === "WAIT_GAME") {
+                return "badge badge-danger";
+            }
+            else if (status === "IN_GAME") {
+                return "badge badge-info";
+            }
+        };
+
         initialize();
     });

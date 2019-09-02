@@ -587,8 +587,8 @@
                         <tr ng-repeat="s_invoice in selected_table_data">
                             <th scope="row">{{ s_invoice.guest_name }}</th>
                             <td>{{ s_invoice.guest_nums | persianNumber }} نفر</td>
-                            <td><span ng-class="s_invoice.invoice_status.status === 'ORDERED' ? 'badge badge-info' : 'badge badge-danger'">{{ s_invoice.invoice_status.text }}</span></td>
-                            <td><span ng-class="s_invoice.game_status.status === 'WAIT_GAME' ? 'badge badge-danger' : 'badge badge-info'">{{ s_invoice.game_status.text }}</span></td>
+                            <td><span ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span></td>
+                            <td><span ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span></td>
                             <td>{{ s_invoice.total_price - s_invoice.discount | number:fractionSize | persianNumber }}ریال</td>
                             <td ng-hide="s_invoice.is_settled" ng-click="editInvoice(s_invoice.invoice_id)"><a href=""
                                                                                                                class="mainButton grayButton smallButton fullWidthButton">جزییات</a>
