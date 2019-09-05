@@ -115,6 +115,9 @@ angular.module("dashboard")
                 var diff = 1000 * 60 * 15;
                 var date = new Date();
                 var rounded = new Date(Math.round(date.getTime() / diff) * diff);
+                if ((Number($scope.working_times[0].hour) === rounded.getHours() && Number($scope.working_times[0].minute) > rounded.getMinutes()) || Number($scope.working_times[0].hour) > rounded.getHours()){
+                    return
+                }
                 for (var i = 0; i < $scope.working_times.length; i++) {
                     if (Number($scope.working_times[i].hour) === rounded.getHours() && Number($scope.working_times[i].minute) === rounded.getMinutes()) {
                         break

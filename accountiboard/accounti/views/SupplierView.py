@@ -12,6 +12,39 @@ PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 
 
+def return_remainder_of_supplier(supplier_id):
+    if not supplier_id:
+        return False
+    supplier_obj = Supplier.objects.filter(id=supplier_id).first()
+
+    # BEDEHKAR
+    debtor = 0
+
+    # Credit Invoice Purchase
+    sum_all_invoice_purchase_credit = InvoicePurchase.objects.filter(supplier=supplier_obj,
+                                                                     settlement_type="CREDIT").aggregate(
+        Sum('total_price'))
+    if sum_all_invoice_purchase_credit['total_price__sum']:
+        debtor += sum_all_invoice_purchase_credit['total_price__sum']
+
+    # Amani Sales
+    amani_sale_sum = 0
+    all_amani_sales = AmaniSale.objects.filter(supplier=supplier_obj, is_amani=True)
+    for amani_sale in all_amani_sales:
+        amani_sale_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
+
+    debtor += amani_sale_sum
+
+    # BESTANKAR
+    creditor = 0
+    sum_all_invoice_settlement = InvoiceSettlement.objects.filter(supplier=supplier_obj).aggregate(
+        Sum('payment_amount'))
+    if sum_all_invoice_settlement['payment_amount__sum']:
+        creditor += sum_all_invoice_settlement['payment_amount__sum']
+
+    return creditor - debtor
+
+
 def add_supplier(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -79,7 +112,7 @@ def get_suppliers(request):
                 'salesman_name': supplier.salesman_name,
                 'salesman_phone': supplier.salesman_phone,
                 'last_pay': jalali_date,
-                'remainder': supplier.remainder,
+                'remainder': return_remainder_of_supplier(supplier.id),
             })
         return JsonResponse({"response_code": 2, 'suppliers': suppliers_data})
 
@@ -110,7 +143,7 @@ def search_supplier(request):
                 'salesman_name': supplier.salesman_name,
                 'salesman_phone': supplier.salesman_phone,
                 'last_pay': jalali_date,
-                'remainder': supplier.remainder,
+                'remainder': return_remainder_of_supplier(supplier.id),
             })
         return JsonResponse({"response_code": 2, 'suppliers': suppliers})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -132,7 +165,7 @@ def get_supplier(request):
                 'phone': supplier.phone,
                 'salesman_name': supplier.salesman_name,
                 'salesman_phone': supplier.salesman_phone,
-                'remainder': supplier.remainder,
+                'remainder': return_remainder_of_supplier(supplier.id),
             }
             return JsonResponse({"response_code": 2, 'supplier': supplier_data})
 
