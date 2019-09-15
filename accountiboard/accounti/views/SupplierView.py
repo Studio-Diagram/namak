@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-import json, jdatetime
+import json, jdatetime, datetime
 from accounti.models import *
 from django.db.models import Sum
 
@@ -10,9 +10,16 @@ NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
+METHOD_NOT_ALLOWED = "Method not allowed."
 
 
-def return_remainder_of_supplier(supplier_id):
+def return_remainder_of_supplier(supplier_id, to_time):
+    if not to_time:
+        remainder_to_date = datetime.datetime.now()
+    else:
+        to_time_split = to_time.split('/')
+        remainder_to_date = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
+                                           int(to_time_split[0]) + 1).togregorian()
     if not supplier_id:
         return False
     supplier_obj = Supplier.objects.filter(id=supplier_id).first()
@@ -22,14 +29,16 @@ def return_remainder_of_supplier(supplier_id):
 
     # Credit Invoice Purchase
     sum_all_invoice_purchase_credit = InvoicePurchase.objects.filter(supplier=supplier_obj,
-                                                                     settlement_type="CREDIT").aggregate(
+                                                                     settlement_type="CREDIT",
+                                                                     created_time__lte=remainder_to_date).aggregate(
         Sum('total_price'))
     if sum_all_invoice_purchase_credit['total_price__sum']:
         debtor += sum_all_invoice_purchase_credit['total_price__sum']
 
     # Amani Sales
     amani_sale_sum = 0
-    all_amani_sales = AmaniSale.objects.filter(supplier=supplier_obj, is_amani=True)
+    all_amani_sales = AmaniSale.objects.filter(supplier=supplier_obj, is_amani=True,
+                                               created_date__lte=remainder_to_date)
     for amani_sale in all_amani_sales:
         amani_sale_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
 
@@ -37,7 +46,8 @@ def return_remainder_of_supplier(supplier_id):
 
     # BESTANKAR
     creditor = 0
-    sum_all_invoice_settlement = InvoiceSettlement.objects.filter(supplier=supplier_obj).aggregate(
+    sum_all_invoice_settlement = InvoiceSettlement.objects.filter(supplier=supplier_obj,
+                                                                  created_time__lte=remainder_to_date).aggregate(
         Sum('payment_amount'))
     if sum_all_invoice_settlement['payment_amount__sum']:
         creditor += sum_all_invoice_settlement['payment_amount__sum']
@@ -112,7 +122,7 @@ def get_suppliers(request):
                 'salesman_name': supplier.salesman_name,
                 'salesman_phone': supplier.salesman_phone,
                 'last_pay': jalali_date,
-                'remainder': return_remainder_of_supplier(supplier.id),
+                'remainder': return_remainder_of_supplier(supplier.id, ""),
             })
         return JsonResponse({"response_code": 2, 'suppliers': suppliers_data})
 
@@ -143,7 +153,7 @@ def search_supplier(request):
                 'salesman_name': supplier.salesman_name,
                 'salesman_phone': supplier.salesman_phone,
                 'last_pay': jalali_date,
-                'remainder': return_remainder_of_supplier(supplier.id),
+                'remainder': return_remainder_of_supplier(supplier.id, ""),
             })
         return JsonResponse({"response_code": 2, 'suppliers': suppliers})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -165,7 +175,7 @@ def get_supplier(request):
                 'phone': supplier.phone,
                 'salesman_name': supplier.salesman_name,
                 'salesman_phone': supplier.salesman_phone,
-                'remainder': return_remainder_of_supplier(supplier.id),
+                'remainder': return_remainder_of_supplier(supplier.id, ""),
             }
             return JsonResponse({"response_code": 2, 'supplier': supplier_data})
 
@@ -683,7 +693,7 @@ def get_detail_invoice_returns_from_supplier(request):
                     'tax': 0,
                     'discount': 0,
                     'kind': 'مرجوعی',
-                    'price': invoice.numbers * invoice.buy_price,
+                    'price': invoice.total_price,
                     'date': jalali_date.strftime("%Y/%m/%d")
                 })
 
@@ -746,7 +756,7 @@ def get_detail_amani_sales_from_supplier(request):
             all_amani_sum = 0
             invoices_data = []
             for amani_sale in all_amani_sales_from_supplier:
-                all_amani_sum += amani_sale.numbers * amani_sale.buy_price
+                all_amani_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
                 date = amani_sale.created_date.date()
                 jalali_date = jdatetime.date.fromgregorian(day=date.day, month=date.month,
                                                            year=date.year)
@@ -757,6 +767,7 @@ def get_detail_amani_sales_from_supplier(request):
                     'name': amani_sale.invoice_sale_to_shop.shop_product.name,
                     'sale_price': amani_sale.sale_price,
                     'buy_price': amani_sale.buy_price,
+                    'return_numbers': amani_sale.return_numbers,
                     'date': jalali_date.strftime("%Y/%m/%d")
                 })
 
@@ -764,3 +775,20 @@ def get_detail_amani_sales_from_supplier(request):
                 {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+def get_remainder_supplier(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    to_time = rec_data['to_time']
+    supplier_id = rec_data['supplier_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    supplier_remainder = return_remainder_of_supplier(supplier_id, to_time)
+    return JsonResponse(
+        {"response_code": 2, 'supplier_remainder': supplier_remainder})

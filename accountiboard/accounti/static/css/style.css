@@ -1052,7 +1052,7 @@ main.pageContent div.tableButtons div.dateFilter input.listFilter {
 }
 
 tr.tableTotal td, tr.tableTotal th {
-    background: var(--pageBG);
+    background: white;
 }
 
 tr.tableTotal .redText {

@@ -10,11 +10,13 @@
             <a href="" ng-click="filter_data()" class="mainButton grayButton tableLefty">اعمال فیلتر</a>
             <div class="dateFilter tableLefty">
                 <span>تا تاریخ:</span>
-                <input ng-model="search_data_supplier.to_time" id="datepicker" class="form-control listFilter tableLefty" placeholder="تا الان" type="text">
+                <input ng-model="search_data_supplier.to_time" id="datepicker"
+                       class="form-control listFilter tableLefty" placeholder="تا الان" type="text">
             </div>
             <div class="dateFilter tableLefty">
                 <span>نمایش از تاریخ:</span>
-                <input ng-model="search_data_supplier.from_time" id="datepicker1" class="form-control listFilter tableLefty" placeholder="از یک‌ماه پیش" type="text">
+                <input ng-model="search_data_supplier.from_time" id="datepicker1"
+                       class="form-control listFilter tableLefty" placeholder="از یک‌ماه پیش" type="text">
             </div>
         </div>
         <div class="row userPageContent">
@@ -70,22 +72,33 @@
                             <td>{{ amani_sales_count | persianNumber }}</td>
                             <td class="greenText">{{ sum_amani_sales | number | persianNumber }} ریال</td>
                             <td>{{ last_amani_sales | persianNumber }}</td>
-                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'amani_sales' })"
+                            <td>
+                                <a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'amani_sales' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                        </tr>
-
-                        <tr class="tableTotal">
-                            <th>تراز مالی</th>
-                            <td></td>
-                            <td class="redText">
-                                {{ remainder | number | persianNumber }} ریال
-                            </td>
-                            <td></td>
-                            <td></td>
                         </tr>
                         </tbody>
                     </table>
+                </div>
 
+                <div class="tableButtons clearfix">
+                    <a href="" ng-click="get_remainder()" class="mainButton grayButton tableLefty">اعمال فیلتر</a>
+                    <div class="dateFilter tableLefty">
+                        <span>تا تاریخ:</span>
+                        <input ng-model="search_data_supplier_remainder.to_time" id="datepicker_remainder"
+                               class="form-control listFilter tableLefty" placeholder="تا الان" type="text">
+                    </div>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <tbody>
+                        <tr class="tableTotal">
+                            <th>مانده حساب</th>
+                            <td class="redText">
+                                {{ remainder | number | persianNumber }} ریال
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </main>
         </div>

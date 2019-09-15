@@ -790,6 +790,13 @@ angular.module('dashboard')
                     'url': "/api/deleteInvoiceSale/",
                     'data': data
                 });
+            },
+            'getSupplierRemainder': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getSupplierRemainder/",
+                    'data': data
+                });
             }
 
 

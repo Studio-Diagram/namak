@@ -129,6 +129,7 @@ urlpatterns = [
     path('api/readyForSettle/', InvoiceSaleView.ready_for_settle),
     path('api/getAllExpenseTags/', InvoiceExpenseView.get_all_tags),
     path('api/deleteInvoiceSale/', InvoiceSaleView.delete_invoice),
+    path('api/getSupplierRemainder/', SupplierView.get_remainder_supplier),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),
