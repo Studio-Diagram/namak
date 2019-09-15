@@ -69,61 +69,75 @@
             </div>
         </div>
     </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addInvoiceModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addInvoiceModal" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور فروش </h2>
-                    <button ng-click="openPermissionModal()" class="mainButton redButton" ng-disabled="disable_print_after_save_all_buttons"
-                       aria-label="Close">
+                    <button ng-click="openPermissionModal()" class="mainButton redButton"
+                            ng-disabled="disable_print_after_save_all_buttons"
+                            aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="openPayModal()" class="mainButton greenButton"><i
-                            class="fas fa-dollar-sign"></i> تسویه</button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="openPayModal()"
+                            class="mainButton greenButton"><i
+                            class="fas fa-dollar-sign"></i> تسویه
+                    </button>
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_cash()"
-                       class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری</button>
-                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
-                       class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش</button>
+                            class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری
+                    </button>
+                    <button ng-disabled="disable_print_after_save_all_buttons"
+                            ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
+                            class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش
+                    </button>
                     <a href="" class="mainButton grayButton"><i class="fas fa-cut"></i> تفکیک فاکتور</a>
-                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()" class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره</button>
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()"
+                            class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره
+                    </button>
 
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <aside class="col-sm-2">
-                                <input ng-show="current_menu_nav === 'MENU'" ng-keyup="searchMenuItem()"
-                                       ng-model="search_data_menu_item.search_word"
-                                       class="form-control listFilter" type="text" placeholder="فیلتر کن">
-                                <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
-                                       ng-model="search_data_shop_products.search_word"
-                                       class="form-control listFilter" type="text" placeholder="فیلتر کن">
+                            <aside class="col-sm-4">
                                 <nav class=" nav nav-justified">
                                     <a ng-click="changeMenuNav('MENU')" href=""
-                                       ng-class="current_menu_nav === 'MENU' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
-                                            class="fas fa-bars"></i></a>
+                                       ng-class="current_menu_nav === 'MENU' ? 'nav-link iconButton active' : 'nav-link iconButton'">منو
+                                        کافه</a>
                                     <a ng-click="changeMenuNav('SHOP')" href=""
-                                       ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
-                                            class="fas fa-store"></i></a>
+                                       ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'">فروشگاه</i></a>
                                 </nav>
+                                <input ng-show="current_menu_nav === 'MENU'" ng-keyup="searchMenuItem()"
+                                       ng-model="search_data_menu_item.search_word"
+                                       class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
+                                <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
+                                       ng-model="search_data_shop_products.search_word"
+                                       class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div ng-hide="search_data_menu_item.search_word" class="accordion">
-                                            <li id="allCollapse" ng-show="current_menu_nav === 'MENU'"
-                                                ng-repeat="category in menu_items_with_categories" class="nav-item">
-                                                <a style="cursor: pointer" ng-click="showCollapse($index)"
-                                                   class="nav-link" data-toggle="collapse"
-                                                   aria-controls="menuNavCollapse
-                                                           {{ $index }}">{{ category.category_name }}</a>
-                                                <ul id="menuNavCollapse{{ $index }}" class="collapse">
-                                                    <li ng-repeat="item in category.items">
-                                                        <a ng-click="add_item(item.id, item.name, item.price)" href=""
-                                                           class="nav-link">{{ item.name }}</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
+                                            <div class="row">
+                                                <div class="col-sm-4"
+                                                     ng-repeat="category in menu_items_with_categories">
+                                                    <button ng-show="current_menu_nav === 'MENU'"
+                                                            class="mainButton grayButton zoop0"
+                                                            ng-click="showCollapse($index)">
+                                                        {{ category.category_name }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row zoop1">
+                                                <li ng-show="current_menu_nav === 'MENU'"
+                                                    ng-repeat="item in selected_category.items"
+                                                    class="col-sm-6 zoop2">
+                                                    <a ng-click="add_item(item.id, item.name, item.price)" href=""
+                                                       class="nav-link zoop4">{{ item.name }}</a>
+                                                </li>
+                                            </div>
+
                                             <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
                                                    style="cursor: copy;" href=""
@@ -151,7 +165,7 @@
                                 </nav>
 
                             </aside>
-                            <main class="col-sm-10">
+                            <main class="col-sm-8">
                                 <table class="invoiceTable">
                                     <tbody>
                                     <tr>
@@ -284,7 +298,10 @@
                                         <th class="first"><input type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index | persianNumber }}</td>
-                                        <td>بازی {{ game.numbers | persianNumber }} نفره ( {{ game.start_time | persianNumber }} تا {{ game.end_time | persianNumber }} )</td>
+                                        <td>بازی {{ game.numbers | persianNumber }} نفره
+                                            ( {{ game.start_time | persianNumber }}
+                                            تا {{ game.end_time | persianNumber }} )
+                                        </td>
                                         <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
                                         <td style="direction: ltr">{{ game.points | persianNumber }}</td>
                                         <td>{{ game.total | number| persianNumber }}</td>
@@ -355,7 +372,8 @@
             </div>
         </div>
     </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal" id="payModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal" id="payModal"
+         tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -393,7 +411,8 @@
             </div>
         </div>
     </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="viewInvoiceModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="viewInvoiceModal" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -587,8 +606,12 @@
                         <tr ng-repeat="s_invoice in selected_table_data">
                             <th scope="row">{{ s_invoice.guest_name }}</th>
                             <td>{{ s_invoice.guest_nums | persianNumber }} نفر</td>
-                            <td><span ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span></td>
-                            <td><span ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span></td>
+                            <td><span
+                                    ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span>
+                            </td>
+                            <td><span
+                                    ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span>
+                            </td>
                             <td>{{ s_invoice.total_price - s_invoice.discount | number:fractionSize | persianNumber }}ریال</td>
                             <td ng-hide="s_invoice.is_settled" ng-click="editInvoice(s_invoice.invoice_id)"><a href=""
                                                                                                                class="mainButton grayButton smallButton fullWidthButton">جزییات</a>

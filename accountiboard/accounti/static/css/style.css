@@ -781,7 +781,7 @@ table.invoiceItem th.first {
 }
 
 table.invoiceItem th.second {
-    width: 35%;
+    width: 25%;
 }
 
 table.invoiceItem th.sixth {
@@ -1522,4 +1522,52 @@ tags-input .tags .input {
 tags-input .tags .tag-item {
     font-family: IRANSans !important;
     font-size: 0.75em !important;
+}
+
+.zoop0 {
+    width: 100%;
+    border-radius: 0 !important;
+    border-left: none !important;
+}
+.zoop0:nth-child(3n){
+    border-left: inherit;
+}
+.zoop0:focus {
+    outline: none;
+}
+
+.zoop1 {
+    background: white;
+    margin-top: 10px !important;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.zoop2 {
+    border-left: 2px solid var(--pageBG);
+}
+
+.zoop2:hover {
+    background: var(--pageBorder);
+}
+
+.zoop3 {
+
+}
+
+.zoop4 {
+    padding: 5px !important;
+}
+
+.cafeMenuNav .col-sm-4 {
+    padding: 0 0 0 0;
+}
+
+.cafeMenuNav .col-sm-4:nth-child(3n) {
+    padding: 0;
+}
+.zoop5 {
+    margin-top: 10px;
 }
