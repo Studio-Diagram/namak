@@ -5,6 +5,9 @@ angular.module("dashboard")
             $scope.current_menu_nav = "MENU";
             $scope.invoice_delete_description = "";
             $scope.disable_print_after_save_all_buttons = false;
+            $scope.selected_category = {
+                "items": []
+            };
             $scope.new_invoice_data = {
                 'invoice_sales_id': 0,
                 'table_id': 0,

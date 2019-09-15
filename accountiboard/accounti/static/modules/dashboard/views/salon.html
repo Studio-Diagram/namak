@@ -119,24 +119,31 @@
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div ng-hide="search_data_menu_item.search_word" class="accordion">
-                                            <div class="row">
-                                                <div class="col-sm-4"
-                                                     ng-repeat="category in menu_items_with_categories">
-                                                    <button ng-show="current_menu_nav === 'MENU'"
-                                                            class="mainButton grayButton zoop0"
-                                                            ng-click="showCollapse($index)">
-                                                        {{ category.category_name }}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="row zoop1">
-                                                <li ng-show="current_menu_nav === 'MENU'"
-                                                    ng-repeat="item in selected_category.items"
-                                                    class="col-sm-6 zoop2">
-                                                    <a ng-click="add_item(item.id, item.name, item.price)" href=""
-                                                       class="nav-link zoop4">{{ item.name }}</a>
-                                                </li>
-                                            </div>
+                                            <table class="table menuNavTable"
+                                                   ng-show="current_menu_nav === 'MENU'">
+                                                <tbody>
+                                                <tr class="row">
+                                                    <th class="col-sm-4" ng-click="showCollapse($index)"
+                                                        ng-repeat="category in menu_items_with_categories">{{ category.category_name }}</th>
+                                                    <th class="col-sm-4"
+                                                        ng-show="menu_items_with_categories.length % 3 === 1"></th>
+                                                    <th class="col-sm-4"
+                                                        ng-show="menu_items_with_categories.length % 3 === 1"></th>
+                                                    <th class="col-sm-4"
+                                                        ng-show="menu_items_with_categories.length % 3 === 2"></th>
+                                                </tr>
+                                                <tr ng-if="selected_category.items.length < 6" class="row">
+                                                    <th class="col-sm-6"
+                                                        ng-repeat="item in selected_category.items" ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6 dumb" ng-repeat="x in [].constructor(6 - selected_category.items.length % 6) track by $index"></th>
+                                                </tr>
+                                                <tr ng-if="selected_category.items.length >= 6" class="row">
+                                                    <th class="col-sm-6"
+                                                        ng-repeat="item in selected_category.items" ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6" ng-show="selected_category.items.length % 2 === 1"></th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
 
                                             <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"

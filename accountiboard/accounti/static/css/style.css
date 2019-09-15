@@ -1524,50 +1524,33 @@ tags-input .tags .tag-item {
     font-size: 0.75em !important;
 }
 
-.zoop0 {
-    width: 100%;
-    border-radius: 0 !important;
-    border-left: none !important;
-}
-.zoop0:nth-child(3n){
-    border-left: inherit;
-}
-.zoop0:focus {
-    outline: none;
+.zoop5 {
+    margin-top: 10px;
 }
 
-.zoop1 {
-    background: white;
-    margin-top: 10px !important;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    overflow: hidden;
+.menuNavTable th {
+    padding: 10px !important;
+    border-bottom: 1px dotted var(--pageBorder) !important;
 }
 
-.zoop2 {
-    border-left: 2px solid var(--pageBG);
-}
-
-.zoop2:hover {
+.menuNavTable th:hover {
     background: var(--pageBorder);
 }
 
-.zoop3 {
-
+.menuNavTable tr {
+    border-top: 1px dotted var(--pageBorder) !important;
+    border-right: 1px dotted var(--pageBorder) !important;
 }
 
-.zoop4 {
-    padding: 5px !important;
+.menuNavTable tr:nth-child(2) {
+    border-left: 1px dotted var(--pageBorder);
+    background-color: white;
 }
 
-.cafeMenuNav .col-sm-4 {
-    padding: 0 0 0 0;
+.menuNavTable tr:nth-child(2) th{
+    font-weight: 300;
 }
 
-.cafeMenuNav .col-sm-4:nth-child(3n) {
-    padding: 0;
-}
-.zoop5 {
-    margin-top: 10px;
+.dumb {
+    min-height: 40px;
 }
