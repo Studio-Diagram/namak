@@ -6,6 +6,7 @@ angular.module("dashboard")
                 $(document).ready(function () {
                     $("#datepicker").datepicker();
                     $("#datepicker1").datepicker();
+                    $("#datepicker_remainder").datepicker();
                 });
 
             })(jQuery);
@@ -16,12 +17,34 @@ angular.module("dashboard")
                 'to_time': '',
                 'username': $rootScope.user_data.username
             };
+            $scope.search_data_supplier_remainder = {
+                'supplier_id': $stateParams.supplier,
+                'to_time': '',
+                'username': $rootScope.user_data.username
+            };
             $scope.get_supplier();
             $scope.get_sum_invoice_purchases();
             $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
             $scope.get_sum_invoice_returns();
             $scope.get_sum_invoice_amani_sales();
+        };
+
+        $scope.get_remainder = function () {
+            $scope.search_data_supplier_remainder.to_time = $("#datepicker_remainder").val();
+            dashboardHttpRequest.getSupplierRemainder($scope.search_data_supplier_remainder)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.remainder = data['supplier_remainder'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.filter_data = function () {
