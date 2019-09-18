@@ -119,12 +119,13 @@
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div ng-hide="search_data_menu_item.search_word" class="accordion">
+
                                             <table class="table menuNavTable"
                                                    ng-show="current_menu_nav === 'MENU'">
                                                 <tbody>
                                                 <tr class="row">
-                                                    <th class="col-sm-4" ng-click="showCollapse($index)"
-                                                        ng-repeat="category in menu_items_with_categories">{{ category.category_name }}</th>
+                                                    <th ng-click="showCollapse($index)"
+                                                        ng-repeat="category in menu_items_with_categories" ng-class="selected_menu_nav_cat === $index ? 'col-sm-4 active' : 'col-sm-4'">{{ category.category_name }}</th>
                                                     <th class="col-sm-4"
                                                         ng-show="menu_items_with_categories.length % 3 === 1"></th>
                                                     <th class="col-sm-4"

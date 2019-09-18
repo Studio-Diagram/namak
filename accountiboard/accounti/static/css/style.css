@@ -1554,3 +1554,15 @@ tags-input .tags .tag-item {
 .dumb {
     min-height: 40px;
 }
+
+.menuNavTable tr:hover{
+    cursor: pointer;
+}
+
+.menuNavTable th:hover{
+    cursor: pointer;
+}
+
+.menuNavTable th.active{
+    background: var(--pageBorder);
+}

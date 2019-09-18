@@ -834,6 +834,7 @@ angular.module("dashboard")
                 $("#menuNavCollapse" + collapse_id).collapse('toggle');
             })(jQuery);
             $scope.selected_category = $scope.menu_items_with_categories[collapse_id];
+            $scope.selected_menu_nav_cat = collapse_id;
         };
 
         $scope.get_menu_item_data = function (data) {

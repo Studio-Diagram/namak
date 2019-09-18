@@ -180,7 +180,7 @@ def get_all_invoices(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         branch_obj = Branch.objects.get(pk=branch_id)
-        invoice_objects = InvoicePurchase.objects.filter(branch=branch_obj)
+        invoice_objects = InvoicePurchase.objects.filter(branch=branch_obj).order_by('-id')
         invoices = []
         for invoice in invoice_objects:
             invoice_date = invoice.created_time.date()
