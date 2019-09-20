@@ -20,6 +20,8 @@ from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView
+from accountiboard import settings
+from django.views.static import serve
 
 urlpatterns = [
     path('api/login/', EmployeeView.login),
@@ -130,9 +132,12 @@ urlpatterns = [
     path('api/getAllExpenseTags/', InvoiceExpenseView.get_all_tags),
     path('api/deleteInvoiceSale/', InvoiceSaleView.delete_invoice),
     path('api/getSupplierRemainder/', SupplierView.get_remainder_supplier),
+    path('api/createAllSuppliersExcel/', SupplierView.create_all_supplier_excel),
+    path('api/createAllMaterialsExcel/', SupplierView.create_all_materials_buy),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),
+    url(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
 ]

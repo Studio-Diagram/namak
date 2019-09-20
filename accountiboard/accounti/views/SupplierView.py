@@ -1,7 +1,8 @@
 from django.http import JsonResponse
-import json, jdatetime, datetime
+import json, jdatetime, datetime, xlwt
 from accounti.models import *
 from django.db.models import Sum
+from accountiboard import settings
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -26,6 +27,14 @@ def return_remainder_of_supplier(supplier_id, to_time):
 
     # BEDEHKAR
     debtor = 0
+
+    # Credit Invoice Expense
+    sum_all_invoice_expense_credit = InvoiceExpense.objects.filter(supplier=supplier_obj,
+                                                                   settlement_type="CREDIT",
+                                                                   created_time__lte=remainder_to_date).aggregate(
+        Sum('price'))
+    if sum_all_invoice_expense_credit['price__sum']:
+        debtor += sum_all_invoice_expense_credit['price__sum']
 
     # Credit Invoice Purchase
     sum_all_invoice_purchase_credit = InvoicePurchase.objects.filter(supplier=supplier_obj,
@@ -792,3 +801,194 @@ def get_remainder_supplier(request):
     supplier_remainder = return_remainder_of_supplier(supplier_id, to_time)
     return JsonResponse(
         {"response_code": 2, 'supplier_remainder': supplier_remainder})
+
+
+def create_all_supplier_excel(request):
+    rec_data = json.loads(request.read().decode('utf-8'))
+    from_time = rec_data['from_time']
+    to_time = rec_data['to_time']
+
+    from_time_split = from_time.split('/')
+    from_time_g = jdatetime.date(int(from_time_split[2]), int(from_time_split[1]),
+                                 int(from_time_split[0])).togregorian()
+    to_time_split = to_time.split('/')
+    to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
+                               int(to_time_split[0]) + 1).togregorian()
+
+    all_suppliers = Supplier.objects.all()
+    workbook = xlwt.Workbook()
+    sheet = workbook.add_sheet('all_suppliers')
+    row = 0
+
+    for supplier in all_suppliers:
+        row += 3
+        all_invoice_purchase = InvoicePurchase.objects.filter(supplier=supplier,
+                                                              created_time__lte=to_time_g,
+                                                              created_time__gte=from_time_g)
+
+        for invoice_purchase in all_invoice_purchase:
+            invoice_data = []
+            invoice_date = invoice_purchase.created_time.date()
+            jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                       year=invoice_date.year)
+            jalali_date = jalali_date.strftime("%Y/%m/%d")
+            invoice_data.append("فاکتور خرید")
+            invoice_data.append(invoice_purchase.factor_number)
+            invoice_data.append(jalali_date)
+            invoice_data.append(invoice_purchase.supplier.name)
+            invoice_data.append(invoice_purchase.settlement_type)
+            invoice_data.append(invoice_purchase.total_price)
+            invoice_data.append(invoice_purchase.tax)
+            invoice_data.append(invoice_purchase.discount)
+            invoice_data.append(invoice_purchase.branch.name)
+
+            for col in range(len(invoice_data)):
+                sheet.write(row, col, invoice_data[col])
+            row += 1
+
+        row += 1
+
+        all_invoice_settlement = InvoiceSettlement.objects.filter(supplier=supplier,
+                                                                  created_time__lte=to_time_g,
+                                                                  created_time__gte=from_time_g)
+
+        for invoice_settlement in all_invoice_settlement:
+            invoice_data = []
+            invoice_date = invoice_settlement.created_time.date()
+            jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                       year=invoice_date.year)
+            jalali_date = jalali_date.strftime("%Y/%m/%d")
+            invoice_data.append("فاکتور پرداختی")
+            invoice_data.append(invoice_settlement.factor_number)
+            invoice_data.append(jalali_date)
+            invoice_data.append(invoice_settlement.supplier.name)
+            invoice_data.append(invoice_settlement.get_settle_type_display())
+            invoice_data.append(invoice_settlement.payment_amount)
+            invoice_data.append(invoice_settlement.tax)
+            invoice_data.append(invoice_settlement.discount)
+            invoice_data.append(invoice_settlement.backup_code)
+            invoice_data.append(invoice_settlement.branch.name)
+
+            for col in range(len(invoice_data)):
+                sheet.write(row, col, invoice_data[col])
+            row += 1
+
+        row += 1
+        all_invoice_return = InvoiceReturn.objects.filter(supplier=supplier, created_time__lte=to_time_g,
+                                                          created_time__gte=from_time_g)
+
+        for invoice_return in all_invoice_return:
+            invoice_data = []
+            invoice_date = invoice_return.created_time.date()
+            jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                       year=invoice_date.year)
+            jalali_date = jalali_date.strftime("%Y/%m/%d")
+            invoice_data.append("فاکتور مرجوعی")
+            invoice_data.append(invoice_return.factor_number)
+            invoice_data.append(jalali_date)
+            invoice_data.append(invoice_return.supplier.name)
+            invoice_data.append(invoice_return.get_return_type_display())
+            invoice_data.append(invoice_return.total_price)
+            invoice_data.append(invoice_return.numbers)
+            invoice_data.append(invoice_return.shop_product.name)
+            invoice_data.append(invoice_return.description)
+            invoice_data.append(invoice_return.branch.name)
+
+            for col in range(len(invoice_data)):
+                sheet.write(row, col, invoice_data[col])
+            row += 1
+
+        row += 1
+        all_invoice_expense = InvoiceExpense.objects.filter(supplier=supplier, created_time__gte=from_time_g,
+                                                            created_time__lte=to_time_g)
+
+        for invoice_expense in all_invoice_expense:
+            invoice_data = []
+            invoice_date = invoice_expense.created_time.date()
+            jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                       year=invoice_date.year)
+            jalali_date = jalali_date.strftime("%Y/%m/%d")
+            invoice_data.append("فاکتور هزینه")
+            invoice_data.append(invoice_expense.factor_number)
+            invoice_data.append(jalali_date)
+            invoice_data.append(invoice_expense.supplier.name)
+            invoice_data.append(invoice_expense.get_expense_kind_display())
+            invoice_data.append(invoice_expense.get_settlement_type_display())
+            invoice_data.append(invoice_expense.price)
+            invoice_data.append(invoice_expense.tax)
+            invoice_data.append(invoice_expense.discount)
+            invoice_data.append(invoice_expense.branch.name)
+
+            for col in range(len(invoice_data)):
+                sheet.write(row, col, invoice_data[col])
+            row += 1
+
+        row += 1
+        all_amani_sales = AmaniSale.objects.filter(supplier=supplier, created_date__gte=from_time_g,
+                                                   created_date__lte=to_time_g)
+
+        for amani_sale in all_amani_sales:
+            invoice_data = []
+            invoice_date = amani_sale.created_date.date()
+            jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                       year=invoice_date.year)
+            jalali_date = jalali_date.strftime("%Y/%m/%d")
+            invoice_data.append("فروش امانی")
+            invoice_data.append(amani_sale.id)
+            invoice_data.append(jalali_date)
+            invoice_data.append(amani_sale.supplier.name)
+            invoice_data.append(amani_sale.numbers)
+            invoice_data.append(amani_sale.numbers * amani_sale.buy_price)
+            invoice_data.append(amani_sale.invoice_sale_to_shop.shop_product.name)
+            invoice_data.append(amani_sale.invoice_sale_to_shop.invoice_sales.branch.name)
+
+            for col in range(len(invoice_data)):
+                sheet.write(row, col, invoice_data[col])
+            row += 1
+
+    excel_name = 'all_suppliers_%s.xls' % str(datetime.datetime.now())
+    workbook.save(settings.MEDIA_ROOT + "/" + excel_name)
+
+    return JsonResponse(
+        {"response_code": 2, 'file_name': excel_name})
+
+
+def create_all_materials_buy(request):
+    rec_data = json.loads(request.read().decode('utf-8'))
+    from_time = rec_data['from_time']
+    to_time = rec_data['to_time']
+
+    from_time_split = from_time.split('/')
+    from_time_g = jdatetime.date(int(from_time_split[2]), int(from_time_split[1]),
+                                 int(from_time_split[0])).togregorian()
+    to_time_split = to_time.split('/')
+    to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
+                               int(to_time_split[0]) + 1).togregorian()
+
+    all_invoice_purchase_to_material = PurchaseToMaterial.objects.filter(
+        invoice_purchase__created_time__gte=from_time_g, invoice_purchase__created_time__lte=to_time_g).order_by(
+        'invoice_purchase__created_time')
+    workbook = xlwt.Workbook()
+    sheet = workbook.add_sheet('all_suppliers')
+    row = 0
+
+    for purchase_to_material in all_invoice_purchase_to_material:
+        row += 1
+        data = []
+        data.append(purchase_to_material.invoice_purchase.factor_number)
+        invoice_date = purchase_to_material.invoice_purchase.created_time.date()
+        jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                   year=invoice_date.year)
+        jalali_date = jalali_date.strftime("%Y/%m/%d")
+        data.append(jalali_date)
+        data.append(purchase_to_material.material.name)
+        data.append(purchase_to_material.unit_numbers)
+        data.append(purchase_to_material.base_unit_price)
+        data.append(purchase_to_material.unit_numbers * purchase_to_material.base_unit_price)
+        for col in range(len(data)):
+            sheet.write(row, col, data[col])
+
+    excel_name = 'all_materials_%s.xls' % str(datetime.datetime.now())
+    workbook.save(settings.MEDIA_ROOT + "/" + excel_name)
+    return JsonResponse(
+        {"response_code": 2, 'file_name': excel_name})
