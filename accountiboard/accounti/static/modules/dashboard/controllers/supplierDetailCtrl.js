@@ -204,6 +204,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_amani_sales_sum'];
                         $scope.invoices_data = data['invoices_data'];
+                        $scope.amani_sale_products = data['amani_sale_base_on_product'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];

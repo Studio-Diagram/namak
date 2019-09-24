@@ -55,6 +55,45 @@
                             </div>
 
                             <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">شماره</th>
+                                            <th scope="col">محصول</th>
+                                            <th scope="col">تعداد</th>
+                                            <th scope="col">مبلغ</th>
+                                            <th scope="col">قیمت خرید</th>
+                                            <th scope="col">قیمت فروش</th>
+                                            <th scope="col">مرجوعی</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="product in amani_sale_products">
+                                            <td>{{ $index + 1 | persianNumber }}</td>
+                                            <td>{{ product.name }}</td>
+                                            <td>{{ product.numbers | persianNumber }}</td>
+                                            <td>{{ product.price | number | persianNumber }} ریال</td>
+                                            <td>{{ product.buy_price | number | persianNumber }} ریال</td>
+                                            <td>{{ product.sale_price | number | persianNumber }} ریال</td>
+                                            <td>{{ product.return_numbers | persianNumber }}</td>
+                                        </tr>
+                                        <tr class="tableTotal">
+                                            <th>جمع کل</th>
+                                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
+
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -90,6 +129,7 @@
                                 </table>
 
                             </div>
+
                         </main>
                     </div>
                 </main>

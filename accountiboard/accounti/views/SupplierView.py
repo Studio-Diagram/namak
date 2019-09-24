@@ -734,6 +734,7 @@ def get_detail_amani_sales_from_supplier(request):
             all_amani_sum = 0
 
             invoices_data = []
+            amani_sale_base_on_product = {}
             for amani_sale in all_amani_sales_from_supplier:
                 all_amani_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
                 date = amani_sale.created_date.date()
@@ -750,8 +751,25 @@ def get_detail_amani_sales_from_supplier(request):
                     'date': jalali_date.strftime("%Y/%m/%d")
                 })
 
+                shop_product_name = amani_sale.invoice_sale_to_shop.shop_product.name
+                if shop_product_name in amani_sale_base_on_product:
+                    amani_sale_base_on_product[shop_product_name]['price'] += \
+                        (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
+                    amani_sale_base_on_product[shop_product_name]['numbers'] += amani_sale.numbers
+                    amani_sale_base_on_product[shop_product_name]['return_numbers'] += amani_sale.return_numbers
+                else:
+                    amani_sale_base_on_product[shop_product_name] = {
+                        'price': (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price,
+                        'numbers': amani_sale.numbers,
+                        'name': amani_sale.invoice_sale_to_shop.shop_product.name,
+                        'sale_price': amani_sale.sale_price,
+                        'buy_price': amani_sale.buy_price,
+                        'return_numbers': amani_sale.return_numbers,
+                    }
+
             return JsonResponse(
-                {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data})
+                {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data,
+                 'amani_sale_base_on_product': amani_sale_base_on_product})
 
         elif from_time and to_time:
             from_time_split = from_time.split('/')
@@ -764,6 +782,7 @@ def get_detail_amani_sales_from_supplier(request):
                                                                      created_date__range=(from_time_g, to_time_g))
             all_amani_sum = 0
             invoices_data = []
+            amani_sale_base_on_product = {}
             for amani_sale in all_amani_sales_from_supplier:
                 all_amani_sum += (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
                 date = amani_sale.created_date.date()
@@ -779,9 +798,25 @@ def get_detail_amani_sales_from_supplier(request):
                     'return_numbers': amani_sale.return_numbers,
                     'date': jalali_date.strftime("%Y/%m/%d")
                 })
+                shop_product_name = amani_sale.invoice_sale_to_shop.shop_product.name
+                if shop_product_name in amani_sale_base_on_product:
+                    amani_sale_base_on_product[shop_product_name]['price'] += \
+                        (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price
+                    amani_sale_base_on_product[shop_product_name]['numbers'] += amani_sale.numbers
+                    amani_sale_base_on_product[shop_product_name]['return_numbers'] += amani_sale.return_numbers
+                else:
+                    amani_sale_base_on_product[shop_product_name] = {
+                        'price': (amani_sale.numbers - amani_sale.return_numbers) * amani_sale.buy_price,
+                        'numbers': amani_sale.numbers,
+                        'name': amani_sale.invoice_sale_to_shop.shop_product.name,
+                        'sale_price': amani_sale.sale_price,
+                        'buy_price': amani_sale.buy_price,
+                        'return_numbers': amani_sale.return_numbers,
+                    }
 
             return JsonResponse(
-                {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data})
+                {"response_code": 2, 'all_invoice_amani_sales_sum': all_amani_sum, 'invoices_data': invoices_data,
+                 'amani_sale_base_on_product': amani_sale_base_on_product})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
@@ -812,8 +847,9 @@ def create_all_supplier_excel(request):
     from_time_g = jdatetime.date(int(from_time_split[2]), int(from_time_split[1]),
                                  int(from_time_split[0])).togregorian()
     to_time_split = to_time.split('/')
+    print(to_time_split)
     to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                               int(to_time_split[0]) + 1).togregorian()
+                               int(to_time_split[0])).togregorian()
 
     all_suppliers = Supplier.objects.all()
     workbook = xlwt.Workbook()
@@ -963,7 +999,7 @@ def create_all_materials_buy(request):
                                  int(from_time_split[0])).togregorian()
     to_time_split = to_time.split('/')
     to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                               int(to_time_split[0]) + 1).togregorian()
+                               int(to_time_split[0])).togregorian()
 
     all_invoice_purchase_to_material = PurchaseToMaterial.objects.filter(
         invoice_purchase__created_time__gte=from_time_g, invoice_purchase__created_time__lte=to_time_g).order_by(
