@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
-    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView
+    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView
 from accountiboard import settings
 from django.views.static import serve
 
@@ -134,6 +134,7 @@ urlpatterns = [
     path('api/getSupplierRemainder/', SupplierView.get_remainder_supplier),
     path('api/createAllSuppliersExcel/', SupplierView.create_all_supplier_excel),
     path('api/createAllMaterialsExcel/', SupplierView.create_all_materials_buy),
+    path('api/getDetailProductNumber/', ShopProductView.get_detail_product_number),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),
