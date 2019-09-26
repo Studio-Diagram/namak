@@ -5,7 +5,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     var loginState = {
         name: 'login',
         url: '',
-        templateUrl: 'static/modules/mainpage/views/login.html/'
+        templateUrl: 'static/modules/mainpage/views/login.html'
     };
 
     $stateProvider.state(loginState);

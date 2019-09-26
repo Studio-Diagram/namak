@@ -19,134 +19,134 @@ myApp.config(function ($stateProvider, $authProvider) {
     var registerEmployee = {
         name: 'manager',
         url: '/manager',
-        templateUrl: 'static/modules/dashboard/views/manager.html/'
+        templateUrl: 'static/modules/dashboard/views/manager.html'
     };
     var addEmployee = {
         name: 'manager.addEmployee',
         url: '/addEmployee',
-        templateUrl: 'static/modules/dashboard/views/add_employee.html/'
+        templateUrl: 'static/modules/dashboard/views/add_employee.html'
     };
     var tables = {
         name: 'manager.tables',
         url: '/tables',
-        templateUrl: 'static/modules/dashboard/views/tables.html/'
+        templateUrl: 'static/modules/dashboard/views/tables.html'
     };
     var menuCategory = {
         name: 'manager.menuCategory',
         url: '/menuCategory',
-        templateUrl: 'static/modules/dashboard/views/menu_category.html/'
+        templateUrl: 'static/modules/dashboard/views/menu_category.html'
     };
     var menuItem = {
         name: 'manager.menuItem',
         url: '/menuItem',
-        templateUrl: 'static/modules/dashboard/views/menu_item.html/'
+        templateUrl: 'static/modules/dashboard/views/menu_item.html'
     };
     var member = {
         name: 'member',
         url: '/member',
-        templateUrl: 'static/modules/dashboard/views/member.html/'
+        templateUrl: 'static/modules/dashboard/views/member.html'
     };
     var boardgame = {
         name: 'boardgame',
         url: '/boardgame',
-        templateUrl: 'static/modules/dashboard/views/boardgame.html/'
+        templateUrl: 'static/modules/dashboard/views/boardgame.html'
     };
 
     var stock = {
         name: 'manager.stock',
         url: '/stock',
-        templateUrl: 'static/modules/dashboard/views/stock.html/'
+        templateUrl: 'static/modules/dashboard/views/stock.html'
     };
 
     var branch = {
         name: 'manager.branch',
         url: '/branch',
-        templateUrl: 'static/modules/dashboard/views/branch.html/'
+        templateUrl: 'static/modules/dashboard/views/branch.html'
     };
     var cash_manager = {
         name: 'cash_manager',
         url: '/cash_manager',
-        templateUrl: 'static/modules/dashboard/views/cash-manager.html/'
+        templateUrl: 'static/modules/dashboard/views/cash-manager.html'
     };
     var salon = {
         name: 'cash_manager.salon',
         url: '/salon',
-        templateUrl: 'static/modules/dashboard/views/salon.html/'
+        templateUrl: 'static/modules/dashboard/views/salon.html'
     };
     var invoices = {
         name: 'cash_manager.invoices',
         url: '/invoices',
-        templateUrl: 'static/modules/dashboard/views/invoices.html/'
+        templateUrl: 'static/modules/dashboard/views/invoices.html'
     };
     var cash = {
         name: 'cash_manager.cash',
         url: '/cash',
-        templateUrl: 'static/modules/dashboard/views/cash.html/'
+        templateUrl: 'static/modules/dashboard/views/cash.html'
     };
     var account_manager = {
         name: 'account_manager',
         url: '/account_manager',
-        templateUrl: 'static/modules/dashboard/views/account-manager.html/'
+        templateUrl: 'static/modules/dashboard/views/account-manager.html'
     };
     var buy = {
         name: 'account_manager.buy',
         url: '/buy',
-        templateUrl: 'static/modules/dashboard/views/buy.html/'
+        templateUrl: 'static/modules/dashboard/views/buy.html'
     };
     var pay = {
         name: 'account_manager.pay',
         url: '/pay',
-        templateUrl: 'static/modules/dashboard/views/pays.html/'
+        templateUrl: 'static/modules/dashboard/views/pays.html'
     };
     var expense = {
         name: 'account_manager.expense',
         url: '/expense',
-        templateUrl: 'static/modules/dashboard/views/expense.html/'
+        templateUrl: 'static/modules/dashboard/views/expense.html'
     };
     var suppliers = {
         name: 'account_manager.suppliers',
         url: '/suppliers',
-        templateUrl: 'static/modules/dashboard/views/suppliers.html/'
+        templateUrl: 'static/modules/dashboard/views/suppliers.html'
     };
     var supplier = {
         name: 'account_manager.supplier',
         url: '/supplier/:supplier',
-        templateUrl: 'static/modules/dashboard/views/supplier.html/'
+        templateUrl: 'static/modules/dashboard/views/supplier.html'
     };
     var detail = {
         name: 'account_manager.detail',
         url: '/supplier/:detailState/:supplier',
-        templateUrl: 'static/modules/dashboard/views/detail.html/'
+        templateUrl: 'static/modules/dashboard/views/detail.html'
     };
 
     var invoiceReturn = {
         name: 'account_manager.return',
         url: '/return',
-        templateUrl: 'static/modules/dashboard/views/return.html/'
+        templateUrl: 'static/modules/dashboard/views/return.html'
     };
 
     var expenseCategory = {
         name: 'manager.expenseCat',
         url: '/expenseCat',
-        templateUrl: 'static/modules/dashboard/views/expense_category.html/'
+        templateUrl: 'static/modules/dashboard/views/expense_category.html'
     };
 
     var reservation = {
         name: 'reservation',
         url: '/reservation',
-        templateUrl: 'static/modules/dashboard/views/reservation.html/'
+        templateUrl: 'static/modules/dashboard/views/reservation.html'
     };
 
     var open_close_cash = {
         name: 'account_manager.manage_cash',
         url: '/manage_cash',
-        templateUrl: 'static/modules/dashboard/views/open_close_cash.html/'
+        templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
     var cash_disable = {
         name: 'cash_disable',
         url: '/cash_disable/:state',
-        templateUrl: 'static/modules/dashboard/views/cash-disable.html/'
+        templateUrl: 'static/modules/dashboard/views/cash-disable.html'
     };
 
     $stateProvider.state(registerEmployee);
