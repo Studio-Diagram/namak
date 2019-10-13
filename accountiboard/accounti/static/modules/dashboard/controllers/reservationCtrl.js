@@ -284,29 +284,19 @@ angular.module("dashboard")
         };
 
         $scope.arrive_reserve = function (reserve_id) {
-            dashboardHttpRequest.addReserve($scope.new_reserve_data)
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch,
+                "reserve_id": reserve_id
+            };
+            dashboardHttpRequest.arriveReserve(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        var sending_data = {
-                            'username': $rootScope.user_data.username,
-                            'branch': $rootScope.user_data.branch,
-                            "reserve_id": reserve_id
-                        };
-                        dashboardHttpRequest.arriveReserve(sending_data)
-                            .then(function (data) {
-                                if (data['response_code'] === 2) {
-                                    $scope.change_date();
-                                    $scope.closeAddModal();
-                                    $scope.closeAddWalkedModal();
-                                }
-                                else if (data['response_code'] === 3) {
-                                    $scope.error_message = data['error_msg'];
-                                    $scope.openErrorModal();
-                                }
-                            }, function (error) {
-                                $scope.error_message = 500;
-                                $scope.openErrorModal();
-                            });
+                        var diff = 1000 * 60 * 15;
+                        var date = new Date();
+                        var rounded = new Date(Math.round(date.getTime() / diff) * diff);
+                        $scope.new_reserve_data.start_time = rounded.getHours() + ":" + rounded.getMinutes();
+                        $scope.add_reserve();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
