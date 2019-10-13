@@ -259,7 +259,7 @@ def get_shop_products(request):
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-        shop_products = ShopProduct.objects.all()
+        shop_products = ShopProduct.objects.all().order_by("-real_numbers")
         shop_products_data = []
         for shop in shop_products:
             last_shop_price = 0
