@@ -657,6 +657,7 @@ def get_today_status(request):
             "all_expense": 0,
             "all_pays": 0,
             "all_games": 0,
+            "all_sales": 0,
         }
 
         all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False)
@@ -676,6 +677,12 @@ def get_today_status(request):
                     status['all_kitchen'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
                 elif invoice_to_menu_item.menu_item.menu_category.kind == "OTHER":
                     status['all_other'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+
+            all_invoice_shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice)
+            for invoice_to_shop_p in all_invoice_shop_products:
+                all_amani_sale = AmaniSale.objects.filter(invoice_sale_to_shop=invoice_to_shop_p)
+                for amani_sale in all_amani_sale:
+                    status['all_sales'] += amani_sale.numbers * amani_sale.sale_price
 
             all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
             for invoice_to_game in all_invoice_games:

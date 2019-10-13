@@ -118,7 +118,20 @@
                                         <span class="">{{ status.all_games | number | persianNumber }}</span>
                                         <small>ریال</small>
                                     </td>
-                                    <td class="">
+                                    <td>
+                                        <h4><i class="fas fa-chess-rook"></i> فروش فروشگاهی</h4>
+                                        <span class="">{{ status.all_sales | number | persianNumber }}</span>
+                                        <small>ریال</small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tableWrapper">
+                            <table class="cashTable">
+                                <tbody>
+                                <tr>
+                                    <td>
                                         <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
                                         <span class="">{{ status.all_purchase | number | persianNumber }}</span>
                                         <small>ریال</small>
