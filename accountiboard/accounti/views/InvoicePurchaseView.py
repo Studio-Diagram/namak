@@ -349,39 +349,44 @@ def search_shop_products(request):
 
 
 def add_material(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        material_name = rec_data['material_name']
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not material_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    material_name = rec_data['material_name']
+    username = rec_data['username']
 
-        new_material = Material(name=material_name)
-        new_material.save()
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not material_name:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    new_material = Material(name=material_name)
+    new_material.save()
+
+    return JsonResponse(
+        {"response_code": 2, "new_material": {"id": new_material.pk, "name": new_material.name, "price": 0}})
 
 
 def add_shop_product(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        shop_product_name = rec_data['shop_product_name']
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not shop_product_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    shop_product_name = rec_data['shop_product_name']
+    username = rec_data['username']
 
-        new_shop_product = ShopProduct(name=shop_product_name)
-        new_shop_product.save()
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not shop_product_name:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    new_shop_product = ShopProduct(name=shop_product_name)
+    new_shop_product.save()
+
+    return JsonResponse({"response_code": 2,
+                         "new_shop_product": {"id": new_shop_product.pk, "name": new_shop_product.name, "sale_price": 0,
+                                              "buy_price": 0}})
 
 
 def delete_invoice_purchase(request):

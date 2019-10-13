@@ -247,9 +247,9 @@ angular.module("dashboard")
                     var entry = $scope.new_invoice_purchase_data.material_items[i];
                     if (parseInt(entry.id) === int_id) {
                         entry.nums += 1;
-                        entry.total += entry.price;
+                        entry.total += parseInt(entry.price);
                         is_fill = true;
-                        $scope.new_invoice_purchase_data.total_price += entry.price;
+                        $scope.new_invoice_purchase_data.total_price += parseInt(entry.price);
                         break;
                     }
                 }
@@ -290,9 +290,9 @@ angular.module("dashboard")
                     var entry = $scope.new_invoice_purchase_data.shop_product_items[i];
                     if (parseInt(entry.id) === int_id) {
                         entry.nums += 1;
-                        entry.total += entry.price;
+                        entry.total += parseInt(entry.price);
                         is_fill = true;
-                        $scope.new_invoice_purchase_data.total_price += entry.price;
+                        $scope.new_invoice_purchase_data.total_price += parseInt(entry.price);
                         break;
                     }
                 }
@@ -433,6 +433,8 @@ angular.module("dashboard")
             dashboardHttpRequest.addMaterial(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        var new_material = data['new_material'];
+                        $scope.add_item(new_material.id, new_material.name, new_material.price);
                         $scope.search_data_material.search_word = "";
                         $scope.can_add_material = false;
                         $scope.search_material();
@@ -482,6 +484,8 @@ angular.module("dashboard")
             dashboardHttpRequest.addShopProduct(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        var new_shop_p = data['new_shop_product'];
+                        $scope.add_item_shop(new_shop_p.id, new_shop_p.name, new_shop_p.sale_price, new_shop_p.buy_price);
                         $scope.search_data_shop_products.search_word = "";
                         $scope.can_add_shop_product = false;
                         $scope.search_shop_products();
