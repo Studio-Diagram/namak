@@ -107,24 +107,24 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th scope="col"></th>
                             <th scope="col">عنوان</th>
                             <th scope="col">مسول فروش</th>
                             <th scope="col">شماره تماس</th>
                             <th scope="col">تاریخ آخرین پرداختی</th>
                             <th scope="col">مانده حساب</th>
                             <th scope="col"></th>
-                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="supplier in suppliers">
+                            <td><a ng-click="editSupplier(supplier.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">ویرایش</a></td>
                             <th scope="row">{{ supplier.name }}</th>
                             <td>{{ supplier.salesman_name }}</td>
                             <td>{{ supplier.salesman_phone }}</td>
                             <td>{{ supplier.last_pay | persianNumber }}</td>
                             <td class="redText">{{ supplier.remainder | number | persianNumber }} ریال</td>
-                            <td><a ng-click="editSupplier(supplier.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">ویرایش</a>
                             <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
