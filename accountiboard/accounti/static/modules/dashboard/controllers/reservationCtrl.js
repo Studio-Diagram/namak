@@ -115,7 +115,7 @@ angular.module("dashboard")
                 var diff = 1000 * 60 * 15;
                 var date = new Date();
                 var rounded = new Date(Math.round(date.getTime() / diff) * diff);
-                if ((Number($scope.working_times[0].hour) === rounded.getHours() && Number($scope.working_times[0].minute) > rounded.getMinutes()) || Number($scope.working_times[0].hour) > rounded.getHours()){
+                if ((Number($scope.working_times[0].hour) === rounded.getHours() && Number($scope.working_times[0].minute) > rounded.getMinutes()) || Number($scope.working_times[0].hour) > rounded.getHours()) {
                     return
                 }
                 for (var i = 0; i < $scope.working_times.length; i++) {
@@ -284,17 +284,29 @@ angular.module("dashboard")
         };
 
         $scope.arrive_reserve = function (reserve_id) {
-            var sending_data = {
-                'username': $rootScope.user_data.username,
-                'branch': $rootScope.user_data.branch,
-                "reserve_id": reserve_id
-            };
-            dashboardHttpRequest.arriveReserve(sending_data)
+            dashboardHttpRequest.addReserve($scope.new_reserve_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.change_date();
-                        $scope.closeAddModal();
-                        $scope.closeAddWalkedModal();
+                        var sending_data = {
+                            'username': $rootScope.user_data.username,
+                            'branch': $rootScope.user_data.branch,
+                            "reserve_id": reserve_id
+                        };
+                        dashboardHttpRequest.arriveReserve(sending_data)
+                            .then(function (data) {
+                                if (data['response_code'] === 2) {
+                                    $scope.change_date();
+                                    $scope.closeAddModal();
+                                    $scope.closeAddWalkedModal();
+                                }
+                                else if (data['response_code'] === 3) {
+                                    $scope.error_message = data['error_msg'];
+                                    $scope.openErrorModal();
+                                }
+                            }, function (error) {
+                                $scope.error_message = 500;
+                                $scope.openErrorModal();
+                            });
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
