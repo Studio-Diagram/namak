@@ -25,6 +25,7 @@ ADMINS = [('Iman Shafiei', 'imanshafiei540@gmail.com')]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.DEBUG
 
+SERVER_EMAIL = 'technical@cafeboard.ir'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.zoho.com'
 EMAIL_USE_TLS = True
