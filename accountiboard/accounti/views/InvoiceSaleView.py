@@ -281,6 +281,9 @@ def create_new_invoice_sales(request):
             if not table_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
+            if not guest_numbers and not guest_numbers == 0:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
             for shop_p in shop_items_new:
                 shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
                 if shop_obj.real_numbers < int(shop_p['nums']):

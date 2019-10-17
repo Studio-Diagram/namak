@@ -155,6 +155,7 @@ LOGGING = {
             'level': 'ERROR',
             # But the emails are plain text by default - HTML is nicer
             'include_html': True,
+            'filters': ['require_debug_false']
         },
         # Log to a text file that can be rotated by logrotate
         'logfile': {
