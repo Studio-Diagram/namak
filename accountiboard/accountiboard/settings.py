@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from accountiboard import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,10 +23,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '07m4jfcu&ejvlu_umu-dm&(qbbhj$o0r8yi60akowb3+abf89a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.DEBUG
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'technical@cafeboard.ir'
+EMAIL_HOST_PASSWORD = 'cafeboard@cafeboard'
 
 ALLOWED_HOSTS = ['*']
-
+MAILER_LIST = ['imanshafiei540@gmail.com']
 # Application definition
 
 INSTALLED_APPS = [
@@ -108,7 +117,36 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[%(asctime)s] [%(levelname)s] module: [%(module)s] %(message)s',
+        }
+    },
     'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        },
+        'console_debug_false': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'logging.StreamHandler',
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
         # Include the default Django email handler for errors
         # This is what you'd get without configuring logging at all.
         'mail_admins': {
@@ -132,7 +170,7 @@ LOGGING = {
         },
         # Might as well log any errors anywhere else in Django
         'django': {
-            'handlers': ['logfile'],
+            'handlers': ['console', 'console_debug_false', 'mail_admins', 'logfile'],
             'level': 'ERROR',
             'propagate': False,
         },
