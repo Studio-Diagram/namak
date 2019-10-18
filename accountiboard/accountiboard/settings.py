@@ -176,7 +176,7 @@ LOGGING = {
         },
         # Might as well log any errors anywhere else in Django
         'django': {
-            'handlers': ['console', 'console_debug_false', 'mail_admins', 'logfile'],
+            'handlers': ['console', 'console_debug_false', 'logfile'],
             'level': 'ERROR',
             'propagate': False,
         },
