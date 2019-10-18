@@ -85,7 +85,6 @@ def create_new_invoice_return(request):
                 return_number_count = int(numbers)
                 all_amani_sales = AmaniSale.objects.filter(invoice_sale_to_shop__shop_product=shop_obj).order_by(
                     '-created_date')
-                print(all_amani_sales)
                 for amani_sale in all_amani_sales:
                     real_number_in_amani_sale = amani_sale.numbers - amani_sale.return_numbers
                     if real_number_in_amani_sale != 0:

@@ -182,7 +182,6 @@ def add_old_member(request):
 
             for row in rows:
                 try:
-                    print(row)
                     first_name = row[1]
                     last_name = row[2]
                     card_number = row[3]

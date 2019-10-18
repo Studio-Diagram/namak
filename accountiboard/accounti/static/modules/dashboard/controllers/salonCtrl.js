@@ -151,7 +151,7 @@ angular.module("dashboard")
         $scope.print_data = function (invoice_id, print_kind, invoice_data) {
             $scope.disable_print_after_save_all_buttons = true;
             if (print_kind === "CASH") {
-                $scope.read_for_settle();
+                $scope.ready_for_settle(invoice_id);
                 var sending_data = {
                     'is_customer_print': 1,
                     'invoice_id': invoice_id
@@ -256,11 +256,12 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        var new_invoice_id = data['new_invoice_id'];
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
                         $scope.last_table_add = $scope.new_invoice_data.table_name;
-                        $scope.print_data($scope.new_invoice_data.invoice_sales_id, 'CASH');
+                        $scope.print_data(new_invoice_id, 'CASH');
                         $scope.refreshInvoice(data['new_invoice_id']);
                     }
                     else if (data['response_code'] === 3) {
@@ -1204,9 +1205,9 @@ angular.module("dashboard")
             $scope.new_invoice_data.table_name = $scope.last_table_add;
         };
 
-        $scope.read_for_settle = function () {
+        $scope.ready_for_settle = function (invoice_id) {
             var sending_data = {
-                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
+                "invoice_id": invoice_id,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };

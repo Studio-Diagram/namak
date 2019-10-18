@@ -490,17 +490,12 @@ def end_current_game(request):
 
             t = timedelta_end - timedelta_start
             point = int(round(t.total_seconds() / 225))
-            print(point)
-            print(game_object.member.id)
             if game_object.member.id == 1:
                 if point % 16 != 0:
-                    print(2222222)
                     point = (int(point / 16) + 1) * 16
-                    print(point)
             game_numbers = game_object.numbers
 
             game_object.points = point * game_numbers
-            print(point * game_numbers)
             game_object.save()
             invoice_object.total_price += point * game_numbers * 5000
             invoice_object.save()

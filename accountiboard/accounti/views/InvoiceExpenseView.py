@@ -95,7 +95,6 @@ def create_new_invoice_expense(request):
             new_invoice.save()
 
             for tag in expense_tags:
-                print(tag)
                 if "id" in tag:
                     tag_obj = ExpenseTag.objects.filter(id=tag['id']).first()
                 else:

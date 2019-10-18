@@ -847,7 +847,6 @@ def create_all_supplier_excel(request):
     from_time_g = jdatetime.date(int(from_time_split[2]), int(from_time_split[1]),
                                  int(from_time_split[0])).togregorian()
     to_time_split = to_time.split('/')
-    print(to_time_split)
     to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
                                int(to_time_split[0])).togregorian()
 
