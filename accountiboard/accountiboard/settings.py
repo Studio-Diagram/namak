@@ -164,6 +164,10 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
         # Again, default Django configuration to email unhandled exceptions
         'django.request': {
             'handlers': ['mail_admins'],
