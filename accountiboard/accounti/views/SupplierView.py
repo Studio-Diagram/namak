@@ -1027,3 +1027,52 @@ def create_all_materials_buy(request):
     workbook.save(settings.MEDIA_ROOT + "/" + excel_name)
     return JsonResponse(
         {"response_code": 2, 'file_name': excel_name})
+
+
+def get_supplier_purchase_item_used(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    supplier_id = rec_data['supplier_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    if not supplier_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    favourite_materials = []
+    favourite_shop_products = []
+
+    materials = PurchaseToMaterial.objects.filter(invoice_purchase__supplier=supplier_id).values("material__pk",
+                                                                                                 "material__name",
+                                                                                                 "material__unit").distinct()
+    for material in materials:
+        last_material = PurchaseToMaterial.objects.filter(material=material['material__pk']).last()
+        favourite_materials.append({
+            "id": material['material__pk'],
+            "name": material['material__name'],
+            "unit": material['material__unit'],
+            "price": last_material.base_unit_price
+        })
+
+    shop_products = PurchaseToShopProduct.objects.filter(invoice_purchase__supplier=supplier_id).values(
+        "shop_product__pk",
+        "shop_product__name",
+        "shop_product__real_numbers",
+        "shop_product__price").distinct()
+
+    for shop_p in shop_products:
+        last_shop_p = PurchaseToShopProduct.objects.filter(shop_product=shop_p['shop_product__pk']).last()
+        favourite_shop_products.append({
+            "id": shop_p['shop_product__pk'],
+            "name": shop_p['shop_product__name'],
+            "real_numbers": shop_p['shop_product__real_numbers'],
+            "price": shop_p['shop_product__price'],
+            "buy_price": last_shop_p.base_unit_price
+        })
+
+    return JsonResponse(
+        {"response_code": 2, 'materials': favourite_materials, "shop_products": favourite_shop_products})

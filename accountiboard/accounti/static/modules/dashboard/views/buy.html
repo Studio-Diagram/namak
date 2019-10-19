@@ -72,6 +72,9 @@
                                     <a ng-click="changeMenuNav('SHOP')" href=""
                                        ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
                                             class="fas fa-store"></i></a>
+                                    <a ng-click="changeMenuNav('STAR')" href=""
+                                       ng-class="current_menu_nav === 'STAR' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
+                                            class="fas fa-star"></i></a>
                                 </nav>
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
@@ -100,6 +103,17 @@
                                                    ng-show="can_add_shop_product">{{ search_data_shop_products.search_word }}<i
                                                         style="float: left;color: #00ff05"
                                                         class="fas fa-plus-square"></i></a>
+                                            </li>
+
+                                            <li ng-show="current_menu_nav === 'STAR'" ng-repeat="material in favourite_materials">
+                                                <a ng-click="add_item(material.id, material.name, material.price)"
+                                                   style="cursor: copy;" href=""
+                                                   class="nav-link">{{ material.name }}</a>
+                                            </li>
+                                            <li ng-show="current_menu_nav === 'STAR'" ng-repeat="shop in favourite_shops">
+                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.buy_price)"
+                                                   style="cursor: copy;" href=""
+                                                   class="nav-link">{{ shop.name }}</a>
                                             </li>
                                         </div>
                                     </ul>
@@ -135,7 +149,7 @@
                                             <ui-select ng-model="new_invoice_purchase_data.supplier_id">
                                                 <ui-select-match placeholder="انتخاب تامین‌کننده">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices
+                                                <ui-select-choices ng-click="get_most_items_supplier(new_invoice_purchase_data.supplier_id)"
                                                         repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>

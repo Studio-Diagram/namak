@@ -135,6 +135,7 @@ urlpatterns = [
     path('api/createAllSuppliersExcel/', SupplierView.create_all_supplier_excel),
     path('api/createAllMaterialsExcel/', SupplierView.create_all_materials_buy),
     path('api/getDetailProductNumber/', ShopProductView.get_detail_product_number),
+    path('api/getMostUsedItemsForSupplier/', SupplierView.get_supplier_purchase_item_used),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),

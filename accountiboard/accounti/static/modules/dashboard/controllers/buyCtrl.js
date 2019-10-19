@@ -8,6 +8,8 @@ angular.module("dashboard")
             $scope.read_only_mode = false;
             $scope.can_add_material = false;
             $scope.can_add_shop_product = false;
+            $scope.favourite_materials = [];
+            $scope.favourite_shops = [];
             $scope.new_invoice_purchase_data = {
                 'id': 0,
                 'factor_number': 0,
@@ -39,6 +41,27 @@ angular.module("dashboard")
 
         };
 
+        $scope.get_most_items_supplier = function (supplier_id) {
+            var sending_data = {
+                'supplier_id': supplier_id,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getMostUsedItemsForSupplier(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.favourite_materials = data['materials'];
+                        $scope.favourite_shops = data['shop_products'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.set_today_for_invoice = function () {
             jQuery.noConflict();
             (function ($) {
@@ -48,8 +71,6 @@ angular.module("dashboard")
                     $("#datepicker").datepicker();
                     $('#datepicker').datepicker('setDate', today);
                 });
-                console.log(today);
-
             })(jQuery);
         };
 
@@ -88,12 +109,7 @@ angular.module("dashboard")
         };
 
         $scope.changeMenuNav = function (name) {
-            if (name === "MAT") {
-                $scope.current_menu_nav = name;
-            }
-            else if (name === "SHOP") {
-                $scope.current_menu_nav = name;
-            }
+            $scope.current_menu_nav = name;
         };
 
         $scope.addInvoicePurchase = function () {

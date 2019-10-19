@@ -797,6 +797,13 @@ angular.module('dashboard')
                     'url': "/api/getSupplierRemainder/",
                     'data': data
                 });
+            },
+            'getMostUsedItemsForSupplier': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getMostUsedItemsForSupplier/",
+                    'data': data
+                });
             }
 
 

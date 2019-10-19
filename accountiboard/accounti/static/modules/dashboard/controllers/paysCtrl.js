@@ -31,8 +31,6 @@ angular.module("dashboard")
                     $("#datepicker").datepicker();
                     $('#datepicker').datepicker('setDate', today);
                 });
-                console.log(today);
-
             })(jQuery);
         };
 
