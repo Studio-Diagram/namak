@@ -190,6 +190,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.deleteInvoiceSettlement(sending_data)
                 .then(function (data) {
+                    $scope.closeDeletePermissionModal();
                     if (data['response_code'] === 2) {
                         $scope.get_pays();
                     }
@@ -201,6 +202,22 @@ angular.module("dashboard")
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.openDeletePermissionModal = function (invoice_id) {
+            $scope.deleteing_invoice_id = invoice_id;
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteInvoicePermissionModal').modal('show');
+            })(jQuery);
+        };
+
+        $scope.closeDeletePermissionModal = function () {
+            $scope.deleteing_invoice_id = 0;
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteInvoicePermissionModal').modal('hide');
+            })(jQuery);
         };
 
         $scope.save_and_open_modal = function () {

@@ -1,4 +1,20 @@
 <div ng-controller="paysCtrl">
+    <div class="modal fade mainModal alertModal redAlertModal" id="deleteInvoicePermissionModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید حذف فاکتور</h2>
+                    <a ng-click="delete_invoice_pay(deleteing_invoice_id)" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ تمام اطلاعات فاکتور شما از بین
+                        می‌رود.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
          data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -140,7 +156,7 @@
                             <td>{{ pay.settle_type }}</td>
                             <td>{{ pay.backup_code | persianNumber }}</td>
                             <td>{{ pay.created_time | persianNumber }}</td>
-                            <td><a ng-click="delete_invoice_pay(pay.id)" href=""
+                            <td><a ng-click="openDeletePermissionModal(pay.id)" href=""
                                    class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
                         </tr>
                         </tbody>
