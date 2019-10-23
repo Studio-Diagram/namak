@@ -295,6 +295,8 @@ angular.module("dashboard")
             for (var i = 0; i < $scope.new_invoice_expense_data.services.length; i++) {
                 $scope.new_invoice_expense_data.total_price += Number($scope.new_invoice_expense_data.services[i].price);
             }
+
+            $scope.new_invoice_expense_data.total_price = Number($scope.new_invoice_expense_data.total_price) + Number($scope.new_invoice_expense_data.tax) - Number($scope.new_invoice_expense_data.discount);
         };
 
         $scope.add_new_row_to_services = function () {

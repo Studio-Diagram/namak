@@ -148,11 +148,15 @@
                                     <tbody>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <td><input ng-model="new_invoice_expense_data.discount" type="text" class="form-control"
+                                                   aria-label="" ng-change="change_total_price()" format>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>مالیات</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <td><input ng-model="new_invoice_expense_data.tax" type="text" class="form-control"
+                                                   aria-label="" ng-change="change_total_price()" format>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
