@@ -94,7 +94,7 @@
                         <tr class="tableTotal">
                             <th>مانده حساب</th>
                             <td>
-                                <span ng-class="remainder > 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ remainder | number | persianNumber }} ریال</span>
+                                <span ng-class="remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ remainder | number | persianNumber }} ریال</span>
                             </td>
                         </tr>
                         </tbody>
