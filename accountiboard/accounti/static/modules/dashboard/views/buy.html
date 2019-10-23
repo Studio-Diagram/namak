@@ -197,7 +197,7 @@
                                         <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
                                                    ng-model="item.nums"
                                                    ng-change="changeItemNumber($index)"></td>
-                                        <td>{{ item.total | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ display_float_to_int(item.total) | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-model="item.description"></td>
                                     </tr>

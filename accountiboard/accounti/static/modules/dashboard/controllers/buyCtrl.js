@@ -227,6 +227,10 @@ angular.module("dashboard")
             $scope.new_invoice_purchase_data.total_price = Math.round(new_total_price);
         };
 
+        $scope.display_float_to_int = function(price){
+            return Math.round(price);
+        };
+
         $scope.changeItemPrice = function (item_index) {
             var new_price = $scope.new_invoice_purchase_data.material_items[item_index].price;
             var item_nums = $scope.new_invoice_purchase_data.material_items[item_index].nums;
