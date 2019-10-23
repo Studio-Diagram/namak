@@ -1547,7 +1547,7 @@ tags-input .tags .tag-item {
     background-color: white;
 }
 
-.menuNavTable tr:nth-child(2) th{
+.menuNavTable tr:nth-child(2) th {
     font-weight: 300;
 }
 
@@ -1555,14 +1555,14 @@ tags-input .tags .tag-item {
     min-height: 40px;
 }
 
-.menuNavTable tr:hover{
+.menuNavTable tr:hover {
     cursor: pointer;
 }
 
-.menuNavTable th:hover{
+.menuNavTable th:hover {
     cursor: pointer;
 }
 
-.menuNavTable th.active{
+.menuNavTable th.active {
     background: var(--pageBorder);
 }
