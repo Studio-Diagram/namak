@@ -1,6 +1,8 @@
 angular.module("dashboard")
     .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $state, $http, $timeout, $window, dashboardHttpRequest, $compile, $stateParams) {
         var initialize = function () {
+            $scope.tomorrow_date = "";
+            $scope.fixed_date = "";
             jQuery.noConflict();
             (function ($) {
                 $(document).ready(function () {

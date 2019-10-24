@@ -118,6 +118,8 @@ def get_reserves(request):
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not date:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         branch_obj = Branch.objects.get(pk=branch_id)
         reserve_date_split = date.split('/')
