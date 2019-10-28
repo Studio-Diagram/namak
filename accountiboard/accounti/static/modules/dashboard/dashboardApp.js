@@ -41,10 +41,20 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/menuItem',
         templateUrl: 'static/modules/dashboard/views/menu_item.html'
     };
+    var member_manager = {
+        name: 'member_manager',
+        url: '/member_manager',
+        templateUrl: 'static/modules/dashboard/views/member_manager.html'
+    };
     var member = {
-        name: 'member',
+        name: 'member_manager.member',
         url: '/member',
         templateUrl: 'static/modules/dashboard/views/member.html'
+    };
+    var lottery = {
+        name: 'member_manager.lottery',
+        url: '/lottery',
+        templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
     var boardgame = {
         name: 'boardgame',
@@ -174,6 +184,8 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(open_close_cash);
     $stateProvider.state(tables);
     $stateProvider.state(cash_disable);
+    $stateProvider.state(member_manager);
+    $stateProvider.state(lottery);
 });
 
 angular.module("dashboard")

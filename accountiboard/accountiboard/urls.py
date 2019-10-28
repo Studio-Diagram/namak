@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
-    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView
+    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView
 from accountiboard import settings
 from django.views.static import serve
 
@@ -136,6 +136,9 @@ urlpatterns = [
     path('api/createAllMaterialsExcel/', SupplierView.create_all_materials_buy),
     path('api/getDetailProductNumber/', ShopProductView.get_detail_product_number),
     path('api/getMostUsedItemsForSupplier/', SupplierView.get_supplier_purchase_item_used),
+    path('api/lottery/', LotteryView.lottery),
+    path('api/get_lotteries/', LotteryView.lottery_list),
+    path('api/give_lottery_prize/', LotteryView.give_prize),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),

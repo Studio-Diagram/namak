@@ -804,6 +804,27 @@ angular.module('dashboard')
                     'url': "/api/getMostUsedItemsForSupplier/",
                     'data': data
                 });
+            },
+            'getLotteries': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/get_lotteries/",
+                    'data': data
+                });
+            },
+            'addLottery': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/lottery/",
+                    'data': data
+                });
+            },
+            'givePrize': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/give_lottery_prize/",
+                    'data': data
+                });
             }
 
 

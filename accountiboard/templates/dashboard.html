@@ -73,6 +73,7 @@
     <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/cashDisableCtrl.js' %}"></script>
+    <script src="{% static 'modules/dashboard/controllers/lotteryCtrl.js' %}"></script>
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
@@ -145,7 +146,7 @@
                            class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="member" href="" ng-class="isActive('/member') ? 'nav-link active' : 'nav-link'"><i
+                        <a ui-sref="member_manager.member" href="" ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-id-card"></i>عضویت</a>
                     </li>
 

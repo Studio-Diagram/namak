@@ -441,3 +441,11 @@ class DeletedInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     description = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
+
+
+class Lottery(models.Model):
+    start_date = models.DateField(null=False)
+    end_date = models.DateField(null=False)
+    prize = models.CharField(max_length=255, null=False)
+    is_give_prize = models.IntegerField(default=0)
+    user = models.ForeignKey(to=Member, on_delete=models.CASCADE)
