@@ -453,7 +453,9 @@ class AmaniSaleToInvoicePurchaseShopProduct(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "id(" + str(self.id) + ")" + "amani_id(" + str(self.amani_sale_id) + ")" + str(self.created_date) + str(
+        return "id(" + str(self.id) + ")" + "InvoicePtoSid(" + str(
+            self.invoice_purchase_to_shop_product_id) + ")" + "amani_id(" + str(self.amani_sale_id) + ")" + str(
+            self.created_date) + str(
             self.amani_sale.supplier.name) + str(
             self.invoice_purchase_to_shop_product.shop_product.name)
 
