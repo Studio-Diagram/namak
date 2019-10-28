@@ -432,7 +432,7 @@ class AmaniSale(models.Model):
 
     def __str__(self):
         return "id(" + str(self.id) + ")" + str(self.created_date) + str(self.supplier.name) + str(
-            self.invoice_sale_to_shop.shop_product.name)
+            self.invoice_sale_to_shop.shop_product.name) + "(Number : " + str(self.numbers) + ")"
 
 
 class AmaniSaleAdmin(admin.ModelAdmin):
