@@ -427,7 +427,8 @@ class AmaniSale(models.Model):
     created_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.created_date) + str(self.supplier.name) + str(self.invoice_sale_to_shop.shop_product.name)
+        return "id(" + str(self.id) + ")" + str(self.created_date) + str(self.supplier.name) + str(
+            self.invoice_sale_to_shop.shop_product.name)
 
 
 class AmaniSaleAdmin(admin.ModelAdmin):
@@ -448,7 +449,8 @@ class AmaniSaleToInvoicePurchaseShopProduct(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.created_date) + str(self.amani_sale.supplier.name) + str(
+        return "id(" + str(self.id) + ")" + "amani_id(" + str(self.amani_sale_id) + ")" + str(self.created_date) + str(
+            self.amani_sale.supplier.name) + str(
             self.invoice_purchase_to_shop_product.shop_product.name)
 
 
