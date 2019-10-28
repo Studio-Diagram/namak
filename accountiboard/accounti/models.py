@@ -300,6 +300,10 @@ class InvoicePurchase(models.Model):
         return str(self.created_time) + str(self.supplier.name) + str(self.total_price)
 
 
+class InvoicePurchaseAdmin(admin.ModelAdmin):
+    search_fields = ('supplier__name',)
+
+
 class PurchaseToMaterial(models.Model):
     material = models.ForeignKey(to=Material, on_delete=models.CASCADE)
     invoice_purchase = models.ForeignKey(to=InvoicePurchase, on_delete=models.CASCADE)
@@ -317,6 +321,10 @@ class PurchaseToShopProduct(models.Model):
     return_numbers = models.IntegerField(null=False, default=0)
     sale_price = models.FloatField(null=False, default=0)
     description = models.TextField(null=True, blank=True)
+
+
+class PurchaseToShopProductAdmin(admin.ModelAdmin):
+    search_fields = ('shop_product__name',)
 
 
 class ExpenseTag(models.Model):
