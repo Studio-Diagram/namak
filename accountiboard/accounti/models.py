@@ -323,7 +323,7 @@ class PurchaseToShopProduct(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.shop_product.name) + "InvoicePId(" + str(self.invoice_purchase.id) + ")" + str(
+        return "id(" + str(self.id) + ")" + str(self.shop_product.name) + "InvoicePId(" + str(self.invoice_purchase.id) + ")" + str(
             self.invoice_purchase.supplier.name)
 
 
