@@ -324,7 +324,7 @@ class PurchaseToShopProduct(models.Model):
 
 
 class PurchaseToShopProductAdmin(admin.ModelAdmin):
-    search_fields = ('shop_product__name',)
+    search_fields = ('shop_product__name', 'invoice_purchase__supplier__name',)
 
 
 class ExpenseTag(models.Model):
