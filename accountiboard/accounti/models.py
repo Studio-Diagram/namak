@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib import admin
 
 
 class Branch(models.Model):
@@ -296,6 +296,9 @@ class InvoicePurchase(models.Model):
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.created_time) + str(self.supplier.name) + str(self.total_price)
+
 
 class PurchaseToMaterial(models.Model):
     material = models.ForeignKey(to=Material, on_delete=models.CASCADE)
@@ -415,6 +418,13 @@ class AmaniSale(models.Model):
     return_numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return str(self.created_date) + str(self.supplier.name) + str(self.invoice_sale_to_shop.shop_product.name)
+
+
+class AmaniSaleAdmin(admin.ModelAdmin):
+    search_fields = ('supplier__name',)
+
 
 class AmaniSaleToInvoiceReturn(models.Model):
     amani_sale = models.ForeignKey(to=AmaniSale, on_delete=models.CASCADE)
@@ -428,6 +438,10 @@ class AmaniSaleToInvoicePurchaseShopProduct(models.Model):
     invoice_purchase_to_shop_product = models.ForeignKey(to=PurchaseToShopProduct, on_delete=models.CASCADE)
     numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.created_date) + str(self.amani_sale.supplier.name) + str(
+            self.invoice_purchase_to_shop_product.shop_product.name)
 
 
 class PurchaseToInvoiceReturn(models.Model):
