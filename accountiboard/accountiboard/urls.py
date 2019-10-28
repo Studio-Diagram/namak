@@ -139,6 +139,7 @@ urlpatterns = [
     path('api/lottery/', LotteryView.lottery),
     path('api/get_lotteries/', LotteryView.lottery_list),
     path('api/give_lottery_prize/', LotteryView.give_prize),
+    path('api/eslah/', LotteryView.eslah),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),

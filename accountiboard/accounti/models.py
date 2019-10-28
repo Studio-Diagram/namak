@@ -322,6 +322,10 @@ class PurchaseToShopProduct(models.Model):
     sale_price = models.FloatField(null=False, default=0)
     description = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return str(self.shop_product.name) + "InvoicePId(" + str(self.invoice_purchase.id) + ")" + str(
+            self.invoice_purchase.supplier.name)
+
 
 class PurchaseToShopProductAdmin(admin.ModelAdmin):
     search_fields = ('shop_product__name', 'invoice_purchase__supplier__name',)

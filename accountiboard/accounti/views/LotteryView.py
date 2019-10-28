@@ -128,3 +128,13 @@ def give_prize(request):
     lot_obj.save()
 
     return JsonResponse({"response_code": 2})
+
+
+def eslah(request):
+    s = Supplier.objects.get(name="قنبر علی ( ما دمک سابق )")
+    all_i_p = PurchaseToShopProduct.objects.filter(invoice_purchase__supplier=s)
+    for i in all_i_p:
+        if i.buy_numbers != i.unit_numbers:
+            i.buy_numbers = i.unit_numbers
+        i.save()
+    return JsonResponse({"response_code": 2})
