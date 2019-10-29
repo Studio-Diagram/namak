@@ -125,7 +125,8 @@ def get_reserves(request):
         reserve_date_split = date.split('/')
         reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
                                         int(reserve_date_split[0])).togregorian()
-        all_today_reserves = Reservation.objects.filter(branch=branch_obj, reserve_date=reserve_date_g)
+        all_today_reserves = Reservation.objects.filter(branch=branch_obj, reserve_date=reserve_date_g).exclude(
+            reserve_state="call_waiting")
         reserves_data = []
         for reserve in all_today_reserves:
             tables_to_reserve = ReserveToTables.objects.filter(reserve=reserve)
@@ -267,3 +268,81 @@ def get_today_for_reserve(request):
 
         return JsonResponse({"response_code": 2, 'today_for_reserve': today, 'tomorrow_for_reserve': tomorrow})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+def get_waiting_list_reserves(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch']
+    date = rec_data['date']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not date:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+    reserve_date_split = date.split('/')
+    reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                    int(reserve_date_split[0])).togregorian()
+    all_today_reserves = Reservation.objects.filter(branch=branch_obj, reserve_date=reserve_date_g,
+                                                    reserve_state="call_waiting")
+    reserves_data = []
+    for reserve in all_today_reserves:
+        reserves_data.append({
+            'id': reserve.pk,
+            'customer_name': reserve.customer_name,
+            'start_time': reserve.start_time.strftime("%H:%M"),
+            'numbers': reserve.numbers,
+            'phone': reserve.phone
+        })
+    return JsonResponse({"response_code": 2, 'all_today_waiting_list': reserves_data})
+
+
+def add_waiting_list(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    start_time = rec_data['start_time']
+    end_time = rec_data['end_time']
+    reserve_date = rec_data['reserve_date']
+    customer_name = rec_data['customer_name']
+    numbers = rec_data['numbers']
+    phone = rec_data['phone']
+    reserve_state = rec_data['reserve_state']
+    branch_id = rec_data['branch']
+
+    if not reserve_state or reserve_state != "call_waiting" or not customer_name or not reserve_date or not numbers \
+            or not phone or not branch_id or not start_time:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    start_time_detail = datetime.strptime(start_time, "%H:%M")
+    if not end_time:
+        end_time_detail = start_time_detail + timedelta(minutes=120)
+        end_time = end_time_detail.strftime("%H:%M")
+
+    end_time_obj = datetime.strptime(end_time, "%H:%M")
+
+    reserve_date_split = reserve_date.split('/')
+    reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                    int(reserve_date_split[0])).togregorian()
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+    new_reservation = Reservation(
+        start_time=datetime.strptime(start_time, "%H:%M"),
+        end_time=end_time_obj,
+        numbers=numbers,
+        customer_name=customer_name,
+        reserve_date=reserve_date_g,
+        reserve_state=reserve_state,
+        phone=phone,
+        branch=branch_obj
+    )
+    new_reservation.save()
+
+    return JsonResponse({"response_code": 2})

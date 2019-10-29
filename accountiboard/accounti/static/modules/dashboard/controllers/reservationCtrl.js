@@ -323,6 +323,7 @@ angular.module("dashboard")
                         $scope.closePermissionModal();
                         $scope.closeAddModal();
                         $scope.closeAddWalkedModal();
+                        $scope.get_waiting_list();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -433,10 +434,33 @@ angular.module("dashboard")
                         $scope.grey_past_hours();
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_waiting_list = function () {
+            var sending_data = {
+                "username": $rootScope.user_data.username,
+                "branch": $rootScope.user_data.branch,
+                "date": $scope.today_date
+            };
+            dashboardHttpRequest.getWaitingList(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.waiting_list = data['all_today_waiting_list'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -448,6 +472,26 @@ angular.module("dashboard")
                         $scope.closeAddModal();
                         $scope.closeAddWalkedModal();
                         $scope.closeCompleteReserveModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.add_waiting_list = function () {
+            dashboardHttpRequest.addWaitingList($scope.new_reserve_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_reserve_data.customer_name = "";
+                        $scope.new_reserve_data.start_time = "";
+                        $scope.new_reserve_data.numbers = 0;
+                        $scope.new_reserve_data.phone = "";
+                        $scope.get_waiting_list();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -550,6 +594,24 @@ angular.module("dashboard")
             (function ($) {
                 $('#addWalkedModal').modal('hide');
                 $scope.get_tables_data($rootScope.user_data);
+                $scope.resetFrom();
+            })(jQuery);
+        };
+
+        $scope.openWaitingListModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#waitingListModal').modal('show');
+            })(jQuery);
+            $scope.get_waiting_list();
+            $scope.new_reserve_data.reserve_state = 'call_waiting';
+            $scope.new_reserve_data.new_reserve_data = $scope.today_date;
+        };
+
+        $scope.closeWaitingListModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#waitingListModal').modal('hide');
                 $scope.resetFrom();
             })(jQuery);
         };
@@ -711,6 +773,24 @@ angular.module("dashboard")
                         }
                         else {
                             $scope.new_reserve_data.end_time = $('#end-time-clock-3').val();
+                        }
+                    }
+                });
+                $('#start-time-clock-waiting-list').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#start-time-clock-waiting-list').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start-time-clock-waiting-list').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.start_time = $('#start-time-clock-waiting-list').val();
                         }
                     }
                 });

@@ -825,6 +825,20 @@ angular.module('dashboard')
                     'url': "/api/give_lottery_prize/",
                     'data': data
                 });
+            },
+            'getWaitingList': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getWaitingList/",
+                    'data': data
+                });
+            },
+            'addWaitingList': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/addWaitingList/",
+                    'data': data
+                });
             }
 
 

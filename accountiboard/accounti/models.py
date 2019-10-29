@@ -404,6 +404,7 @@ class Reservation(models.Model):
         ('waiting', 'waiting'),
         ('arrived', 'arrived'),
         ('walked', 'walked'),
+        ('call_waiting', 'call_waiting'),
     )
     start_time = models.TimeField(null=False)
     end_time = models.TimeField(null=False)

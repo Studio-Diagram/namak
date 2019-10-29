@@ -94,12 +94,12 @@
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-2" >
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-2">
                             </div>
                             <div class="col">
                                 <label>ساعت پایان</label>
                                 <input ng-model="new_reserve_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-2" >
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-2">
                             </div>
                         </div>
                     </form>
@@ -128,7 +128,8 @@
                         پاک کردن صفحه</a>
                     <a ng-click="openPermissionModal(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
                             class="fas fa-save"></i> پاک کردن</a>
-                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو رفت!</a>
+                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو
+                        رفت!</a>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -171,12 +172,12 @@
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-3" >
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-3">
                             </div>
                             <div class="col">
                                 <label>ساعت پایان</label>
                                 <input ng-model="new_reserve_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-3" >
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-3">
                             </div>
                         </div>
                     </form>
@@ -206,7 +207,8 @@
                             class="fas fa-save"></i> ثبت حضور</a>
                     <a ng-click="openPermissionModal(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
                             class="fas fa-save"></i> پاک کردن</a>
-                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو رفت!</a>
+                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو
+                        رفت!</a>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -259,15 +261,101 @@
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
-                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-1" >
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-1">
                             </div>
                             <div class="col">
                                 <label>ساعت پایان</label>
                                 <input ng-model="new_reserve_data.end_time" type="text"
-                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-1" >
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-1">
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="waitingListModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت انتظار جدید</h2>
+                    <a class="mainButton redButton" ng-click="closeWaitingListModal()" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="add_waiting_list()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form>
+                                <h3>اطلاعات انتظار جدید</h3>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>نام مورد انتظار</label>
+                                        <input ng-model="new_reserve_data.customer_name" type="text"
+                                               class="form-control" placeholder="نام مورد انتظار">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>شماره تماس</label>
+                                        <input ng-model="new_reserve_data.phone" type="text"
+                                               class="form-control" placeholder="شماره تماس">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>تعداد نفرات</label>
+                                        <input ng-model="new_reserve_data.numbers" type="number"
+                                               class="form-control" placeholder="تعداد نفرات">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>ساعت شروع</label>
+                                        <input ng-model="new_reserve_data.start_time" type="text"
+                                               class="form-control" placeholder="ساعت شروع"
+                                               id="start-time-clock-waiting-list">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="tableWrapper">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">شماره</th>
+                                        <th scope="col">نام مورد انتظار</th>
+                                        <th scope="col">شماره تماس</th>
+                                        <th scope="col">تعداد نفرات</th>
+                                        <th scope="col">ساعت شروع</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="waiting in waiting_list">
+                                        <td>{{ $index + 1 | persianNumber }}</td>
+                                        <td>{{ waiting.customer_name }}</td>
+                                        <td>{{ waiting.phone | persianNumber }}</td>
+                                        <td>{{ waiting.numbers | persianNumber }}</td>
+                                        <td>{{ waiting.start_time | persianNumber }}</td>
+                                        <td><a ng-click="openPermissionModal(waiting.id)" href=""
+                                               class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
 
@@ -308,6 +396,9 @@
                     <a ng-click="openAddWalkedModal()" class="tableLefty mainButton blueButton" href=""
                        data-toggle="modal"><i
                             class="fas fa-user-plus"></i> مشتری حضوری جدید</a>
+                    <a ng-click="openWaitingListModal()" class="tableLefty mainButton yellowButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> لیست انتظار</a>
 
 
                     <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_today_for_reserve()"
@@ -317,7 +408,8 @@
                        class="tableLefty mainButton blueButton" href=""
                        data-toggle="modal"> فردا </a>
 
-                    <input style="width: 20%;float: right;margin-left: 10px;margin-right: 10px" ng-model="fixed_date" type="text"
+                    <input style="width: 20%;float: right;margin-left: 10px;margin-right: 10px" ng-model="fixed_date"
+                           type="text"
                            class="form-control" placeholder="تاریخ" id="datepicker">
                     <a style="float: right !important;margin: 0 !important;" ng-click="change_date()"
                        class="tableLefty mainButton blueButton" href=""
@@ -344,8 +436,12 @@
             </main>
         </div>
         <div style="position: fixed;border-radius: 0.5em;color: white;display: none;z-index: 1000;" class="tooltipM">
-            <button ng-click="openCompleteReserveModal('walked')" class="btn btn-info" style="float: right;border-radius: 0 0.5em 0.5em 0;">حضوری</button>
-            <button ng-click="openCompleteReserveModal('waiting')" class="btn btn-success" style="float: left;border-radius: 0.5em 0 0 0.5em;">رزرو</button>
+            <button ng-click="openCompleteReserveModal('walked')" class="btn btn-info"
+                    style="float: right;border-radius: 0 0.5em 0.5em 0;">حضوری
+            </button>
+            <button ng-click="openCompleteReserveModal('waiting')" class="btn btn-success"
+                    style="float: left;border-radius: 0.5em 0 0 0.5em;">رزرو
+            </button>
         </div>
     </main>
 </div>

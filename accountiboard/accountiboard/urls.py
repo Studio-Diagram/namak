@@ -136,6 +136,8 @@ urlpatterns = [
     path('api/createAllMaterialsExcel/', SupplierView.create_all_materials_buy),
     path('api/getDetailProductNumber/', ShopProductView.get_detail_product_number),
     path('api/getMostUsedItemsForSupplier/', SupplierView.get_supplier_purchase_item_used),
+    path('api/getWaitingList/', ReserveView.get_waiting_list_reserves),
+    path('api/addWaitingList/', ReserveView.add_waiting_list),
     path('api/lottery/', LotteryView.lottery),
     path('api/get_lotteries/', LotteryView.lottery_list),
     path('api/give_lottery_prize/', LotteryView.give_prize),
