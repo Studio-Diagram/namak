@@ -278,6 +278,9 @@ def create_new_invoice_sales(request):
             discount = rec_data['discount']
             tip = rec_data['tip']
 
+            if tip == "" or discount == "":
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
             if not table_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -363,6 +366,9 @@ def create_new_invoice_sales(request):
             branch_id = rec_data['branch_id']
             discount = rec_data['discount']
             tip = rec_data['tip']
+
+            if tip == "" or discount == "":
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             table_obj = Table.objects.get(pk=table_id)
