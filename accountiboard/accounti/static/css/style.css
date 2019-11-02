@@ -1566,3 +1566,16 @@ tags-input .tags .tag-item {
 .menuNavTable th.active {
     background: var(--pageBorder);
 }
+
+.preloader:before {
+    position: absolute;
+    content: '';
+    display: block;
+    top: 35%;
+    width: 10%;
+    height: 35%;
+    background: url(/static/img/namak-main.gif);
+    background-size: 8em 8em;
+    background-repeat: no-repeat;
+    left: 55%;
+}

@@ -34,6 +34,7 @@ angular.module("dashboard")
         $scope.get_employees_data = function (data) {
             dashboardHttpRequest.getEmployees(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.employees = data['employees'];
                     }
@@ -42,6 +43,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });

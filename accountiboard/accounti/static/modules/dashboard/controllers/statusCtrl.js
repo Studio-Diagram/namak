@@ -17,6 +17,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.status = data['all_today_status'];
                     }
@@ -24,6 +25,7 @@ angular.module("dashboard")
                         console.log("NOT SUCCESS!");
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     console.log(error);
                 });
         };

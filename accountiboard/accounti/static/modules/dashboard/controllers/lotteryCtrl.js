@@ -23,6 +23,7 @@ angular.module("dashboard")
         $scope.get_lotteries_data = function (data) {
             dashboardHttpRequest.getLotteries(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.lotteries = data['lotteries'];
                     }
@@ -31,6 +32,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });

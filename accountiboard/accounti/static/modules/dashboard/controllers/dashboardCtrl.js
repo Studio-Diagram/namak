@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $interval, $http, $location, $timeout, dashboardHttpRequest, $window) {
         var initialize = function () {
+            $rootScope.is_page_loading = true;
             if (localStorage.user && localStorage.branch) {
                 $rootScope.user_data = {
                     "username": JSON.parse(localStorage.user),
@@ -48,6 +49,11 @@ angular.module("dashboard")
                 }
             }
         };
+
+        $rootScope.$on('$stateChangeStart',
+            function (event, toState, toParams, fromState, fromParams, options) {
+                $rootScope.is_page_loading = true;
+            });
 
         $scope.isActive = function (path) {
             return ($location.path().substr(0, path.length) === path);

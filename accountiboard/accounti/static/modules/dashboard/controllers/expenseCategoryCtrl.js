@@ -20,6 +20,7 @@ angular.module("dashboard")
         $scope.get_expense_cats_data = function (data) {
             dashboardHttpRequest.getAllExpenseCategories(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.expense_cats = data['all_expense_categories'];
                     }
@@ -28,6 +29,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });

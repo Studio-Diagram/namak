@@ -26,6 +26,7 @@ angular.module("dashboard")
         $scope.get_members_data = function (data) {
             dashboardHttpRequest.getMembers(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.members = data['members'];
                     }
@@ -34,6 +35,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });

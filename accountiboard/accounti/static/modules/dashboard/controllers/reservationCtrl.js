@@ -131,6 +131,7 @@ angular.module("dashboard")
                     })(jQuery);
                 }
             }
+            $rootScope.is_page_loading = false;
         };
 
         $scope.cross_hover = function (hour, min, table, event) {

@@ -108,6 +108,7 @@ angular.module("dashboard")
         $scope.get_today_cash = function () {
             dashboardHttpRequest.getTodayCash($rootScope.user_data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
                         $scope.new_invoice_data.cash_id = data['cash_id'];
@@ -117,6 +118,7 @@ angular.module("dashboard")
                         $rootScope.cash_data.cash_id = 0;
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     console.log(error);
                 });
         };

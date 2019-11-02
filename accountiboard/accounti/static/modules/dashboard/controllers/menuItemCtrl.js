@@ -37,15 +37,16 @@ angular.module("dashboard")
         $scope.get_menu_item_data = function (data) {
             dashboardHttpRequest.getMenuItems(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.menu_items = data['menu_items'];
-                        console.log(data);
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });

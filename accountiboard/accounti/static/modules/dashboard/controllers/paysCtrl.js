@@ -154,6 +154,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getAllPays(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.pays = data['invoices']
                     }
@@ -162,6 +163,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
