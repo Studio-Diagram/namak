@@ -51,7 +51,8 @@ def lottery(request):
     end_date_g = jdatetime.date(int(end_date_split[2]), int(end_date_split[1]),
                                 int(end_date_split[0])).togregorian()
 
-    all_games = Game.objects.filter(add_date__gte=start_date_g, add_date__lte=end_date_g).order_by('add_date')
+    all_games = Game.objects.filter(add_date__gte=start_date_g, add_date__lte=end_date_g).order_by('add_date').exclude(
+        member__card_number='0000')
 
     lottery_data = []
     for game in all_games:
