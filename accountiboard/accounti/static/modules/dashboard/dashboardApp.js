@@ -159,6 +159,12 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/cash-disable.html'
     };
 
+    var quick_access = {
+        name: 'quickAccess',
+        url: '/quickAccess',
+        templateUrl: 'static/modules/dashboard/views/quick-access.html'
+    };
+
     $stateProvider.state(registerEmployee);
     $stateProvider.state(addEmployee);
     $stateProvider.state(menuCategory);
@@ -186,6 +192,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(cash_disable);
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);
+    $stateProvider.state(quick_access);
 });
 
 angular.module("dashboard")

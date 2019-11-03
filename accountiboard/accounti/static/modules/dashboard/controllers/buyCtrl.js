@@ -38,7 +38,7 @@ angular.module("dashboard")
             $scope.get_suppliers();
             $scope.get_materials();
             $scope.get_shop_products();
-
+            $scope.getNextFactorNumber('BUY');
         };
 
         $scope.get_most_items_supplier = function (supplier_id) {

@@ -349,6 +349,20 @@ angular.module("dashboard")
             })(jQuery);
         };
 
+        $rootScope.open_modal = function (modal_id) {
+            jQuery.noConflict();
+            (function ($) {
+                $('#' + modal_id).modal('show');
+            })(jQuery);
+        };
+
+        $rootScope.close_modal = function (modal_id) {
+            jQuery.noConflict();
+            (function ($) {
+                $('#' + modal_id).modal('hide');
+            })(jQuery);
+        };
+
 
         initialize();
 

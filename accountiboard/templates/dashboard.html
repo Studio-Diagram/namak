@@ -74,6 +74,7 @@
     <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/cashDisableCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/lotteryCtrl.js' %}"></script>
+    <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
@@ -133,7 +134,8 @@
             <nav class=" nav flex-column myNav">
                 <ul>
                     <li class="nav-item">
-                        <a href="" class="nav-link"><i class="fas fa-user-circle"></i>داشبورد</a>
+                        <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
+                           ui-sref="quickAccess" href="" class="nav-link"><i class="fas fa-user-circle"></i>داشبورد</a>
                     </li>
                     <li class="nav-item">
                         <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
