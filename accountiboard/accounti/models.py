@@ -177,6 +177,12 @@ class InvoiceSales(models.Model):
         ('BANK_CARD', 'کارت بانکی'),
         ('CASH', 'نقدی'),
     )
+    GAME_STATES = (
+        ('NO_GAME', 'بازی نمی‌خواهد'),
+        ('PLAYING', 'در حال بازی'),
+        ('WAIT_GAME', 'منتظر بازی'),
+        ('END_GAME', 'بازی تمام شده'),
+    )
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
     settle_time = models.DateTimeField(null=True, blank=True)
@@ -196,6 +202,8 @@ class InvoiceSales(models.Model):
     cash_desk = models.ForeignKey(Cash, null=True, blank=True, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
+    is_do_not_want_order = models.BooleanField(default=False)
+    game_state = models.CharField(max_length=50, choices=GAME_STATES, default='WAIT_GAME')
 
 
 class InvoicesSalesToMenuItem(models.Model):

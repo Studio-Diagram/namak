@@ -1,13 +1,6 @@
 from django.http import JsonResponse
-import json, base64, random
+import json
 from accounti.models import *
-from django.db.models import Q
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'

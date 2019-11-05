@@ -1255,6 +1255,9 @@ angular.module("dashboard")
             else if (status === "WAIT_FOR_SETTLE") {
                 return "badge badge-warning";
             }
+            else if (status === "DO_NOT_WANT_ORDER") {
+                return "badge badge-info";
+            }
         };
 
         $scope.return_status_badge_class_game = function (status) {
@@ -1264,7 +1267,10 @@ angular.module("dashboard")
             else if (status === "WAIT_GAME") {
                 return "badge badge-danger";
             }
-            else if (status === "IN_GAME") {
+            else if (status === "PLAYING") {
+                return "badge badge-info";
+            }
+            else if (status === "NO_GAME") {
                 return "badge badge-info";
             }
         };

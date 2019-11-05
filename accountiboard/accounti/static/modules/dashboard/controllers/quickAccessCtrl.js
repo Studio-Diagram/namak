@@ -61,43 +61,67 @@ angular.module("dashboard")
             };
             $scope.get_all_expense_tags();
             $scope.get_suppliers();
+            $scope.get_today_cash();
+        };
+
+        $scope.get_today_cash = function () {
+            dashboardHttpRequest.getTodayCash($rootScope.user_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $rootScope.cash_data.cash_id = data['cash_id'];
+                        $scope.get_all_invoices_state_base(data['cash_id']);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $rootScope.cash_data.cash_id = 0;
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    console.log(error);
+                });
+        };
+
+        $scope.get_all_invoices_state_base = function (cash_id) {
+            var sending_data = {
+                "username": $rootScope.user_data.username,
+                "branch_id": $rootScope.user_data.branch,
+                "cash_id": cash_id
+            };
+            dashboardHttpRequest.getAllInvoicesStateBase(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.wait_for_settle_invoices_data = data['wait_for_settle_invoices_data'];
+                        $scope.wait_game_invoices_data = data['wait_game_invoices_data'];
+                        $scope.playing_game_invoices_data = data['playing_game_invoices_data'];
+                        $scope.ordered_invoices_data = data['ordered_invoices_data'];
+                        $scope.not_order_invoices_data = data['not_order_invoices_data'];
+                        $scope.end_game_invoices_data = data['end_game_invoices_data'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.addMember = function () {
-            if ($scope.is_in_edit_mode) {
-                $scope.is_in_edit_mode = false;
-                dashboardHttpRequest.addMember($scope.new_member_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_members_data($rootScope.user_data);
-                            $scope.close_modal('addMemberModal');
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
+            dashboardHttpRequest.addMember($scope.new_member_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.resetFrom();
+                        $scope.close_modal('addMemberModal');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
-                    });
-            }
-            else {
-                dashboardHttpRequest.addMember($scope.new_member_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_members_data($rootScope.user_data);
-                            $scope.resetFrom();
-                            $scope.close_modal('addMemberModal');
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.addPay = function () {

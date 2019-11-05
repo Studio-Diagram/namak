@@ -583,10 +583,10 @@
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳ نفر</th>
+                            <tr ng-repeat="invoice in not_order_invoices_data">
+                                <th scope="row">{{ invoice.table_name }}</th>
+                                <th scope="row">{{ invoice.customer_name }}</th>
+                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
                                 <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
                                     دهد</a>
                                 </td>
@@ -600,13 +600,28 @@
                 <div class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
-                            <tbody>
+                            <tbody ng-repeat="invoice in wait_game_invoices_data">
                             <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳ نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
-                                    دهد</a>
+                                <th scope="row">{{ invoice.table_name }}</th>
+                                <th scope="row">{{ invoice.customer_name }}</th>
+                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input ng-model="new_invoice_data.current_game.numbers" type="number"
+                                           min="0"
+                                           class="form-control" placeholder="تعداد نفرات بازی"
+                                           aria-label="">
+                                </td>
+                                <td>
+                                    <input ng-disabled="new_invoice_data.current_game.start_time"
+                                           ng-model="new_invoice_data.current_game.numbers" type="number"
+                                           min="0"
+                                           class="form-control" placeholder="شماره کارت"
+                                           aria-label="">
+                                </td>
+                                <td>
+                                    <a href="" class="mainButton fullWidthButton smallButton grayButton">شروع</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -619,13 +634,10 @@
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳ نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
-                                    دهد</a>
-                                </td>
+                            <tr ng-repeat="invoice in ordered_invoices_data">
+                                <th scope="row">{{ invoice.table_name }}</th>
+                                <th scope="row">{{ invoice.customer_name }}</th>
+                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
                             </tr>
                             </tbody>
                         </table>
@@ -637,12 +649,11 @@
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳ نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
-                                    دهد</a>
+                            <tr ng-repeat="invoice in playing_game_invoices_data">
+                                <th scope="row">{{ invoice.table_name }}</th>
+                                <th scope="row">{{ invoice.customer_name }}</th>
+                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
+                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">اتمام بازی</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -655,12 +666,11 @@
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳ نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
-                                    دهد</a>
+                            <tr ng-repeat="invoice in wait_for_settle_invoices_data">
+                                <th scope="row">{{ invoice.table_name }}</th>
+                                <th scope="row">{{ invoice.customer_name }}</th>
+                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
+                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">تسویه</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -673,12 +683,12 @@
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳ نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
-                                    دهد</a>
+                            <tr ng-repeat="invoice in end_game_invoices_data">
+                                <th scope="row">{{ invoice.table_name }}</th>
+                                <th scope="row">{{ invoice.customer_name }}</th>
+                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
+                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">دوباره بازی
+                                    می‌خواهد</a>
                                 </td>
                             </tr>
                             </tbody>

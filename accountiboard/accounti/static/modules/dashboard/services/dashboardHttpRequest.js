@@ -839,6 +839,27 @@ angular.module('dashboard')
                     'url': "/api/addWaitingList/",
                     'data': data
                 });
+            },
+            'getAllInvoicesStateBase': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getAllInvoicesStateBase/",
+                    'data': data
+                });
+            },
+            'changeGameState': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/changeGameState/",
+                    'data': data
+                });
+            },
+            'doNotWantOrder': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/doNotWantOrder/",
+                    'data': data
+                });
             }
 
 
