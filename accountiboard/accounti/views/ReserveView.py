@@ -346,3 +346,95 @@ def add_waiting_list(request):
     new_reservation.save()
 
     return JsonResponse({"response_code": 2})
+
+
+def get_all_today_left_reserves_with_hour(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch']
+    hour = rec_data['hour']
+    minutes = rec_data['minutes']
+    date = rec_data['date']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id or not date or hour == '' or minutes == '':
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    now = datetime.now()
+    delta_time = timedelta(hours=int(hour), minutes=int(minutes))
+    future_time = now + delta_time
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+
+    reserve_date_split = date.split('/')
+    reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                    int(reserve_date_split[0])).togregorian()
+    all_today_reserves = Reservation.objects.filter(branch=branch_obj, reserve_date=reserve_date_g,
+                                                    reserve_state="waiting").exclude(
+        reserve_state="call_waiting").order_by("start_time")
+
+    reserves_data = []
+
+    for reserve in all_today_reserves:
+        if now.time() <= reserve.start_time <= future_time.time():
+            table_to_reserve = ReserveToTables.objects.filter(reserve=reserve).first()
+            reserves_data.append({
+                'id': reserve.pk,
+                'customer_name': reserve.customer_name,
+                'start_time_hour': reserve.start_time.strftime('%H'),
+                'start_time_min': reserve.start_time.strftime('%M'),
+                'numbers': reserve.numbers,
+                'table_name': table_to_reserve.table.name
+            })
+
+    return JsonResponse({"response_code": 2, "reserves": reserves_data})
+
+
+def get_all_today_not_come_reserves(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch']
+    date = rec_data['date']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id or not date:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    now = datetime.now()
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+
+    reserve_date_split = date.split('/')
+    reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                    int(reserve_date_split[0])).togregorian()
+    all_today_reserves = Reservation.objects.filter(branch=branch_obj, reserve_date=reserve_date_g,
+                                                    reserve_state="waiting").exclude(
+        reserve_state="call_waiting").order_by("start_time")
+
+    reserves_data = []
+    midnight_time = datetime.strptime("00:00", "%H:%M")
+    end_cafe_time = branch_obj.end_working_time
+
+    for reserve in all_today_reserves:
+        if end_cafe_time > reserve.start_time > midnight_time.time():
+            continue
+        elif now.time() > reserve.start_time:
+            table_to_reserve = ReserveToTables.objects.filter(reserve=reserve).first()
+            reserves_data.append({
+                'id': reserve.pk,
+                'customer_name': reserve.customer_name,
+                'start_time_hour': reserve.start_time.strftime('%H'),
+                'start_time_min': reserve.start_time.strftime('%M'),
+                'numbers': reserve.numbers,
+                'table_name': table_to_reserve.table.name
+            })
+
+    return JsonResponse({"response_code": 2, "reserves": reserves_data})

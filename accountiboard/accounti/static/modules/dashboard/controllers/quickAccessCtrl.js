@@ -59,9 +59,120 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            $scope.get_today_for_reserve();
             $scope.get_all_expense_tags();
             $scope.get_suppliers();
             $scope.get_today_cash();
+        };
+
+        $scope.get_today_for_reserve = function () {
+            var sending_data = {
+                'branch': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getTodayForReserve(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.today_date = data['today_for_reserve'];
+                        $scope.get_left_reserves();
+                        $scope.get_not_come_reserves();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.delete_reserve = function (reserve_id) {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch,
+                "reserve_id": reserve_id
+            };
+            dashboardHttpRequest.deleteReserve(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_not_come_reserves();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.arrive_reserve = function (reserve_id) {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch,
+                "reserve_id": reserve_id
+            };
+            dashboardHttpRequest.arriveReserve(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_left_reserves();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_left_reserves = function () {
+            var sending_data = {
+                "username": $rootScope.user_data.username,
+                "branch": $rootScope.user_data.branch,
+                "hour": 1,
+                "minutes": 0,
+                "date": $scope.today_date
+            };
+            dashboardHttpRequest.getAllLeftReserves(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.left_reserves = data['reserves'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_not_come_reserves = function () {
+            var sending_data = {
+                "username": $rootScope.user_data.username,
+                "branch": $rootScope.user_data.branch,
+                "date": $scope.today_date
+            };
+            dashboardHttpRequest.getAllNotComeReserves(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.not_come_reserves = data['reserves'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.get_today_cash = function () {

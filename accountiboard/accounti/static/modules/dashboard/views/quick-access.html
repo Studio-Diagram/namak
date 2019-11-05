@@ -714,12 +714,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳</th>
-                                <th scope="row">۱۷:۴۵</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">ثبت حضور</a>
+                            <tr ng-repeat="reserve in left_reserves">
+                                <th scope="row">{{ reserve.table_name }}</th>
+                                <th scope="row">{{ reserve.customer_name }}</th>
+                                <th scope="row">{{ reserve.numbers | persianNumber }}</th>
+                                <th scope="row">{{ reserve.start_time_hour | persianNumber }}:{{ reserve.start_time_min | persianNumber }}</th>
+                                <td><a href="" ng-click="arrive_reserve(reserve.id)" class="mainButton fullWidthButton smallButton grayButton">ثبت حضور</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -743,12 +743,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">A3</th>
-                                <th scope="row">صدری</th>
-                                <th scope="row">۳</th>
-                                <th scope="row">۰۹۱۲۵۱۴۱۵۴۳</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
+                            <tr ng-repeat="reserve in not_come_reserves">
+                                <th scope="row">{{ reserve.table_name }}</th>
+                                <th scope="row">{{ reserve.customer_name }}</th>
+                                <th scope="row">{{ reserve.numbers | persianNumber }}</th>
+                                <th scope="row">{{ reserve.start_time_hour | persianNumber }}:{{ reserve.start_time_min | persianNumber }}</th>
+                                <td><a href="" ng-click="delete_reserve(reserve.id)" class="mainButton fullWidthButton smallButton grayButton">حذف</a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>

@@ -860,6 +860,20 @@ angular.module('dashboard')
                     'url': "/api/doNotWantOrder/",
                     'data': data
                 });
+            },
+            'getAllLeftReserves': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getAllLeftReserves/",
+                    'data': data
+                });
+            },
+            'getAllNotComeReserves': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getAllNotComeReserves/",
+                    'data': data
+                });
             }
 
 
