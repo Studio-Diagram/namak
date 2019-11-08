@@ -287,11 +287,6 @@ def get_detail_product_number(shop_product_id):
                           sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] +
                           sum_all_shop_p_numbers_amani_sales['numbers__sum'])
 
-    print(sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'])
-    print(sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum'])
-    print(sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'])
-    print(sum_all_shop_p_numbers_amani_sales['numbers__sum'])
-
     return real_shop_p_num
 
 
