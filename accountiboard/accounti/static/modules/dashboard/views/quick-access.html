@@ -583,8 +583,6 @@
     <main class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-5 dashboard-col">
-                <h3>وضعیت میزها</h3>
-
                 <div ng-show="not_order_invoices_data.length"
                      class="badge badge-pill badge-danger dashboard-badge mb-3">سفارش نداده
                 </div>
@@ -634,23 +632,6 @@
                                 <td>
                                     <a href="" class="mainButton fullWidthButton smallButton grayButton">شروع</a>
                                 </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-                <div ng-show="ordered_invoices_data.length" class="badge badge-pill badge-success dashboard-badge mb-3">
-                    سفارش داده
-                </div>
-                <div ng-show="ordered_invoices_data.length" class="mb-3">
-                    <div class="tableWrapper">
-                        <table class="table">
-                            <tbody>
-                            <tr ng-repeat="invoice in ordered_invoices_data">
-                                <th scope="row">{{ invoice.table_name }}</th>
-                                <th scope="row">{{ invoice.customer_name }}</th>
-                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
                             </tr>
                             </tbody>
                         </table>

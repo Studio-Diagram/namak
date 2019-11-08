@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from accounti.models import *
 from datetime import datetime
 import jdatetime, json
+from django.db.models import Sum
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -12,6 +13,43 @@ SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 FACTOR_NUMBER_INVALID = "شماره فاکتور تطابق ندارد."
+
+
+def get_detail_product_number(shop_product_id):
+    shop_product = ShopProduct.objects.get(id=shop_product_id)
+
+    # All Shop Product in all Invoice Purchases
+    sum_all_shop_p_numbers_invoice_purchases = PurchaseToShopProduct.objects.filter(
+        shop_product=shop_product).aggregate(Sum('unit_numbers'))
+
+    # All Shop Product in all Invoice return (Customer to Cafe)
+    sum_all_shop_p_numbers_invoice_return_c_to_cafe = InvoiceReturn.objects.filter(
+        shop_product=shop_product, return_type="CUSTOMER_TO_CAFE").aggregate(Sum('numbers'))
+
+    # All Shop Products in Invoice return Cafe to Supplier
+    sum_all_shop_p_numbers_invoice_return_cafe_to_s = InvoiceReturn.objects.filter(
+        shop_product=shop_product, return_type="CAFE_TO_SUPPLIER").aggregate(Sum('numbers'))
+
+    # All Shop Products in Amani Sales
+    sum_all_shop_p_numbers_amani_sales = AmaniSale.objects.filter(
+        invoice_sale_to_shop__shop_product=shop_product).aggregate(Sum('numbers'))
+
+    if not sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum']:
+        sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum']:
+        sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum']:
+        sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_amani_sales['numbers__sum']:
+        sum_all_shop_p_numbers_amani_sales['numbers__sum'] = 0
+
+    real_shop_p_num = (sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'] +
+                       sum_all_shop_p_numbers_invoice_return_c_to_cafe[
+                           'numbers__sum']) - (
+                          sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] +
+                          sum_all_shop_p_numbers_amani_sales['numbers__sum'])
+
+    return real_shop_p_num
 
 
 def create_new_invoice_return(request):
@@ -52,7 +90,7 @@ def create_new_invoice_return(request):
             branch_obj = Branch.objects.get(pk=branch_id)
             shop_obj = ShopProduct.objects.get(pk=shop_id)
 
-            if shop_obj.real_numbers < int(numbers):
+            if get_detail_product_number(shop_obj.id) < int(numbers):
                 return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Stock!"})
 
             invoice_date_split = invoice_date.split('/')

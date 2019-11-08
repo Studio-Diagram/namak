@@ -3,6 +3,7 @@ from django.shortcuts import render
 import json, jdatetime
 from accounti.models import *
 from datetime import datetime, timedelta, date
+from django.db.models import Sum
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -153,6 +154,9 @@ def settle_invoice_sale(request):
         invoice_object.settle_time = datetime.now()
 
         shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
+        for shop_product in shop_products:
+            if get_detail_product_number(shop_product.shop_product.id) < int(shop_product.numbers):
+                return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
         for shop_p in shop_products:
             shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
             unit_count = shop_p.numbers
@@ -368,6 +372,43 @@ def get_games_from_invoice_sales(invoice_sale_id):
     return data
 
 
+def get_detail_product_number(shop_product_id):
+    shop_product = ShopProduct.objects.get(id=shop_product_id)
+
+    # All Shop Product in all Invoice Purchases
+    sum_all_shop_p_numbers_invoice_purchases = PurchaseToShopProduct.objects.filter(
+        shop_product=shop_product).aggregate(Sum('unit_numbers'))
+
+    # All Shop Product in all Invoice return (Customer to Cafe)
+    sum_all_shop_p_numbers_invoice_return_c_to_cafe = InvoiceReturn.objects.filter(
+        shop_product=shop_product, return_type="CUSTOMER_TO_CAFE").aggregate(Sum('numbers'))
+
+    # All Shop Products in Invoice return Cafe to Supplier
+    sum_all_shop_p_numbers_invoice_return_cafe_to_s = InvoiceReturn.objects.filter(
+        shop_product=shop_product, return_type="CAFE_TO_SUPPLIER").aggregate(Sum('numbers'))
+
+    # All Shop Products in Amani Sales
+    sum_all_shop_p_numbers_amani_sales = AmaniSale.objects.filter(
+        invoice_sale_to_shop__shop_product=shop_product).aggregate(Sum('numbers'))
+
+    if not sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum']:
+        sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum']:
+        sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum']:
+        sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_amani_sales['numbers__sum']:
+        sum_all_shop_p_numbers_amani_sales['numbers__sum'] = 0
+
+    real_shop_p_num = (sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'] +
+                       sum_all_shop_p_numbers_invoice_return_c_to_cafe[
+                           'numbers__sum']) - (
+                          sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] +
+                          sum_all_shop_p_numbers_amani_sales['numbers__sum'])
+
+    return real_shop_p_num
+
+
 def create_new_invoice_sales(request):
     if request.method == "POST":
         new_invoice_id = 0
@@ -398,7 +439,7 @@ def create_new_invoice_sales(request):
 
             for shop_p in shop_items_new:
                 shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
-                if shop_obj.real_numbers < int(shop_p['nums']):
+                if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
                     return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
             cash_obj = Cash.objects.get(pk=cash_id)
@@ -485,7 +526,7 @@ def create_new_invoice_sales(request):
 
             for shop_p in shop_items_new:
                 shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
-                if shop_obj.real_numbers < int(shop_p['nums']):
+                if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
                     return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
             if member_id == 0:
