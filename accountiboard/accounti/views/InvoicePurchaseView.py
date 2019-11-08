@@ -310,7 +310,8 @@ def get_shop_products(request):
                 'name': shop.name,
                 'price': shop.price,
                 'buy_price': last_shop_price,
-                'real_numbers': get_detail_product_number(shop.id)
+                'real_numbers': get_detail_product_number(shop.id),
+                'nums': shop.real_numbers
             })
         return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
 
