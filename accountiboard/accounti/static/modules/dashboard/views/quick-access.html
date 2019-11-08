@@ -580,7 +580,9 @@
         </div>
     </div>
 
-    <main class="container-fluid mt-4">
+    <div class="preloader" ng-show="is_page_loading"></div>
+
+    <main ng-hide="is_page_loading" class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-5 dashboard-col">
                 <div ng-show="not_order_invoices_data.length"

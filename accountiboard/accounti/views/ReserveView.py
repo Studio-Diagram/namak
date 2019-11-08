@@ -11,6 +11,7 @@ NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
+TIME_NOT_IN_CORRECT_FORMAT = 'زمان را به حالت درستی وارد کنید.'
 
 
 def add_reserve(request):
@@ -49,17 +50,20 @@ def add_reserve(request):
             customer_name = "حضوری"
             phone = "NO_PHONE"
 
-        start_time_detail = datetime.strptime(start_time, "%H:%M")
-        if not end_time:
-            end_time_detail = start_time_detail + timedelta(minutes=120)
-            end_time = end_time_detail.strftime("%H:%M")
+        try:
+            start_time_detail = datetime.strptime(start_time, "%H:%M")
+            if not end_time:
+                end_time_detail = start_time_detail + timedelta(minutes=120)
+                end_time = end_time_detail.strftime("%H:%M")
 
-        end_time_obj = datetime.strptime(end_time, "%H:%M")
+            end_time_obj = datetime.strptime(end_time, "%H:%M")
 
-        reserve_date_split = reserve_date.split('/')
-        reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
-                                        int(reserve_date_split[0])).togregorian()
+            reserve_date_split = reserve_date.split('/')
+            reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                            int(reserve_date_split[0])).togregorian()
 
+        except ValueError:
+            return JsonResponse({"response_code": 3, "error_msg": TIME_NOT_IN_CORRECT_FORMAT})
         if reserve_id == 0:
             branch_obj = Branch.objects.get(pk=branch_id)
             new_reservation = Reservation(
