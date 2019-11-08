@@ -1,15 +1,6 @@
 from django.http import JsonResponse
-from django.shortcuts import render
-import json, base64, random, jdatetime
+import json
 from accounti.models import *
-from django.db.models import Q
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime, timedelta, date
-from pytz import timezone
 
 UNAUTHENTICATED = 'لطفا ابتدا وارد شوید.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."

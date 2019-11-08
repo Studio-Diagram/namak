@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from accounti.models import *
 from datetime import datetime
 import jdatetime, json
+from django.db.models import Sum
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -251,6 +252,49 @@ def get_materials(request):
         return JsonResponse({"response_code": 2, 'materials': materials_data})
 
 
+def get_detail_product_number(shop_product_id):
+    shop_product = ShopProduct.objects.get(id=shop_product_id)
+    print(shop_product.name)
+
+    # All Shop Product in all Invoice Purchases
+    sum_all_shop_p_numbers_invoice_purchases = PurchaseToShopProduct.objects.filter(
+        shop_product=shop_product).aggregate(Sum('unit_numbers'))
+
+    # All Shop Product in all Invoice return (Customer to Cafe)
+    sum_all_shop_p_numbers_invoice_return_c_to_cafe = InvoiceReturn.objects.filter(
+        shop_product=shop_product, return_type="CUSTOMER_TO_CAFE").aggregate(Sum('numbers'))
+
+    # All Shop Products in Invoice return Cafe to Supplier
+    sum_all_shop_p_numbers_invoice_return_cafe_to_s = InvoiceReturn.objects.filter(
+        shop_product=shop_product, return_type="CAFE_TO_SUPPLIER").aggregate(Sum('numbers'))
+
+    # All Shop Products in Amani Sales
+    sum_all_shop_p_numbers_amani_sales = AmaniSale.objects.filter(
+        invoice_sale_to_shop__shop_product=shop_product).aggregate(Sum('numbers'))
+
+    if not sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum']:
+        sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum']:
+        sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum']:
+        sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] = 0
+    if not sum_all_shop_p_numbers_amani_sales['numbers__sum']:
+        sum_all_shop_p_numbers_amani_sales['numbers__sum'] = 0
+
+    real_shop_p_num = (sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'] +
+                       sum_all_shop_p_numbers_invoice_return_c_to_cafe[
+                           'numbers__sum']) - (
+                          sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'] +
+                          sum_all_shop_p_numbers_amani_sales['numbers__sum'])
+
+    print(sum_all_shop_p_numbers_invoice_purchases['unit_numbers__sum'])
+    print(sum_all_shop_p_numbers_invoice_return_c_to_cafe['numbers__sum'])
+    print(sum_all_shop_p_numbers_invoice_return_cafe_to_s['numbers__sum'])
+    print(sum_all_shop_p_numbers_amani_sales['numbers__sum'])
+
+    return real_shop_p_num
+
+
 def get_shop_products(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -271,7 +315,7 @@ def get_shop_products(request):
                 'name': shop.name,
                 'price': shop.price,
                 'buy_price': last_shop_price,
-                'real_numbers': shop.real_numbers
+                'real_numbers': get_detail_product_number(shop.id)
             })
         return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
 

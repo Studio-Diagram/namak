@@ -1,11 +1,6 @@
 from django.http import JsonResponse
-import json, base64, random
+import json
 from accounti.models import *
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta
 import jdatetime
 
