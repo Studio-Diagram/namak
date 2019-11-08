@@ -1581,17 +1581,15 @@ tags-input .tags .tag-item {
 }
 
 .page_button {
-    min-height: 5.5em;
+    min-height: 3em;
     display: flex !important;
     justify-content: center;
     align-items: center;
-    font-size: 1.3em !important;
-    font-weight: 600;
-    color: white;
+    font-size: 1em !important;
 }
 
 .dashboard-col {
-    border-left: 6px solid var(--pageBorder);
+    border-left: 1px solid var(--pageBorder);
 }
 
 .page_button:hover {
@@ -1606,6 +1604,6 @@ tags-input .tags .tag-item {
 .badge.badge-pill.dashboard-badge {
     line-height: 15px;
     display: inline-block;
-    font-size: 1em;
+    font-size: 0.8em;
     padding: .8em;
 }

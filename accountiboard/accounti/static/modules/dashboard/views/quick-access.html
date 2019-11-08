@@ -1,4 +1,11 @@
 <div ng-controller="quickAccessCtrl">
+    <div class="pageSubMenu">
+        <nav class=" nav nav-justified">
+            <a class="nav-link">وضعیت میزها</a>
+            <a style="margin-right: 27em" class="nav-link">وضعیت رزروها</a>
+            <a style="margin-right: 20em" class="nav-link">دسترسی سریع</a>
+        </nav>
+    </div>
     <div ng-controller="buyCtrl">
         <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
              data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -573,13 +580,15 @@
         </div>
     </div>
 
-    <main class="container-fluid">
+    <main class="container-fluid mt-4">
         <div class="row">
-            <div class="col dashboard-col">
+            <div class="col-md-5 dashboard-col">
                 <h3>وضعیت میزها</h3>
 
-                <div class="badge badge-pill badge-danger dashboard-badge mb-3">سفارش نداده</div>
-                <div class="mb-3">
+                <div ng-show="not_order_invoices_data.length"
+                     class="badge badge-pill badge-danger dashboard-badge mb-3">سفارش نداده
+                </div>
+                <div ng-show="not_order_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
@@ -596,8 +605,10 @@
 
                     </div>
                 </div>
-                <div class="badge badge-pill badge-danger dashboard-badge mb-3">منتظر بازی</div>
-                <div class="mb-3">
+                <div ng-show="wait_game_invoices_data.length"
+                     class="badge badge-pill badge-danger dashboard-badge mb-3">منتظر بازی
+                </div>
+                <div ng-show="wait_game_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody ng-repeat="invoice in wait_game_invoices_data">
@@ -629,8 +640,10 @@
 
                     </div>
                 </div>
-                <div class="badge badge-pill badge-success dashboard-badge mb-3">سفارش داده</div>
-                <div class="mb-3">
+                <div ng-show="ordered_invoices_data.length" class="badge badge-pill badge-success dashboard-badge mb-3">
+                    سفارش داده
+                </div>
+                <div ng-show="ordered_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
@@ -644,8 +657,10 @@
 
                     </div>
                 </div>
-                <div class="badge badge-pill badge-info dashboard-badge mb-3">در حال بازی</div>
-                <div class="mb-3">
+                <div ng-show="playing_game_invoices_data.length"
+                     class="badge badge-pill badge-info dashboard-badge mb-3">در حال بازی
+                </div>
+                <div ng-show="playing_game_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
@@ -661,8 +676,10 @@
 
                     </div>
                 </div>
-                <div class="badge badge-pill badge-warning dashboard-badge mb-3">منتظر تسویه</div>
-                <div class="mb-3">
+                <div ng-show="wait_for_settle_invoices_data.length"
+                     class="badge badge-pill badge-warning dashboard-badge mb-3">منتظر تسویه
+                </div>
+                <div ng-show="wait_for_settle_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
@@ -678,8 +695,10 @@
 
                     </div>
                 </div>
-                <div class="badge badge-pill badge-success dashboard-badge mb-3">بازی تمام شده</div>
-                <div class="mb-3">
+                <div ng-show="end_game_invoices_data.length"
+                     class="badge badge-pill badge-success dashboard-badge mb-3">بازی تمام شده
+                </div>
+                <div ng-show="end_game_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
                         <table class="table">
                             <tbody>
@@ -697,7 +716,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col dashboard-col">
+            <div class="col-md-4 dashboard-col">
                 <h3>
                     رزروهای تا یک ساعت آینده
                 </h3>
@@ -719,7 +738,8 @@
                                 <th scope="row">{{ reserve.customer_name }}</th>
                                 <th scope="row">{{ reserve.numbers | persianNumber }}</th>
                                 <th scope="row">{{ reserve.start_time_hour | persianNumber }}:{{ reserve.start_time_min | persianNumber }}</th>
-                                <td><a href="" ng-click="arrive_reserve(reserve.id)" class="mainButton fullWidthButton smallButton grayButton">ثبت حضور</a>
+                                <td><a href="" ng-click="arrive_reserve(reserve.id)"
+                                       class="mainButton fullWidthButton smallButton grayButton">ثبت حضور</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -748,7 +768,8 @@
                                 <th scope="row">{{ reserve.customer_name }}</th>
                                 <th scope="row">{{ reserve.numbers | persianNumber }}</th>
                                 <th scope="row">{{ reserve.start_time_hour | persianNumber }}:{{ reserve.start_time_min | persianNumber }}</th>
-                                <td><a href="" ng-click="delete_reserve(reserve.id)" class="mainButton fullWidthButton smallButton grayButton">حذف</a>
+                                <td><a href="" ng-click="delete_reserve(reserve.id)"
+                                       class="mainButton fullWidthButton smallButton grayButton">حذف</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -757,24 +778,35 @@
                     </div>
                 </div>
             </div>
-            <div class="col dashboard-col">
-                <a ng-click="open_modal('addModal')"
-                   class="addUser mainButton greenButton page_button mb-3">
-                    ثبت خرید جدید
-                </a>
-                <a ng-click="open_modal('addExpenseModal');getNextFactorNumber('EXPENSE')"
-                   class="addUser mainButton greenButton page_button mb-3">
-                    ثبت هزینه جدید
-                </a>
-
-                <a ng-click="open_modal('addPayModal');getNextFactorNumber('PAY')"
-                   class="addUser mainButton greenButton page_button mb-3">
-                    ثبت پرداخت جدید
-                </a>
-
-                <a ng-click="open_modal('addMemberModal')" class="addUser mainButton greenButton page_button mb-3">
-                    ثبت عضو جدید
-                </a>
+            <div class="col-md-3 dashboard-col">
+                <div class="row">
+                    <div class="col">
+                        <a ng-click="open_modal('addModal')"
+                           class="addUser mainButton greenButton page_button mb-3">
+                            خرید جدید
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a ng-click="open_modal('addExpenseModal');getNextFactorNumber('EXPENSE')"
+                           class="addUser mainButton greenButton page_button mb-3">
+                            هزینه جدید
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a ng-click="open_modal('addPayModal');getNextFactorNumber('PAY')"
+                           class="addUser mainButton greenButton page_button mb-3">
+                            پرداخت جدید
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a ng-click="open_modal('addMemberModal')"
+                           class="addUser mainButton greenButton page_button mb-3">
+                            عضو جدید
+                        </a>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
                            class="form-control listFilter mb-3" type="search" placeholder="فیلتر کن">

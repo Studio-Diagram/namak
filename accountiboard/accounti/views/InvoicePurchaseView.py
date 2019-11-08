@@ -254,7 +254,6 @@ def get_materials(request):
 
 def get_detail_product_number(shop_product_id):
     shop_product = ShopProduct.objects.get(id=shop_product_id)
-    print(shop_product.name)
 
     # All Shop Product in all Invoice Purchases
     sum_all_shop_p_numbers_invoice_purchases = PurchaseToShopProduct.objects.filter(
