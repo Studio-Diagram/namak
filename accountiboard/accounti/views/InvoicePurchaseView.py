@@ -382,7 +382,8 @@ def search_shop_products(request):
                 'name': shop.name,
                 'price': shop.price,
                 'buy_price': last_shop_price,
-                'real_numbers': shop.real_numbers
+                'real_numbers': get_detail_product_number(shop.id),
+                'nums': shop.real_numbers
             })
         return JsonResponse({"response_code": 2, 'shop_products': shops})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
