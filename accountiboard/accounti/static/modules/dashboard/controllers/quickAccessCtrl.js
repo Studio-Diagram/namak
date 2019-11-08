@@ -139,7 +139,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getAllLeftReserves(sending_data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+
                     if (data['response_code'] === 2) {
                         $scope.left_reserves = data['reserves'];
                     }
@@ -161,7 +161,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getAllNotComeReserves(sending_data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+
                     if (data['response_code'] === 2) {
                         $scope.not_come_reserves = data['reserves'];
                     }
@@ -178,7 +178,7 @@ angular.module("dashboard")
         $scope.get_today_cash = function () {
             dashboardHttpRequest.getTodayCash($rootScope.user_data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
                         $scope.get_all_invoices_state_base(data['cash_id']);
@@ -187,7 +187,7 @@ angular.module("dashboard")
                         $rootScope.cash_data.cash_id = 0;
                     }
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+
                     console.log(error);
                 });
         };
@@ -200,6 +200,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getAllInvoicesStateBase(sending_data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.wait_for_settle_invoices_data = data['wait_for_settle_invoices_data'];
                         $scope.wait_game_invoices_data = data['wait_game_invoices_data'];
@@ -213,6 +214,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
