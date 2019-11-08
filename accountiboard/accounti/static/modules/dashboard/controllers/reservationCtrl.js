@@ -131,7 +131,6 @@ angular.module("dashboard")
                     })(jQuery);
                 }
             }
-            $rootScope.is_page_loading = false;
         };
 
         $scope.cross_hover = function (hour, min, table, event) {
@@ -418,6 +417,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getAllReserves(sending_data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.all_today_reserves = data['all_today_reserves'];
                         jQuery.noConflict();
@@ -439,6 +439,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
