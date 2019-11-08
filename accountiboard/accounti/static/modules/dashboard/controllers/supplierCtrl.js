@@ -199,6 +199,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getSumInAmaniSales(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.sum_amani_sales = data['all_amani_sales_sum'];
                         $scope.last_amani_sales = '-';
@@ -209,6 +210,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });

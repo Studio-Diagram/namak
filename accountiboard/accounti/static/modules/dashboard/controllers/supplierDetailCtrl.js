@@ -109,6 +109,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getDetailInPurchase(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_purchases_sum'];
                         $scope.invoices_data = data['invoices_data'];
@@ -118,6 +119,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
@@ -132,6 +134,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getDetailInSettlement(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_settlements_sum'];
                         $scope.invoices_data = data['invoices_data'];
@@ -141,6 +144,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
@@ -155,6 +159,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getDetailInExpense(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_expenses_sum'];
                         $scope.invoices_data = data['invoices_data'];
@@ -164,6 +169,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
@@ -178,6 +184,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getDetailInReturn(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_returns_sum'];
                         $scope.invoices_data = data['invoices_data'];
@@ -187,6 +194,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
@@ -201,6 +209,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getDetailInAmaniSales(data)
                 .then(function (data) {
+                    $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.sum_invoices = data['all_invoice_amani_sales_sum'];
                         $scope.invoices_data = data['invoices_data'];
@@ -211,6 +220,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
