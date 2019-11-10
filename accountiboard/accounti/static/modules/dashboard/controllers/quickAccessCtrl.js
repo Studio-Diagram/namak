@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("quickAccessCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
+    .controller("quickAccessCtrl", function ($scope, $interval, $rootScope, $filter, $state, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             jQuery.noConflict();
             (function ($) {
