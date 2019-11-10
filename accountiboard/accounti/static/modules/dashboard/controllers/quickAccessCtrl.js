@@ -67,10 +67,7 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-            $scope.get_today_for_reserve();
-            $scope.get_all_expense_tags();
-            $scope.get_suppliers();
-            $scope.get_today_cash();
+            $scope.check_cash();
         };
 
         $scope.get_today_for_reserve = function () {
@@ -596,6 +593,33 @@ angular.module("dashboard")
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.check_cash = function () {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.checkCashExist(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_today_for_reserve();
+                        $scope.get_all_expense_tags();
+                        $scope.get_suppliers();
+                        $scope.get_today_cash();
+                    }
+                    else if (data['response_code'] === 3) {
+                        if (data['error_mode'] === "NO_CASH") {
+                            $state.go("cash_disable", {state: "NO_CASH"});
+                        }
+                        if (data['error_mode'] === "OLD_CASH") {
+                            $state.go("cash_disable", {state: "OLD_CASH"});
+                        }
                     }
                 }, function (error) {
                     $scope.error_message = 500;
