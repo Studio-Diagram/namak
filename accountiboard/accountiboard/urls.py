@@ -141,6 +141,7 @@ urlpatterns = [
     path('api/getAllInvoicesStateBase/', InvoiceSaleView.get_dashboard_quick_access_invoices),
     path('api/changeGameState/', InvoiceSaleView.change_game_state),
     path('api/doNotWantOrder/', InvoiceSaleView.do_not_want_order),
+    path('api/startInvoiceGame/', InvoiceSaleView.start_invoice_game),
     path('api/getAllLeftReserves/', ReserveView.get_all_today_left_reserves_with_hour),
     path('api/getAllNotComeReserves/', ReserveView.get_all_today_not_come_reserves),
     path('api/lottery/', LotteryView.lottery),

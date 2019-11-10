@@ -247,6 +247,45 @@
             </div>
         </div>
     </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal" id="payModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">انتخاب نوع پرداخت</h2>
+                    <a ng-click="close_modal('pay_modal')" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a href="" ng-click="settleInvoice()" class="mainButton greenButton"><i class="fas fa-save"></i> ثبت</a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <form>
+                                    <label class="lefty iconic">نقد<i class="fas fa-money-bill-alt"></i></label>
+                                    <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
+                                    <input ng-change="payModalChangeNumber()" type="range" class="form-control-range"
+                                           ng-model="invoice_settling.cash" min="0"
+                                           max="{{ invoice_settling.total_price - invoice_settling.discount + invoice_settling.tip }}"
+                                           step="5000">
+                                    <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
+                                           class="form-control paymentMethod righty"
+                                           ng-model="invoice_settling.card" format>
+                                    <input style="font-family: 'B Yekan'" ng-change="payModalChangeNumber()" type="text"
+                                           aria-label="cash"
+                                           class="form-control paymentMethod lefty"
+                                           ng-model="invoice_settling.cash" format>
+                                </form>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade mainModal" id="addMemberModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -515,7 +554,7 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت پرداختی جدید</h2>
-                    <a class="mainButton redButton" ng-click="close_modal('addPayModal');closeForm();" href=""
+                    <a class="mainButton redButton" ng-click="close_modal('pay_modal');" href=""
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
@@ -596,7 +635,8 @@
                                 <th scope="row">{{ invoice.table_name }}</th>
                                 <th scope="row">{{ invoice.customer_name }}</th>
                                 <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
+                                <td><a href="" ng-click="do_not_want_order(invoice.invoice_id)"
+                                       class="mainButton fullWidthButton smallButton grayButton">سفارش نمی
                                     دهد</a>
                                 </td>
                             </tr>
@@ -615,24 +655,24 @@
                             <tr>
                                 <th scope="row">{{ invoice.table_name }}</th>
                                 <th scope="row">{{ invoice.customer_name }}</th>
-                                <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <input ng-model="new_invoice_data.current_game.numbers" type="number"
+                                    <input ng-model="invoice.player_numbers" type="number"
                                            min="0"
                                            class="form-control" placeholder="تعداد نفرات بازی"
                                            aria-label="">
                                 </td>
-                                <td>
+                                <td ng-hide="invoice.has_member">
                                     <input ng-disabled="new_invoice_data.current_game.start_time"
-                                           ng-model="new_invoice_data.current_game.numbers" type="number"
+                                           ng-model="invoice.card_number" type="number"
                                            min="0"
                                            class="form-control" placeholder="شماره کارت"
                                            aria-label="">
                                 </td>
+                                <td class="align-middle" scope="row" ng-show="invoice.has_member">
+                                    {{ invoice.member_name }}
+                                </td>
                                 <td>
-                                    <a href="" class="mainButton fullWidthButton smallButton grayButton">شروع</a>
+                                    <button ng-disabled="invoice.player_numbers === 0 || invoice.card_number === ''" href="" ng-click="start_invoice_game(invoice.invoice_id, $index)" class="mainButton fullWidthButton smallButton grayButton">شروع</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -651,7 +691,8 @@
                                 <th scope="row">{{ invoice.table_name }}</th>
                                 <th scope="row">{{ invoice.customer_name }}</th>
                                 <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">اتمام بازی</a>
+                                <td><a ng-click="endCurrentGame(invoice.game_id)" href=""
+                                       class="mainButton fullWidthButton smallButton grayButton">اتمام بازی</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -670,7 +711,9 @@
                                 <th scope="row">{{ invoice.table_name }}</th>
                                 <th scope="row">{{ invoice.customer_name }}</th>
                                 <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">تسویه</a>
+                                <td>
+                                    <a ng-click="set_pay_modal_data(invoice.invoice_id, invoice.total_price, invoice.discount, invoice.tip)"
+                                       href="" class="mainButton fullWidthButton smallButton grayButton">تسویه</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -689,7 +732,8 @@
                                 <th scope="row">{{ invoice.table_name }}</th>
                                 <th scope="row">{{ invoice.customer_name }}</th>
                                 <th scope="row">{{ invoice.numbers | persianNumber }} نفر</th>
-                                <td><a href="" class="mainButton fullWidthButton smallButton grayButton">دوباره بازی
+                                <td><a href="" ng-click="change_game_state(invoice.invoice_id, 'WAIT_GAME')"
+                                       class="mainButton fullWidthButton smallButton grayButton">دوباره بازی
                                     می‌خواهد</a>
                                 </td>
                             </tr>

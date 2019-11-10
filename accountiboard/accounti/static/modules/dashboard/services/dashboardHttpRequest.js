@@ -874,7 +874,14 @@ angular.module('dashboard')
                     'url': "/api/getAllNotComeReserves/",
                     'data': data
                 });
-            }
+            },
+            'startInvoiceGame': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/startInvoiceGame/",
+                    'data': data
+                });
+            },
 
 
 

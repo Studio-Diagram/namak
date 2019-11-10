@@ -23,6 +23,48 @@ NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
 WAIT_FOR_SETTLE = "منتظر تسویه"
 
 
+def start_invoice_game(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    invoice_id = rec_data['invoice_id']
+    numbers = rec_data['numbers']
+    card_number = rec_data['card_number']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id or not numbers:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+    if invoice_object.member.card_number == "0000":
+        if card_number == '':
+            member_obj = Member.objects.get(pk=1)
+        else:
+            member_obj = Member.objects.get(card_number=card_number)
+            invoice_object.member = member_obj
+    else:
+        member_obj = invoice_object.member
+
+    new_game = Game(
+        member=member_obj,
+        start_time=datetime.strftime(datetime.now(), '%H:%M'),
+        add_date=datetime.now(),
+        numbers=numbers
+    )
+    new_game.save()
+    new_invoice_to_game = InvoicesSalesToGame(
+        game=new_game,
+        invoice_sales=invoice_object
+    )
+    new_invoice_to_game.save()
+    invoice_object.game_state = "PLAYING"
+    invoice_object.save()
+
+    return JsonResponse({"response_code": 2})
+
+
 def change_game_state(request):
     if not request.method == "POST":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -40,6 +82,8 @@ def change_game_state(request):
     invoice_object.game_state = state
     invoice_object.save()
 
+    return JsonResponse({"response_code": 2})
+
 
 def do_not_want_order(request):
     if not request.method == "POST":
@@ -56,6 +100,8 @@ def do_not_want_order(request):
     invoice_object = InvoiceSales.objects.get(pk=invoice_id)
     invoice_object.is_do_not_want_order = True
     invoice_object.save()
+
+    return JsonResponse({"response_code": 2})
 
 
 def get_dashboard_quick_access_invoices(request):
@@ -85,23 +131,39 @@ def get_dashboard_quick_access_invoices(request):
     wait_for_settle_invoices_data = []
     for invoice in all_invoices:
         if invoice.game_state == "PLAYING":
+            invoice_current_game = InvoicesSalesToGame.objects.filter(invoice_sales=invoice,
+                                                                      game__end_time="00:00:00").first()
             playing_game_invoices_data.append({
                 "customer_name": invoice.member.last_name,
                 "numbers": invoice.guest_numbers,
-                "table_name": invoice.table.name
+                "table_name": invoice.table.name,
+                "game_id": invoice_current_game.game.pk
             })
         elif invoice.game_state == "END_GAME":
             end_game_invoices_data.append({
                 "customer_name": invoice.member.last_name,
                 "numbers": invoice.guest_numbers,
-                "table_name": invoice.table.name
+                "table_name": invoice.table.name,
+                "invoice_id": invoice.pk
             })
 
         elif invoice.game_state == "WAIT_GAME":
+            if invoice.member.card_number == "0000":
+                has_member = False
+                card_number = ''
+            else:
+                has_member = True
+                card_number = invoice.member.card_number
+
             wait_game_invoices_data.append({
                 "customer_name": invoice.member.last_name,
                 "numbers": invoice.guest_numbers,
-                "table_name": invoice.table.name
+                "table_name": invoice.table.name,
+                "invoice_id": invoice.pk,
+                "has_member": has_member,
+                'member_name': invoice.member.first_name + " " + invoice.member.last_name,
+                "card_number": card_number,
+                "player_numbers": 0
             })
 
         invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
@@ -111,7 +173,11 @@ def get_dashboard_quick_access_invoices(request):
             wait_for_settle_invoices_data.append({
                 "customer_name": invoice.member.last_name,
                 "numbers": invoice.guest_numbers,
-                "table_name": invoice.table.name
+                "table_name": invoice.table.name,
+                "invoice_id": invoice.pk,
+                "total_price": invoice.total_price,
+                "discount": invoice.discount,
+                "tip": invoice.tip
             })
         else:
             if invoice_to_menu_items.count():
@@ -125,7 +191,8 @@ def get_dashboard_quick_access_invoices(request):
                     not_order_invoices_data.append({
                         "customer_name": invoice.member.last_name,
                         "numbers": invoice.guest_numbers,
-                        "table_name": invoice.table.name
+                        "table_name": invoice.table.name,
+                        "invoice_id": invoice.pk
                     })
 
     return JsonResponse({"response_code": 2, "playing_game_invoices_data": playing_game_invoices_data,

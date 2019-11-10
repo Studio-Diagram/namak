@@ -10,6 +10,14 @@ angular.module("dashboard")
             })(jQuery);
             $scope.members = [];
             $scope.tags = [];
+
+            $scope.invoice_settling = {
+                'cash': 0,
+                'card': 0,
+                'total_price': 0,
+                'discount': 0,
+                'tip': 0
+            };
             $scope.new_member_data = {
                 'member_id': 0,
                 'first_name': '',
@@ -185,10 +193,12 @@ angular.module("dashboard")
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.cash_data.cash_id = 0;
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-
-                    console.log(error);
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -469,6 +479,128 @@ angular.module("dashboard")
         $scope.closeForm = function () {
             $scope.resetFrom();
             $scope.close_modal('addMemberModal');
+        };
+
+        $scope.endCurrentGame = function (game_id) {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username,
+                "game_id": parseInt(game_id)
+            };
+            dashboardHttpRequest.endCurrentGame(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.do_not_want_order = function (invoice_id) {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username,
+                "invoice_id": parseInt(invoice_id)
+            };
+            dashboardHttpRequest.doNotWantOrder(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.change_game_state = function (invoice_id, state) {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username,
+                "invoice_id": parseInt(invoice_id),
+                "state": state
+            };
+            dashboardHttpRequest.changeGameState(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.set_pay_modal_data = function (invoice_id, total_price, discount, tip) {
+            $scope.invoice_settling.id = invoice_id;
+            $scope.invoice_settling.total_price = total_price;
+            $scope.invoice_settling.discount = discount;
+            $scope.invoice_settling.tip = tip;
+            $scope.payModalChangeNumber();
+            $scope.open_modal('payModal');
+        };
+
+        $scope.settleInvoice = function () {
+            var sending_data = {
+                'invoice_id': $scope.invoice_settling.id,
+                'cash': $scope.invoice_settling.cash,
+                'card': $scope.invoice_settling.card,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.settleInvoiceSale(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.close_modal('payModal');
+                        $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.payModalChangeNumber = function () {
+            $scope.invoice_settling.card = Number($scope.invoice_settling.total_price) - Number($scope.invoice_settling.cash) - Number($scope.invoice_settling.discount) + Number($scope.invoice_settling.tip);
+        };
+
+        $scope.start_invoice_game = function (invoice_id, invoice_index) {
+            var sending_data = {
+                'invoice_id': invoice_id,
+                'card_number': $scope.wait_game_invoices_data[invoice_index].card_number,
+                'numbers': $scope.wait_game_invoices_data[invoice_index].player_numbers,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.startInvoiceGame(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
         };
 
         initialize();
