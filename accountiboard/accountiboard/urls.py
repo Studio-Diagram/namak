@@ -122,7 +122,6 @@ urlpatterns = [
     path('api/deleteInvoiceExpense/', InvoiceExpenseView.delete_invoice_expense),
     path('api/deleteInvoiceReturn/', InvoiceReturnView.delete_invoice_return),
     path('api/deleteInvoiceSettlement/', InvoiceSettlementView.delete_invoice_settlement),
-    path('api/addOldMembers/', MemberView.add_old_member),
     path('api/getNextFactorNumber/', GeneralInvoiceView.get_invoice_number),
     path('api/addTableCategory/', TableView.add_table_category),
     path('api/getTableCategory/', TableView.get_table_category),

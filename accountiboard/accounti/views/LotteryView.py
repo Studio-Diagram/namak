@@ -13,7 +13,6 @@ UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 
 
 def do_lottery(lot_data):
-    print(lot_data)
     all_luck_points_sum = 0
     sum_list = []
     for lot in lot_data:

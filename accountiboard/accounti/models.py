@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+from multiselectfield import MultiSelectField
 
 
 class Branch(models.Model):
@@ -116,7 +117,6 @@ class Member(models.Model):
     first_name = models.CharField(max_length=255, null=False)
     last_name = models.CharField(max_length=255, null=False)
     card_number = models.CharField(max_length=20, null=False, unique=True)
-    credit = models.FloatField(default=0, null=False)
     phone = models.CharField(max_length=30, null=False, unique=True)
     intro = models.CharField(max_length=255, choices=INTRO_CHOICES, default='other')
     year_of_birth = models.IntegerField(null=False)
@@ -144,7 +144,6 @@ class Table(models.Model):
 
 class Game(models.Model):
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE)
-    credit_used = models.FloatField(default=0, null=False)
     start_time = models.TimeField(null=False)
     end_time = models.TimeField(null=True, default="00:00:00")
     numbers = models.IntegerField(null=False)
@@ -331,7 +330,8 @@ class PurchaseToShopProduct(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "id(" + str(self.id) + ")" + str(self.shop_product.name) + "InvoicePId(" + str(self.invoice_purchase.id) + ")" + str(
+        return "id(" + str(self.id) + ")" + str(self.shop_product.name) + "InvoicePId(" + str(
+            self.invoice_purchase.id) + ")" + str(
             self.invoice_purchase.supplier.name)
 
 
@@ -488,3 +488,26 @@ class Lottery(models.Model):
     prize = models.CharField(max_length=255, null=False)
     is_give_prize = models.IntegerField(default=0)
     user = models.ForeignKey(to=Member, on_delete=models.CASCADE)
+
+
+class Credit(models.Model):
+    CATEGORIES = (
+        ("bar", "آیتم‌های بار"),
+        ("kitchen", "آیتم‌های آشپزخانه"),
+        ("other", "آیتم‌های سایر"),
+        ("shop", "محصولات فروشگاهی"),
+        ("game", "بازی"),
+    )
+    credit_categories = MultiSelectField(max_length=50, choices=CATEGORIES)
+    created_time = models.DateTimeField(auto_now_add=True)
+    expire_time = models.DateTimeField(null=False, blank=False)
+    total_price = models.IntegerField(null=False, blank=False)
+    used_price = models.IntegerField(default=0)
+    member = models.ForeignKey(to=Member, on_delete=models.CASCADE)
+
+
+class CreditToInvoiceSale(models.Model):
+    credit = models.ForeignKey(to=Credit, null=True, on_delete=models.SET_NULL)
+    invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True)
+    used_price = models.IntegerField(default=0)
