@@ -492,11 +492,11 @@ class Lottery(models.Model):
 
 class Credit(models.Model):
     CATEGORIES = (
-        ("bar", "آیتم‌های بار"),
-        ("kitchen", "آیتم‌های آشپزخانه"),
-        ("other", "آیتم‌های سایر"),
-        ("shop", "محصولات فروشگاهی"),
-        ("game", "بازی"),
+        ("BAR", "آیتم‌های بار"),
+        ("KITCHEN", "آیتم‌های آشپزخانه"),
+        ("OTHER", "آیتم‌های سایر"),
+        ("SHOP", "محصولات فروشگاهی"),
+        ("GAME", "بازی"),
     )
     credit_categories = MultiSelectField(max_length=50, choices=CATEGORIES)
     created_time = models.DateTimeField(auto_now_add=True)

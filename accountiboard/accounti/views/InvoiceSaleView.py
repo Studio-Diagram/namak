@@ -296,6 +296,8 @@ def get_invoice(request):
             'menu_items_old': [],
             'shop_items_old': [],
             'games': [],
+            'used_credit': 0,
+            'total_credit': 0
         }
         invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
         for game in invoice_games:
@@ -346,6 +348,17 @@ def get_invoice(request):
                 'total': int(item.shop_product.price) * int(item.numbers),
                 'description': item.description
             })
+
+        sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object).aggregate(
+            Sum('used_price'))
+        invoice_data['used_credit'] = sum_all_used_credit_on_this_invoice['used_price__sum']
+
+        if invoice_object.member.card_number != "0000":
+            total_member_credit = Credit.objects.filter(member=invoice_object.member,
+                                                        expire_time__gte=datetime.now()).aggregate(
+                total_credit=(Sum('total_price') - Sum('used_price')))
+            invoice_data['total_credit'] = total_member_credit['total_credit']
+
         return JsonResponse({"response_code": 2, "invoice": invoice_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
@@ -390,6 +403,10 @@ def get_all_today_invoices(request):
                     else:
                         invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
 
+            sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(
+                invoice_sale=invoice).aggregate(
+                Sum('used_price'))
+
             all_invoices_list.append({
                 "invoice_id": invoice.pk,
                 "guest_name": invoice.member.last_name,
@@ -401,7 +418,8 @@ def get_all_today_invoices(request):
                 "settle_time": st_time,
                 "is_settled": invoice.is_settled,
                 "game_status": {"status": invoice.game_state, "text": invoice.get_game_state_display()},
-                "invoice_status": invoice_status
+                "invoice_status": invoice_status,
+                'used_credit': sum_all_used_credit_on_this_invoice['used_price__sum']
             })
 
         return JsonResponse({"response_code": 2, "all_today_invoices": all_invoices_list})

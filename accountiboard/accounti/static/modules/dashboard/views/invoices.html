@@ -106,7 +106,7 @@
                                     <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
                                     <input ng-change="payModalChangeNumber()" type="range" class="form-control-range"
                                            ng-model="new_invoice_data.cash" min="0"
-                                           max="{{ new_invoice_data.total_price }}" step="5000">
+                                           max="{{ new_invoice_data.total_price - new_invoice_data.discount + new_invoice_data.tip - new_invoice_data.used_credit }}" step="5000">
                                     <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
                                            class="form-control paymentMethod righty"
                                            ng-model="new_invoice_data.card" format>
@@ -384,12 +384,12 @@
                                 <table class="invoiceTable invoiceTotal">
                                     <tbody>
                                     <tr>
-                                        <th>اعتبار مصرفی</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <th>اعتبار</th>
+                                        <td>{{ new_invoice_data.total_credit  | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
-                                        <th>اعتبار باقی‌مانده</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <th>اعتبار مصرفی</th>
+                                        <td>{{ new_invoice_data.used_credit  | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
                                         <th>انعام</th>
@@ -405,7 +405,7 @@
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -513,12 +513,12 @@
                                 <table class="invoiceTable invoiceTotal">
                                     <tbody>
                                     <tr>
-                                        <th>اعتبار مصرفی</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <th>اعتبار</th>
+                                        <td>{{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
-                                        <th>اعتبار باقی‌مانده</th>
-                                        <td>{{ 0 | number:fractionSize | persianNumber }}</td>
+                                        <th>اعتبار مصرفی</th>
+                                        <td>{{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
                                         <th>انعام</th>
@@ -530,7 +530,7 @@
                                     </tr>
                                     <tr>
                                         <th>جمع کل</th>
-                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -570,7 +570,7 @@
                             <td>{{ invoice.table_name }}</td>
                             <td><span ng-hide="invoice.is_settled" ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span></td>
                             <td><span ng-hide="invoice.is_settled" ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span></td>
-                            <td>{{ invoice.total_price - invoice.discount | number:fractionSize | persianNumber }} ریال</td>
+                            <td>{{ invoice.total_price - invoice.discount - invoice.used_credit | number:fractionSize | persianNumber }} ریال</td>
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
                             <td>{{ invoice.settle_time | persianNumber }}</td>
                             <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>

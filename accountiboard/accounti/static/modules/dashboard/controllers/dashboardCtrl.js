@@ -53,7 +53,6 @@ angular.module("dashboard")
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams, options) {
                 $rootScope.is_page_loading = true;
-                console.log(1);
             });
 
         $scope.isActive = function (path) {

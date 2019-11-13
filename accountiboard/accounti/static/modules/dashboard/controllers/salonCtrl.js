@@ -31,6 +31,8 @@ angular.module("dashboard")
                 'card': 0,
                 'discount': 0,
                 'tip': 0,
+                'total_credit': 0,
+                'used_credit': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username
@@ -275,7 +277,7 @@ angular.module("dashboard")
         };
 
         $scope.payModalChangeNumber = function () {
-            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.cash) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip);
+            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.cash) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip) - Number($scope.new_invoice_data.used_credit);
         };
 
         $scope.openErrorModal = function () {
@@ -525,6 +527,10 @@ angular.module("dashboard")
                 var entry4 = $scope.new_invoice_data.menu_items_old[n];
                 new_total_price += entry4.total;
             }
+            for (var g = 0; g < $scope.new_invoice_data.games.length; g++) {
+                var entry5 = $scope.new_invoice_data.games[g];
+                new_total_price += entry5.total;
+            }
             $scope.new_invoice_data.total_price = new_total_price;
         };
 
@@ -610,6 +616,10 @@ angular.module("dashboard")
             for (var n = 0; n < $scope.new_invoice_data.shop_items_old.length; n++) {
                 var entry4 = $scope.new_invoice_data.shop_items_old[n];
                 new_total_price += entry4.total;
+            }
+            for (var g = 0; g < $scope.new_invoice_data.games.length; g++) {
+                var entry5 = $scope.new_invoice_data.games[g];
+                new_total_price += entry5.total;
             }
 
             $scope.new_invoice_data.total_price = new_total_price;
@@ -964,6 +974,8 @@ angular.module("dashboard")
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
+                            'total_credit': data['invoice']['total_credit'],
+                            'used_credit': data['invoice']['used_credit'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
@@ -1011,6 +1023,8 @@ angular.module("dashboard")
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
+                            'total_credit': data['invoice']['total_credit'],
+                            'used_credit': data['invoice']['used_credit'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
@@ -1059,6 +1073,8 @@ angular.module("dashboard")
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
+                            'total_credit': data['invoice']['total_credit'],
+                            'used_credit': data['invoice']['used_credit'],
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
@@ -1108,6 +1124,8 @@ angular.module("dashboard")
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
+                            'total_credit': data['invoice']['total_credit'],
+                            'used_credit': data['invoice']['used_credit'],
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
@@ -1116,7 +1134,7 @@ angular.module("dashboard")
                         };
                         jQuery.noConflict();
                         (function ($) {
-                            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip);
+                            $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip) - Number($scope.new_invoice_data.used_credit);
                             $scope.new_invoice_data.cash = 0;
                             $('#payModal').modal('show');
                             $('#addInvoiceModal').css('z-index', 1000);
@@ -1181,6 +1199,8 @@ angular.module("dashboard")
                 'total_price': 0,
                 'discount': 0,
                 'tip': 0,
+                'total_credit': 0,
+                'used_credit': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username
