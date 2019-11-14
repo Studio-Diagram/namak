@@ -882,6 +882,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'performCredit': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/performCredit/",
+                    'data': data
+                });
+            }
 
 
 

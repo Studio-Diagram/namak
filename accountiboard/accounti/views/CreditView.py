@@ -19,6 +19,7 @@ def perform_credit_on_invoice_sale(request):
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
     invoice_id = rec_data['invoice_id']
+    used_credit_price = 0
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
@@ -47,16 +48,7 @@ def perform_credit_on_invoice_sale(request):
                                                         used_price=used_credit_price)
             new_credit_to_invoice.save()
 
-    sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object).aggregate(
-        Sum('used_price'))
-
-    total_member_credit = Credit.objects.filter(member=invoice_object.member,
-                                                expire_time__gte=datetime.now()).aggregate(
-        total_credit=(Sum('total_price') - Sum('used_price')))
-
-    return JsonResponse(
-        {"response_code": 2, "all_credit_used_in_invoice": sum_all_used_credit_on_this_invoice['used_price__sum'],
-         "all_member_left_credit": total_member_credit['total_credit']})
+    return JsonResponse({"response_code": 2, 'used_credit': used_credit_price})
 
 
 def credit_handler(credit_object, invoice_object):

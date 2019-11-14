@@ -93,7 +93,7 @@
                             ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
                             class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش
                     </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons"
+                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="perform_credit()"
                             class="mainButton grayButton"><i class="fas fa-save"></i> اعمال اعتبار
                     </button>
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()"

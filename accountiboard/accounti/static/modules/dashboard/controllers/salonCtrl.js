@@ -107,6 +107,29 @@ angular.module("dashboard")
             }
         };
 
+        $scope.perform_credit = function () {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'invoice_id': $scope.new_invoice_data.invoice_sales_id
+            };
+            dashboardHttpRequest.performCredit(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_invoice_data.used_credit += data['used_credit'];
+                        $scope.new_invoice_data.total_credit -= data['used_credit'];
+                        $scope.getAllTodayInvoices();
+                        $scope.selectTable($scope.last_table_add);
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.get_today_cash = function () {
             dashboardHttpRequest.getTodayCash($rootScope.user_data)
                 .then(function (data) {
@@ -980,6 +1003,7 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
                         };
+                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                         $scope.openAddInvoiceModal();
                     }
                     else if (data['response_code'] === 3) {
