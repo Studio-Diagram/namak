@@ -1264,7 +1264,8 @@ def get_all_invoices_with_date(request):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
     data_list = []
-    all_invoices = InvoiceSales.objects.filter(created_time__gte=datetime.strptime("10/5/2019", '%m/%d/%y'))
+    print(datetime.strptime("10/05/2019", '%m/%d/%Y'))
+    all_invoices = InvoiceSales.objects.filter(created_time__gte=datetime.strptime("10/5/2019", '%m/%d/%Y'))
     for item in all_invoices:
         shops_list = []
         all_shops = InvoicesSalesToShopProducts.objects.filter(invoice_sales=item)
@@ -1278,4 +1279,4 @@ def get_all_invoices_with_date(request):
             "invoice_number": item.pk,
             "shop_products": shops_list
         })
-    return JsonResponse({"response_code": 2})
+    return JsonResponse({"response_code": 2, "data": data_list})
