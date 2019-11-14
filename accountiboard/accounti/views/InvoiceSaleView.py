@@ -1275,8 +1275,9 @@ def get_all_invoices_with_date(request):
                 "shop_price": shop.shop_product.price,
                 "shop_number": shop.numbers,
             })
-        data_list.append({
-            "invoice_number": item.pk,
-            "shop_products": shops_list
-        })
+        if len(all_shops) > 0:
+            data_list.append({
+                "invoice_number": item.pk,
+                "shop_products": shops_list
+            })
     return JsonResponse({"response_code": 2, "data": data_list})
