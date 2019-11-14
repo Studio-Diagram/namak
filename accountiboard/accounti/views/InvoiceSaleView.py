@@ -1258,3 +1258,24 @@ def delete_invoice(request):
     new_invoice_deleted.save()
     invoice_obj.save()
     return JsonResponse({"response_code": 2})
+
+
+def get_all_invoices_with_date(request):
+    if request.method != "GET":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    data_list = []
+    all_invoices = InvoiceSales.objects.filter(created_time__gte=datetime.strptime("10/5/2019", '%m/%d/%y'))
+    for item in all_invoices:
+        shops_list = []
+        all_shops = InvoicesSalesToShopProducts.objects.filter(invoice_sales=item)
+        for shop in all_shops:
+            shops_list.append({
+                "shop_name": shop.shop_product.name,
+                "shop_price": shop.shop_product.price,
+                "shop_number": shop.numbers,
+            })
+        data_list.append({
+            "invoice_number": item.pk,
+            "shop_products": shops_list
+        })
+    return JsonResponse({"response_code": 2})
