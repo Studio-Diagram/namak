@@ -2,14 +2,82 @@ from django.http import JsonResponse
 import json
 from datetime import datetime
 from accounti.models import *
-from django.db.models import Sum
+import jdatetime
 
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 INVOICE_NOT_EXIST = "فاکتور وجود ندارد."
 MEMBER_NOT_SELCETD = "عضوی به این فاکتور وصل نشده است."
+MEMBER_NOT_EXIST = "عضوی یافت نشد."
 CREDIT_CATEGORY_NOT_HANDLED = "این دسته‌بندی برای اعتبار بررسی نشده است."
 GAME_PER_POINT_PRICE = 5000
+
+
+def get_all_credits_data_from_user(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    member_id = rec_data['member_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    if not member_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    try:
+        member_object = Member.objects.get(pk=member_id)
+    except Member.DoesNotExist:
+        return JsonResponse({"response_code": 3, "error_msg": MEMBER_NOT_EXIST})
+
+    all_credit_data = []
+    all_credits_from_user = Credit.objects.filter(member=member_object)
+    for credit in all_credits_from_user:
+        jalali_date = jdatetime.date.fromgregorian(day=credit.expire_time.day, month=credit.expire_time.month,
+                                                   year=credit.expire_time.year)
+        all_credit_data.append({
+            "credit_categories": credit.credit_categories,
+            "expire_time": jalali_date.strftime("%Y/%m/%d %H:%M"),
+            "total_price": credit.total_price,
+            "used_price": credit.used_price
+        })
+    return JsonResponse({"response_code": 2, "all_credits": 0, "all_used_credits": 0})
+
+
+def create_credit(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    member_id = rec_data['member_id']
+    credit_categories = rec_data['credit_categories']
+    expire_date = rec_data['expire_date']
+    expire_time = rec_data['expire_time']
+    total_credit = rec_data['total_credit']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    if not credit_categories or not expire_date or not expire_time or not total_credit:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    try:
+        member_object = Member.objects.get(pk=member_id)
+    except Member.DoesNotExist:
+        return JsonResponse({"response_code": 3, "error_msg": MEMBER_NOT_EXIST})
+
+    expire_date_split = expire_date.split('/')
+    expire_time_split = expire_time.split('/')
+    expire_date_g = jdatetime.datetime(int(expire_date_split[2]), int(expire_date_split[1]),
+                                       int(expire_date_split[0]), expire_time_split[0],
+                                       expire_time_split[1], 0).togregorian()
+    new_credit = Credit(member=member_object, total_price=total_credit, expire_time=expire_date_g,
+                        credit_categories=credit_categories)
+    new_credit.save()
+    return JsonResponse({"response_code": 2})
 
 
 def perform_credit_on_invoice_sale(request):

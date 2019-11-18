@@ -32,8 +32,8 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">-->
 
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -183,7 +183,7 @@
     </div>
 </div>
 <script src="{% static 'js/popper.min.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'js/bootstrap1.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-datepicker.fa.min.js' %}"></script>
@@ -191,7 +191,7 @@
 <script src="{% static 'js/select.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
 
-<link rel="stylesheet" href="http://mbenford.github.io/ngTagsInput/css/ng-tags-input.min.css"/>
-<script src="http://mbenford.github.io/ngTagsInput/js/ng-tags-input.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}"/>
+<script src="{% static 'js/ng-tags-input.min.js' %}"></script>
 </body>
 </html>
