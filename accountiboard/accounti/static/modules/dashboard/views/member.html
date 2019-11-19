@@ -6,12 +6,12 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت مشتری جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()"  aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="addMember()" href=""  class="mainButton greenButton"><i
+                    <a ng-click="addMember()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
                 </div>
                 <div class="modal-body">
@@ -35,17 +35,17 @@
                                        class="form-control" placeholder="شماره تلفن">
                             </div>
                             <div class="col">
-                                <label>روز  تولد<i class="fas fa-star-of-life"></i></label>
+                                <label>روز تولد<i class="fas fa-star-of-life"></i></label>
                                 <input ng-model="new_member_data.day_of_birth" type="text" aria-label="Last name"
                                        class="form-control" placeholder="روز  تولد">
                             </div>
                             <div class="col">
-                                <label>ماه  تولد<i class="fas fa-star-of-life"></i></label>
+                                <label>ماه تولد<i class="fas fa-star-of-life"></i></label>
                                 <input ng-model="new_member_data.month_of_birth" type="text" aria-label="Last name"
                                        class="form-control" placeholder="ماه  تولد">
                             </div>
                             <div class="col">
-                                <label>سال  تولد<i class="fas fa-star-of-life"></i></label>
+                                <label>سال تولد<i class="fas fa-star-of-life"></i></label>
                                 <input ng-model="new_member_data.year_of_birth" type="text" aria-label="Last name"
                                        class="form-control" placeholder="سال  تولد">
                             </div>
@@ -56,22 +56,22 @@
                                 <select ng-model="new_member_data.category" class="form-control" id="sel1">
                                     <option ng-selected="1">دسته‌بندی</option>
                                     <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
-                                      معرفی دوستان
+                                        معرفی دوستان
                                     </option>
                                     <option ng-selected="new_member_data.intro === 'friends'" value="HEAVY">
-جست‌وجوی اینترنت
+                                        جست‌وجوی اینترنت
                                     </option>
                                     <option ng-selected="new_member_data.intro === 'instagram'" value="ABSTRACT">
-اینستاگرام
+                                        اینستاگرام
                                     </option>
                                     <option ng-selected="new_member_data.intro === 'roomiz'" value="FAMILY">
-سایت رومیز
+                                        سایت رومیز
                                     </option>
                                     <option ng-selected="new_member_data.intro === 'events'" value="FAMILY">
-شرکت در رویدادها
+                                        شرکت در رویدادها
                                     </option>
                                     <option ng-selected="new_member_data.intro === 'other'" value="FAMILY">
-سایر
+                                        سایر
                                     </option>
                                 </select>
                             </div>
@@ -89,7 +89,91 @@
             </div>
         </div>
     </div>
+    <div class="modal fade mainModal" id="showMemberProfileModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">اطلاعات مشتری</h2>
+                    <a class="mainButton redButton closeModal" ng-click="close_modal('showMemberProfileModal')"
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="create_credit()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label>مقدار اعتبار<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_credit_data.total_credit" type="text" aria-label="Last name"
+                                               class="form-control" placeholder="مقدار اعتبار" format>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label>تاریخ انقضا<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_credit_data.expire_date" type="text" aria-label="Last name"
+                                               class="form-control" placeholder="تاریخ انقضا" id="expire_credit_date">
+                                    </div>
+                                    <div class="col">
+                                        <label>ساعت انقضا<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_credit_data.expire_time" type="text" aria-label="Last name"
+                                               class="form-control" placeholder="ساعت انقضا" id="expire_credit_time">
+                                    </div>
+                                </div>
+                                <div class="row mr-2">
+                                    <div class="col-md-12 pr-0">
+                                        <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                    </div>
+                                    <div ng-repeat="credit_category in credit_categories" class="col-md-4">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" ng-model="is_checked"
+                                                   ng-click="change_credit_category_checkBox(is_checked, credit_category[0])">{{ credit_category[1] }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="tableWrapper">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">تاریخ انقضا</th>
+                                            <th scope="col">ساعت انقضا</th>
+                                            <th scope="col">اعتبار</th>
+                                            <th scope="col">استفاده شده</th>
+                                            <th scope="col">دسته بندی</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="credit in member_credit_data">
+                                            <th scope="row">{{ $index + 1 | persianNumber }}</th>
+                                            <td scope="row">{{ credit.expire_date | persianNumber }}</td>
+                                            <td scope="row">{{ credit.expire_time | persianNumber }}</td>
+                                            <td scope="row">{{ credit.total_price | persianNumber }}</td>
+                                            <td scope="row">{{ credit.used_price | persianNumber }}</td>
+                                            <td scope="row">{{ credit.credit_categories }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
          data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -127,6 +211,7 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th scope="col"></th>
                             <th scope="col">نام مشتری</th>
                             <th scope="col">شماره تلفن</th>
                             <th scope="col">شماره عضویت</th>
@@ -135,35 +220,18 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="member in members">
-                            <th scope="row">{{ member.first_name + " " + member.last_name }}</th>
-                            <th scope="row">{{ member.phone }}</th>
+                            <td><a ng-click="show_member_profile_data(member.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">وضعیت پروفایل</a></td>
+                            <td scope="row">{{ member.first_name + " " + member.last_name }}</td>
+                            <td scope="row">{{ member.phone }}</td>
                             <th scope="row">{{ member.card_number }}</th>
-                            <td><a ng-click="editMember(member.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                            <td><a ng-click="editMember(member.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>
                     </table>
 
                 </div>
-
-                <nav ng-hide="1" aria-label="...">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <span class="page-link">قبلی</span>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">۱</a></li>
-                        <li class="page-item active">
-                                            <span class="page-link">
-                                                ۲
-                                                <span class="sr-only">(current)</span>
-                                            </span>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">۳</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">بعدی</a>
-                        </li>
-                    </ul>
-                </nav>
-
             </main>
 
 

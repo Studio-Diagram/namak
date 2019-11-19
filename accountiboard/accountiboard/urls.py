@@ -147,6 +147,8 @@ urlpatterns = [
     path('api/get_lotteries/', LotteryView.lottery_list),
     path('api/give_lottery_prize/', LotteryView.give_prize),
     path('api/performCredit/', CreditView.perform_credit_on_invoice_sale),
+    path('api/memberCredits/', CreditView.get_all_credits_data_from_user),
+    path('api/createCredit/', CreditView.create_credit),
     path('api/getYourInvoices/', InvoiceSaleView.get_all_invoices_with_date),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),

@@ -888,8 +888,21 @@ angular.module('dashboard')
                     'url': "/api/performCredit/",
                     'data': data
                 });
+            },
+            'memberCredits': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/memberCredits/",
+                    'data': data
+                });
+            },
+            'createCredit': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/createCredit/",
+                    'data': data
+                });
             }
-
 
 
         };

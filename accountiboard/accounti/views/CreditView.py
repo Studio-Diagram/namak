@@ -38,12 +38,13 @@ def get_all_credits_data_from_user(request):
         jalali_date = jdatetime.date.fromgregorian(day=credit.expire_time.day, month=credit.expire_time.month,
                                                    year=credit.expire_time.year)
         all_credit_data.append({
-            "credit_categories": credit.credit_categories,
-            "expire_time": jalali_date.strftime("%Y/%m/%d %H:%M"),
+            "credit_categories": str(credit.credit_categories),
+            "expire_date": jalali_date.strftime("%Y/%m/%d"),
+            "expire_time": jalali_date.strftime("%H:%M"),
             "total_price": credit.total_price,
             "used_price": credit.used_price
         })
-    return JsonResponse({"response_code": 2, "all_credits": 0, "all_used_credits": 0})
+    return JsonResponse({"response_code": 2, "all_credits": all_credit_data})
 
 
 def create_credit(request):
@@ -70,10 +71,10 @@ def create_credit(request):
         return JsonResponse({"response_code": 3, "error_msg": MEMBER_NOT_EXIST})
 
     expire_date_split = expire_date.split('/')
-    expire_time_split = expire_time.split('/')
+    expire_time_split = expire_time.split(':')
     expire_date_g = jdatetime.datetime(int(expire_date_split[2]), int(expire_date_split[1]),
-                                       int(expire_date_split[0]), expire_time_split[0],
-                                       expire_time_split[1], 0).togregorian()
+                                       int(expire_date_split[0]), int(expire_time_split[0]),
+                                       int(expire_time_split[1]), 0).togregorian()
     new_credit = Credit(member=member_object, total_price=total_credit, expire_time=expire_date_g,
                         credit_categories=credit_categories)
     new_credit.save()

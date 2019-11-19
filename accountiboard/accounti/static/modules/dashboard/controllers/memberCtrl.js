@@ -1,7 +1,21 @@
 angular.module("dashboard")
     .controller("memberCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    $("#expire_credit_date").datepicker();
+                });
+            })(jQuery);
             $scope.is_in_edit_mode = false;
+            $scope.new_credit_data = {
+                'member_id': 0,
+                'total_credit': 0,
+                'expire_date': '',
+                'expire_time': '',
+                'credit_categories': [],
+                'username': $rootScope.user_data.username
+            };
             $scope.new_member_data = {
                 'member_id': 0,
                 'first_name': '',
@@ -20,8 +34,97 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            $scope.credit_categories = [
+                ["BAR", "آیتم‌های بار"],
+                ["KITCHEN", "آیتم‌های آشپزخانه"],
+                ["OTHER", "آیتم‌های سایر"],
+                ["SHOP", "محصولات فروشگاهی"],
+                ["GAME", "بازی"]
+            ];
             $scope.get_members_data($rootScope.user_data);
+            $scope.config_clock();
         };
+
+        $scope.config_clock = function () {
+            jQuery.noConflict();
+            (function ($) {
+                var choices = ["00", "15", "30", "45"];
+                $('#expire_credit_time').clockpicker({
+                donetext: 'تایید',
+                autoclose: true,
+                afterShow: function () {
+                    $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                        return !($.inArray($(element).text(), choices) != -1)
+                    }).remove();
+                },
+                afterDone: function () {
+                    var seleceted_min = $('#expire_credit_time').val().split(":")[1];
+                    if (!choices.includes(seleceted_min)) {
+                        $('#expire_credit_time').val("");
+                    }
+                    else {
+                        $scope.new_reserve_data.start_time = $('#expire_credit_time').val();
+                    }
+                }
+            });
+            })(jQuery);
+        };
+
+        $scope.show_member_profile_data = function (member_id) {
+            $scope.new_credit_data.member_id = member_id;
+            var sending_data = {
+                "member_id": member_id,
+                "username": $rootScope.user_data.username
+            };
+            dashboardHttpRequest.memberCredits(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.member_credit_data = data['all_credits'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+            $rootScope.open_modal("showMemberProfileModal");
+        };
+
+        $scope.change_credit_category_checkBox = function (is_checked, category_name) {
+            if (is_checked) {
+                $scope.new_credit_data.credit_categories.push(category_name);
+            }
+            else {
+                for (var i = 0; i < $scope.new_credit_data.credit_categories.length; i++) {
+                    if ($scope.new_credit_data.credit_categories[i] === category_name) {
+                        $scope.new_credit_data.credit_categories.splice(i, 1);
+                    }
+                }
+            }
+        };
+
+
+        $scope.create_credit = function () {
+            $scope.new_credit_data.expire_date = $("#expire_credit_date").val();
+            $scope.new_credit_data.expire_time = $("#expire_credit_time").val();
+            dashboardHttpRequest.createCredit($scope.new_credit_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.resetFrom();
+                        $rootScope.close_modal("showMemberProfileModal");
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
 
         $scope.get_members_data = function (data) {
             dashboardHttpRequest.getMembers(data)
@@ -197,6 +300,14 @@ angular.module("dashboard")
                 'phone': '',
                 'intro': 'other',
                 'branch': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            $scope.new_credit_data = {
+                'member_id': 0,
+                'total_credit': 0,
+                'expire_date': '',
+                'expire_time': '',
+                'credit_categories': [],
                 'username': $rootScope.user_data.username
             };
         };

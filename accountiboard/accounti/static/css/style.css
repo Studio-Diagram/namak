@@ -1607,3 +1607,7 @@ tags-input .tags .tag-item {
     font-size: 0.8em;
     padding: .8em;
 }
+
+.form-check-input {
+    margin-right: -1.25rem;
+}
