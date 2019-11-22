@@ -10,22 +10,6 @@ angular.module("dashboard")
             if ($location.path() === '/account_manager') {
                 $state.go('account_manager.buy');
             }
-
-            $scope.get_employees_data($rootScope.user_data);
-        };
-
-        $scope.get_employees_data = function (data) {
-            dashboardHttpRequest.getEmployees(data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.employees = data['employees'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
-                    }
-                }, function (error) {
-                    console.log(error);
-                });
         };
 
         $scope.check_cash = function () {

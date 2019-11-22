@@ -84,6 +84,7 @@ def close_cash(request):
             current_cash_obj.is_close = 1
             current_cash_obj.employee = employee_obj
             current_cash_obj.ended_date_time = now
+            current_cash_obj.save()
             return JsonResponse({"response_code": 2})
         else:
             return JsonResponse({"response_code": 3, 'error_msg': DUPLICATE_CASH})
