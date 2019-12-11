@@ -78,6 +78,7 @@ angular.module("dashboard")
                     $scope.closeAddModal();
                     $scope.closeCompleteReserveModal();
                     $scope.closeAddWalkedModal();
+                    $scope.closeWaitingListModal();
                 }
                 if (event.ctrlKey && event.keyCode === 49) {
 

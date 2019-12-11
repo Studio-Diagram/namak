@@ -317,10 +317,15 @@ def add_waiting_list(request):
     branch_id = rec_data['branch']
 
     if not reserve_state or reserve_state != "call_waiting" or not customer_name or not reserve_date or not numbers \
-            or not phone or not branch_id or not start_time:
+            or not phone or not branch_id:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    start_time_detail = datetime.strptime(start_time, "%H:%M")
+    if start_time:
+        start_time_detail = datetime.strptime(start_time, "%H:%M")
+    else:
+        start_time = "00:00"
+        start_time_detail = datetime.strptime("00:00", "%H:%M")
+
     if not end_time:
         end_time_detail = start_time_detail + timedelta(minutes=120)
         end_time = end_time_detail.strftime("%H:%M")
