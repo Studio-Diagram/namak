@@ -127,7 +127,8 @@
                                                 <tbody>
                                                 <tr class="row">
                                                     <th ng-click="showCollapse($index)"
-                                                        ng-repeat="category in menu_items_with_categories" ng-class="selected_menu_nav_cat === $index ? 'col-sm-4 active' : 'col-sm-4'">{{ category.category_name }}</th>
+                                                        ng-repeat="category in menu_items_with_categories"
+                                                        ng-class="selected_menu_nav_cat === $index ? 'col-sm-4 active' : 'col-sm-4'">{{ category.category_name }}</th>
                                                     <th class="col-sm-4"
                                                         ng-show="menu_items_with_categories.length % 3 === 1"></th>
                                                     <th class="col-sm-4"
@@ -137,13 +138,17 @@
                                                 </tr>
                                                 <tr ng-if="selected_category.items.length < 6" class="row">
                                                     <th class="col-sm-6"
-                                                        ng-repeat="item in selected_category.items" ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
-                                                    <th class="col-sm-6 dumb" ng-repeat="x in [].constructor(6 - selected_category.items.length % 6) track by $index"></th>
+                                                        ng-repeat="item in selected_category.items"
+                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6 dumb"
+                                                        ng-repeat="x in [].constructor(6 - selected_category.items.length % 6) track by $index"></th>
                                                 </tr>
                                                 <tr ng-if="selected_category.items.length >= 6" class="row">
                                                     <th class="col-sm-6"
-                                                        ng-repeat="item in selected_category.items" ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
-                                                    <th class="col-sm-6" ng-show="selected_category.items.length % 2 === 1"></th>
+                                                        ng-repeat="item in selected_category.items"
+                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6"
+                                                        ng-show="selected_category.items.length % 2 === 1"></th>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -230,7 +235,7 @@
                                         </td>
                                         <td>
                                             <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
-                                                    ng-disabled="new_invoice_data.current_game.start_time === ''"
+                                                    ng-disabled="new_invoice_data.current_game.start_time === '' || disable_print_after_save_all_buttons"
                                                     href="" class="mainButton grayButton">اتمام زمان بازی
                                             </button>
                                         </td>
@@ -324,11 +329,13 @@
                                     <tbody>
                                     <tr>
                                         <th>اعتبار</th>
-                                        <td>{{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
                                         <th>اعتبار مصرفی</th>
-                                        <td>{{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                     </tr>
                                     <tr>
                                         <th>انعام</th>
@@ -495,7 +502,9 @@
                             <td><span
                                     ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span>
                             </td>
-                            <td>{{ s_invoice.total_price - s_invoice.discount - s_invoice.used_credit | number:fractionSize | persianNumber }}ریال</td>
+                            <td>
+                                {{ s_invoice.total_price - s_invoice.discount - s_invoice.used_credit | number:fractionSize | persianNumber }}ریال
+                            </td>
                             <td ng-hide="s_invoice.is_settled" ng-click="editInvoice(s_invoice.invoice_id)"><a href=""
                                                                                                                class="mainButton grayButton smallButton fullWidthButton">جزییات</a>
                         </tr>

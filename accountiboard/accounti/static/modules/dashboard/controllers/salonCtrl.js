@@ -144,7 +144,8 @@ angular.module("dashboard")
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -270,10 +271,12 @@ angular.module("dashboard")
 
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -292,10 +295,12 @@ angular.module("dashboard")
                         $scope.refreshInvoice(data['new_invoice_id']);
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -381,10 +386,12 @@ angular.module("dashboard")
                         $scope.last_table_add = $scope.new_invoice_data.table_name;
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -683,10 +690,12 @@ angular.module("dashboard")
                         $scope.check_table_has_invoice();
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -702,14 +711,17 @@ angular.module("dashboard")
                         $scope.new_invoice_data.games = data['games'];
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
         $scope.endCurrentGame = function (game_id) {
+            $scope.disable_print_after_save_all_buttons = true;
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
@@ -717,6 +729,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.endCurrentGame(sending_data)
                 .then(function (data) {
+                    $scope.disable_print_after_save_all_buttons = false;
                     if (data['response_code'] === 2) {
                         $scope.new_invoice_data.current_game = {
                             'id': 0,
@@ -726,13 +739,15 @@ angular.module("dashboard")
                         // $scope.getAllInvoiceGames($scope.new_invoice_data.invoice_sales_id);
                         $scope.refreshInvoice($scope.new_invoice_data.invoice_sales_id);
                         $scope.getAllTodayInvoices();
-
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.disable_print_after_save_all_buttons = false;
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -814,10 +829,12 @@ angular.module("dashboard")
                         $scope.menu_items_with_categories = data['menu_items_with_categories'];
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -828,10 +845,12 @@ angular.module("dashboard")
                         $scope.tables = data['tables'];
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -881,10 +900,12 @@ angular.module("dashboard")
                         console.log(data);
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -919,10 +940,12 @@ angular.module("dashboard")
                             $scope.menu_items = data['menu_items'];
                         }
                         else if (data['response_code'] === 3) {
-                            console.log("NOT SUCCESS!");
+                            $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                         }
                     }, function (error) {
-                        console.log(error);
+                        $scope.error_message = 500;
+                    $scope.openErrorModal();
                     });
             }
         };
@@ -1007,10 +1030,12 @@ angular.module("dashboard")
                         $scope.openAddInvoiceModal();
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -1056,10 +1081,12 @@ angular.module("dashboard")
                         $scope.openViewInvoiceModal();
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -1108,10 +1135,12 @@ angular.module("dashboard")
                         $scope.last_table_add = data['invoice']['table_name'];
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -1166,10 +1195,12 @@ angular.module("dashboard")
                         $scope.last_table_add = data['invoice']['table_name'];
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
