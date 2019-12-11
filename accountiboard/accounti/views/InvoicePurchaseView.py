@@ -312,6 +312,8 @@ def get_shop_products(request):
                 'real_numbers': get_detail_product_number(shop.id),
                 'nums': shop.real_numbers
             })
+        shop_products_data = sorted(shop_products_data, key=lambda i: i['real_numbers'])
+        shop_products_data.reverse()
         return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
 
 

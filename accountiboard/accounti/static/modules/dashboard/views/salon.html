@@ -153,13 +153,21 @@
                                                 </tbody>
                                             </table>
 
-                                            <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
-                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
-                                                   style="cursor: copy;" href=""
-                                                   class="nav-link">{{ shop.name }}
-                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span>
-                                                </a>
-                                            </li>
+                                            <table class="table menuNavTable"
+                                                   ng-show="current_menu_nav === 'SHOP'">
+                                                <tbody>
+                                                <tr style="border-top: none !important;" class="row"></tr>
+                                                <tr class="row">
+                                                    <th class="col-sm-6"
+                                                        ng-repeat="shop in shop_products"
+                                                        ng-click="add_item_shop(shop.id, shop.name, shop.price)">
+                                                        {{ shop.name }}<span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger mr-1' : 'badge badge-pill badge-dark mr-1'">{{ shop.real_numbers }}</span>
+                                                    </th>
+                                                    <th class="col-sm-6"
+                                                        ng-show="selected_category.items.length % 2 === 1"></th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                         <div ng-show="search_data_menu_item.search_word" class="accordion">
                                             <li ng-show="current_menu_nav === 'MENU'"
