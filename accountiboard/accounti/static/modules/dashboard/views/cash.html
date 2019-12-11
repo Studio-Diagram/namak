@@ -1,5 +1,46 @@
-<main ng-controller="statusCtrl" class="pageContent container-fluid">
-    <div style="height: 119px" class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
+<div ng-controller="statusCtrl">
+    <div class="modal fade mainModal" id="sale_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">جزییات فروش</h2>
+                    <a class="mainButton redButton" ng-click="close_modal('sale_details')" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="tableWrapper">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">نام آیتم</th>
+                                        <th scope="col">تعداد</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in sale_details">
+                                        <td>{{ $index + 1 | persianNumber }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.numbers | persianNumber }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 119px" class="modal fade mainModal alertModal redAlertModal"
+         id="closeInvoicePermissionModal" data-backdrop="static"
          data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -38,121 +79,133 @@
             </div>
         </div>
     </div>
-    <div class="row saloonPageContent">
-        <main class="col-sm-12 ">
-            <div class="tableButtons clearfix">
-                <a ng-click="openPermissionModal()" class="addUser mainButton greenButton" href="" data-toggle="modal"><i
-                        class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h3>گزارش فروش</h3>
-                        <div class="tableWrapper">
-                            <table class="cashTable">
-                                <tbody>
-                                <tr>
-                                    <td class="mainValue">
-                                        <h4><i class="fas fa-cash-register"></i> کل فروش</h4>
-                                        <span class="">{{ status.all_sales_price | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-money-bill"></i> نقد</h4>
-                                        <span class="">{{ status.all_cash | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="far fa-credit-card"></i> کارت‌خوان</h4>
-                                        <span class="">{{ status.all_pos | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-users"></i> تعداد مهمانان</h4>
-                                        <span class="">{{ status.all_guests | persianNumber }}</span>
-                                        <small>نفر</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-file-invoice-dollar"></i> مالیات</h4>
-                                        <span class="">{{ status.all_tax | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-hand-holding-usd"></i> انعام</h4>
-                                        <span class="">{{ status.all_tip | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-file-invoice"></i> تخفیف</h4>
-                                        <span class="">{{ status.all_discount | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+    <main class="pageContent container-fluid">
+        <div class="row saloonPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <a ng-click="openPermissionModal()" class="addUser mainButton greenButton" href=""
+                       data-toggle="modal"><i
+                            class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>گزارش فروش</h3>
+                            <div class="tableWrapper">
+                                <table class="cashTable">
+                                    <tbody>
+                                    <tr>
+                                        <td class="mainValue">
+                                            <h4><i class="fas fa-cash-register"></i> کل فروش</h4>
+                                            <span class="">{{ status.all_sales_price | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-money-bill"></i> نقد</h4>
+                                            <span class="">{{ status.all_cash | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="far fa-credit-card"></i> کارت‌خوان</h4>
+                                            <span class="">{{ status.all_pos | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-users"></i> تعداد مهمانان</h4>
+                                            <span class="">{{ status.all_guests | persianNumber }}</span>
+                                            <small>نفر</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice-dollar"></i> مالیات</h4>
+                                            <span class="">{{ status.all_tax | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-hand-holding-usd"></i> انعام</h4>
+                                            <span class="">{{ status.all_tip | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice"></i> تخفیف</h4>
+                                            <span class="">{{ status.all_discount | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <h3>گزارش تفکیکی</h3>
-                        <div class="tableWrapper">
-                            <table class="cashTable">
-                                <tbody>
-                                <tr>
-                                    <td class="">
-                                        <h4><i class="fas fa-coffee"></i> فروش بار</h4>
-                                        <span class="">{{ status.all_bar | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
-                                        <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-file-invoice-dollar"></i>فروش سایر</h4>
-                                        <span class="">{{ status.all_other | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-chess-rook"></i> هزینه بازی</h4>
-                                        <span class="">{{ status.all_games | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-chess-rook"></i> فروش فروشگاهی</h4>
-                                        <span class="">{{ status.all_sales | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tableWrapper">
-                            <table class="cashTable">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
-                                        <span class="">{{ status.all_purchase | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-hammer"></i> هزینه</h4>
-                                        <span class="">{{ status.all_expense | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                    <td>
-                                        <h4><i class="fas fa-file-invoice-dollar"></i> پرداختی</h4>
-                                        <span class="">{{ status.all_pays | number | persianNumber }}</span>
-                                        <small>ریال</small>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="col-sm-12">
+                            <h3>گزارش تفکیکی</h3>
+                            <div class="tableWrapper">
+                                <table class="cashTable">
+                                    <tbody>
+                                    <tr>
+                                        <td class="">
+                                            <h4><i class="fas fa-coffee"></i> فروش بار</h4>
+                                            <span class="">{{ status.all_bar | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                            <button ng-click="get_bar_detail_sales()"
+                                                    class="mainButton smallButton grayButton mt-2">جزییات
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
+                                            <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                            <button ng-click="get_kitchen_detail_sales()"
+                                                    class="mainButton smallButton grayButton mt-2">جزییات
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice-dollar"></i>فروش سایر</h4>
+                                            <span class="">{{ status.all_other | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                            <button ng-click="get_other_detail_sales()"
+                                                    class="mainButton smallButton grayButton mt-2">جزییات
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-chess-rook"></i> هزینه بازی</h4>
+                                            <span class="">{{ status.all_games | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-chess-rook"></i> فروش فروشگاهی</h4>
+                                            <span class="">{{ status.all_sales | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tableWrapper">
+                                <table class="cashTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
+                                            <span class="">{{ status.all_purchase | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-hammer"></i> هزینه</h4>
+                                            <span class="">{{ status.all_expense | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice-dollar"></i> پرداختی</h4>
+                                            <span class="">{{ status.all_pays | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
-</main>
+            </main>
+        </div>
+    </main>
+</div>

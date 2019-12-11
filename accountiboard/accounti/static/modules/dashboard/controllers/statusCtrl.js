@@ -1,7 +1,7 @@
 angular.module("dashboard")
     .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
-            if ($rootScope.cash_data.cash_id !== 0){
+            if ($rootScope.cash_data.cash_id !== 0) {
                 $scope.get_status_data();
             }
             else {
@@ -9,11 +9,11 @@ angular.module("dashboard")
             }
         };
 
-        $scope.get_status_data = function (data) {
+        $scope.get_status_data = function () {
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $rootScope.cash_data.cash_id
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
@@ -22,11 +22,82 @@ angular.module("dashboard")
                         $scope.status = data['all_today_status'];
                     }
                     else if (data['response_code'] === 3) {
-                        console.log("NOT SUCCESS!");
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_kitchen_detail_sales = function () {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id
+            };
+            dashboardHttpRequest.getKitchenDetailSales(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.sale_details = data['sale_details'];
+                        $scope.open_modal("sale_details");
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_bar_detail_sales = function () {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id
+            };
+            dashboardHttpRequest.getBarDetailSales(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.sale_details = data['sale_details'];
+                        $scope.open_modal("sale_details");
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_other_detail_sales = function () {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id
+            };
+            dashboardHttpRequest.getOtherDetailSales(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.sale_details = data['sale_details'];
+                        $scope.open_modal("sale_details");
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -41,7 +112,8 @@ angular.module("dashboard")
                         $rootScope.cash_data.cash_id = 0;
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -99,7 +171,8 @@ angular.module("dashboard")
                         };
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
                 });
         };
 

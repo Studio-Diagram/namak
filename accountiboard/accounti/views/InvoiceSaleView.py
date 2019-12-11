@@ -860,125 +860,238 @@ def delete_items(request):
 
 
 def get_today_status(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        branch_id = rec_data['branch_id']
-        cash_id = rec_data['cash_id']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        branch_obj = Branch.objects.get(pk=branch_id)
-        cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    cash_id = rec_data['cash_id']
 
-        now_date = datetime.now().date()
-        now_time = datetime.now().time()
+    branch_obj = Branch.objects.get(pk=branch_id)
+    cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
 
-        datetime_object_3am = datetime.strptime('03:00:00', '%H:%M:%S')
-        time3am = datetime.time(datetime_object_3am)
+    now_date = datetime.now().date()
+    now_time = datetime.now().time()
 
-        datetime_object_0am = datetime.strptime('00:00:00', '%H:%M:%S')
-        time0am = datetime.time(datetime_object_0am)
+    datetime_object_3am = datetime.strptime('03:00:00', '%H:%M:%S')
+    time3am = datetime.time(datetime_object_3am)
 
-        yesterday = date.today() - timedelta(1)
+    datetime_object_0am = datetime.strptime('00:00:00', '%H:%M:%S')
+    time0am = datetime.time(datetime_object_0am)
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not branch_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not cash_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    yesterday = date.today() - timedelta(1)
 
-        status = {
-            "all_sales_price": 0,
-            "all_cash": 0,
-            "all_pos": 0,
-            "all_guests": 0,
-            "all_tax": 0,
-            "all_discount": 0,
-            "all_tip": 0,
-            "all_bar": 0,
-            "all_kitchen": 0,
-            "all_other": 0,
-            "all_purchase": 0,
-            "all_expense": 0,
-            "all_pays": 0,
-            "all_games": 0,
-            "all_sales": 0,
-        }
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not cash_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False)
-        for invoice in all_invoices:
-            status['all_sales_price'] += invoice.total_price
-            status['all_cash'] += invoice.cash
-            status['all_pos'] += invoice.pos
-            status['all_guests'] += invoice.guest_numbers
-            status['all_tax'] += invoice.tax
-            status['all_discount'] += invoice.discount
-            status['all_tip'] += invoice.tip
-            all_invoice_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice)
-            for invoice_to_menu_item in all_invoice_menu_items:
-                if invoice_to_menu_item.menu_item.menu_category.kind == "BAR":
-                    status['all_bar'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
-                elif invoice_to_menu_item.menu_item.menu_category.kind == "KITCHEN":
-                    status['all_kitchen'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
-                elif invoice_to_menu_item.menu_item.menu_category.kind == "OTHER":
-                    status['all_other'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+    status = {
+        "all_sales_price": 0,
+        "all_cash": 0,
+        "all_pos": 0,
+        "all_guests": 0,
+        "all_tax": 0,
+        "all_discount": 0,
+        "all_tip": 0,
+        "all_bar": 0,
+        "all_kitchen": 0,
+        "all_other": 0,
+        "all_purchase": 0,
+        "all_expense": 0,
+        "all_pays": 0,
+        "all_games": 0,
+        "all_sales": 0,
+    }
 
-            all_invoice_shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice)
-            for invoice_to_shop_p in all_invoice_shop_products:
-                all_amani_sale = AmaniSale.objects.filter(invoice_sale_to_shop=invoice_to_shop_p)
-                for amani_sale in all_amani_sale:
-                    status['all_sales'] += amani_sale.numbers * amani_sale.sale_price
+    all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False)
+    for invoice in all_invoices:
+        status['all_sales_price'] += invoice.total_price
+        status['all_cash'] += invoice.cash
+        status['all_pos'] += invoice.pos
+        status['all_guests'] += invoice.guest_numbers
+        status['all_tax'] += invoice.tax
+        status['all_discount'] += invoice.discount
+        status['all_tip'] += invoice.tip
+        all_invoice_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice)
+        for invoice_to_menu_item in all_invoice_menu_items:
+            if invoice_to_menu_item.menu_item.menu_category.kind == "BAR":
+                status['all_bar'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+            elif invoice_to_menu_item.menu_item.menu_category.kind == "KITCHEN":
+                status['all_kitchen'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+            elif invoice_to_menu_item.menu_item.menu_category.kind == "OTHER":
+                status['all_other'] += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
 
-            all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
-            for invoice_to_game in all_invoice_games:
-                status['all_games'] += invoice_to_game.game.points * 5000
+        all_invoice_shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice)
+        for invoice_to_shop_p in all_invoice_shop_products:
+            all_amani_sale = AmaniSale.objects.filter(invoice_sale_to_shop=invoice_to_shop_p)
+            for amani_sale in all_amani_sale:
+                status['all_sales'] += amani_sale.numbers * amani_sale.sale_price
 
-        if now_time > time3am:
-            all_invoice_purchase = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoice_purchase:
-                if invoice.created_time.time() > time3am:
-                    status['all_purchase'] += invoice.total_price
+        all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
+        for invoice_to_game in all_invoice_games:
+            status['all_games'] += invoice_to_game.game.points * 5000
 
-            all_invoice_expense = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoice_expense:
-                if invoice.created_time.time() > time3am:
-                    status['all_expense'] += invoice.price
-
-            all_invoice_pays = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoice_pays:
-                if invoice.created_time.time() > time3am:
-                    status['all_pays'] += invoice.payment_amount
-
-        elif time0am < now_time < time3am:
-            all_invoice_purchase_y = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=yesterday)
-            for invoice in all_invoice_purchase_y:
-                if invoice.created_time.time() > time3am:
-                    status['all_purchase'] += invoice.total_price
-
-            all_invoice_purchase_t = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoice_purchase_t:
+    if now_time > time3am:
+        all_invoice_purchase = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
+        for invoice in all_invoice_purchase:
+            if invoice.created_time.time() > time3am:
                 status['all_purchase'] += invoice.total_price
 
-            all_invoice_expense_y = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=yesterday)
-            for invoice in all_invoice_expense_y:
-                if invoice.created_time.time() > time3am:
-                    status['all_expense'] += invoice.price
-
-            all_invoice_expense_t = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoice_expense_t:
+        all_invoice_expense = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=now_date)
+        for invoice in all_invoice_expense:
+            if invoice.created_time.time() > time3am:
                 status['all_expense'] += invoice.price
 
-            all_invoice_pays_y = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=yesterday)
-            for invoice in all_invoice_pays_y:
-                if invoice.created_time.time() > time3am:
-                    status['all_pays'] += invoice.payment_amount
-
-            all_invoice_pays_t = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=now_date)
-            for invoice in all_invoice_pays_t:
+        all_invoice_pays = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=now_date)
+        for invoice in all_invoice_pays:
+            if invoice.created_time.time() > time3am:
                 status['all_pays'] += invoice.payment_amount
 
-        return JsonResponse({"response_code": 2, "all_today_status": status})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    elif time0am < now_time < time3am:
+        all_invoice_purchase_y = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=yesterday)
+        for invoice in all_invoice_purchase_y:
+            if invoice.created_time.time() > time3am:
+                status['all_purchase'] += invoice.total_price
+
+        all_invoice_purchase_t = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
+        for invoice in all_invoice_purchase_t:
+            status['all_purchase'] += invoice.total_price
+
+        all_invoice_expense_y = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=yesterday)
+        for invoice in all_invoice_expense_y:
+            if invoice.created_time.time() > time3am:
+                status['all_expense'] += invoice.price
+
+        all_invoice_expense_t = InvoiceExpense.objects.filter(branch=branch_obj, created_time__date=now_date)
+        for invoice in all_invoice_expense_t:
+            status['all_expense'] += invoice.price
+
+        all_invoice_pays_y = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=yesterday)
+        for invoice in all_invoice_pays_y:
+            if invoice.created_time.time() > time3am:
+                status['all_pays'] += invoice.payment_amount
+
+        all_invoice_pays_t = InvoiceSettlement.objects.filter(branch=branch_obj, created_time__date=now_date)
+        for invoice in all_invoice_pays_t:
+            status['all_pays'] += invoice.payment_amount
+
+    return JsonResponse({"response_code": 2, "all_today_status": status})
+
+
+def get_kitchen_sail_detail(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    cash_id = rec_data['cash_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id or not cash_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+    cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
+    sale_details = []
+
+    all_invoices_menu_items_kitchen = InvoicesSalesToMenuItem.objects.filter(invoice_sales__is_deleted=False,
+                                                                             invoice_sales__cash_desk=cash_obj,
+                                                                             menu_item__menu_category__kind="KITCHEN").order_by(
+        "menu_item__name")
+
+    for menu_item in all_invoices_menu_items_kitchen:
+        found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
+        if found_item:
+            found_item[0]['numbers'] += menu_item.numbers
+        else:
+            sale_details.append({
+                "name": menu_item.menu_item.name,
+                "numbers": menu_item.numbers
+            })
+
+    sale_details = sorted(sale_details, key=lambda i: i['numbers'], reverse=True)
+    return JsonResponse({"response_code": 2, "sale_details": sale_details})
+
+
+def get_bar_sail_detail(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    cash_id = rec_data['cash_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id or not cash_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+    cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
+    sale_details = []
+
+    all_invoices_menu_items_bar = InvoicesSalesToMenuItem.objects.filter(invoice_sales__is_deleted=False,
+                                                                         invoice_sales__cash_desk=cash_obj,
+                                                                         menu_item__menu_category__kind="BAR").order_by(
+        "menu_item__name")
+
+    for menu_item in all_invoices_menu_items_bar:
+        found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
+        if found_item:
+            found_item[0]['numbers'] += menu_item.numbers
+        else:
+            sale_details.append({
+                "name": menu_item.menu_item.name,
+                "numbers": menu_item.numbers
+            })
+
+    sale_details = sorted(sale_details, key=lambda i: i['numbers'], reverse=True)
+    return JsonResponse({"response_code": 2, "sale_details": sale_details})
+
+
+def get_other_sail_detail(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    cash_id = rec_data['cash_id']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id or not cash_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    branch_obj = Branch.objects.get(pk=branch_id)
+    cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
+    sale_details = []
+
+    all_invoices_menu_items_other = InvoicesSalesToMenuItem.objects.filter(invoice_sales__is_deleted=False,
+                                                                           invoice_sales__cash_desk=cash_obj,
+                                                                           menu_item__menu_category__kind="OTHER").order_by(
+        "menu_item__name")
+
+    for menu_item in all_invoices_menu_items_other:
+        found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
+        if found_item:
+            found_item[0]['numbers'] += menu_item.numbers
+        else:
+            sale_details.append({
+                "name": menu_item.menu_item.name,
+                "numbers": menu_item.numbers
+            })
+
+    sale_details = sorted(sale_details, key=lambda i: i['numbers'], reverse=True)
+
+    return JsonResponse({"response_code": 2, "sale_details": sale_details})
 
 
 def calec_time(request):

@@ -560,6 +560,27 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'getKitchenDetailSales': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getKitchenDetailSales/",
+                    'data': data
+                });
+            },
+            'getBarDetailSales': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getBarDetailSales/",
+                    'data': data
+                });
+            },
+            'getOtherDetailSales': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getOtherDetailSales/",
+                    'data': data
+                });
+            },
             'timeCalc': function (data) {
                 return this.request({
                     'method': "POST",
