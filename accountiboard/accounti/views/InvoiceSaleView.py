@@ -713,42 +713,42 @@ def get_member(request):
 
 
 def end_current_game(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        game_id = rec_data['game_id']
-        end_time = datetime.now().time()
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not game_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        else:
-            game_object = Game.objects.get(pk=game_id)
-            invoice_to_sales_object = InvoicesSalesToGame.objects.get(game=game_object)
-            invoice_id = invoice_to_sales_object.invoice_sales.pk
-            invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-            start_time = game_object.start_time
-            game_object.end_time = end_time
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-            timedelta_start = timedelta(hours=start_time.hour, minutes=start_time.minute, seconds=start_time.second)
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    game_id = rec_data['game_id']
+    end_time = datetime.now().time()
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not game_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-            timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute, seconds=end_time.second)
+    game_object = Game.objects.get(pk=game_id, end_time="00:00:00")
+    invoice_to_sales_object = InvoicesSalesToGame.objects.get(game=game_object)
+    invoice_id = invoice_to_sales_object.invoice_sales.pk
+    invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+    start_time = game_object.start_time
+    game_object.end_time = end_time
 
-            t = timedelta_end - timedelta_start
-            point = int(round(t.total_seconds() / 225))
-            if game_object.member.id == 1:
-                if point % 16 != 0:
-                    point = (int(point / 16) + 1) * 16
-            game_numbers = game_object.numbers
+    timedelta_start = timedelta(hours=start_time.hour, minutes=start_time.minute, seconds=start_time.second)
 
-            game_object.points = point * game_numbers
-            game_object.save()
-            invoice_object.total_price += point * game_numbers * 5000
-            invoice_object.game_state = "END_GAME"
-            invoice_object.save()
-            return JsonResponse({"response_code": 2})
+    timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute, seconds=end_time.second)
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    t = timedelta_end - timedelta_start
+    point = int(round(t.total_seconds() / 225))
+    if game_object.member.id == 1:
+        if point % 16 != 0:
+            point = (int(point / 16) + 1) * 16
+    game_numbers = game_object.numbers
+
+    game_object.points = point * game_numbers
+    game_object.save()
+    invoice_object.total_price += point * game_numbers * 5000
+    invoice_object.game_state = "END_GAME"
+    invoice_object.save()
+    return JsonResponse({"response_code": 2})
 
 
 def get_all_invoice_games(request):
