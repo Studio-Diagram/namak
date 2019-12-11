@@ -189,42 +189,61 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <aside class="col-sm-2">
-                                <input ng-show="current_menu_nav === 'MENU'" ng-keyup="searchMenuItem()"
-                                       ng-model="search_data_menu_item.search_word"
-                                       class="form-control listFilter" type="text" placeholder="فیلتر کن">
-                                <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
-                                       ng-model="search_data_shop_products.search_word"
-                                       class="form-control listFilter" type="text" placeholder="فیلتر کن">
+                            <aside class="col-sm-4">
                                 <nav class=" nav nav-justified">
                                     <a ng-click="changeMenuNav('MENU')" href=""
-                                       ng-class="current_menu_nav === 'MENU' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
-                                            class="fas fa-bars"></i></a>
+                                       ng-class="current_menu_nav === 'MENU' ? 'nav-link iconButton active' : 'nav-link iconButton'">منو
+                                        کافه</a>
                                     <a ng-click="changeMenuNav('SHOP')" href=""
-                                       ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
-                                            class="fas fa-store"></i></a>
+                                       ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'">فروشگاه</i></a>
                                 </nav>
+                                <input ng-show="current_menu_nav === 'MENU'" ng-keyup="searchMenuItem()"
+                                       ng-model="search_data_menu_item.search_word"
+                                       class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
+                                <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
+                                       ng-model="search_data_shop_products.search_word"
+                                       class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div ng-hide="search_data_menu_item.search_word" class="accordion">
-                                            <li ng-show="current_menu_nav === 'MENU'"
-                                                ng-repeat="category in menu_items_with_categories" class="nav-item">
-                                                <a style="cursor: pointer" ng-click="showCollapse($index)"
-                                                   class="nav-link" data-toggle="collapse"
-                                                   aria-controls="menuNavCollapse
-                                                           {{ $index }}">{{ category.category_name }}</a>
-                                                <ul id="menuNavCollapse{{ $index }}" class="collapse">
-                                                    <li ng-repeat="item in category.items">
-                                                        <a ng-click="add_item(item.id, item.name, item.price)" href=""
-                                                           class="nav-link">{{ item.name }}</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
+
+                                            <table class="table menuNavTable"
+                                                   ng-show="current_menu_nav === 'MENU'">
+                                                <tbody>
+                                                <tr class="row">
+                                                    <th ng-click="showCollapse($index)"
+                                                        ng-repeat="category in menu_items_with_categories"
+                                                        ng-class="selected_menu_nav_cat === $index ? 'col-sm-4 active' : 'col-sm-4'">{{ category.category_name }}</th>
+                                                    <th class="col-sm-4"
+                                                        ng-show="menu_items_with_categories.length % 3 === 1"></th>
+                                                    <th class="col-sm-4"
+                                                        ng-show="menu_items_with_categories.length % 3 === 1"></th>
+                                                    <th class="col-sm-4"
+                                                        ng-show="menu_items_with_categories.length % 3 === 2"></th>
+                                                </tr>
+                                                <tr ng-if="selected_category.items.length < 6" class="row">
+                                                    <th class="col-sm-6"
+                                                        ng-repeat="item in selected_category.items"
+                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6 dumb"
+                                                        ng-repeat="x in [].constructor(6 - selected_category.items.length % 6) track by $index"></th>
+                                                </tr>
+                                                <tr ng-if="selected_category.items.length >= 6" class="row">
+                                                    <th class="col-sm-6"
+                                                        ng-repeat="item in selected_category.items"
+                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6"
+                                                        ng-show="selected_category.items.length % 2 === 1"></th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
                                             <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ shop.name }}
-                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span> </a> </a>
+                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span>
+                                                </a>
                                             </li>
                                         </div>
                                         <div ng-show="search_data_menu_item.search_word" class="accordion">
@@ -238,14 +257,15 @@
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ shop.name }}
-                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span> </a> </a>
+                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span>
+                                                </a>
                                             </li>
                                         </div>
                                     </ul>
                                 </nav>
 
                             </aside>
-                            <main class="col-sm-10">
+                            <main class="col-sm-8">
                                 <table class="invoiceTable">
                                     <tbody>
                                     <tr>
@@ -297,7 +317,7 @@
                                         </td>
                                         <td>
                                             <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
-                                                    ng-disabled="new_invoice_data.current_game.start_time === ''"
+                                                    ng-disabled="new_invoice_data.current_game.start_time === '' || disable_print_after_save_all_buttons"
                                                     href="" class="mainButton grayButton">اتمام زمان بازی</button>
                                         </td>
                                         <td>
@@ -323,7 +343,7 @@
                                         <th class="first"><input ng-click="will_delete_items_adder('menu', old_item.id)"
                                                                  type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ old_item.name }}</td>
                                         <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
                                         <td>{{ old_item.nums | persianNumber }}</td>
@@ -333,7 +353,7 @@
                                     <tr ng-repeat="new_item in new_invoice_data.menu_items_new">
                                         <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
                                                 class="fas fa-trash"></i></a></th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ new_item.name }}</td>
                                         <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
@@ -358,7 +378,7 @@
                                         <th class="first"><a ng-click="deleteNewItemShop($index)"
                                                              style="cursor: pointer"><i class="fas fa-trash"></i></a>
                                         </th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ new_item.name }}</td>
                                         <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
@@ -372,7 +392,7 @@
                                         <th class="first"><input ng-click="will_delete_items_adder('game', game.id)"
                                                                  type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>بازی {{ game.numbers | persianNumber }} نفره ( {{ game.start_time | persianNumber }} تا {{ game.end_time | persianNumber }} )</td>
                                         <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
                                         <td  style="direction: ltr">{{ game.points | persianNumber }}</td>
