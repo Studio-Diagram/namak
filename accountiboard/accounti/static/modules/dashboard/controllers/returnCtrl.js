@@ -10,7 +10,7 @@ angular.module("dashboard")
                 'shop_id': '',
                 'numbers': 0,
                 'buy_price': 0,
-                'return_type': 'CUSTOMER_TO_CAFE',
+                'return_type': '',
                 'description': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username

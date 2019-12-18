@@ -228,7 +228,7 @@ def settle_invoice_sale(request):
             shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
             unit_count = shop_p.numbers
             for purchase_to_shop in shop_to_purchases:
-                if purchase_to_shop.buy_numbers < purchase_to_shop.unit_numbers and unit_count != 0:
+                if purchase_to_shop.buy_numbers + purchase_to_shop.return_numbers < purchase_to_shop.unit_numbers and unit_count != 0:
                     buy_counter = 0
                     for i in range(0, unit_count):
                         buy_counter += 1
