@@ -330,8 +330,12 @@ def get_last_buy_price(request):
 
         shop_product = ShopProduct.objects.get(pk=shop_product_id)
         last_invoice_purchase = PurchaseToShopProduct.objects.filter(shop_product=shop_product).last()
+        if last_invoice_purchase:
+            last_price = last_invoice_purchase.base_unit_price
+        else:
+            last_price = 0
 
-        return JsonResponse({"response_code": 2, 'last_buy_price': last_invoice_purchase.base_unit_price})
+        return JsonResponse({"response_code": 2, 'last_buy_price': last_price})
 
 
 def search_materials(request):

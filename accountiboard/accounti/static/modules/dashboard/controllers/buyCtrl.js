@@ -1,6 +1,9 @@
 angular.module("dashboard")
     .controller("buyCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            $scope.selected_material = {
+                "id": 0
+            };
             $scope.set_today_for_invoice();
             $scope.is_in_edit_mode_supplier = false;
             $scope.error_message = '';
@@ -39,6 +42,11 @@ angular.module("dashboard")
             $scope.get_materials();
             $scope.get_shop_products();
             $scope.getNextFactorNumber('BUY');
+        };
+
+        $scope.add_material_item = function (item) {
+            var material_item = item;
+            $scope.add_item(material_item.id, material_item.name, material_item.price);
         };
 
         $scope.get_most_items_supplier = function (supplier_id) {

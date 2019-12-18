@@ -95,6 +95,13 @@
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div class="accordion">
+                                            <ui-select ng-show="current_menu_nav === 'MAT'" ng-change="add_material_item($select.selected)" ng-model="selected_material.id">
+                                                <ui-select-match placeholder="انتخاب محصول">
+                                                    {{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="material.id as material in materials | filter: $select.search">
+                                                    <div ng-bind="material.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
                                             <li ng-show="current_menu_nav === 'MAT'" ng-repeat="material in materials">
                                                 <a ng-click="add_item(material.id, material.name, material.price)"
                                                    style="cursor: copy;" href=""

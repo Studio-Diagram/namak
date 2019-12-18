@@ -63,12 +63,13 @@
                                         </td>
                                         <td>
                                             <small>تامین کننده</small>
-                                            <select ng-model="new_invoice_return_data.supplier_id"
-                                                    class="form-control">
-                                                <option ng-repeat="supplier in suppliers"
-                                                        value="{{ supplier.id }}"
-                                                        ng-selected="supplier.id == new_invoice_return_data.supplier_id">{{ supplier.name }}</option>
-                                            </select>
+                                            <ui-select ng-model="new_invoice_return_data.supplier_id">
+                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
+                                                    {{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                    <div ng-bind="supplier.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -88,17 +89,18 @@
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ 1 | persianNumber }}</td>
                                         <td>
-                                            <select ng-change="get_last_buy_price(new_invoice_return_data.shop_id)"
-                                                    ng-model="new_invoice_return_data.shop_id"
-                                                    class="form-control">
-                                                <option ng-repeat="shop in shops"
-                                                        value="{{ shop.id }}"
-                                                        ng-selected="shop.id == new_invoice_return_data.shop_id">{{ shop.name }}</option>
-                                            </select>
+                                            <ui-select ng-change="get_last_buy_price(new_invoice_return_data.shop_id)" ng-model="new_invoice_return_data.shop_id">
+                                                <ui-select-match placeholder="انتخاب محصول">
+                                                    {{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="shop.id as shop in shops | filter: $select.search">
+                                                    <div ng-bind="shop.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+
                                         </td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="text"
+                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
                                                    min="0"
-                                                   ng-model="new_invoice_return_data.numbers" format></td>
+                                                   ng-model="new_invoice_return_data.numbers"></td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-model="new_invoice_return_data.description"></td>
                                     </tr>
