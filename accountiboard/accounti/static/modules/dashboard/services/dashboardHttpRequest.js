@@ -923,6 +923,13 @@ angular.module('dashboard')
                     'url': "/api/createCredit/",
                     'data': data
                 });
+            },
+            'getCategoriesBaseOnKind': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/getCategoriesBaseOnKind/",
+                    'data': data
+                });
             }
 
 

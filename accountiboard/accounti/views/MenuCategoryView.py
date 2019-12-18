@@ -42,3 +42,21 @@ def change_list_order(request):
             menu_cat_obj.save()
 
     return JsonResponse({"response_code": 2})
+
+
+def get_categires_base_on_kind(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    kind = rec_data['kind']
+    username = rec_data['username']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+    if not kind:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    menu_cats = MenuCategory.objects.filter(kind=kind).values()
+
+    return JsonResponse({"response_code": 2, "categories": list(menu_cats)})

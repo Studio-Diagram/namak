@@ -1,12 +1,14 @@
 angular.module("dashboard")
     .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            $scope.bar_sale_detail_category_filter = "";
             if ($rootScope.cash_data.cash_id !== 0) {
                 $scope.get_status_data();
             }
             else {
                 $scope.get_today_cash();
             }
+            $scope.get_menu_categories_base_on_kind("BAR");
         };
 
         $scope.get_status_data = function () {
@@ -27,6 +29,27 @@ angular.module("dashboard")
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_menu_categories_base_on_kind = function (kind) {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'kind': kind
+            };
+            dashboardHttpRequest.getCategoriesBaseOnKind(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        if (kind === "BAR")
+                            $scope.bar_categories = data['categories'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
@@ -59,7 +82,8 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id
+                'cash_id': $rootScope.cash_data.cash_id,
+                "menu_category_id": $scope.bar_sale_detail_category_filter
             };
             dashboardHttpRequest.getBarDetailSales(sending_data)
                 .then(function (data) {
@@ -174,6 +198,22 @@ angular.module("dashboard")
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.openErrorModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#errorModal').modal('show');
+                $('#addModal').css('z-index', 1000);
+            })(jQuery);
+        };
+
+        $scope.closeErrorModal = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $('#errorModal').modal('hide');
+                $('#addModal').css('z-index', "");
+            })(jQuery);
         };
 
         initialize();

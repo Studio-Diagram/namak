@@ -11,12 +11,31 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
+                            <table class="invoiceTable">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <small>فیلتر دسته‌بندی</small>
+                                        <select ng-change="get_bar_detail_sales()" ng-model="bar_sale_detail_category_filter"
+                                                class="form-control">
+                                            <option value="">همه</option>
+                                            <option ng-repeat="bar_category in bar_categories"
+                                                    value="{{ bar_category.id }}">{{ bar_category.name }}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
                             <div class="tableWrapper">
                                 <table class="table">
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">نام آیتم</th>
+                                        <th scope="col">دسته‌بندی</th>
                                         <th scope="col">تعداد</th>
                                     </tr>
                                     </thead>
@@ -24,6 +43,7 @@
                                     <tr ng-repeat="item in sale_details">
                                         <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
+                                        <td>{{ item.category }}</td>
                                         <td>{{ item.numbers | persianNumber }}</td>
                                     </tr>
                                     </tbody>
