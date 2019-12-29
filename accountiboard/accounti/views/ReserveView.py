@@ -424,13 +424,24 @@ def get_all_today_not_come_reserves(request):
         reserve_state="call_waiting").order_by("start_time")
 
     reserves_data = []
-    midnight_time = datetime.strptime("00:00", "%H:%M")
+    midnight_time = datetime.strptime("00:00", "%H:%M").time()
+    morning_time = datetime.strptime("06:00", "%H:%M").time()
     end_cafe_time = branch_obj.end_working_time
 
     for reserve in all_today_reserves:
-        if end_cafe_time > reserve.start_time > midnight_time.time():
-            continue
+        reserve_has_to_add = False
+        if midnight_time < reserve.start_time < morning_time:
+            if now.time() < morning_time:
+                if now.time() > reserve.start_time:
+                    reserve_has_to_add = True
+                else:
+                    continue
+            else:
+                continue
         elif now.time() > reserve.start_time:
+            reserve_has_to_add = True
+
+        if reserve_has_to_add:
             table_to_reserve = ReserveToTables.objects.filter(reserve=reserve).first()
             reserves_data.append({
                 'id': reserve.pk,

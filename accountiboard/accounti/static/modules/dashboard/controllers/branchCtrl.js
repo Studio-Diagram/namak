@@ -99,6 +99,8 @@ angular.module("dashboard")
         };
 
         $scope.addBranch = function () {
+            $scope.new_branch_data.start_time = $('#start-time-clock').val();
+            $scope.new_branch_data.end_time = $('#end-time-clock').val();
             if ($scope.is_in_edit_mode) {
                 $scope.is_in_edit_mode = false;
                 dashboardHttpRequest.addBranch($scope.new_branch_data)
