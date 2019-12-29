@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
+    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
             $scope.current_menu_nav = "MENU";
@@ -50,7 +50,6 @@ angular.module("dashboard")
             $scope.tables_have_invoice = [];
 
             $scope.selected_table_data = [];
-            $scope.selected_table = "";
 
             $scope.tables = [];
 
@@ -118,7 +117,10 @@ angular.module("dashboard")
                         $scope.new_invoice_data.used_credit += data['used_credit'];
                         $scope.new_invoice_data.total_credit -= data['used_credit'];
                         $scope.getAllTodayInvoices();
-                        $scope.selectTable($scope.last_table_add);
+                        $scope.current_selected_table_name = $stateParams.table_name;
+                        if ($scope.current_selected_table_name) {
+                            $scope.selectTable($scope.current_selected_table_name);
+                        }
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -161,7 +163,6 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.closePayModal();
                         $scope.getAllTodayInvoices();
-                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                         $scope.closeAddInvoiceModal();
                     }
                     else if (data['response_code'] === 3) {
@@ -246,7 +247,6 @@ angular.module("dashboard")
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
-                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                         $scope.closeForm();
                         // printing after saving
                         var sending_data = {
@@ -290,7 +290,6 @@ angular.module("dashboard")
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
-                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                         $scope.print_data(new_invoice_id, 'CASH');
                         $scope.refreshInvoice(data['new_invoice_id']);
                     }
@@ -383,7 +382,6 @@ angular.module("dashboard")
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.refreshInvoiceInPayModal(data['new_invoice_id']);
                         $scope.getAllTodayInvoices();
-                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -656,7 +654,14 @@ angular.module("dashboard")
         };
 
         $scope.selectTable = function (table_name) {
-            $scope.selected_table = table_name;
+            $state.transitionTo('cash_manager.salon', {table_name: table_name}, {
+                location: true,
+                inherit: true,
+                relative: $state.$current,
+                notify: false
+            });
+            $scope.current_selected_table_name = table_name;
+            $scope.current_selected_table_name = $scope.current_selected_table_name;
             $scope.selected_table_data = [];
             $scope.new_invoice_data.table_id = $filter('filter')($scope.tables, {'table_name': table_name})[0].table_id;
             $scope.new_invoice_data.table_name = table_name;
@@ -686,8 +691,11 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.all_today_invoices = data['all_today_invoices'];
-                        $scope.selectTable($scope.last_table_add);
                         $scope.check_table_has_invoice();
+                        $scope.current_selected_table_name = $stateParams.table_name;
+                        if ($scope.current_selected_table_name) {
+                            $scope.selectTable($scope.current_selected_table_name);
+                        }
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -809,7 +817,6 @@ angular.module("dashboard")
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
-                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                         $scope.closeForm();
                     }
                     else if (data['response_code'] === 3) {
@@ -941,11 +948,11 @@ angular.module("dashboard")
                         }
                         else if (data['response_code'] === 3) {
                             $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                            $scope.openErrorModal();
                         }
                     }, function (error) {
                         $scope.error_message = 500;
-                    $scope.openErrorModal();
+                        $scope.openErrorModal();
                     });
             }
         };
@@ -1026,7 +1033,6 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
                         };
-                        $scope.last_table_add = $scope.new_invoice_data.table_name;
                         $scope.openAddInvoiceModal();
                     }
                     else if (data['response_code'] === 3) {
@@ -1132,7 +1138,6 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
                         };
-                        $scope.last_table_add = data['invoice']['table_name'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -1192,7 +1197,6 @@ angular.module("dashboard")
                             $('#payModal').modal('show');
                             $('#addInvoiceModal').css('z-index', 1000);
                         })(jQuery);
-                        $scope.last_table_add = data['invoice']['table_name'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -1205,16 +1209,16 @@ angular.module("dashboard")
         };
 
         $scope.set_class_name = function (table_name) {
-            if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
+            if ($scope.current_selected_table_name === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
                 return 'mainButton greenButton fullWidthButton';
             }
-            else if ($scope.selected_table === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
+            else if ($scope.current_selected_table_name === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
                 return 'mainButton blackButton fullWidthButton';
             }
-            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
+            else if ($scope.current_selected_table_name !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
                 return 'mainButton whiteButton fullWidthButton';
             }
-            else if ($scope.selected_table !== table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
+            else if ($scope.current_selected_table_name !== table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
                 return 'mainButton grayButton fullWidthButton';
             }
         };
@@ -1279,7 +1283,7 @@ angular.module("dashboard")
             }
 
             $scope.new_invoice_data.table_id = last_table_id;
-            $scope.new_invoice_data.table_name = $scope.last_table_add;
+            $scope.new_invoice_data.table_name = $scope.current_selected_table_name;
         };
 
         $scope.ready_for_settle = function (invoice_id) {

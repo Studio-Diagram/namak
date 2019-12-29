@@ -80,7 +80,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
     var salon = {
         name: 'cash_manager.salon',
-        url: '/salon',
+        url: '/salon/:table_name',
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
     var invoices = {

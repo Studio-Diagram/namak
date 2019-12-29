@@ -489,9 +489,9 @@
                         ng-bind="table_factor_counts('E2')"></span>E2</a>
             </main>
             <main class="col-sm-10 ">
-                <div ng-show="selected_table" class="tableWrapper">
+                <div ng-show="current_selected_table_name" class="tableWrapper">
                     <table class="table">
-                        <h3 class="tableName">{{ selected_table }}</h3>
+                        <h3 class="tableName">{{ current_selected_table_name }}</h3>
                         <tbody>
                         <tr>
                             <th>نام مهمان</th>
