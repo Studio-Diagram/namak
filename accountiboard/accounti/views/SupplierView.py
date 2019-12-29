@@ -730,7 +730,7 @@ def get_detail_amani_sales_from_supplier(request):
         supplier = Supplier.objects.get(pk=supplier_id)
 
         if from_time == "" or to_time == "":
-            all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier)
+            all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier).order_by('-created_date')
             all_amani_sum = 0
 
             invoices_data = []
@@ -779,7 +779,8 @@ def get_detail_amani_sales_from_supplier(request):
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
                                        int(to_time_split[0]) + 1).togregorian()
             all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier,
-                                                                     created_date__range=(from_time_g, to_time_g))
+                                                                     created_date__range=(
+                                                                     from_time_g, to_time_g)).order_by('-created_date')
             all_amani_sum = 0
             invoices_data = []
             amani_sale_base_on_product = {}
