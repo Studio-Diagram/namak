@@ -161,7 +161,8 @@
                                                     <th class="col-sm-6"
                                                         ng-repeat="shop in shop_products"
                                                         ng-click="add_item_shop(shop.id, shop.name, shop.price)">
-                                                        {{ shop.name }}<span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger mr-1' : 'badge badge-pill badge-dark mr-1'">{{ shop.real_numbers }}</span>
+                                                        {{ shop.name }}<span
+                                                            ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger mr-1' : 'badge badge-pill badge-dark mr-1'">{{ shop.real_numbers }}</span>
                                                     </th>
                                                     <th class="col-sm-6"
                                                         ng-show="selected_category.items.length % 2 === 1"></th>
@@ -442,52 +443,16 @@
                     class="fas fa-file-invoice-dollar"></i> فاکتور جدید</a>
         </div>
         <div class="row saloonPageContent">
-            <main class="col-sm-1 tableNavigation">
-                <a href="" ng-click="selectTable('A1')" ng-class="set_class_name('A1')"><span
-                        ng-hide="table_factor_counts('A1') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('A1')"></span>A1</a>
-                <a href="" ng-click="selectTable('A2')" ng-class="set_class_name('A2')"><span
-                        ng-hide="table_factor_counts('A2') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('A2')"></span>A2</a>
-                <a href="" ng-click="selectTable('A3')" ng-class="set_class_name('A3')"><span
-                        ng-hide="table_factor_counts('A3') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('A3')"></span>A3</a>
-                <a href="" ng-click="selectTable('A4')" ng-class="set_class_name('A4')"><span
-                        ng-hide="table_factor_counts('A4') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('A4')"></span>A4</a>
-                <a href="" ng-click="selectTable('A5')" ng-class="set_class_name('A5')"><span
-                        ng-hide="table_factor_counts('A5') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('A5')"></span>A5</a>
+            <main class="col-sm-2 tableNavigation">
+                <div class="row">
+                    <div ng-repeat="table_category in categorized_tables_data" class="col-md-6">
+                        <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)" ng-class="set_class_name(table.table_name)"><span
+                                ng-hide="table_factor_counts(table.table_name) === 0" class="badge badge-pill badge-warning"
+                                ng-bind="table_factor_counts(table.table_name)"></span>{{ table.table_name }}</a>
+                    </div>
+                </div>
             </main>
-            <main class="col-sm-1 tableNavigation">
-                <a href="" ng-click="selectTable('B1')" ng-class="set_class_name('B1')"><span
-                        ng-hide="table_factor_counts('B1') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('B1')"></span>B1</a>
-                <a href="" ng-click="selectTable('B2')" ng-class="set_class_name('B2')"><span
-                        ng-hide="table_factor_counts('B2') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('B2')"></span>B2</a>
-                <a href="" ng-click="selectTable('B3')" ng-class="set_class_name('B3')"><span
-                        ng-hide="table_factor_counts('B3') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('B3')"></span>B3</a>
-                <a href="" ng-click="selectTable('C1')" ng-class="set_class_name('C1')"><span
-                        ng-hide="table_factor_counts('C1') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('C1')"></span>C1</a>
-                <a href="" ng-click="selectTable('C2')" ng-class="set_class_name('C2')"><span
-                        ng-hide="table_factor_counts('C2') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('C2')"></span>C2</a>
-                <a href="" ng-click="selectTable('C3')" ng-class="set_class_name('C3')"><span
-                        ng-hide="table_factor_counts('C3') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('C3')"></span>C3</a>
-                <a href="" ng-click="selectTable('بار')" ng-class="set_class_name('بار')">بار<span
-                        ng-hide="table_factor_counts('بار') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('بار')"></span></a>
-                <a href="" ng-click="selectTable('E1')" ng-class="set_class_name('E1')"><span
-                        ng-hide="table_factor_counts('E1') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('E1')"></span>E1</a>
-                <a href="" ng-click="selectTable('E2')" ng-class="set_class_name('E2')"><span
-                        ng-hide="table_factor_counts('E2') === 0" class="badge badge-pill badge-warning"
-                        ng-bind="table_factor_counts('E2')"></span>E2</a>
-            </main>
+
             <main class="col-sm-10 ">
                 <div ng-show="current_selected_table_name" class="tableWrapper">
                     <table class="table">

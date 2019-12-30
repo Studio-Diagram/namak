@@ -1611,3 +1611,8 @@ tags-input .tags .tag-item {
 .form-check-input {
     margin-right: -1.25rem;
 }
+
+.table-category-separation {
+    display: inline-block;
+    margin-left: 1.5em;
+}

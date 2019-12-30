@@ -56,7 +56,7 @@ urlpatterns = [
     path('api/searchBranch/', BranchView.search_branch),
     path('api/getBranch/', BranchView.get_branch),
     path('api/getMenuItemsWithCategories/', EmployeeView.get_menu_items_with_categories),
-    path('api/getTables/', EmployeeView.get_tables),
+    path('api/getTables/', TableView.get_tables),
     path('api/addTable/', TableView.add_table),
     path('api/searchTable/', TableView.search_table),
     path('api/getTable/', TableView.get_table),

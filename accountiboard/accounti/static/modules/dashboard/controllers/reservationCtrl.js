@@ -42,7 +42,6 @@ angular.module("dashboard")
             };
             $scope.config_clock();
             $scope.get_today_for_reserve();
-            $scope.get_tables_data($rootScope.user_data);
             $scope.get_tables_data_for_main_page($rootScope.user_data);
             $scope.get_working_time();
 
@@ -382,7 +381,8 @@ angular.module("dashboard")
             dashboardHttpRequest.getTables(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.cafe_tables = data['tables'];
+                        $scope.tables = data['tables'];
+                        $scope.categorize_tables($scope.tables);
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -392,6 +392,29 @@ angular.module("dashboard")
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.categorize_tables = function (tables_data) {
+            $scope.categorized_tables_data = [
+                {
+                    "table_category_name": "A",
+                    "tables": []
+                }
+            ];
+            for (var i = 0; i < tables_data.length; i++) {
+                var category_find = $filter('filter')($scope.categorized_tables_data, {'table_category_name': tables_data[i].table_category_name});
+                if (category_find.length === 0) {
+                    $scope.categorized_tables_data.push(
+                        {
+                            "table_category_name": tables_data[i].table_category_name,
+                            "tables": [tables_data[i]]
+                        }
+                    );
+                }
+                else {
+                    category_find[0].tables.push(tables_data[i]);
+                }
+            }
         };
 
         $scope.get_tables_data = function (data) {

@@ -668,7 +668,6 @@ angular.module("dashboard")
                 notify: false
             });
             $scope.current_selected_table_name = table_name;
-            $scope.current_selected_table_name = $scope.current_selected_table_name;
             $scope.selected_table_data = [];
             $scope.new_invoice_data.table_id = $filter('filter')($scope.tables, {'table_name': table_name})[0].table_id;
             $scope.new_invoice_data.table_name = table_name;
@@ -859,6 +858,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.tables = data['tables'];
+                        $scope.categorize_tables($scope.tables);
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -868,6 +868,29 @@ angular.module("dashboard")
                     $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.categorize_tables = function (tables_data) {
+            $scope.categorized_tables_data = [
+                {
+                    "table_category_name": "A",
+                    "tables": []
+                }
+            ];
+            for (var i = 0; i < tables_data.length; i++) {
+                var category_find = $filter('filter')($scope.categorized_tables_data, {'table_category_name': tables_data[i].table_category_name});
+                if (category_find.length === 0) {
+                    $scope.categorized_tables_data.push(
+                        {
+                            "table_category_name": tables_data[i].table_category_name,
+                            "tables": [tables_data[i]]
+                        }
+                    );
+                }
+                else {
+                    category_find[0].tables.push(tables_data[i]);
+                }
+            }
         };
 
         $scope.get_member_data = function (card_number) {

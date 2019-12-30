@@ -113,6 +113,26 @@ def add_table_category(request):
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
+def get_tables(request):
+    if request.method == "POST":
+        rec_data = json.loads(request.read().decode('utf-8'))
+        username = rec_data['username']
+        if not request.session.get('is_logged_in', None) == username:
+            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+        tables = Table.objects.all().order_by('id')
+        tables_data = []
+        for table in tables:
+            tables_data.append({
+                'table_id': table.pk,
+                'table_name': table.name,
+                'table_category_name': table.category.name,
+                'is_checked': 0
+            })
+        return JsonResponse({"response_code": 2, 'tables': tables_data})
+    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
 def get_table_category(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
