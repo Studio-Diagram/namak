@@ -107,12 +107,14 @@ angular.module("dashboard")
         };
 
         $scope.perform_credit = function () {
+            $scope.disable_print_after_save_all_buttons = true;
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'invoice_id': $scope.new_invoice_data.invoice_sales_id
             };
             dashboardHttpRequest.performCredit(sending_data)
                 .then(function (data) {
+                    $scope.disable_print_after_save_all_buttons = false;
                     if (data['response_code'] === 2) {
                         $scope.new_invoice_data.used_credit += data['used_credit'];
                         $scope.new_invoice_data.total_credit -= data['used_credit'];
@@ -127,6 +129,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $scope.disable_print_after_save_all_buttons = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -375,6 +378,7 @@ angular.module("dashboard")
         };
 
         $scope.openPayModal = function () {
+            $scope.disable_print_after_save_all_buttons = true;
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -382,14 +386,17 @@ angular.module("dashboard")
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.refreshInvoiceInPayModal(data['new_invoice_id']);
                         $scope.getAllTodayInvoices();
+                        $scope.disable_print_after_save_all_buttons = false;
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
+                        $scope.disable_print_after_save_all_buttons = false;
                     }
                 }, function (error) {
                     $scope.error_message = 500;
                     $scope.openErrorModal();
+                    $scope.disable_print_after_save_all_buttons = false;
                 });
         };
 
@@ -744,7 +751,6 @@ angular.module("dashboard")
                             'numbers': 0,
                             'start_time': ''
                         };
-                        // $scope.getAllInvoiceGames($scope.new_invoice_data.invoice_sales_id);
                         $scope.refreshInvoice($scope.new_invoice_data.invoice_sales_id);
                         $scope.getAllTodayInvoices();
                     }
@@ -811,6 +817,7 @@ angular.module("dashboard")
         };
 
         $scope.saveInvoice = function () {
+            $scope.disable_print_after_save_all_buttons = true;
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -823,9 +830,11 @@ angular.module("dashboard")
                         $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
                     }
+                    $scope.disable_print_after_save_all_buttons = false;
                 }, function (error) {
                     $scope.error_message = error;
                     $scope.openErrorModal();
+                    $scope.disable_print_after_save_all_buttons = false;
                 });
         };
 
