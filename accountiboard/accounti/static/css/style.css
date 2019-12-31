@@ -1616,3 +1616,7 @@ tags-input .tags .tag-item {
     display: inline-block;
     margin-left: 1.5em;
 }
+
+.tooltip {
+    font-family: IRANSans;
+}

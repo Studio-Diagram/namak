@@ -249,3 +249,17 @@ myApp.directive('selectOnClick', ['$window', function ($window) {
         }
     };
 }]);
+
+myApp.directive('tooltip', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('mouseenter', function () {
+                jQuery.noConflict();
+                (function ($) {
+                    $(element[0]).tooltip('show');
+                })(jQuery);
+            });
+        }
+    };
+});
