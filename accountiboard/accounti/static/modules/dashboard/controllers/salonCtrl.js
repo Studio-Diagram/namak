@@ -67,6 +67,7 @@ angular.module("dashboard")
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
             $scope.get_tables_data($rootScope.user_data);
             $scope.get_shop_products();
+            $scope.get_menu_item_data($rootScope.user_data);
             $window.onkeyup = function (event) {
                 if (event.keyCode === 27) {
                     $scope.closeAddInvoiceModal();
@@ -529,6 +530,7 @@ angular.module("dashboard")
             dashboardHttpRequest.getShopProducts(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.shop_products_original = data['shop_products'];
                         $scope.shop_products = data['shop_products'];
                     }
                     else if (data['response_code'] === 3) {
@@ -669,11 +671,14 @@ angular.module("dashboard")
             });
             $scope.current_selected_table_name = table_name;
             $scope.selected_table_data = [];
-            $scope.new_invoice_data.table_id = $filter('filter')($scope.tables, {'table_name': table_name})[0].table_id;
-            $scope.new_invoice_data.table_name = table_name;
-            for (var i = 0; i < $scope.all_today_invoices.length; i++) {
-                if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
-                    $scope.selected_table_data.push($scope.all_today_invoices[i]);
+            var found_table = $filter('filter')($scope.tables, {'table_name': table_name});
+            if (found_table.length) {
+                $scope.new_invoice_data.table_id = found_table[0].table_id;
+                $scope.new_invoice_data.table_name = table_name;
+                for (var i = 0; i < $scope.all_today_invoices.length; i++) {
+                    if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
+                        $scope.selected_table_data.push($scope.all_today_invoices[i]);
+                    }
                 }
             }
         };
@@ -935,8 +940,8 @@ angular.module("dashboard")
             dashboardHttpRequest.getMenuItems(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.menu_items_original = data['menu_items'];
                         $scope.menu_items = data['menu_items'];
-                        console.log(data);
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -949,44 +954,10 @@ angular.module("dashboard")
         };
 
         $scope.search_shop_products = function () {
-            if ($scope.search_data_shop_products.search_word === '') {
-                $scope.get_shop_products();
-            }
-            else {
-                dashboardHttpRequest.searchShopProducts($scope.search_data_shop_products)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.shop_products = data['shop_products'];
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = 500;
-                        $scope.openErrorModal();
-                    });
-            }
+            $scope.shop_products = $filter('filter')($scope.shop_products_original, {'name': $scope.search_data_shop_products.search_word});
         };
         $scope.searchMenuItem = function () {
-            if ($scope.search_data_menu_item.search_word === '') {
-                $scope.get_menu_item_data($rootScope.user_data);
-            }
-            else {
-                dashboardHttpRequest.searchMenuItem($scope.search_data_menu_item)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.menu_items = data['menu_items'];
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = 500;
-                        $scope.openErrorModal();
-                    });
-            }
+            $scope.menu_items = $filter('filter')($scope.menu_items_original, {'name': $scope.search_data_menu_item.search_word});
         };
 
         $scope.openAddInvoiceModal = function () {

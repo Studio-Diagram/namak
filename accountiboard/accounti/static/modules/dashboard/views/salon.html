@@ -120,10 +120,10 @@
                                        class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
-                                        <div ng-hide="search_data_menu_item.search_word" class="accordion">
+                                        <div class="accordion">
 
                                             <table class="table menuNavTable"
-                                                   ng-show="current_menu_nav === 'MENU'">
+                                                   ng-show="current_menu_nav === 'MENU' && !search_data_menu_item.search_word">
                                                 <tbody>
                                                 <tr class="row">
                                                     <th ng-click="showCollapse($index)"
@@ -154,6 +154,20 @@
                                             </table>
 
                                             <table class="table menuNavTable"
+                                                   ng-show="current_menu_nav === 'MENU' && search_data_menu_item.search_word">
+                                                <tbody>
+                                                <tr style="border-top: none !important;" class="row"></tr>
+                                                <tr class="row">
+                                                    <th class="col-sm-6"
+                                                        ng-repeat="item in menu_items"
+                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
+                                                    <th class="col-sm-6"
+                                                        ng-show="menu_items.length % 2 === 1"></th>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table menuNavTable"
                                                    ng-show="current_menu_nav === 'SHOP'">
                                                 <tbody>
                                                 <tr style="border-top: none !important;" class="row"></tr>
@@ -169,21 +183,6 @@
                                                 </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div ng-show="search_data_menu_item.search_word" class="accordion">
-                                            <li ng-show="current_menu_nav === 'MENU'"
-                                                ng-repeat="menu_item in menu_items">
-                                                <a style="cursor: copy;" href=""
-                                                   ng-click="add_item(menu_item.id, menu_item.name, menu_item.price)"
-                                                   class="nav-link">{{ menu_item.name }}</a>
-                                            </li>
-                                            <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
-                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price)"
-                                                   style="cursor: copy;" href=""
-                                                   class="nav-link">{{ shop.name }}
-                                                    <span ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger' : 'badge badge-pill badge-dark'">{{ shop.real_numbers }}</span>
-                                                </a>
-                                            </li>
                                         </div>
                                     </ul>
                                 </nav>
