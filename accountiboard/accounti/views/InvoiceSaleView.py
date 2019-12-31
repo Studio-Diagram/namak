@@ -135,7 +135,7 @@ def get_dashboard_quick_access_invoices(request):
                                                                       game__end_time="00:00:00").first()
             playing_game_invoices_data.append({
                 "customer_name": invoice.member.last_name,
-                "numbers": invoice.guest_numbers,
+                "numbers": invoice_current_game.game.numbers,
                 "table_name": invoice.table.name,
                 "game_id": invoice_current_game.game.pk
             })

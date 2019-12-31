@@ -49,6 +49,11 @@ angular.module("dashboard")
             $scope.add_item(material_item.id, material_item.name, material_item.price);
         };
 
+        $scope.add_item_shop_from_search_dropdown = function (item) {
+            var shop_p = item;
+            $scope.add_item_shop(shop_p.id, shop_p.name, shop_p.price, shop_p.buy_price);
+        };
+
         $scope.get_most_items_supplier = function (supplier_id) {
             var sending_data = {
                 'supplier_id': supplier_id,
@@ -237,7 +242,7 @@ angular.module("dashboard")
             $scope.new_invoice_purchase_data.total_price = Math.round(new_total_price);
         };
 
-        $scope.display_float_to_int = function(price){
+        $scope.display_float_to_int = function (price) {
             return Math.round(price);
         };
 
@@ -428,30 +433,9 @@ angular.module("dashboard")
             $scope.resetFrom();
         };
 
-        $scope.search_material = function () {
-            if ($scope.search_data_material.search_word === '') {
-                $scope.get_materials();
-                $scope.can_add_material = false;
-            }
-            else {
-                dashboardHttpRequest.searchMaterials($scope.search_data_material)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.materials = data['materials'];
-                            $scope.can_add_material = true;
-                            if ($scope.materials.length === 1 && $scope.materials[0].name === $scope.search_data_material.search_word) {
-                                $scope.can_add_material = false;
-                            }
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
+        $scope.search_material = function (search_word, items) {
+            $scope.can_add_material = !items.length;
+            $scope.search_data_material.search_word = search_word;
         };
 
 
@@ -467,7 +451,7 @@ angular.module("dashboard")
                         $scope.add_item(new_material.id, new_material.name, new_material.price);
                         $scope.search_data_material.search_word = "";
                         $scope.can_add_material = false;
-                        $scope.search_material();
+                        $scope.get_materials();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -479,30 +463,9 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.search_shop_products = function () {
-            if ($scope.search_data_shop_products.search_word === '') {
-                $scope.get_shop_products();
-                $scope.can_add_shop_product = false;
-            }
-            else {
-                dashboardHttpRequest.searchShopProducts($scope.search_data_shop_products)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.shop_products = data['shop_products'];
-                            $scope.can_add_shop_product = true;
-                            if ($scope.shop_products.length === 1 && $scope.shop_products[0].name === $scope.search_data_shop_products.search_word) {
-                                $scope.can_add_shop_product = false;
-                            }
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
+        $scope.search_shop_products = function (search_word, items) {
+            $scope.can_add_shop_product = !items.length;
+            $scope.search_data_shop_products.search_word = search_word;
         };
 
 
@@ -518,7 +481,7 @@ angular.module("dashboard")
                         $scope.add_item_shop(new_shop_p.id, new_shop_p.name, new_shop_p.sale_price, new_shop_p.buy_price);
                         $scope.search_data_shop_products.search_word = "";
                         $scope.can_add_shop_product = false;
-                        $scope.search_shop_products();
+                        $scope.get_shop_products();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];

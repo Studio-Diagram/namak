@@ -75,12 +75,6 @@
                     <div class="container-fluid">
                         <div class="row">
                             <aside class="col-sm-2">
-                                <input ng-show="current_menu_nav === 'MAT'" ng-keyup="search_material()"
-                                       ng-model="search_data_material.search_word"
-                                       class="form-control listFilter" type="text" placeholder="فیلتر کن">
-                                <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
-                                       ng-model="search_data_shop_products.search_word"
-                                       class="form-control listFilter" type="text" placeholder="فیلتر کن">
                                 <nav class=" nav nav-justified">
                                     <a ng-click="changeMenuNav('MAT')" href=""
                                        ng-class="current_menu_nav === 'MAT' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
@@ -88,26 +82,18 @@
                                     <a ng-click="changeMenuNav('SHOP')" href=""
                                        ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
                                             class="fas fa-store"></i></a>
-                                    <a ng-click="changeMenuNav('STAR')" href=""
-                                       ng-class="current_menu_nav === 'STAR' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
-                                            class="fas fa-star"></i></a>
                                 </nav>
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div class="accordion">
-                                            <ui-select ng-show="current_menu_nav === 'MAT'" ng-change="add_material_item($select.selected)" ng-model="selected_material.id">
+                                            <ui-select ng-keyup="search_material($select.search, $select.items)" ng-show="current_menu_nav === 'MAT'" ng-change="add_material_item($select.selected)" ng-model="selected_material.id">
                                                 <ui-select-match placeholder="انتخاب محصول">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices repeat="material.id as material in materials | filter: $select.search">
                                                     <div ng-bind="material.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
-                                            <li ng-show="current_menu_nav === 'MAT'" ng-repeat="material in materials">
-                                                <a ng-click="add_item(material.id, material.name, material.price)"
-                                                   style="cursor: copy;" href=""
-                                                   class="nav-link">{{ material.name }}</a>
-                                            </li>
-                                            <li>
+                                            <li class="mt-3">
                                                 <a ng-click="add_material_to_data_base_after_search(search_data_material.search_word)"
                                                    href="" class="nav-link"
                                                    ng-show="can_add_material">{{ search_data_material.search_word }}<i
@@ -115,12 +101,15 @@
                                                         class="fas fa-plus-square"></i></a>
                                             </li>
 
-                                            <li ng-show="current_menu_nav === 'SHOP'" ng-repeat="shop in shop_products">
-                                                <a ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.buy_price)"
-                                                   style="cursor: copy;" href=""
-                                                   class="nav-link">{{ shop.name }}</a>
-                                            </li>
-                                            <li>
+
+                                            <ui-select ng-keyup="search_shop_products($select.search, $select.items)"  ng-show="current_menu_nav === 'SHOP'" ng-change="add_item_shop_from_search_dropdown($select.selected)" ng-model="selected_material.id">
+                                                <ui-select-match placeholder="انتخاب محصول">
+                                                    {{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices repeat="shop.id as shop in shop_products | filter: $select.search">
+                                                    <div ng-bind="shop.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <li class="mt-3">
                                                 <a ng-click="add_shop_product_to_data_base_after_search(search_data_shop_products.search_word)"
                                                    href="" class="nav-link"
                                                    ng-show="can_add_shop_product">{{ search_data_shop_products.search_word }}<i
@@ -128,12 +117,14 @@
                                                         class="fas fa-plus-square"></i></a>
                                             </li>
 
-                                            <li ng-show="current_menu_nav === 'STAR'" ng-repeat="material in favourite_materials">
+                                            <li class="mt-3">محصولات اخیر تامین‌کننده</li>
+
+                                            <li ng-repeat="material in favourite_materials">
                                                 <a ng-click="add_item(material.id, material.name, material.price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ material.name }}</a>
                                             </li>
-                                            <li ng-show="current_menu_nav === 'STAR'" ng-repeat="shop in favourite_shops">
+                                            <li ng-repeat="shop in favourite_shops">
                                                 <a ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.buy_price)"
                                                    style="cursor: copy;" href=""
                                                    class="nav-link">{{ shop.name }}</a>
