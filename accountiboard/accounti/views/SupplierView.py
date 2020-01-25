@@ -20,7 +20,7 @@ def return_remainder_of_supplier(supplier_id, to_time):
     else:
         to_time_split = to_time.split('/')
         remainder_to_date = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                           int(to_time_split[0]) + 1).togregorian()
+                                           int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
     if not supplier_id:
         return False
     supplier_obj = Supplier.objects.filter(id=supplier_id).first()
@@ -227,7 +227,7 @@ def get_sum_invoice_purchases_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_purchases = InvoicePurchase.objects.filter(supplier=supplier,
                                                                    created_time__range=(from_time_g, to_time_g))
             all_invoice_purchases_sum = all_invoice_purchases.aggregate(Sum('total_price'))
@@ -277,7 +277,7 @@ def get_sum_invoice_settlements_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_settlements = InvoiceSettlement.objects.filter(supplier=supplier,
                                                                        created_time__range=(from_time_g, to_time_g))
             all_invoice_settlements_sum = all_invoice_settlements.aggregate(Sum('payment_amount'))
@@ -327,7 +327,7 @@ def get_sum_invoice_expenses_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_expenses = InvoiceExpense.objects.filter(supplier=supplier,
                                                                  created_time__range=(from_time_g, to_time_g))
             all_invoice_expenses_sum = all_invoice_expenses.aggregate(Sum('price'))
@@ -377,7 +377,7 @@ def get_sum_invoice_return_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_returns = InvoiceReturn.objects.filter(supplier=supplier,
                                                                created_time__range=(from_time_g, to_time_g),
                                                                return_type="CAFE_TO_SUPPLIER")
@@ -422,7 +422,7 @@ def get_sum_amani_sales_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier,
                                                                      created_date__range=(from_time_g, to_time_g))
             all_amani_sum = 0
@@ -480,7 +480,7 @@ def get_detail_invoice_purchases_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_purchases = InvoicePurchase.objects.filter(supplier=supplier,
                                                                    created_time__range=(from_time_g, to_time_g))
             all_invoice_purchases_sum = all_invoice_purchases.aggregate(Sum('total_price'))
@@ -549,7 +549,7 @@ def get_detail_invoice_expenses_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_expenses = InvoiceExpense.objects.filter(supplier=supplier,
                                                                  created_time__range=(from_time_g, to_time_g))
             all_invoice_expenses_sum = all_invoice_expenses.aggregate(Sum('price'))
@@ -618,7 +618,7 @@ def get_detail_invoice_settlements_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_settlements = InvoiceSettlement.objects.filter(supplier=supplier,
                                                                        created_time__range=(from_time_g, to_time_g))
             all_invoice_settlements_sum = all_invoice_settlements.aggregate(Sum('payment_amount'))
@@ -687,7 +687,7 @@ def get_detail_invoice_returns_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_invoice_returns = InvoiceReturn.objects.filter(supplier=supplier,
                                                                created_time__range=(from_time_g, to_time_g),
                                                                return_type="CAFE_TO_SUPPLIER")
@@ -777,7 +777,7 @@ def get_detail_amani_sales_from_supplier(request):
                                          int(from_time_split[0])).togregorian()
             to_time_split = to_time.split('/')
             to_time_g = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                       int(to_time_split[0]) + 1).togregorian()
+                                       int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
             all_amani_sales_from_supplier = AmaniSale.objects.filter(supplier=supplier,
                                                                      created_date__range=(
                                                                      from_time_g, to_time_g)).order_by('-created_date')
