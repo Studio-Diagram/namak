@@ -490,6 +490,35 @@ class Lottery(models.Model):
     user = models.ForeignKey(to=Member, on_delete=models.CASCADE)
 
 
+class GiftCodeSupplier(models.Model):
+    name = models.CharField(max_length=150, blank=False, null=False)
+    phone = models.CharField(max_length=30, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class GiftCode(models.Model):
+    CATEGORIES = (
+        ("BAR", "آیتم‌های بار"),
+        ("KITCHEN", "آیتم‌های آشپزخانه"),
+        ("OTHER", "آیتم‌های سایر"),
+        ("SHOP", "محصولات فروشگاهی"),
+        ("GAME", "بازی"),
+    )
+    credit_categories = MultiSelectField(max_length=50, choices=CATEGORIES)
+    name = models.CharField(max_length=30, blank=False, null=False)
+    created_time = models.DateTimeField(auto_now_add=True)
+    expire_time = models.DateTimeField(null=False, blank=False)
+    price = models.IntegerField(null=False, blank=False)
+    number_will_use = models.IntegerField(default=1)
+    number_used = models.IntegerField(default=0)
+    gift_code_supplier = models.ForeignKey(to=GiftCodeSupplier, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Name: %s, Price: %d" % (self.name, self.price)
+
+
 class Credit(models.Model):
     CATEGORIES = (
         ("BAR", "آیتم‌های بار"),
@@ -504,6 +533,7 @@ class Credit(models.Model):
     total_price = models.IntegerField(null=False, blank=False)
     used_price = models.IntegerField(default=0)
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE)
+    gift_code = models.ForeignKey(to=GiftCode, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class CreditToInvoiceSale(models.Model):

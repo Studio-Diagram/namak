@@ -2,7 +2,7 @@ from django.http import JsonResponse
 import json
 from datetime import datetime
 from accounti.models import *
-import jdatetime
+import jdatetime, random
 
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
@@ -192,3 +192,77 @@ def game_credit_handler(invoice_object):
         sum_all_items += game.game.points * GAME_PER_POINT_PRICE
 
     return sum_all_items
+
+
+def create_gift_code_manual(request):
+    if request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "POST REQUEST!"})
+    s = "abcdefghijklmnopqrstuvwxyz0123456789"
+    gift_len = 5
+    code_supplier = GiftCodeSupplier.objects.get(name="پاندا")
+    expire_date = jdatetime.datetime(1399, 6, 31, 23, 59, 59).togregorian()
+    data = []
+
+    for i in range(4):
+        print(i)
+        if i == 0:
+            category = ["KITCHEN"]
+            expensive_price = 500000
+            mid_price = 350000
+            cheap_price = 200000
+        elif i == 1:
+            category = ["BAR"]
+            expensive_price = 400000
+            mid_price = 300000
+            cheap_price = 150000
+        elif i == 2:
+            category = ["GAME"]
+            expensive_price = 250000
+            mid_price = 150000
+            cheap_price = 80000
+        elif i == 3:
+            category = ["SHOP"]
+            expensive_price = 600000
+            mid_price = 400000
+            cheap_price = 200000
+        else:
+            break
+
+        for hard in range(2):
+            code = "".join(random.sample(s, gift_len))
+            new_code = GiftCode(name=code, expire_time=expire_date, gift_code_supplier=code_supplier,
+                                credit_categories=category, price=expensive_price)
+            new_code.save()
+            data.append({
+                "code_name": code,
+                "expire_date": expire_date,
+                "kind": category,
+                "price": expensive_price,
+                "supplier": "PANDA"
+            })
+        for mid in range(3):
+            code = "".join(random.sample(s, gift_len))
+            new_code = GiftCode(name=code, expire_time=expire_date, gift_code_supplier=code_supplier,
+                                credit_categories=category, price=mid_price)
+            new_code.save()
+            data.append({
+                "code_name": code,
+                "expire_date": expire_date,
+                "kind": category,
+                "price": mid_price,
+                "supplier": "PANDA"
+            })
+        for easy in range(5):
+            code = "".join(random.sample(s, gift_len))
+            new_code = GiftCode(name=code, expire_time=expire_date, gift_code_supplier=code_supplier,
+                                credit_categories=category, price=cheap_price)
+            new_code.save()
+            data.append({
+                "code_name": code,
+                "expire_date": expire_date,
+                "kind": category,
+                "price": cheap_price,
+                "supplier": "PANDA"
+            })
+
+    return JsonResponse({"response_code": 2, "created": data})

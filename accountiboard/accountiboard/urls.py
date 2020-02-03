@@ -154,6 +154,7 @@ urlpatterns = [
     path('api/memberCredits/', CreditView.get_all_credits_data_from_user),
     path('api/createCredit/', CreditView.create_credit),
     path('api/getYourInvoices/', InvoiceSaleView.get_all_invoices_with_date),
+    path('api/createManualGiftCode/', CreditView.create_gift_code_manual),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
     path('admin/', admin.site.urls),
