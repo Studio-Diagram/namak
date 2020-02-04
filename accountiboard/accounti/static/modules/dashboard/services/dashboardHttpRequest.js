@@ -930,6 +930,13 @@ angular.module('dashboard')
                     'url': "/api/getCategoriesBaseOnKind/",
                     'data': data
                 });
+            },
+            'checkGiftCode': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/checkGiftCode/",
+                    'data': data
+                });
             }
 
 

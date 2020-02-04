@@ -1,6 +1,11 @@
 angular.module("dashboard")
     .controller("memberCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            $scope.gift_code_data = {
+                "gift_code": "",
+                "member_id": "",
+                "username": $rootScope.user_data.username
+            };
             jQuery.noConflict();
             (function ($) {
                 $(document).ready(function () {
@@ -50,28 +55,29 @@ angular.module("dashboard")
             (function ($) {
                 var choices = ["00", "15", "30", "45"];
                 $('#expire_credit_time').clockpicker({
-                donetext: 'تایید',
-                autoclose: true,
-                afterShow: function () {
-                    $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                        return !($.inArray($(element).text(), choices) != -1)
-                    }).remove();
-                },
-                afterDone: function () {
-                    var seleceted_min = $('#expire_credit_time').val().split(":")[1];
-                    if (!choices.includes(seleceted_min)) {
-                        $('#expire_credit_time').val("");
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#expire_credit_time').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#expire_credit_time').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.start_time = $('#expire_credit_time').val();
+                        }
                     }
-                    else {
-                        $scope.new_reserve_data.start_time = $('#expire_credit_time').val();
-                    }
-                }
-            });
+                });
             })(jQuery);
         };
 
         $scope.show_member_profile_data = function (member_id) {
             $scope.new_credit_data.member_id = member_id;
+            $scope.gift_code_data.member_id = member_id;
             var sending_data = {
                 "member_id": member_id,
                 "username": $rootScope.user_data.username
@@ -103,6 +109,23 @@ angular.module("dashboard")
                     }
                 }
             }
+        };
+
+        $scope.check_gift_code = function () {
+            dashboardHttpRequest.checkGiftCode($scope.gift_code_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.show_member_profile_data($scope.gift_code_data.member_id);
+                        $scope.gift_code_data.gift_code = "";
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
 
@@ -277,6 +300,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('show');
                 $('#addMemberModal').css('z-index', 1000);
+                $('#showMemberProfileModal').css('z-index', 1000);
             })(jQuery);
         };
 
@@ -285,6 +309,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('hide');
                 $('#addMemberModal').css('z-index', "");
+                $('#showMemberProfileModal').css('z-index', "");
             })(jQuery);
         };
 

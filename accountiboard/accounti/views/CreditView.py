@@ -10,6 +10,8 @@ INVOICE_NOT_EXIST = "فاکتور وجود ندارد."
 MEMBER_NOT_SELCETD = "عضوی به این فاکتور وصل نشده است."
 MEMBER_NOT_EXIST = "عضوی یافت نشد."
 CREDIT_CATEGORY_NOT_HANDLED = "این دسته‌بندی برای اعتبار بررسی نشده است."
+GIFT_CODE_NOT_EXIST = "این کد وجود ندارد."
+GIFT_CODE_NOT_USABLE = "کد قابل استفاده نیست."
 GAME_PER_POINT_PRICE = 5000
 
 
@@ -192,6 +194,47 @@ def game_credit_handler(invoice_object):
         sum_all_items += game.game.points * GAME_PER_POINT_PRICE
 
     return sum_all_items
+
+
+def check_gift_code(request):
+    if not request.method == "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    gift_code = rec_data['gift_code']
+    gift_code = gift_code.lower()
+    member_id = rec_data['member_id']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    if not gift_code:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    try:
+        member_object = Member.objects.get(pk=member_id)
+    except Member.DoesNotExist:
+        return JsonResponse({"response_code": 3, "error_msg": MEMBER_NOT_EXIST})
+
+    try:
+        gift_code_object = GiftCode.objects.get(name=gift_code)
+    except GiftCode.DoesNotExist:
+        return JsonResponse({"response_code": 3, "error_msg": GIFT_CODE_NOT_EXIST})
+
+    if not gift_code_object.number_will_use:
+        return JsonResponse({"response_code": 3, "error_msg": GIFT_CODE_NOT_USABLE})
+
+    if gift_code_object.expire_time < datetime.now():
+        return JsonResponse({"response_code": 3, "error_msg": GIFT_CODE_NOT_USABLE})
+
+    new_credit = Credit(member=member_object, total_price=gift_code_object.price,
+                        expire_time=gift_code_object.expire_time,
+                        credit_categories=gift_code_object.credit_categories)
+    new_credit.save()
+    gift_code_object.number_will_use -= 1
+    gift_code_object.number_used += 1
+    gift_code_object.save()
+    return JsonResponse({"response_code": 2})
 
 
 def create_gift_code_manual(request):
