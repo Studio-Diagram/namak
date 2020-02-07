@@ -161,6 +161,7 @@
                                             <th scope="col">اعتبار</th>
                                             <th scope="col">استفاده شده</th>
                                             <th scope="col">دسته بندی</th>
+                                            <th scope="col">نوع</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -171,6 +172,7 @@
                                             <td scope="row">{{ credit.total_price | persianNumber }}</td>
                                             <td scope="row">{{ credit.used_price | persianNumber }}</td>
                                             <td scope="row">{{ credit.credit_categories }}</td>
+                                            <td scope="row">{{ credit.kind }}</td>
                                         </tr>
                                         </tbody>
                                     </table>

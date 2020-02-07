@@ -44,7 +44,8 @@ def get_all_credits_data_from_user(request):
             "expire_date": jalali_date.strftime("%Y/%m/%d"),
             "expire_time": jalali_date.strftime("%H:%M"),
             "total_price": credit.total_price,
-            "used_price": credit.used_price
+            "used_price": credit.used_price,
+            "kind": credit.gift_code.gift_code_supplier.name if credit.gift_code else "دستی"
         })
     return JsonResponse({"response_code": 2, "all_credits": all_credit_data})
 
@@ -229,7 +230,7 @@ def check_gift_code(request):
 
     new_credit = Credit(member=member_object, total_price=gift_code_object.price,
                         expire_time=gift_code_object.expire_time,
-                        credit_categories=gift_code_object.credit_categories)
+                        credit_categories=gift_code_object.credit_categories, gift_code=gift_code_object)
     new_credit.save()
     gift_code_object.number_will_use -= 1
     gift_code_object.number_used += 1
