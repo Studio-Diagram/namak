@@ -177,7 +177,7 @@
                             aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="openPayModal()"
+                    <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean" ng-click="openPayModal()"
                             class="mainButton greenButton"><i
                             class="fas fa-dollar-sign"></i> تسویه
                     </button>

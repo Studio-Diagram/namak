@@ -12,6 +12,7 @@ UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 DUPLICATE_CASH = 'دو صندوق باز وجود دارد. با تیم فنی تماس بگیرید.'
 NO_CASH = 'صندوق بازی وجود ندارد.'
 OLD_CASH = 'انقضای صندوق گذشته است.'
+UNSETTLED_INVOICE = "فاکتور تسویه نشده وجود دارد."
 
 
 def get_all_cash(request):
@@ -80,6 +81,9 @@ def close_cash(request):
         current_cash = Cash.objects.filter(branch=branch_obj, is_close=0)
 
         if current_cash.count() == 1:
+            all_invoices_from_this_cash = InvoiceSales.objects.filter(cash_desk=current_cash.first(), is_settled=False)
+            if all_invoices_from_this_cash.count():
+                return JsonResponse({"response_code": 3, 'error_msg': UNSETTLED_INVOICE})
             current_cash_obj = current_cash.first()
             current_cash_obj.is_close = 1
             current_cash_obj.employee = employee_obj

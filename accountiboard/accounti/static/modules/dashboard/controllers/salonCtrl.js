@@ -319,6 +319,12 @@ angular.module("dashboard")
             })(jQuery);
         };
 
+        $scope.can_settle_invoice = function () {
+            $('#settle_button').prop("disabled", false);
+            if ($scope.new_invoice_data.current_game.start_time || !$scope.new_invoice_data.invoice_sales_id)
+                $('#settle_button').prop("disabled", true);
+        };
+
         $scope.closeErrorModal = function () {
             jQuery.noConflict();
             (function ($) {
@@ -755,6 +761,7 @@ angular.module("dashboard")
                             'numbers': 0,
                             'start_time': ''
                         };
+                        $scope.can_settle_invoice();
                         $scope.refreshInvoice($scope.new_invoice_data.invoice_sales_id);
                         $scope.getAllTodayInvoices();
                     }
@@ -961,6 +968,7 @@ angular.module("dashboard")
         };
 
         $scope.openAddInvoiceModal = function () {
+            $scope.can_settle_invoice();
             jQuery.noConflict();
             (function ($) {
                 $('#addInvoiceModal').modal('show');
@@ -1036,6 +1044,7 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
                         };
+                        $scope.can_settle_invoice();
                         $scope.openAddInvoiceModal();
                     }
                     else if (data['response_code'] === 3) {
