@@ -18,31 +18,6 @@ UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 
 
 def add_boardgame(request):
-    f = open("/home/ubuntu/test_pythons/demofile3.txt", "r")
-    all_bg = f.read()
-    all_bg_list = all_bg.split("###@@@###")
-    branch_obj = Branch.objects.get(pk=1)
-    for bg in all_bg_list:
-        bg_data = eval(bg)
-        image_bg = bg_data['image']
-        image_bg = image_bg.replace("./", "")
-        new_boardgame = Boardgame(
-            name=bg_data['name'],
-            category=bg_data['cat'],
-            min_players=bg_data['min_p'],
-            max_players=bg_data['max_p'],
-            best_players=bg_data['best_p'],
-            rate=bg_data['rate'],
-            learning_time=bg_data['learn'],
-            duration=bg_data['dur'],
-            description=bg_data['discription'],
-            bgg_code=bg_data['bgg_code'],
-            branch=branch_obj,
-            image=image_bg,
-            image_name=image_bg
-        )
-        new_boardgame.save()
-
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         boardgame_id = rec_data['boardgame_id']
