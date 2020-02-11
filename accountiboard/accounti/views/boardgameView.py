@@ -42,7 +42,7 @@ def add_boardgame(request):
             image_name=image_bg
         )
         new_boardgame.save()
-        break
+
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         boardgame_id = rec_data['boardgame_id']
