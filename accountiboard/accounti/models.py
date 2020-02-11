@@ -204,6 +204,10 @@ class InvoiceSales(models.Model):
     is_do_not_want_order = models.BooleanField(default=False)
     game_state = models.CharField(max_length=50, choices=GAME_STATES, default='WAIT_GAME')
 
+    def __str__(self):
+        return "num: " + str(self.factor_number) + " total_p: " + str(self.total_price) + " Is Settled: " + str(
+            self.is_settled) + " member: " + self.member.last_name
+
 
 class InvoicesSalesToMenuItem(models.Model):
     invoice_sales = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
