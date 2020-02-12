@@ -7,7 +7,6 @@ from django.db.models import Sum
 import logging
 
 logger = logging.getLogger("accounti_info")
-print(logger)
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
 PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
@@ -596,7 +595,7 @@ def create_new_invoice_sales(request):
                 new_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
             new_invoice.save()
-            logger.info('[CreateNewInvoiceSale] Body field is: %s', str(rec_data))
+            logger.info('%s : [CreateNewInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
         elif invoice_sales_id != 0:
@@ -677,7 +676,7 @@ def create_new_invoice_sales(request):
             old_invoice.tip = tip
             old_invoice.save()
             new_invoice_id = old_invoice.pk
-            logger.info('[EditInvoiceSale] Body field is: %s', str(rec_data))
+            logger.info('%s : [EditInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
