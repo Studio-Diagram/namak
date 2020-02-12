@@ -122,13 +122,16 @@
         <tr>
             <td class="small-text">نام میز</td>
             <td class="small-text">نام مشتری</td>
+            <td class="small-text">نفرات</td>
         </tr>
         <tr>
             <td class="no-border">{{ invoice_data.table_name }}</td>
             <td class="no-border">{{ invoice_data.customer_name }}</td>
+            <td class="no-border iranian-number">{{ invoice_data.guest_numbers }}</td>
         </tr>
         <tr>
             <td class="iranian-number">{{ invoice_data.date }}</td>
+            <td></td>
             <td class="iranian-number">{{ invoice_data.time }}</td>
         </tr>
         </tbody>

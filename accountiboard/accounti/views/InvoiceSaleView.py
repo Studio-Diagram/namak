@@ -1309,6 +1309,7 @@ def print_after_save_template(request):
             'printer_name': printer_name,
             'table_name': invoice_obj.table.name,
             'customer_name': invoice_obj.member.last_name,
+            'guest_numbers': invoice_obj.guest_numbers,
             'time': now_time.strftime("%H:%M"),
             'date': now_time.strftime("%Y/%m/%d"),
             'items': []
