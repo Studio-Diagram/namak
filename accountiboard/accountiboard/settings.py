@@ -90,9 +90,9 @@ WSGI_APPLICATION = 'accountiboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'accountiboard',
-        'USER': 'accountiboard',
-        'PASSWORD': 'password',
+        'NAME': config.DATABASE_NAME,
+        'USER': config.DATABASE_USER,
+        'PASSWORD': config.DATABASE_PASSWORD,
         'HOST': 'localhost',
         'PORT': '',
     }
