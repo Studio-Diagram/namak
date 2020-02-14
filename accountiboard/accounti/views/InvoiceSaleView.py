@@ -503,6 +503,7 @@ def create_new_invoice_sales(request):
     if request.method == "POST":
         new_invoice_id = 0
         rec_data = json.loads(request.read().decode('utf-8'))
+        print(rec_data)
         invoice_sales_id = rec_data['invoice_sales_id']
         new_game_id = 0
 

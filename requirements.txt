@@ -1,0 +1,5 @@
+django-multiselectfield
+django-cors-headers
+pillow
+jdatetime
+xlwt
