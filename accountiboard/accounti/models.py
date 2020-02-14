@@ -545,9 +545,3 @@ class CreditToInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
     used_price = models.IntegerField(default=0)
-
-
-class Test(models.Model):
-    credit = models.ForeignKey(to=Credit, null=True, on_delete=models.SET_NULL)
-    created_time = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=30, blank=False, null=False)
