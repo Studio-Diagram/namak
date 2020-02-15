@@ -1,136 +1,243 @@
 <div ng-controller="supplierDetailCtrl">
+    <div class="modal fade mainModal" id="show_invoice_purchase" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">فاکتور خرید </h2>
+                    <a class="mainButton redButton" href=""
+                       aria-label="Close" data-dismiss="modal">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <table class="invoiceTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <small>شماره فاکتور</small>
+                                            {{ invoice_purchase_data.factor_number | persianNumber }}
+                                        </td>
+                                        <td>
+                                            <small>تاریخ فاکتور</small>
+                                            {{ invoice_purchase_data.created_date | persianNumber }}
+                                        </td>
+                                        <td>
+                                            <small>نوع پرداخت</small>
+                                            {{ invoice_purchase_data.settlement_type_name }}
+                                        </td>
+                                        <td>
+                                            <small>تامین کننده</small>
+                                            {{ invoice_purchase_data.supplier_name }}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="invoiceTable invoiceItem">
+                                    <tbody>
+                                    <tr>
+                                        <th class="first"><input type="checkbox"
+                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first">#</th>
+                                        <th style="width: 30%" class="second">عنوان</th>
+                                        <th style="width: 25%" class="third">قیمت واحد ( ریال )</th>
+                                        <th style="width: 10%;" class="forth">تعداد</th>
+                                        <th class="fifth">قیمت کل</th>
+                                        <th style="width: 25%;" class="sixth">توضیحات</th>
+                                    </tr>
+                                    <tr ng-repeat="item in invoice_purchase_data.material_items">
+                                        <th class="first"></th>
+                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.price | number | persianNumber }}</td>
+                                        <td>{{ item.nums | number | persianNumber }}</td>
+                                        <td>{{ display_float_to_int(item.total) | number | persianNumber }}</td>
+                                        <td>{{ item.description }}</td>
+                                    </tr>
+
+                                    <tr ng-repeat="item in invoice_purchase_data.shop_product_items">
+                                        <th class="first"></th>
+                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td>
+                                            <label>قیمت خرید : </label>
+                                            {{ item.price | number | persianNumber }}
+                                            <br>
+                                            <label>قیمت فروش : </label>
+                                            {{ item.sale_price | number | persianNumber }}
+                                        </td>
+                                        <td>{{ item.nums | number | persianNumber }}</td>
+                                        <td>{{ item.total | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ item.description }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="invoiceTable invoiceTotal">
+                                    <tbody>
+                                    <tr>
+                                        <th>تخفیف</th>
+                                        <td>{{ invoice_purchase_data.discount | number | persianNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>مالیات</th>
+                                        <td>{{ invoice_purchase_data.tax | number | persianNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>جمع کل</th>
+                                        <td>{{ invoice_purchase_data.total_price | number | persianNumber }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <main class="pageContent container-fluid">
-                    <div class="tableButtons clearfix">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
-                                <li class="breadcrumb-item"><a ui-sref="account_manager.supplier({ supplier: supplier_id })">{{ supplier_name }}</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ state_word }}</li>
-                            </ol>
-                        </nav>
-                        <div class="dateFilter tableLefty">
-                            <span>تا تاریخ:</span>
-                            <input ng-model="search_data_supplier.to_time" disabled class="form-control listFilter tableLefty" type="text" placeholder="تا الان">
-                        </div>
-                        <div class="dateFilter tableLefty">
-                            <span>نمایش از تاریخ:</span>
-                            <input ng-model="search_data_supplier.from_time" disabled class="form-control listFilter tableLefty" type="text" placeholder="از یک‌ماه پیش">
-                        </div>
-                    </div>
-                    <div class="row userPageContent">
-                        <main class="col-sm-12 ">
+        <div class="tableButtons clearfix">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
+                    <li class="breadcrumb-item"><a
+                            ui-sref="account_manager.supplier({ supplier: supplier_id })">{{ supplier_name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ state_word }}</li>
+                </ol>
+            </nav>
+            <div class="dateFilter tableLefty">
+                <span>تا تاریخ:</span>
+                <input ng-model="search_data_supplier.to_time" disabled class="form-control listFilter tableLefty"
+                       type="text" placeholder="تا الان">
+            </div>
+            <div class="dateFilter tableLefty">
+                <span>نمایش از تاریخ:</span>
+                <input ng-model="search_data_supplier.from_time" disabled class="form-control listFilter tableLefty"
+                       type="text" placeholder="از یک‌ماه پیش">
+            </div>
+        </div>
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
 
-                            <div ng-hide="detailState === 'amani_sales'" class="tableWrapper">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">تاریخ</th>
-                                            <th scope="col">مبلغ</th>
-                                            <th scope="col">نوع</th>
-                                            <th scope="col">تخفیف</th>
-                                            <th scope="col">مالیات</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="invoice in invoices_data">
-                                            <td>{{ invoice.date | persianNumber }}</td>
-                                            <td>{{ invoice.price | number | persianNumber }} ریال</td>
-                                            <td>{{ invoice.kind }}</td>
-                                            <td>{{ invoice.discount | number | persianNumber }} ریال</td>
-                                            <td>{{ invoice.tax | number | persianNumber }} ریال</td>
-                                            <td><a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                                        </tr>
-                                        <tr class="tableTotal">
-                                            <th>جمع کل</th>
-                                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                <div ng-hide="detailState === 'amani_sales'" class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">تاریخ</th>
+                            <th scope="col">مبلغ</th>
+                            <th scope="col">نوع</th>
+                            <th scope="col">تخفیف</th>
+                            <th scope="col">مالیات</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="invoice in invoices_data">
+                            <td>{{ invoice.date | persianNumber }}</td>
+                            <td>{{ invoice.price | number | persianNumber }} ریال</td>
+                            <td>{{ invoice.kind }}</td>
+                            <td>{{ invoice.discount | number | persianNumber }} ریال</td>
+                            <td>{{ invoice.tax | number | persianNumber }} ریال</td>
+                            <td><a href="" ng-click="show_invoice_detail(invoice.invoice_id)"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        <tr class="tableTotal">
+                            <th>جمع کل</th>
+                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                            </div>
+                </div>
 
-                            <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
+                <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
 
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">شماره</th>
-                                            <th scope="col">محصول</th>
-                                            <th scope="col">تعداد</th>
-                                            <th scope="col">مبلغ</th>
-                                            <th scope="col">قیمت خرید</th>
-                                            <th scope="col">قیمت فروش</th>
-                                            <th scope="col">مرجوعی</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="product in amani_sale_products">
-                                            <td>{{ $index + 1 | persianNumber }}</td>
-                                            <td>{{ product.name }}</td>
-                                            <td>{{ product.numbers | persianNumber }}</td>
-                                            <td>{{ product.price | number | persianNumber }} ریال</td>
-                                            <td>{{ product.buy_price | number | persianNumber }} ریال</td>
-                                            <td>{{ product.sale_price | number | persianNumber }} ریال</td>
-                                            <td>{{ product.return_numbers | persianNumber }}</td>
-                                        </tr>
-                                        <tr class="tableTotal">
-                                            <th>جمع کل</th>
-                                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">شماره</th>
+                            <th scope="col">محصول</th>
+                            <th scope="col">تعداد</th>
+                            <th scope="col">مبلغ</th>
+                            <th scope="col">قیمت خرید</th>
+                            <th scope="col">قیمت فروش</th>
+                            <th scope="col">مرجوعی</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="product in amani_sale_products">
+                            <td>{{ $index + 1 | persianNumber }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.numbers | persianNumber }}</td>
+                            <td>{{ product.price | number | persianNumber }} ریال</td>
+                            <td>{{ product.buy_price | number | persianNumber }} ریال</td>
+                            <td>{{ product.sale_price | number | persianNumber }} ریال</td>
+                            <td>{{ product.return_numbers | persianNumber }}</td>
+                        </tr>
+                        <tr class="tableTotal">
+                            <th>جمع کل</th>
+                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                            </div>
+                </div>
 
-                            <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
+                <div ng-show="detailState === 'amani_sales'" class="tableWrapper">
 
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">تاریخ</th>
-                                            <th scope="col">محصول</th>
-                                            <th scope="col">تعداد</th>
-                                            <th scope="col">مبلغ</th>
-                                            <th scope="col">قیمت خرید</th>
-                                            <th scope="col">قیمت فروش</th>
-                                            <th scope="col">مرجوعی</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="invoice in invoices_data">
-                                            <td>{{ invoice.date | persianNumber }}</td>
-                                            <td>{{ invoice.name }}</td>
-                                            <td>{{ invoice.numbers | persianNumber }}</td>
-                                            <td>{{ invoice.price | number | persianNumber }} ریال</td>
-                                            <td>{{ invoice.buy_price | number | persianNumber }} ریال</td>
-                                            <td>{{ invoice.sale_price | number | persianNumber }} ریال</td>
-                                            <td>{{ invoice.return_numbers | persianNumber }}</td>
-                                        </tr>
-                                        <tr class="tableTotal">
-                                            <th>جمع کل</th>
-                                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">تاریخ</th>
+                            <th scope="col">محصول</th>
+                            <th scope="col">تعداد</th>
+                            <th scope="col">مبلغ</th>
+                            <th scope="col">قیمت خرید</th>
+                            <th scope="col">قیمت فروش</th>
+                            <th scope="col">مرجوعی</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="invoice in invoices_data">
+                            <td>{{ invoice.date | persianNumber }}</td>
+                            <td>{{ invoice.name }}</td>
+                            <td>{{ invoice.numbers | persianNumber }}</td>
+                            <td>{{ invoice.price | number | persianNumber }} ریال</td>
+                            <td>{{ invoice.buy_price | number | persianNumber }} ریال</td>
+                            <td>{{ invoice.sale_price | number | persianNumber }} ریال</td>
+                            <td>{{ invoice.return_numbers | persianNumber }}</td>
+                        </tr>
+                        <tr class="tableTotal">
+                            <th>جمع کل</th>
+                            <td class="redText">{{ sum_invoices | number | persianNumber }} ریال</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                            </div>
+                </div>
 
-                        </main>
-                    </div>
-                </main>
+            </main>
+        </div>
+    </main>
 </div>

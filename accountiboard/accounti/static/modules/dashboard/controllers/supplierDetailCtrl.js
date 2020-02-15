@@ -43,6 +43,37 @@ angular.module("dashboard")
             }
         };
 
+        $scope.display_float_to_int = function (price) {
+            return Math.round(price);
+        };
+
+        $scope.showInvoicePurchase = function (invoice_id) {
+            var sending_data = {
+                'invoice_id': invoice_id,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getInvoicePurchase(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.invoice_purchase_data = data['invoice'];
+                        $rootScope.open_modal('show_invoice_purchase');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.show_invoice_detail = function (invoice_id) {
+            if ($scope.detailState === "buy"){
+                $scope.showInvoicePurchase(invoice_id);
+            }
+        };
+
         $scope.get_supplier = function () {
             var data = {
                 'username': $rootScope.user_data.username,

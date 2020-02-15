@@ -25,16 +25,22 @@ def get_invoice(request):
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         invoice_object = InvoicePurchase.objects.get(pk=invoice_id)
+        invoice_date = invoice_object.created_time.date()
+        jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                   year=invoice_date.year)
         invoice_data = {
             'id': invoice_object.pk,
             'factor_number': invoice_object.factor_number,
             'supplier_id': invoice_object.supplier.id,
+            'supplier_name': invoice_object.supplier.name,
             'material_items': [],
             'shop_product_items': [],
             'total_price': invoice_object.total_price,
             'settlement_type': invoice_object.settlement_type,
             'tax': invoice_object.tax,
             'discount': invoice_object.discount,
+            'created_date': jalali_date.strftime("%Y/%m/%d"),
+            'settlement_type_name': invoice_object.get_settlement_type_display()
         }
 
         invoice_materials = PurchaseToMaterial.objects.filter(invoice_purchase=invoice_object)
