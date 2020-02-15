@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 import json, jdatetime, datetime
 from accounti.models import *
+from django.db.models import Sum
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -34,6 +35,10 @@ def get_all_cash(request):
         all_cashes_json_data = []
 
         for cash in all_cashes:
+            all_invoice_sales_cash_total_income = InvoiceSales.objects.filter(cash_desk=cash, is_deleted=False,
+                                                                              is_settled=True).aggregate(
+                Sum('total_price'))
+
             cash_start_date = cash.created_date_time.date()
             cash_start_jalali_date = jdatetime.date.fromgregorian(day=cash_start_date.day, month=cash_start_date.month,
                                                                   year=cash_start_date.year)
@@ -54,7 +59,8 @@ def get_all_cash(request):
                 'end_date': cash_final_end_date,
                 'start_time': cash_start_time,
                 'end_time': cash_end_time,
-                'is_closed': cash.is_close
+                'is_closed': cash.is_close,
+                'total_income': all_invoice_sales_cash_total_income['total_price__sum']
             })
 
         return JsonResponse({"response_code": 2, 'all_cashes': all_cashes_json_data})
