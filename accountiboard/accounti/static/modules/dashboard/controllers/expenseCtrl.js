@@ -272,13 +272,9 @@ angular.module("dashboard")
                 'id': 0,
                 'factor_number': 0,
                 'expense_id': 0,
-                'expense_tags': [],
                 'expense_kind': '',
-                'service_name': '',
-                'description': '',
-                'total_price': 0,
-                'settlement_type': 'CASH',
-                'tax': 0,
+                'expense_tags': [],
+                'supplier_id': 0,
                 'services': [
                     {
                         'service_name': '',
@@ -286,6 +282,9 @@ angular.module("dashboard")
                         'description': ''
                     }
                 ],
+                'total_price': 0,
+                'settlement_type': 'CASH',
+                'tax': 0,
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
