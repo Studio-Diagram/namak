@@ -59,9 +59,7 @@ def create_new_invoice_return(request):
 
         if invoice_return_id == 0:
             supplier_id = rec_data['supplier_id']
-            shop_id = rec_data['shop_id']
-            description = rec_data['description']
-            numbers = rec_data['numbers']
+            return_products = rec_data['return_products']
             return_type = rec_data['return_type']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
@@ -74,11 +72,7 @@ def create_new_invoice_return(request):
                 return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not shop_id:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not numbers:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not description:
+            if not return_products:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not return_type:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -88,10 +82,6 @@ def create_new_invoice_return(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
-            shop_obj = ShopProduct.objects.get(pk=shop_id)
-
-            if get_detail_product_number(shop_obj.id) < int(numbers):
-                return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Stock!"})
 
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
@@ -106,117 +96,137 @@ def create_new_invoice_return(request):
             if new_factor_number != factor_number:
                 return JsonResponse({"response_code": 3, "error_msg": FACTOR_NUMBER_INVALID})
 
-            new_invoice = InvoiceReturn(
-                branch=branch_obj,
-                created_time=invoice_date_g,
-                shop_product=shop_obj,
-                description=description,
-                numbers=numbers,
-                return_type=return_type,
-                factor_number=new_factor_number
-            )
-            new_invoice.save()
+            for return_product in return_products:
+                shop_id = return_product['shop_id']
+                numbers = return_product['numbers']
+                description = return_product['description']
+                if not shop_id:
+                    return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+                if not numbers:
+                    return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+                if not description:
+                    return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-            if return_type == "CUSTOMER_TO_CAFE":
-                shop_obj.real_numbers += int(numbers)
-                shop_obj.save()
-                return_number_count = int(numbers)
-                all_amani_sales = AmaniSale.objects.filter(invoice_sale_to_shop__shop_product=shop_obj).order_by(
-                    '-created_date')
-                for amani_sale in all_amani_sales:
-                    real_number_in_amani_sale = amani_sale.numbers - amani_sale.return_numbers
-                    if real_number_in_amani_sale != 0:
-                        if return_number_count == real_number_in_amani_sale or return_number_count < real_number_in_amani_sale:
-                            amani_sale.return_numbers += return_number_count
-                            amani_sale.save()
-                            amani_sale.supplier.remainder -= amani_sale.buy_price * return_number_count
-                            amani_sale.supplier.save()
-                            new_amani_to_return = AmaniSaleToInvoiceReturn(
-                                amani_sale=amani_sale,
-                                invoice_return=new_invoice,
-                                numbers=return_number_count
-                            )
-                            new_amani_to_return.save()
-                            new_invoice.total_price += amani_sale.buy_price * return_number_count
-                            new_invoice.save()
-                            amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct.objects.filter(
-                                amani_sale=amani_sale)
-                            if amani_to_purchase:
-                                amani_to_purchase[0].invoice_purchase_to_shop_product.buy_numbers -= return_number_count
-                                amani_to_purchase[0].invoice_purchase_to_shop_product.save()
-                            else:
-                                return JsonResponse({"response_code": 3, "error_msg": "HOLY S***!"})
+                shop_obj = ShopProduct.objects.get(pk=shop_id)
+                if get_detail_product_number(shop_obj.id) < int(numbers):
+                    return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Stock!"})
 
-                            return_number_count = 0
-                            break
-                        else:
-                            amani_sale.return_numbers += real_number_in_amani_sale
-                            amani_sale.supplier.remainder -= amani_sale.buy_price * real_number_in_amani_sale
-                            amani_sale.supplier.save()
-                            new_amani_to_return = AmaniSaleToInvoiceReturn(
-                                amani_sale=amani_sale,
-                                invoice_return=new_invoice,
-                                numbers=real_number_in_amani_sale
-                            )
-                            new_amani_to_return.save()
-                            new_invoice.total_price += amani_sale.buy_price * real_number_in_amani_sale
-                            new_invoice.save()
-                            amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct.objects.filter(
-                                amani_sale=amani_sale)
-                            if amani_to_purchase:
-                                amani_to_purchase[
-                                    0].invoice_purchase_to_shop_product.buy_numbers -= real_number_in_amani_sale
-                                amani_to_purchase[0].invoice_purchase_to_shop_product.save()
-                            else:
-                                return JsonResponse({"response_code": 3, "error_msg": "HOLY S***!"})
-                            return_number_count -= real_number_in_amani_sale
-                            amani_sale.save()
-
-            elif return_type == 'CAFE_TO_SUPPLIER':
-                want_to_rerurn = int(numbers)
-                if not supplier_id:
-                    return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
-                supplier_obj = Supplier.objects.get(pk=supplier_id)
-                new_invoice.supplier = supplier_obj
+            for return_product in return_products:
+                shop_id = return_product['shop_id']
+                description = return_product['description']
+                numbers = return_product['numbers']
+                shop_obj = ShopProduct.objects.get(pk=shop_id)
+                new_invoice = InvoiceReturn(
+                    branch=branch_obj,
+                    created_time=invoice_date_g,
+                    shop_product=shop_obj,
+                    description=description,
+                    numbers=numbers,
+                    return_type=return_type,
+                    factor_number=new_factor_number
+                )
                 new_invoice.save()
 
-                can_returned_nums = 0
-                all_purchase_to_shop_p = PurchaseToShopProduct.objects.filter(shop_product=shop_obj)
-                for purchase in all_purchase_to_shop_p:
-                    can_returned_nums += purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
+                if return_type == "CUSTOMER_TO_CAFE":
+                    shop_obj.real_numbers += int(numbers)
+                    shop_obj.save()
+                    return_number_count = int(numbers)
+                    all_amani_sales = AmaniSale.objects.filter(invoice_sale_to_shop__shop_product=shop_obj).order_by(
+                        '-created_date')
+                    for amani_sale in all_amani_sales:
+                        real_number_in_amani_sale = amani_sale.numbers - amani_sale.return_numbers
+                        if real_number_in_amani_sale != 0:
+                            if return_number_count == real_number_in_amani_sale or return_number_count < real_number_in_amani_sale:
+                                amani_sale.return_numbers += return_number_count
+                                amani_sale.save()
+                                amani_sale.supplier.remainder -= amani_sale.buy_price * return_number_count
+                                amani_sale.supplier.save()
+                                new_amani_to_return = AmaniSaleToInvoiceReturn(
+                                    amani_sale=amani_sale,
+                                    invoice_return=new_invoice,
+                                    numbers=return_number_count
+                                )
+                                new_amani_to_return.save()
+                                new_invoice.total_price += amani_sale.buy_price * return_number_count
+                                new_invoice.save()
+                                amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct.objects.filter(
+                                    amani_sale=amani_sale)
+                                if amani_to_purchase:
+                                    amani_to_purchase[0].invoice_purchase_to_shop_product.buy_numbers -= return_number_count
+                                    amani_to_purchase[0].invoice_purchase_to_shop_product.save()
+                                else:
+                                    return JsonResponse({"response_code": 3, "error_msg": "HOLY S***!"})
 
-                if can_returned_nums < int(numbers):
-                    return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Supplier!"})
+                                return_number_count = 0
+                                break
+                            else:
+                                amani_sale.return_numbers += real_number_in_amani_sale
+                                amani_sale.supplier.remainder -= amani_sale.buy_price * real_number_in_amani_sale
+                                amani_sale.supplier.save()
+                                new_amani_to_return = AmaniSaleToInvoiceReturn(
+                                    amani_sale=amani_sale,
+                                    invoice_return=new_invoice,
+                                    numbers=real_number_in_amani_sale
+                                )
+                                new_amani_to_return.save()
+                                new_invoice.total_price += amani_sale.buy_price * real_number_in_amani_sale
+                                new_invoice.save()
+                                amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct.objects.filter(
+                                    amani_sale=amani_sale)
+                                if amani_to_purchase:
+                                    amani_to_purchase[
+                                        0].invoice_purchase_to_shop_product.buy_numbers -= real_number_in_amani_sale
+                                    amani_to_purchase[0].invoice_purchase_to_shop_product.save()
+                                else:
+                                    return JsonResponse({"response_code": 3, "error_msg": "HOLY S***!"})
+                                return_number_count -= real_number_in_amani_sale
+                                amani_sale.save()
 
-                shop_obj.real_numbers -= int(numbers)
-                shop_obj.save()
+                elif return_type == 'CAFE_TO_SUPPLIER':
+                    want_to_rerurn = int(numbers)
+                    if not supplier_id:
+                        return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
+                    supplier_obj = Supplier.objects.get(pk=supplier_id)
+                    new_invoice.supplier = supplier_obj
+                    new_invoice.save()
 
-                for purchase in all_purchase_to_shop_p:
-                    can_return_num_in_purchase = purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
-                    if want_to_rerurn <= can_return_num_in_purchase != 0:
-                        purchase.return_numbers += want_to_rerurn
-                        purchase.save()
-                        new_return_to_purchase = PurchaseToInvoiceReturn(
-                            invoice_return=new_invoice,
-                            invoice_purchase_to_shop_product=purchase,
-                            numbers=want_to_rerurn
-                        )
-                        new_return_to_purchase.save()
-                        new_invoice.total_price += want_to_rerurn * purchase.base_unit_price
-                        new_invoice.save()
-                        break
-                    else:
-                        purchase.return_numbers += can_return_num_in_purchase
-                        purchase.save()
-                        new_return_to_purchase = PurchaseToInvoiceReturn(
-                            invoice_return=new_invoice,
-                            invoice_purchase_to_shop_product=purchase,
-                            numbers=can_return_num_in_purchase
-                        )
-                        new_return_to_purchase.save()
-                        new_invoice.total_price += can_return_num_in_purchase * purchase.base_unit_price
-                        new_invoice.save()
-                        want_to_rerurn -= can_return_num_in_purchase
+                    can_returned_nums = 0
+                    all_purchase_to_shop_p = PurchaseToShopProduct.objects.filter(shop_product=shop_obj)
+                    for purchase in all_purchase_to_shop_p:
+                        can_returned_nums += purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
+
+                    if can_returned_nums < int(numbers):
+                        return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Supplier!"})
+
+                    shop_obj.real_numbers -= int(numbers)
+                    shop_obj.save()
+
+                    for purchase in all_purchase_to_shop_p:
+                        can_return_num_in_purchase = purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
+                        if want_to_rerurn <= can_return_num_in_purchase != 0:
+                            purchase.return_numbers += want_to_rerurn
+                            purchase.save()
+                            new_return_to_purchase = PurchaseToInvoiceReturn(
+                                invoice_return=new_invoice,
+                                invoice_purchase_to_shop_product=purchase,
+                                numbers=want_to_rerurn
+                            )
+                            new_return_to_purchase.save()
+                            new_invoice.total_price += want_to_rerurn * purchase.base_unit_price
+                            new_invoice.save()
+                            break
+                        else:
+                            purchase.return_numbers += can_return_num_in_purchase
+                            purchase.save()
+                            new_return_to_purchase = PurchaseToInvoiceReturn(
+                                invoice_return=new_invoice,
+                                invoice_purchase_to_shop_product=purchase,
+                                numbers=can_return_num_in_purchase
+                            )
+                            new_return_to_purchase.save()
+                            new_invoice.total_price += can_return_num_in_purchase * purchase.base_unit_price
+                            new_invoice.save()
+                            want_to_rerurn -= can_return_num_in_purchase
 
             return JsonResponse({"response_code": 2})
 

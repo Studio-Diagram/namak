@@ -51,7 +51,7 @@
                                     </tr>
                                     <tr ng-repeat="item in invoice_purchase_data.material_items">
                                         <th class="first"></th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
                                         <td>{{ item.price | number | persianNumber }}</td>
                                         <td>{{ item.nums | number | persianNumber }}</td>

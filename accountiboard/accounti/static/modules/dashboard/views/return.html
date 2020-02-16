@@ -28,7 +28,8 @@
                     </a>
                     <a ng-hide="read_only_mode" href="" ng-click="addReturn()" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();" class="mainButton greenButton"><i
+                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
+                       class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
@@ -66,7 +67,8 @@
                                             <ui-select ng-model="new_invoice_return_data.supplier_id">
                                                 <ui-select-match placeholder="انتخاب تامین‌کننده">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                <ui-select-choices
+                                                        repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
@@ -84,15 +86,17 @@
                                         <th class="fifth">تعداد</th>
                                         <th style="width: 25%;" class="sixth">توضیحات</th>
                                     </tr>
-                                    <tr>
+                                    <tr ng-repeat="return_product in new_invoice_return_data.return_products">
                                         <th class="first"><input type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ 1 | persianNumber }}</td>
                                         <td>
-                                            <ui-select ng-change="get_last_buy_price(new_invoice_return_data.shop_id)" ng-model="new_invoice_return_data.shop_id">
+                                            <ui-select ng-change="get_last_buy_price(return_product.shop_id)"
+                                                       ng-model="return_product.shop_id">
                                                 <ui-select-match placeholder="انتخاب محصول">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="shop.id as shop in shops | filter: $select.search">
+                                                <ui-select-choices
+                                                        repeat="shop.id as shop in shops | filter: $select.search">
                                                     <div ng-bind="shop.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
@@ -100,13 +104,16 @@
                                         </td>
                                         <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
                                                    min="0"
-                                                   ng-model="new_invoice_return_data.numbers"></td>
+                                                   ng-model="return_product.numbers"></td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="new_invoice_return_data.description"></td>
+                                                   ng-model="return_product.description"></td>
                                     </tr>
 
                                     </tbody>
                                 </table>
+                                <a ng-click="add_new_row_to_return_products()" href="" class="mainButton grayButton"><i
+                                        class="fas fa-eraser"></i>
+                                    اضافه کردن سطر جدید</a>
                             </main>
                         </div>
                     </div>
@@ -149,7 +156,8 @@
                     <li class="breadcrumb-item active" aria-current="page">مرجوعی‌ها</li>
                 </ol>
             </nav>
-            <a ng-click="openAddModal();getNextFactorNumber('RETURN')" href="" class="mainButton greenButton tableLefty">مرجوعی جدید</a>
+            <a ng-click="openAddModal();getNextFactorNumber('RETURN')" href=""
+               class="mainButton greenButton tableLefty">مرجوعی جدید</a>
             <input ng-keyup="searchReturn()" ng-model="search_data_return.search_word"
                    class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
         </div>
@@ -177,7 +185,7 @@
                             <td>{{ invoice_return.numbers | persianNumber }}</td>
                             <td>{{ invoice_return.total_price | number | persianNumber }} ریال</td>
                             <td>{{ invoice_return.description }}</td>
-                            <td>{{ invoice_return.date }}</td>
+                            <td>{{ invoice_return.date | persianNumber }}</td>
                         </tr>
                         </tbody>
                     </table>

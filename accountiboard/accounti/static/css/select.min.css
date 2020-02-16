@@ -318,4 +318,14 @@ body > .ui-select-bootstrap.open {
     -webkit-animation: none 0s
 }
 
+.ui-select-match {
+    border: thin solid lightgrey;
+    border-radius: 7px;
+}
+
+ul.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu {
+    display: block;
+    text-align: right;
+}
+
 /*# sourceMappingURL=select.min.css.map */

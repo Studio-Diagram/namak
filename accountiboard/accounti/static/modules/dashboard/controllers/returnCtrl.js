@@ -1,17 +1,21 @@
 angular.module("dashboard")
     .controller("returnCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
-            $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.new_invoice_return_data = {
                 'id': 0,
                 'factor_number': 0,
                 'supplier_id': 0,
-                'shop_id': '',
-                'numbers': 0,
-                'buy_price': 0,
+                'return_products': [
+                    {
+                        'shop_id': '',
+                        'numbers': 0,
+                        'buy_price': 0,
+                        'description': ''
+                    }
+                ],
+                'date': '',
                 'return_type': '',
-                'description': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
@@ -34,6 +38,15 @@ angular.module("dashboard")
                     $('#datepicker').datepicker('setDate', today);
                 });
             })(jQuery);
+        };
+
+        $scope.add_new_row_to_return_products = function () {
+            $scope.new_invoice_return_data.return_products.push({
+                'shop_id': '',
+                'numbers': 0,
+                'buy_price': 0,
+                'description': ''
+            });
         };
 
         $scope.get_last_buy_price = function (shop_product_id) {
@@ -235,7 +248,15 @@ angular.module("dashboard")
             }, 1000);
         };
 
+        $scope.set_date = function (date_picker_id, date) {
+            jQuery.noConflict();
+            (function ($) {
+                $('#' + date_picker_id).datepicker('setDate', date);
+            })(jQuery);
+        };
+
         $scope.resetFrom = function () {
+            $scope.set_date("datepicker", "");
             $scope.new_invoice_return_data = {
                 'id': 0,
                 'factor_number': 0,
@@ -243,11 +264,13 @@ angular.module("dashboard")
                 'shop_id': '',
                 'numbers': 0,
                 'buy_price': 0,
-                'return_type': 'CUSTOMER_TO_CAFE',
+                'return_type': '',
                 'description': '',
+                'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            $scope.getNextFactorNumber('RETURN');
         };
         initialize();
     });
