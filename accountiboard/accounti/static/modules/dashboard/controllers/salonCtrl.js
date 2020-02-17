@@ -246,7 +246,7 @@ angular.module("dashboard")
 
         $scope.print_after_save = function (invoice_id) {
             $scope.disable_print_after_save_all_buttons = true;
-            if ($scope.is_in_edit_mode_invoice){
+            if ($scope.is_in_edit_mode_invoice) {
                 $scope.new_invoice_data['in_edit_mode'] = "IN_EDIT_MODE";
             }
             else {
@@ -296,7 +296,7 @@ angular.module("dashboard")
 
         $scope.print_cash = function () {
             $scope.disable_print_after_save_all_buttons = true;
-            if ($scope.is_in_edit_mode_invoice){
+            if ($scope.is_in_edit_mode_invoice) {
                 $scope.new_invoice_data['in_edit_mode'] = "IN_EDIT_MODE";
             }
             else {
@@ -402,7 +402,7 @@ angular.module("dashboard")
 
         $scope.openPayModal = function () {
             $scope.disable_print_after_save_all_buttons = true;
-            if ($scope.is_in_edit_mode_invoice){
+            if ($scope.is_in_edit_mode_invoice) {
                 $scope.new_invoice_data['in_edit_mode'] = "IN_EDIT_MODE";
             }
             else {
@@ -852,7 +852,7 @@ angular.module("dashboard")
 
         $scope.saveInvoice = function () {
             $scope.disable_print_after_save_all_buttons = true;
-            if ($scope.is_in_edit_mode_invoice){
+            if ($scope.is_in_edit_mode_invoice) {
                 $scope.new_invoice_data['in_edit_mode'] = "IN_EDIT_MODE";
             }
             else {
@@ -1018,6 +1018,7 @@ angular.module("dashboard")
             })(jQuery);
             $scope.showCollapse(0);
             $scope.reset_deleted_items();
+            $scope.clear_invoice_sale();
         };
 
         $scope.openViewInvoiceModal = function () {
