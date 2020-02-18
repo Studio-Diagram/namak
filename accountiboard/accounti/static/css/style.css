@@ -1622,14 +1622,16 @@ tags-input .tags .tag-item {
 }
 
 .checkbox-unit {
-
+    margin-bottom: 0 !important;
+    flex-direction: column;
+    display: flex;
+    padding-left: 0 !important;
 }
 
 .checkbox-item {
-    margin-bottom: 1em;
-    border: 1px solid var(--pageBorder);
-    margin-right: 2em;
-    padding: 0.5em !important;
+    margin-bottom: 0;
+    border: 1px dotted var(--pageBorder);
+    padding: 0.7em !important;
 }
 
 .checkbox-item:hover {

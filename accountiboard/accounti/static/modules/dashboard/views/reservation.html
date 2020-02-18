@@ -79,17 +79,20 @@
                                        class="form-control" placeholder="ساعت پایان" id="end-time-clock-2">
                             </div>
                         </div>
+                        <label class="mb-3">انتخاب میز</label>
+
                         <div class="row">
-                            <div class="col">
-                                <label class="mb-3">انتخاب میز</label>
-                                <div ng-repeat="table_category in categorized_tables_data" class="checkbox-unit row">
-                                    <label ng-repeat="table in table_category.tables" class="checkbox-item col-md-2">
-                                        <input style="float: left;" ng-checked="table.is_checked"
-                                               type="checkbox"
-                                               ng-model="is_checked"
-                                               ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
-                                    </label>
-                                </div>
+                            <div ng-repeat="table_category in categorized_tables_data"
+                                 class="checkbox-unit col">
+                                <label ng-repeat="table in table_category.tables" class="checkbox-item">
+                                    <input style="float: left;" ng-checked="table.is_checked"
+                                           type="checkbox"
+                                           ng-model="is_checked"
+                                           ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                </label>
+                                <label style="height: 3em" ng-repeat="n in [] | range:(max_category_size - table_category.tables.length)" class="checkbox-item">
+
+                                </label>
                             </div>
                         </div>
                     </form>
@@ -146,19 +149,24 @@
                                        class="form-control" placeholder="ساعت پایان" id="end-time-clock-3">
                             </div>
                         </div>
+
+                        <label class="mb-3">انتخاب میز</label>
+
                         <div class="row">
-                            <div class="col">
-                                <label class="mb-3">انتخاب میز</label>
-                                <div ng-repeat="table_category in categorized_tables_data" class="checkbox-unit row">
-                                    <label ng-repeat="table in table_category.tables" class="checkbox-item col-md-2">
-                                        <input style="float: left;" ng-checked="table.is_checked"
-                                               type="checkbox"
-                                               ng-model="is_checked"
-                                               ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
-                                    </label>
-                                </div>
+                            <div ng-repeat="table_category in categorized_tables_data"
+                                 class="checkbox-unit col">
+                                <label ng-repeat="table in table_category.tables" class="checkbox-item">
+                                    <input style="float: left;" ng-checked="table.is_checked"
+                                           type="checkbox"
+                                           ng-model="is_checked"
+                                           ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                </label>
+                                <label style="height: 3em" ng-repeat="n in [] | range:(max_category_size - table_category.tables.length)" class="checkbox-item">
+
+                                </label>
                             </div>
                         </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -224,17 +232,20 @@
                                        class="form-control" placeholder="ساعت پایان" id="end-time-clock-1">
                             </div>
                         </div>
+                        <label class="mb-3">انتخاب میز</label>
+
                         <div class="row">
-                            <div class="col">
-                                <label class="mb-3">انتخاب میز</label>
-                                <div ng-repeat="table_category in categorized_tables_data" class="checkbox-unit row">
-                                    <label ng-repeat="table in table_category.tables" class="checkbox-item col-md-2">
-                                        <input style="float: left;" ng-checked="table.is_checked"
-                                               type="checkbox"
-                                               ng-model="is_checked"
-                                               ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
-                                    </label>
-                                </div>
+                            <div ng-repeat="table_category in categorized_tables_data"
+                                 class="checkbox-unit col">
+                                <label ng-repeat="table in table_category.tables" class="checkbox-item">
+                                    <input style="float: left;" ng-checked="table.is_checked"
+                                           type="checkbox"
+                                           ng-model="is_checked"
+                                           ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                </label>
+                                <label style="height: 3em" ng-repeat="n in [] | range:(max_category_size - table_category.tables.length)" class="checkbox-item">
+
+                                </label>
                             </div>
                         </div>
                     </form>
