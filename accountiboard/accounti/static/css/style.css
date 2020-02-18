@@ -1631,3 +1631,8 @@ tags-input .tags .tag-item {
     margin-right: 2em;
     padding: 0.5em !important;
 }
+
+.checkbox-item:hover {
+    cursor: pointer;
+    background-color: var(--pageBorder);
+}
