@@ -1627,7 +1627,7 @@ tags-input .tags .tag-item {
 
 .checkbox-item {
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--pageBorder);
+    border: 1px solid var(--pageBorder);
     margin-right: 2em;
-    padding-bottom: 0.4em !important;
+    padding: 0.5em !important;
 }

@@ -151,13 +151,12 @@
                             <div class="col">
                                 <label class="mb-3">انتخاب میز</label>
                                 <div class="checkbox-unit row">
-                                    <div ng-repeat="table in tables" class="checkbox-item col-md-2">
-                                        <span style="font-size: 14px">میز {{ table.table_name }}</span>
+                                    <label ng-repeat="table in tables" class="checkbox-item col-md-2">
                                         <input style="float: left;" ng-checked="table.is_checked"
                                                type="checkbox"
                                                ng-model="is_checked"
-                                               ng-click="changeTableCheckBox(is_checked, table.table_id)">
-                                    </div>
+                                               ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                    </label>
                                 </div>
                             </div>
                         </div>
