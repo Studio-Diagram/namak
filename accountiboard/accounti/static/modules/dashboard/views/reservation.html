@@ -82,8 +82,8 @@
                         <div class="row">
                             <div class="col">
                                 <label class="mb-3">انتخاب میز</label>
-                                <div class="checkbox-unit row">
-                                    <label ng-repeat="table in tables" class="checkbox-item col-md-2">
+                                <div ng-repeat="table_category in categorized_tables_data" class="checkbox-unit row">
+                                    <label ng-repeat="table in table_category.tables" class="checkbox-item col-md-2">
                                         <input style="float: left;" ng-checked="table.is_checked"
                                                type="checkbox"
                                                ng-model="is_checked"
@@ -149,8 +149,8 @@
                         <div class="row">
                             <div class="col">
                                 <label class="mb-3">انتخاب میز</label>
-                                <div class="checkbox-unit row">
-                                    <label ng-repeat="table in tables" class="checkbox-item col-md-2">
+                                <div ng-repeat="table_category in categorized_tables_data" class="checkbox-unit row">
+                                    <label ng-repeat="table in table_category.tables" class="checkbox-item col-md-2">
                                         <input style="float: left;" ng-checked="table.is_checked"
                                                type="checkbox"
                                                ng-model="is_checked"
@@ -227,8 +227,8 @@
                         <div class="row">
                             <div class="col">
                                 <label class="mb-3">انتخاب میز</label>
-                                <div class="checkbox-unit row">
-                                    <label ng-repeat="table in tables" class="checkbox-item col-md-2">
+                                <div ng-repeat="table_category in categorized_tables_data" class="checkbox-unit row">
+                                    <label ng-repeat="table in table_category.tables" class="checkbox-item col-md-2">
                                         <input style="float: left;" ng-checked="table.is_checked"
                                                type="checkbox"
                                                ng-model="is_checked"
