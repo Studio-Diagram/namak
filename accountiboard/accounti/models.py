@@ -308,7 +308,7 @@ class InvoicePurchase(models.Model):
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.factor_number) + str(self.created_time) + str(self.supplier.name) + str(self.total_price)
+        return "FactorNumber: " + str(self.factor_number) + " Time: " + str(self.created_time) + str(self.supplier.name) + str(self.total_price)
 
 
 class InvoicePurchaseAdmin(admin.ModelAdmin):
@@ -334,7 +334,7 @@ class PurchaseToShopProduct(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "id(" + str(self.id) + ")" + str(self.shop_product.name) + "InvoicePId(" + str(
+        return "FactorNumber: " + str(self.invoice_purchase.factor_number) + " id(" + str(self.id) + ")" + str(self.shop_product.name) + "InvoicePId(" + str(
             self.invoice_purchase.id) + ")" + str(
             self.invoice_purchase.supplier.name)
 
