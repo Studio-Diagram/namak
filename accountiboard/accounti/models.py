@@ -308,7 +308,7 @@ class InvoicePurchase(models.Model):
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.created_time) + str(self.supplier.name) + str(self.total_price)
+        return str(self.factor_number) + str(self.created_time) + str(self.supplier.name) + str(self.total_price)
 
 
 class InvoicePurchaseAdmin(admin.ModelAdmin):
