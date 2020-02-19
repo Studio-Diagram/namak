@@ -20,7 +20,7 @@ def get_detail_product_number(request):
     shop_product = ShopProduct.objects.get(name=shop_product_name)
 
     # All Invoice Sales with this product
-    invoice_sales_counter = InvoicesSalesToShopProducts.objects.filter(shop_product=shop_product).count()
+    invoice_sales_counter = InvoicesSalesToShopProducts.objects.filter(shop_product=shop_product).aggregate(Sum('numbers'))
 
     # All Shop Product in all Invoice Purchases
     sum_all_shop_p_numbers_invoice_purchases = PurchaseToShopProduct.objects.filter(
