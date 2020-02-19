@@ -227,6 +227,10 @@ class InvoicesSalesToShopProducts(models.Model):
         return str(self.shop_product) + "+" + str(self.numbers) + "+" + str(self.id)
 
 
+class InvoicesSalesToShopProductsAdmin(admin.ModelAdmin):
+    search_fields = ('shop_product__name',)
+
+
 class InvoicesSalesToGame(models.Model):
     invoice_sales = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     game = models.ForeignKey(to=Game, on_delete=models.CASCADE)
