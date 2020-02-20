@@ -1389,7 +1389,6 @@ def get_all_invoices_with_date(request):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
     data_list = []
-    print(datetime.strptime("10/05/2019", '%m/%d/%Y'))
     all_invoices = InvoiceSales.objects.filter(created_time__gte=datetime.strptime("10/5/2019", '%m/%d/%Y'))
     for item in all_invoices:
         shops_list = []
@@ -1406,3 +1405,23 @@ def get_all_invoices_with_date(request):
                 "shop_products": shops_list
             })
     return JsonResponse({"response_code": 2, "data": data_list})
+
+
+def edit_payment_invoice_sale(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    invoice_data = rec_data['invoice_data']
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_data:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    invoice_obj = InvoiceSales.objects.get(id=invoice_data['invoice_id'])
+    invoice_obj.cash = invoice_data['cash']
+    invoice_obj.pos = invoice_data['pos']
+    invoice_obj.save()
+    return JsonResponse({"response_code": 2})

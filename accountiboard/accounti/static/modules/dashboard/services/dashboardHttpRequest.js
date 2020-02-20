@@ -935,6 +935,13 @@ angular.module('dashboard')
                     'url': "/api/checkGiftCode/",
                     'data': data
                 });
+            },
+            'editPaymentInvoiceSale': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/editPaymentInvoiceSale/",
+                    'data': data
+                });
             }
 
 

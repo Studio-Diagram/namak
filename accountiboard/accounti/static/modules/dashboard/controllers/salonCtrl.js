@@ -6,8 +6,15 @@ angular.module("dashboard")
             $scope.invoice_delete_description = "";
             $scope.disable_print_after_save_all_buttons = false;
             $scope.is_in_edit_mode_invoice = false;
+            $scope.first_time_edit_payment_init = true;
             $scope.selected_category = {
                 "items": []
+            };
+            $scope.editable_invoice = {
+                "invoice_id": 0,
+                "cash": 5000,
+                "pos": 0,
+                "total": 0
             };
             $scope.new_invoice_data = {
                 'invoice_sales_id': 0,
@@ -77,6 +84,8 @@ angular.module("dashboard")
                     $scope.closeDeleteModal();
                     $scope.closeErrorModal();
                     $scope.closeDeleteInvoiceModal();
+                    $rootScope.close_modal("editSettledInvoicePayment", "viewInvoiceModal");
+                    $rootScope.close_modal("viewInvoiceModal");
                 }
                 if (event.ctrlKey && event.keyCode === 49) {
 
@@ -133,6 +142,27 @@ angular.module("dashboard")
                 }, function (error) {
                     $scope.disable_print_after_save_all_buttons = false;
                     $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.edit_settled_invoice_payment = function () {
+            var sending_data = {
+                "username": $rootScope.user_data.username,
+                "invoice_data": $scope.editable_invoice
+            };
+            dashboardHttpRequest.editPaymentInvoiceSale(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $rootScope.close_modal('editSettledInvoicePayment', 'viewInvoiceModal')
+                        $rootScope.close_modal("viewInvoiceModal");
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = 500;
                     $scope.openErrorModal();
                 });
         };
@@ -328,7 +358,20 @@ angular.module("dashboard")
         };
 
         $scope.edit_payment_modal_changer = function () {
-            $scope.editable_invoice.pos = $scope.editable_invoice.total - $scope.editable_invoice.cash;
+            if ($scope.first_time_edit_payment_init) {
+                $scope.editable_invoice = {
+                    "invoice_id": $scope.new_invoice_data.invoice_sales_id,
+                    "cash": $scope.new_invoice_data.cash_amount,
+                    "pos": $scope.new_invoice_data.pos_amount,
+                    "total": $scope.new_invoice_data.cash_amount + $scope.new_invoice_data.pos_amount
+                };
+                $timeout(function () {
+                    $scope.first_time_edit_payment_init = false;
+                }, 2000);
+            }
+            else{
+                $scope.editable_invoice.pos = $scope.editable_invoice.total - $scope.editable_invoice.cash;
+            }
         };
 
         $scope.openErrorModal = function () {
@@ -1092,6 +1135,16 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.initiate_edit_payment_invoice_sale = function () {
+            $scope.editable_invoice = {
+                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
+                "cash": $scope.new_invoice_data.cash_amount,
+                "pos": $scope.new_invoice_data.pos_amount,
+                "total": $scope.new_invoice_data.cash_amount + $scope.new_invoice_data.pos_amount
+            };
+            $rootScope.open_modal('editSettledInvoicePayment', 'viewInvoiceModal');
+        };
+
         $scope.showInvoice = function (invoice_id) {
             $scope.will_delete_items.invoice_id = invoice_id;
             var sending_data = {
@@ -1102,7 +1155,6 @@ angular.module("dashboard")
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-
                         $scope.new_invoice_data = {
                             'invoice_sales_id': data['invoice']['invoice_sales_id'],
                             'table_id': data['invoice']['table_id'],
@@ -1124,17 +1176,13 @@ angular.module("dashboard")
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
+                            "cash_amount": Number(data['invoice']['cash_amount']),
+                            "pos_amount": Number(data['invoice']['pos_amount']),
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
-                        };
-                        $scope.editable_invoice = {
-                            "invoice_id": data['invoice']['invoice_sales_id'],
-                            "cash": data['invoice']['cash_amount'],
-                            "pos": data['invoice']['pos_amount'],
-                            "total": Number(data['invoice']['pos_amount']) + Number(data['invoice']['cash_amount'])
                         };
                         $scope.openViewInvoiceModal();
                     }
