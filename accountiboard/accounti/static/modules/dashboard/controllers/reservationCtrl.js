@@ -171,6 +171,7 @@ angular.module("dashboard")
                                 for (var i = 0; i < $scope.categorized_tables_data[j].tables.length; i++) {
                                     if ($scope.categorized_tables_data[j].tables[i].table_id === table.table_id) {
                                         $scope.categorized_tables_data[j].tables[i].is_checked = 1;
+                                        $scope.categorized_tables_data[j].tables[i].is_checked_m = 1;
                                         $scope.new_reserve_data.tables_id.push(table.table_id);
                                         break;
                                     }
@@ -429,6 +430,7 @@ angular.module("dashboard")
                 for (var j = 0; j < $scope.categorized_tables_data.length; j++) {
                     for (var i = 0; i < $scope.categorized_tables_data[j].tables.length; i++) {
                         $scope.categorized_tables_data[j].tables[i].is_checked = 0;
+                        $scope.categorized_tables_data[j].tables[i].is_checked_m = 0;
                     }
                 }
             };
@@ -558,6 +560,7 @@ angular.module("dashboard")
                                     for (var i = 0; i < $scope.categorized_tables_data[j].tables.length; i++) {
                                         if ($scope.categorized_tables_data[j].tables[i].table_id === table_id) {
                                             $scope.categorized_tables_data[j].tables[i].is_checked = 1;
+                                            $scope.categorized_tables_data[j].tables[i].is_checked_m = 1;
                                             break;
                                         }
                                     }
@@ -611,7 +614,6 @@ angular.module("dashboard")
                 jQuery.noConflict();
                 (function ($) {
                     $('#addReservationModal').modal('hide');
-                    $scope.get_tables_data();
                     $scope.resetFrom();
                 })(jQuery);
             };
@@ -630,7 +632,6 @@ angular.module("dashboard")
                 jQuery.noConflict();
                 (function ($) {
                     $('#addWalkedModal').modal('hide');
-                    $scope.get_tables_data();
                     $scope.resetFrom();
                 })(jQuery);
             };
@@ -665,7 +666,6 @@ angular.module("dashboard")
                 jQuery.noConflict();
                 (function ($) {
                     $('#completeReserveModal').modal('hide');
-                    $scope.get_tables_data();
                     $('.tooltipM').fadeOut();
                     $scope.resetFrom();
                 })(jQuery);
@@ -835,6 +835,7 @@ angular.module("dashboard")
             };
 
             $scope.resetFrom = function () {
+                $scope.get_tables_data();
                 $scope.new_reserve_data = {
                     'reserve_id': 0,
                     'numbers': 0,
