@@ -25,11 +25,9 @@ angular.module('dashboard')
                     headers: {'X-CSRFToken': $cookies.get("csrftoken")},
                     params: params,
                     data: data
-                })
-                    .success(angular.bind(this, function (data, status, headers, config) {
-                        deferred.resolve(data, status);
-                    }))
-                    .error(angular.bind(this, function (data, status, headers, config) {
+                }).then(angular.bind(this, function (data, status, headers, config) {
+                        deferred.resolve(data['data'], status);
+                    }), angular.bind(this, function (data, status, headers, config) {
                         console.log("error syncing with: " + url);
 
                         // Set request status
@@ -37,14 +35,14 @@ angular.module('dashboard')
                             data.status = status;
                         }
 
-                        if (status == 0) {
-                            if (data == "") {
+                        if (status === 0) {
+                            if (data === "") {
                                 data = {};
                                 data['status'] = 0;
                                 data['non_field_errors'] = ["Could not connect. Please try again."];
                             }
                             // or if the data is null, then there was a timeout.
-                            if (data == null) {
+                            if (data === null) {
                                 // Inject a non field error alerting the user
                                 // that there's been a timeout error.
                                 data = {};

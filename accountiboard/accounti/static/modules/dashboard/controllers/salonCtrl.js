@@ -327,6 +327,10 @@ angular.module("dashboard")
             $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.cash) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip) - Number($scope.new_invoice_data.used_credit);
         };
 
+        $scope.edit_payment_modal_changer = function () {
+            $scope.editable_invoice.pos = $scope.editable_invoice.total - $scope.editable_invoice.cash;
+        };
+
         $scope.openErrorModal = function () {
             jQuery.noConflict();
             (function ($) {
@@ -692,11 +696,11 @@ angular.module("dashboard")
         };
 
         $scope.selectTable = function (table_name) {
-            $state.transitionTo('cash_manager.salon', {table_name: table_name}, {
-                location: true,
-                inherit: true,
-                relative: $state.$current,
-                notify: false
+            $state.go($state.current, {table_name: table_name}, {
+                notify: false,
+                reload: false,
+                location: 'replace',
+                inherit: true
             });
             $scope.current_selected_table_name = table_name;
             $scope.selected_table_data = [];
@@ -1125,6 +1129,12 @@ angular.module("dashboard")
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
+                        };
+                        $scope.editable_invoice = {
+                            "invoice_id": data['invoice']['invoice_sales_id'],
+                            "cash": data['invoice']['cash_amount'],
+                            "pos": data['invoice']['pos_amount'],
+                            "total": Number(data['invoice']['pos_amount']) + Number(data['invoice']['cash_amount'])
                         };
                         $scope.openViewInvoiceModal();
                     }

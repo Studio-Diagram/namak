@@ -349,18 +349,30 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $rootScope.open_modal = function (modal_id) {
+        $rootScope.open_modal = function (modal_id, modal_has_to_fade_out) {
             jQuery.noConflict();
             (function ($) {
                 $('#' + modal_id).modal('show');
             })(jQuery);
+            if (modal_has_to_fade_out) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_has_to_fade_out).css('z-index', 1000);
+                })(jQuery);
+            }
         };
 
-        $rootScope.close_modal = function (modal_id) {
+        $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {
             jQuery.noConflict();
             (function ($) {
                 $('#' + modal_id).modal('hide');
             })(jQuery);
+            if (modal_has_to_fade_in) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_has_to_fade_in).css('z-index', "");
+                })(jQuery);
+            }
         };
 
 

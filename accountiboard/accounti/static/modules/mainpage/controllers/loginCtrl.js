@@ -21,6 +21,7 @@ angular.module("mainpage")
                 $scope.buttonText = "ورود";
                 mainpageHttpRequest.loginUser($scope.user_login_data)
                     .then(function (data) {
+                        console.log(data);
                         if (data['response_code'] === 2) {
                             var logged_in_user = data['user_data']['username'];
                             var branch = data['user_data']['branch'];

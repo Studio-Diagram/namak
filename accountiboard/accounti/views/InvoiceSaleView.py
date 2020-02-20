@@ -299,7 +299,9 @@ def get_invoice(request):
             'shop_items_old': [],
             'games': [],
             'used_credit': 0,
-            'total_credit': 0
+            'total_credit': 0,
+            'cash_amount': invoice_object.cash,
+            "pos_amount": invoice_object.pos
         }
         invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
         for game in invoice_games:
