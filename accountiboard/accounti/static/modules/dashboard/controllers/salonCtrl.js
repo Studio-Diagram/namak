@@ -283,6 +283,8 @@ angular.module("dashboard")
                 $scope.new_invoice_data['in_edit_mode'] = "OUT_EDIT_MODE";
             }
             $scope.is_in_edit_mode_invoice = false;
+            $scope.new_invoice_data.referal_page = $state.current.name;
+            $scope.new_invoice_data.method_name = "print_after_save";
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -333,6 +335,8 @@ angular.module("dashboard")
                 $scope.new_invoice_data['in_edit_mode'] = "OUT_EDIT_MODE";
             }
             $scope.is_in_edit_mode_invoice = false;
+            $scope.new_invoice_data.referal_page = $state.current.name;
+            $scope.new_invoice_data.method_name = "print_cash";
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -456,6 +460,8 @@ angular.module("dashboard")
                 $scope.new_invoice_data['in_edit_mode'] = "OUT_EDIT_MODE";
             }
             $scope.is_in_edit_mode_invoice = false;
+            $scope.new_invoice_data.referal_page = $state.current.name;
+            $scope.new_invoice_data.method_name = "openPayModal";
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -906,6 +912,8 @@ angular.module("dashboard")
                 $scope.new_invoice_data['in_edit_mode'] = "OUT_EDIT_MODE";
             }
             $scope.is_in_edit_mode_invoice = false;
+            $scope.new_invoice_data.referal_page = $state.current.name;
+            $scope.new_invoice_data.method_name = "SaveInvoice";
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

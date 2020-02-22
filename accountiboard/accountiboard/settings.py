@@ -167,6 +167,10 @@ LOGGING = {
             'class': 'logging.handlers.WatchedFileHandler',
             'filename': 'myapp_info.log'
         },
+        'specific_info': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': 'specific_bug.log'
+        },
     },
     'loggers': {
         'django.security.DisallowedHost': {
@@ -193,6 +197,11 @@ LOGGING = {
         },
         'accounti_info': {
             'handlers': ['logfile_info'],
+            'level': 'INFO',  # Or maybe INFO or DEBUG
+            'propagate': False
+        },
+        'specific_bug': {
+            'handlers': ['specific_info'],
             'level': 'INFO',  # Or maybe INFO or DEBUG
             'propagate': False
         },

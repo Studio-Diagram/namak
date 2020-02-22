@@ -23,6 +23,7 @@ DO_NOT_WANT_ORDER = "سفارش ندارد"
 DO_NOT_WANT_GAME = "بازی نمی‌خواهد"
 NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
 WAIT_FOR_SETTLE = "منتظر تسویه"
+PRICE_PER_POINT_IN_GAME = 5000
 
 
 def start_invoice_game(request):
@@ -597,6 +598,11 @@ def create_new_invoice_sales(request):
                 new_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
             new_invoice.save()
+            valid_total_price = get_invoice_sale_total_price(new_invoice.id)
+            if valid_total_price != new_invoice.total_price:
+                new_invoice.total_price = valid_total_price
+                new_invoice.save()
+                logger.info('%s : [WrongTotalPrice] Body field is: %s', str(datetime.now()), str(rec_data))
             logger.info('%s : [CreateNewInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
@@ -678,10 +684,33 @@ def create_new_invoice_sales(request):
             old_invoice.tip = tip
             old_invoice.save()
             new_invoice_id = old_invoice.pk
+            valid_total_price = get_invoice_sale_total_price(old_invoice.id)
+            if valid_total_price != old_invoice.total_price:
+                old_invoice.total_price = valid_total_price
+                old_invoice.save()
+                logger.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()), str(rec_data))
             logger.info('%s : [EditInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+
+def get_invoice_sale_total_price(invoice_id):
+    total_price = 0
+    invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+    all_invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_object)
+    for invoice_to_menu_item in all_invoice_to_menu_items:
+        total_price += invoice_to_menu_item.numbers * int(invoice_to_menu_item.menu_item.price)
+
+    all_invoice_to_shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
+    for invoice_to_shop_product in all_invoice_to_shop_products:
+        total_price += invoice_to_shop_product.numbers * int(invoice_to_shop_product.shop_product.price)
+
+    all_invoice_sales_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object).exclude(game__points=0)
+    for invoice_to_game in all_invoice_sales_games:
+        total_price += invoice_to_game.game.points * PRICE_PER_POINT_IN_GAME
+
+    return total_price
 
 
 def get_member(request):
