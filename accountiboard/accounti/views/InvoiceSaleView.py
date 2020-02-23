@@ -7,6 +7,7 @@ from django.db.models import Sum
 import logging
 
 logger = logging.getLogger("accounti_info")
+logger_specific_bug = logging.getLogger("specific_bug")
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
 PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
@@ -602,7 +603,7 @@ def create_new_invoice_sales(request):
             if valid_total_price != new_invoice.total_price:
                 new_invoice.total_price = valid_total_price
                 new_invoice.save()
-                logger.info('%s : [WrongTotalPrice] Body field is: %s', str(datetime.now()), str(rec_data))
+                logger_specific_bug.info('%s : [WrongTotalPrice] Body field is: %s', str(datetime.now()), str(rec_data))
             logger.info('%s : [CreateNewInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
@@ -688,7 +689,7 @@ def create_new_invoice_sales(request):
             if valid_total_price != old_invoice.total_price:
                 old_invoice.total_price = valid_total_price
                 old_invoice.save()
-                logger.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()), str(rec_data))
+                logger_specific_bug.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()), str(rec_data))
             logger.info('%s : [EditInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
