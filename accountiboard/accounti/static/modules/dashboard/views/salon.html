@@ -444,7 +444,7 @@
         <div class="row saloonPageContent">
             <main class="col-sm-2 tableNavigation">
                 <div class="row">
-                    <div ng-repeat="table_category in categorized_tables_data" class="col-md-6">
+                    <div ng-repeat="table_category in categorized_tables_data" class="col-md-6 table_category">
                         <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)" ng-class="set_class_name(table.table_name)"><span
                                 ng-hide="table_factor_counts(table.table_name) === 0" class="badge badge-pill badge-warning"
                                 ng-bind="table_factor_counts(table.table_name)"></span>{{ table.table_name }}</a>

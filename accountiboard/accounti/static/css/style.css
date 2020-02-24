@@ -1638,3 +1638,13 @@ tags-input .tags .tag-item {
     cursor: pointer;
     background-color: var(--pageBorder);
 }
+
+.table_category {
+    border-bottom: 1px dotted var(--pageBorder);
+    margin-bottom: 1em;
+}
+
+.table_category:nth-last-child(-n+2) {
+    border-bottom: none;
+    margin-bottom: 1em;
+}
