@@ -689,7 +689,8 @@ def create_new_invoice_sales(request):
             if valid_total_price != old_invoice.total_price:
                 old_invoice.total_price = valid_total_price
                 old_invoice.save()
-                logger_specific_bug.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()), str(rec_data))
+                logger_specific_bug.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()),
+                                         str(rec_data))
             logger.info('%s : [EditInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
@@ -1455,3 +1456,33 @@ def edit_payment_invoice_sale(request):
     invoice_obj.pos = invoice_data['pos']
     invoice_obj.save()
     return JsonResponse({"response_code": 2})
+
+
+def night_report_template(request):
+    if request.method != "GET":
+        return JsonResponse({"response_code": 4, "error_msg": "POST REQUEST!"})
+
+    jdatetime.set_locale('fa_IR')
+    report_data = {}
+    cash_id = request.GET['cash_id']
+
+    try:
+        cash_object = Cash.objects.get(pk=cash_id)
+    except Cash.DoesNotExist:
+        return JsonResponse({"response_code": 4, "error_msg": "No Cash!"})
+
+    cash_open_date = cash_object.created_date_time
+    jalali_date_create = jdatetime.date.fromgregorian(day=cash_open_date.day, month=cash_open_date.month,
+                                                      year=cash_open_date.year)
+    all_invoice_in_cash_desk = InvoiceSales.objects.filter(cash_desk=cash_object)
+    sum_total_price = all_invoice_in_cash_desk.aggregate(Sum("total_price"))
+    sum_cash = all_invoice_in_cash_desk.aggregate(Sum("cash"))
+    sum_pos = all_invoice_in_cash_desk.aggregate(Sum("pos"))
+    sum_tip = all_invoice_in_cash_desk.aggregate(Sum("tip"))
+    report_data['created_date'] = jalali_date_create.strftime("%Y/%m/%d")
+    report_data['day_of_the_week'] = jalali_date_create.strftime("%A")
+    report_data['total_price'] = format(int(sum_total_price['total_price__sum']), ",d")
+    report_data['cash'] = format(int(sum_cash['cash__sum']), ",d")
+    report_data['pos'] = format(int(sum_pos['pos__sum']), ",d")
+    report_data['tip'] = format(int(sum_tip['tip__sum']), ",d")
+    return render(request, 'night_report.html', {"report_data": report_data})

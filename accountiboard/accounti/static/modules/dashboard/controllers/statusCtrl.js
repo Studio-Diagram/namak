@@ -200,6 +200,23 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.print_night_report = function () {
+            var sending_data = {
+                'cash_id': $rootScope.cash_data.cash_id
+            };
+            $http({
+                method: 'POST',
+                url: 'http://127.0.0.1:8000/printNightReport',
+                data: sending_data,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).then(function successCallback(response) {
+
+            }, function errorCallback(response) {
+                $scope.error_message = "Printer Server not connected.";
+                $scope.openErrorModal();
+            });
+        };
+
         $scope.openErrorModal = function () {
             jQuery.noConflict();
             (function ($) {

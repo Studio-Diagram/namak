@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        @font-face {
+            font-family: IRANSans;
+            font-style: normal;
+            font-weight: normal;
+            src: url('{% static 'fonts/ttf/IRANSansWeb.ttf' %}') format('truetype');
+        }
+
+        @font-face {
+            font-family: IRANSansNums;
+            font-style: normal;
+            font-weight: normal;
+            src: url('{% static 'fonts/ttf/IRANsansNUMs.ttf' %}') format('truetype');
+        }
+
+        .iranian-number {
+            font-family: IRANSansNums;
+        }
+
+        .tableWrapper {
+            background: white;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        body {
+            font-size: 1.3em;
+            font-family: 'IRANSans', tahoma, serif;
+            font-weight: normal;
+            direction: rtl;
+            width: 80mm;
+            margin: auto;
+            text-align: center;
+        }
+
+        .table td, .table th {
+            padding: .3rem;
+            vertical-align: top;
+            border: 1px solid black;
+        }
+
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+        table {
+            border-collapse: collapse;
+        }
+
+        .table {
+            width: 100%;
+            background-color: transparent;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+        }
+
+        .small-text {
+            font-size: 0.7em;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+<br>
+<div class="tableWrapper">
+    <table class="table">
+        <tbody>
+        <tr>
+            <td class="small-text">تاریخ</td>
+            <td class="small-text">{{ report_data.created_date }}</td>
+        </tr>
+        <tr>
+            <td class="small-text">روز</td>
+            <td class="small-text">{{ report_data.day_of_the_week }}</td>
+        </tr>
+        <tr>
+            <td class="small-text">فروش</td>
+            <td class="small-text">{{ report_data.total_price }}</td>
+        </tr>
+        <tr>
+            <td class="small-text">پوز بانکی</td>
+            <td class="small-text">{{ report_data.pos }}</td>
+        </tr>
+        <tr>
+            <td class="small-text">گزارش پرداخت</td>
+            <td class="small-text"></td>
+        </tr>
+        <tr>
+            <td class="small-text">بلیط رویداد</td>
+            <td class="small-text"></td>
+        </tr>
+        <tr>
+            <td class="small-text">گزارش دریافت</td>
+            <td class="small-text"></td>
+        </tr>
+        <tr>
+            <td class="small-text">انعام</td>
+            <td class="small-text">{{ report_data.tip }}</td>
+        </tr>
+        <tr>
+            <td class="small-text">پول نقد</td>
+            <td class="small-text">{{ report_data.cash }}</td>
+        </tr>
+        <tr>
+            <td class="small-text">صندوق</td>
+            <td class="small-text"></td>
+        </tr>
+        <tr>
+            <td class="small-text">اختلاف</td>
+            <td class="small-text"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+
+</html>
