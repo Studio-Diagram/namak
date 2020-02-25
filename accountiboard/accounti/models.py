@@ -166,6 +166,10 @@ class ShopProduct(models.Model):
 class Cash(models.Model):
     created_date_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     ended_date_time = models.DateTimeField(null=True, blank=True)
+    income_report = models.IntegerField(null=False, default=0)
+    outcome_report = models.IntegerField(null=False, default=0)
+    event_tickets = models.IntegerField(null=False, default=0)
+    current_money_in_cash = models.IntegerField(null=False, default=0)
     employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_close = models.SmallIntegerField(default=0, null=False)

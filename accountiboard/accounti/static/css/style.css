@@ -1648,3 +1648,11 @@ tags-input .tags .tag-item {
     border-bottom: none;
     margin-bottom: 1em;
 }
+
+.red-cell {
+    background: var(--myRed) !important;
+}
+
+.green-cell {
+    background: var(--myGreen) !important;
+}

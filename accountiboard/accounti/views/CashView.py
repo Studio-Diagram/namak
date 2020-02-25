@@ -74,6 +74,7 @@ def close_cash(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch_id']
         username = rec_data['username']
+        night_report_inputs = rec_data['night_report_inputs']
 
         if not username:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -81,6 +82,10 @@ def close_cash(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+        if night_report_inputs['income_report'] == "" or night_report_inputs['outcome_report'] == ""  \
+                or night_report_inputs['event_tickets'] == "" or night_report_inputs['current_money_in_cash'] == "":
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         branch_obj = Branch.objects.get(pk=branch_id)
         employee_obj = Employee.objects.filter(phone=username).first()
@@ -95,6 +100,10 @@ def close_cash(request):
             current_cash_obj.is_close = 1
             current_cash_obj.employee = employee_obj
             current_cash_obj.ended_date_time = now
+            current_cash_obj.current_money_in_cash = night_report_inputs['current_money_in_cash']
+            current_cash_obj.income_report = night_report_inputs['income_report']
+            current_cash_obj.outcome_report = night_report_inputs['outcome_report']
+            current_cash_obj.event_tickets = night_report_inputs['event_tickets']
             current_cash_obj.save()
             return JsonResponse({"response_code": 2})
         else:

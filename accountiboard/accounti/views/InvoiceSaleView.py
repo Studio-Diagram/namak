@@ -1479,10 +1479,23 @@ def night_report_template(request):
     sum_cash = all_invoice_in_cash_desk.aggregate(Sum("cash"))
     sum_pos = all_invoice_in_cash_desk.aggregate(Sum("pos"))
     sum_tip = all_invoice_in_cash_desk.aggregate(Sum("tip"))
+    sum_discount = all_invoice_in_cash_desk.aggregate(Sum("discount"))
     report_data['created_date'] = jalali_date_create.strftime("%Y/%m/%d")
     report_data['day_of_the_week'] = jalali_date_create.strftime("%A")
-    report_data['total_price'] = format(int(sum_total_price['total_price__sum']), ",d")
+    report_data['total_price'] = format(int(sum_total_price['total_price__sum']) - int(sum_discount['discount__sum']),
+                                        ",d")
     report_data['cash'] = format(int(sum_cash['cash__sum']), ",d")
     report_data['pos'] = format(int(sum_pos['pos__sum']), ",d")
     report_data['tip'] = format(int(sum_tip['tip__sum']), ",d")
+    report_data['income_report'] = format(cash_object.income_report, ",d")
+    report_data['outcome_report'] = format(cash_object.outcome_report, ",d")
+    report_data['event_tickets'] = format(cash_object.event_tickets, ",d")
+    report_data['current_money_in_cash'] = format(cash_object.current_money_in_cash, ",d")
+    report_data['total_cash_desk'] = (int(sum_total_price['total_price__sum']) - int(
+        sum_discount['discount__sum'])) - int(
+        sum_pos['pos__sum']) - cash_object.outcome_report - cash_object.event_tickets + cash_object.income_report + int(
+        sum_tip['tip__sum'])
+    report_data['difference'] = cash_object.current_money_in_cash - report_data['total_cash_desk']
+    report_data['total_cash_desk'] = format(report_data['total_cash_desk'], ',d')
+    report_data['difference'] = format(report_data['difference'], ',d')
     return render(request, 'night_report.html', {"report_data": report_data})

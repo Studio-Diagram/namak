@@ -91,15 +91,15 @@
         </tr>
         <tr>
             <td class="small-text">گزارش پرداخت</td>
-            <td class="small-text"></td>
+            <td class="small-text">{{ report_data.outcome_report }}</td>
         </tr>
         <tr>
             <td class="small-text">بلیط رویداد</td>
-            <td class="small-text"></td>
+            <td class="small-text">{{ report_data.event_tickets }}</td>
         </tr>
         <tr>
             <td class="small-text">گزارش دریافت</td>
-            <td class="small-text"></td>
+            <td class="small-text">{{ report_data.income_report }}</td>
         </tr>
         <tr>
             <td class="small-text">انعام</td>
@@ -107,15 +107,15 @@
         </tr>
         <tr>
             <td class="small-text">پول نقد</td>
-            <td class="small-text">{{ report_data.cash }}</td>
+            <td class="small-text">{{ report_data.current_money_in_cash }}</td>
         </tr>
         <tr>
             <td class="small-text">صندوق</td>
-            <td class="small-text"></td>
+            <td class="small-text">{{ report_data.total_cash_desk }}</td>
         </tr>
         <tr>
             <td class="small-text">اختلاف</td>
-            <td class="small-text"></td>
+            <td class="small-text">{{ report_data.difference }}</td>
         </tr>
         </tbody>
     </table>

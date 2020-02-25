@@ -1,6 +1,12 @@
 angular.module("dashboard")
     .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            $scope.night_report_inputs = {
+                "income_report": 0,
+                "outcome_report": 0,
+                "event_tickets": 0,
+                "current_money_in_cash": 0
+            };
             $scope.bar_sale_detail_category_filter = "";
             if ($rootScope.cash_data.cash_id !== 0) {
                 $scope.get_status_data();
@@ -142,29 +148,23 @@ angular.module("dashboard")
         };
 
         $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
+            $rootScope.open_modal('closeInvoicePermissionModal', 'submit_cash_today_modal');
         };
 
         $scope.closePermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
+            $rootScope.close_modal('closeInvoicePermissionModal', 'submit_cash_today_modal');
         };
 
         $scope.close_cash = function () {
             var sending_data = {
+                'night_report_inputs': $scope.night_report_inputs,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.closeCash(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.print_night_report();
                         $scope.log_out();
                     }
                     else if (data['response_code'] === 3) {
