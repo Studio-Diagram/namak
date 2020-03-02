@@ -74,7 +74,15 @@ def close_cash(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch_id']
         username = rec_data['username']
-        night_report_inputs = rec_data['night_report_inputs']
+        if 'night_report_inputs' not in rec_data.keys():
+            night_report_inputs = {
+                "current_money_in_cash": 0,
+                "income_report": 0,
+                "outcome_report": 0,
+                "event_tickets": 0
+            }
+        else:
+            night_report_inputs = rec_data['night_report_inputs']
 
         if not username:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
