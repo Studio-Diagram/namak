@@ -108,11 +108,11 @@
     <div class="row">
         <div class="col-sm-2 mainLogo">
             <a class="" href="index.html">
-                <img src="{% static 'img/boardlogowhite.svg' %}" width="104" height="26"
-                     class="d-inline-block align-top">
+                <img src="{% static 'img/namak_logo.svg' %}" width="104" height="26"
+                     class="d-inline-block align-top namak_logo">
             </a>
         </div>
-        <div class="col-sm-7 userInfo">
+        <div class="col-sm-6 userInfo">
                     <span>
                         سلام!
                     </span>
@@ -120,7 +120,7 @@
             <a class="mainButton blackButton" href="#"><i class="fas fa-star"></i> میانبرها</a>
             <a ng-click="log_out()" class="mainButton blackButton" href="#"><i class="fas fa-sign-out-alt"></i> خروج</a>
         </div>
-        <div style="padding: 10px 40px 0 0" class="col-sm-3">
+        <div class="col-sm-4 time_container">
             <time ng-bind="clock | date:'HH:mm' | persianNumber"></time>
             <time ng-bind="get_today_var | persianNumber"></time>
         </div>

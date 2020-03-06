@@ -87,12 +87,8 @@ a:hover i {
 .topHeader {
     padding: 5px 30px;
     background: var(--myBlack);
-    height: 55px;
+    height: 4.5em;
     border-top: 5px solid var(--myRed);
-}
-
-.topHeader .mainLogo {
-    padding-top: 6px;
 }
 
 .topHeader .userInfo {
@@ -140,9 +136,9 @@ main.pageWrapper {
 }
 
 main a.bigLogo {
+    width: 15em;
     display: block;
-    width: 111px;
-    margin: 70px auto;
+    margin: auto;
 }
 
 a.smallLink {
@@ -1655,4 +1651,16 @@ tags-input .tags .tag-item {
 
 .green-cell {
     background: var(--myGreen) !important;
+}
+
+.time_container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.namak_logo {
+    display: block;
+    height: auto;
+    width: 3.6em;
 }
