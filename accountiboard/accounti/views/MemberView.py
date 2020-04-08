@@ -3,6 +3,7 @@ import json
 from accounti.models import *
 from django.db.models.functions import Concat
 from django.db.models import CharField, Value as V
+from django.db import IntegrityError
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -62,10 +63,14 @@ def add_member(request):
                     intro=intro
                 )
                 new_member.save()
-            except Exception as e:
-                return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
 
-            return JsonResponse({"response_code": 2})
+                method = "create"
+                member_primary_key = new_member.pk
+
+            except IntegrityError as e:
+                if 'unique constraint' in e.args[0]:
+                    return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
+
         else:
             try:
                 old_member = Member.objects.get(pk=member_id)
@@ -78,10 +83,20 @@ def add_member(request):
                 old_member.phone = phone
                 old_member.intro = intro
                 old_member.save()
-            except Exception as e:
-                return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
 
-            return JsonResponse({"response_code": 2})
+                method = "edit"
+                member_primary_key = old_member.pk
+
+            except IntegrityError as e:
+                if 'unique constraint' in e.args[0]:
+                    return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
+
+        return JsonResponse({"response_code": 2, "created_member": {
+            "last_name": last_name,
+            "card_number": card_number,
+            "method": method,
+            "member_primary_key": member_primary_key
+        }})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 

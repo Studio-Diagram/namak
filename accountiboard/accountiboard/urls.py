@@ -14,12 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls import url
 from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
-    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView
+    ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
+    OfflineAPIs
 from accountiboard import settings
 from django.views.static import serve
 
@@ -156,10 +157,16 @@ urlpatterns = [
     path('api/getYourInvoices/', InvoiceSaleView.get_all_invoices_with_date),
     path('api/createManualGiftCode/', CreditView.create_gift_code_manual),
     path('api/checkGiftCode/', CreditView.check_gift_code),
+    # Offline APIs URLs
+    path('api/offline/status/', OfflineAPIs.status_of_server),
+    path('api/offline/list/member/<int:last_uuid>/', OfflineAPIs.sync_member_list),
+    path('api/offline/list/menu_category/<int:last_uuid>/', OfflineAPIs.sync_member_list),
+    # End of offline APIs URLs
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
     path('template/night-report', InvoiceSaleView.night_report_template),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
     path('template/invoice-no-cash', InvoiceSaleView.print_after_save_template),
+    path('api/do_sync/', include('accounti.offline_syncer_urls')),
     path('admin/', admin.site.urls),
     url(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),

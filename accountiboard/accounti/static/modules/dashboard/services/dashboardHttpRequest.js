@@ -1,5 +1,5 @@
 angular.module('dashboard')
-    .service('dashboardHttpRequest', function dashboardHttpRequest($q, $http, $auth, $cookies) {
+    .service('dashboardHttpRequest', function dashboardHttpRequest($q, $http, $auth, $cookies, $window) {
         var service = {
             'API_URL': window.location.origin,
             'use_session': false,
@@ -29,26 +29,9 @@ angular.module('dashboard')
                         deferred.resolve(data['data'], status);
                     }), angular.bind(this, function (data, status, headers, config) {
                         console.log("error syncing with: " + url);
-
-                        // Set request status
-                        if (data) {
-                            data.status = status;
-                        }
-
-                        if (status === 0) {
-                            if (data === "") {
-                                data = {};
-                                data['status'] = 0;
-                                data['non_field_errors'] = ["Could not connect. Please try again."];
-                            }
-                            // or if the data is null, then there was a timeout.
-                            if (data === null) {
-                                // Inject a non field error alerting the user
-                                // that there's been a timeout error.
-                                data = {};
-                                data['status'] = 0;
-                                data['non_field_errors'] = ["Server timed out. Please try again."];
-                            }
+                        // There is a timeout or connection error in server
+                        if (data.status === -1){
+                            $window.location.href = "http://127.0.0.1:8000/dashboard";
                         }
                         deferred.reject(data, status, headers, config);
                     }));

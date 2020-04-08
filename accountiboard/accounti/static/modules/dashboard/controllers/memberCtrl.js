@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("memberCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
+    .controller("memberCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, offlineAPIHttpRequest) {
         var initialize = function () {
             $scope.gift_code_data = {
                 "gift_code": "",
@@ -12,7 +12,6 @@ angular.module("dashboard")
                     $("#expire_credit_date").datepicker();
                 });
             })(jQuery);
-            $scope.is_in_edit_mode = false;
             $scope.new_credit_data = {
                 'member_id': 0,
                 'total_credit': 0,
@@ -182,40 +181,21 @@ angular.module("dashboard")
         };
 
         $scope.addMember = function () {
-            if ($scope.is_in_edit_mode) {
-                $scope.is_in_edit_mode = false;
-                dashboardHttpRequest.addMember($scope.new_member_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_members_data($rootScope.user_data);
-                            $scope.closeAddMemberModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
+            dashboardHttpRequest.addMember($scope.new_member_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.create_member_offline(data['created_member']);
+                        $scope.get_members_data($rootScope.user_data);
+                        $scope.closeAddMemberModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
-                    });
-            }
-            else {
-                dashboardHttpRequest.addMember($scope.new_member_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_members_data($rootScope.user_data);
-                            $scope.resetFrom();
-                            $scope.closeAddMemberModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.searchMember = function () {
@@ -239,29 +219,7 @@ angular.module("dashboard")
             }
         };
 
-        $scope.getMember = function (member_id) {
-            var data = {
-                'username': $rootScope.user_data.username,
-                'member_id': member_id
-            };
-            dashboardHttpRequest.getMember(data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        return data['member'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
-        };
-
-
         $scope.editMember = function (member_id) {
-            $scope.is_in_edit_mode = true;
             var data = {
                 'username': $rootScope.user_data.username,
                 'member_id': member_id
@@ -294,6 +252,31 @@ angular.module("dashboard")
                 });
 
         };
+
+        $scope.create_member_offline = function (online_server_response) {
+            var sending_data = {
+                'payload': {
+                    "last_name": online_server_response['last_name'],
+                    "card_number": online_server_response['card_number'],
+                    "method": online_server_response['method'],
+                    "member_primary_key": online_server_response['member_primary_key']
+                },
+                'username': $rootScope.user_data.username
+            };
+            offlineAPIHttpRequest.create_member(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
 
         $scope.openErrorModal = function () {
             jQuery.noConflict();
