@@ -19,9 +19,8 @@ angular.module("dashboard")
                     window.location.replace("/");
                 }
 
-                $transitions.onStart({}, function (transition) {
+                $transitions.onBefore({}, function (transition) {
                     $rootScope.is_page_loading = true;
-
                 });
 
                 $window.onkeyup = function (event) {

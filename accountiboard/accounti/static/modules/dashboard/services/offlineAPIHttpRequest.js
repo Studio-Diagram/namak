@@ -40,6 +40,76 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'create_reserve': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "create_reserve/",
+                    'data': data
+                });
+            },
+            'create_waiting_reserve': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "create_waiting_reserve/",
+                    'data': data
+                });
+            },
+            'delete_reserve': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "delete_reserve/",
+                    'data': data
+                });
+            },
+            'arrive_reserve': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "arrive_reserve/",
+                    'data': data
+                });
+            },
+            'create_new_invoice_sales': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "create_new_invoice_sales/",
+                    'data': data
+                });
+            },
+            'end_current_game': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "end_current_game/",
+                    'data': data
+                });
+            },
+            'ready_for_settle': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "ready_for_settle/",
+                    'data': data
+                });
+            },
+            'print_after_save': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "print_after_save/",
+                    'data': data
+                });
+            },
+            'delete_items': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "delete_items/",
+                    'data': data
+                });
+            },
+            'delete_invoice': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "delete_invoice/",
+                    'data': data
+                });
+            }
         };
         return service;
 

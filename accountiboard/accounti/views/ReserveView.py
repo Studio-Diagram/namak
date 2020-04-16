@@ -12,99 +12,104 @@ DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 TIME_NOT_IN_CORRECT_FORMAT = 'زمان را به حالت درستی وارد کنید.'
+METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED"
 
 
 def add_reserve(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        start_time = rec_data['start_time']
-        end_time = rec_data['end_time']
-        reserve_date = rec_data['reserve_date']
-        customer_name = rec_data['customer_name']
-        tables_id = rec_data['tables_id']
-        reserve_id = rec_data['reserve_id']
-        numbers = rec_data['numbers']
-        phone = rec_data['phone']
-        reserve_state = rec_data['reserve_state']
-        branch_id = rec_data['branch']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    start_time = rec_data['start_time']
+    end_time = rec_data['end_time']
+    reserve_date = rec_data['reserve_date']
+    customer_name = rec_data['customer_name']
+    tables_id = rec_data['tables_id']
+    reserve_id = rec_data['reserve_id']
+    numbers = rec_data['numbers']
+    phone = rec_data['phone']
+    reserve_state = rec_data['reserve_state']
+    branch_id = rec_data['branch']
 
-        if not start_time:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not len(tables_id):
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not reserve_state:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not reserve_date:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not branch_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not numbers:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not start_time:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not len(tables_id):
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not reserve_state:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not reserve_date:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not numbers:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        if reserve_state != "walked":
-            if not customer_name:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not phone:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        else:
-            customer_name = "حضوری"
-            phone = "NO_PHONE"
+    if reserve_state != "walked":
+        if not customer_name:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not phone:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    else:
+        customer_name = "حضوری"
+        phone = "NO_PHONE"
 
-        try:
-            start_time_detail = datetime.strptime(start_time, "%H:%M")
-            if not end_time:
-                end_time_detail = start_time_detail + timedelta(minutes=120)
-                end_time = end_time_detail.strftime("%H:%M")
+    try:
+        start_time_detail = datetime.strptime(start_time, "%H:%M")
+        if not end_time:
+            end_time_detail = start_time_detail + timedelta(minutes=120)
+            end_time = end_time_detail.strftime("%H:%M")
 
-            end_time_obj = datetime.strptime(end_time, "%H:%M")
+        end_time_obj = datetime.strptime(end_time, "%H:%M")
 
-            reserve_date_split = reserve_date.split('/')
-            reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
-                                            int(reserve_date_split[0])).togregorian()
+        reserve_date_split = reserve_date.split('/')
+        reserve_date_g = jdatetime.date(int(reserve_date_split[2]), int(reserve_date_split[1]),
+                                        int(reserve_date_split[0])).togregorian()
 
-        except ValueError:
-            return JsonResponse({"response_code": 3, "error_msg": TIME_NOT_IN_CORRECT_FORMAT})
-        if reserve_id == 0:
-            branch_obj = Branch.objects.get(pk=branch_id)
-            new_reservation = Reservation(
-                start_time=datetime.strptime(start_time, "%H:%M"),
-                end_time=end_time_obj,
-                numbers=numbers,
-                customer_name=customer_name,
-                reserve_date=reserve_date_g,
-                reserve_state=reserve_state,
-                phone=phone,
-                branch=branch_obj
+    except ValueError:
+        return JsonResponse({"response_code": 3, "error_msg": TIME_NOT_IN_CORRECT_FORMAT})
+    if reserve_id == 0:
+        branch_obj = Branch.objects.get(pk=branch_id)
+        new_reservation = Reservation(
+            start_time=datetime.strptime(start_time, "%H:%M"),
+            end_time=end_time_obj,
+            numbers=numbers,
+            customer_name=customer_name,
+            reserve_date=reserve_date_g,
+            reserve_state=reserve_state,
+            phone=phone,
+            branch=branch_obj
+        )
+        new_reservation.save()
+        for table_id in tables_id:
+            table_obj = Table.objects.get(pk=table_id)
+            new_reserve_to_table = ReserveToTables(
+                table=table_obj,
+                reserve=new_reservation
             )
-            new_reservation.save()
-            for table_id in tables_id:
-                table_obj = Table.objects.get(pk=table_id)
-                new_reserve_to_table = ReserveToTables(
-                    table=table_obj,
-                    reserve=new_reservation
-                )
-                new_reserve_to_table.save()
-            return JsonResponse({"response_code": 2})
-        else:
-            old_reserve = Reservation.objects.get(pk=reserve_id)
-            old_reserve.start_time = start_time
-            old_reserve.end_time = end_time
-            old_reserve.numbers = numbers
-            old_reserve.customer_name = customer_name
-            old_reserve.phone = phone
-            old_reserve.save()
+            new_reserve_to_table.save()
 
-            ReserveToTables.objects.filter(reserve=old_reserve).delete()
-            for table_id in tables_id:
-                table_obj = Table.objects.get(pk=table_id)
-                new_reserve_to_table = ReserveToTables(
-                    table=table_obj,
-                    reserve=old_reserve
-                )
-                new_reserve_to_table.save()
-            return JsonResponse({"response_code": 2})
+        new_reserve_id = new_reservation.pk
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    else:
+        old_reserve = Reservation.objects.get(pk=reserve_id)
+        old_reserve.start_time = start_time
+        old_reserve.end_time = end_time
+        old_reserve.numbers = numbers
+        old_reserve.customer_name = customer_name
+        old_reserve.phone = phone
+        old_reserve.save()
+
+        ReserveToTables.objects.filter(reserve=old_reserve).delete()
+        for table_id in tables_id:
+            table_obj = Table.objects.get(pk=table_id)
+            new_reserve_to_table = ReserveToTables(
+                table=table_obj,
+                reserve=old_reserve
+            )
+            new_reserve_to_table.save()
+
+        new_reserve_id = old_reserve.pk
+
+    return JsonResponse({"response_code": 2, "server_primary_key_for_offline": new_reserve_id})
 
 
 def get_reserves(request):
@@ -148,7 +153,7 @@ def get_reserves(request):
                     'reserve_state': reserve.reserve_state
                 })
         return JsonResponse({"response_code": 2, 'all_today_reserves': reserves_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def arrive_reserve(request):
@@ -164,7 +169,7 @@ def arrive_reserve(request):
         old_reserve.reserve_state = "arrived"
         old_reserve.save()
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def delete_reserve(request):
@@ -179,7 +184,7 @@ def delete_reserve(request):
         old_reserve = Reservation.objects.get(pk=reserve_id)
         old_reserve.delete()
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_reserve(request):
@@ -224,7 +229,7 @@ def get_reserve(request):
         }
 
         return JsonResponse({"response_code": 2, "reserve_data": reserve_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_today_for_reserve(request):
@@ -266,12 +271,12 @@ def get_today_for_reserve(request):
             today = today.strftime("%d/%m/%Y")
 
         return JsonResponse({"response_code": 2, 'today_for_reserve': today, 'tomorrow_for_reserve': tomorrow})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_waiting_list_reserves(request):
     if not request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
@@ -304,7 +309,7 @@ def get_waiting_list_reserves(request):
 
 def add_waiting_list(request):
     if not request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     start_time = rec_data['start_time']
@@ -349,12 +354,12 @@ def add_waiting_list(request):
     )
     new_reservation.save()
 
-    return JsonResponse({"response_code": 2})
+    return JsonResponse({"response_code": 2, "reserve_id": new_reservation.pk})
 
 
 def get_all_today_left_reserves_with_hour(request):
     if not request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
@@ -400,7 +405,7 @@ def get_all_today_left_reserves_with_hour(request):
 
 def get_all_today_not_come_reserves(request):
     if not request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']

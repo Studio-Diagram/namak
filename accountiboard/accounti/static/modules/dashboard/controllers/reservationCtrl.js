@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $state, $http, $timeout, $window, dashboardHttpRequest, $compile, $stateParams) {
+    .controller("reservationCtrl", function ($scope, $interval, $rootScope, $filter, $state, $http, $timeout, $window, dashboardHttpRequest, $compile, offlineAPIHttpRequest) {
             var initialize = function () {
                 $scope.tomorrow_date = "";
                 $scope.fixed_date = "";
@@ -297,6 +297,7 @@ angular.module("dashboard")
                 dashboardHttpRequest.arriveReserve(sending_data)
                     .then(function (data) {
                         if (data['response_code'] === 2) {
+                            $scope.arrive_reserve_offline(sending_data);
                             var diff = 1000 * 60 * 15;
                             var date = new Date();
                             var rounded = new Date(Math.round(date.getTime() / diff) * diff);
@@ -313,6 +314,21 @@ angular.module("dashboard")
                     });
             };
 
+            $scope.arrive_reserve_offline = function (payload) {
+                offlineAPIHttpRequest.arrive_reserve(payload)
+                    .then(function (data) {
+                        if (data['response_code'] === 2) {
+
+                        }
+                        else if (data['response_code'] === 3) {
+
+                        }
+                    }, function (error) {
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
+                    });
+            };
+
             $scope.delete_reserve = function (reserve_id) {
                 var sending_data = {
                     'username': $rootScope.user_data.username,
@@ -322,6 +338,7 @@ angular.module("dashboard")
                 dashboardHttpRequest.deleteReserve(sending_data)
                     .then(function (data) {
                         if (data['response_code'] === 2) {
+                            $scope.delete_reserve_offline(sending_data);
                             $scope.change_date();
                             $scope.closePermissionModal();
                             $scope.closeAddModal();
@@ -334,6 +351,21 @@ angular.module("dashboard")
                         }
                     }, function (error) {
                         $scope.error_message = 500;
+                        $scope.openErrorModal();
+                    });
+            };
+
+            $scope.delete_reserve_offline = function (payload) {
+                offlineAPIHttpRequest.delete_reserve(payload)
+                    .then(function (data) {
+                        if (data['response_code'] === 2) {
+
+                        }
+                        else if (data['response_code'] === 3) {
+
+                        }
+                    }, function (error) {
+                        $scope.error_message = error;
                         $scope.openErrorModal();
                     });
             };
@@ -496,6 +528,8 @@ angular.module("dashboard")
                 dashboardHttpRequest.addReserve($scope.new_reserve_data)
                     .then(function (data) {
                         if (data['response_code'] === 2) {
+                            $scope.new_reserve_data['server_primary_key_for_offline'] = data['server_primary_key_for_offline'];
+                            $scope.add_reserve_offline($scope.new_reserve_data);
                             $scope.change_date();
                             $scope.closeAddModal();
                             $scope.closeAddWalkedModal();
@@ -511,14 +545,27 @@ angular.module("dashboard")
                     });
             };
 
+            $scope.add_reserve_offline = function (payload) {
+                offlineAPIHttpRequest.create_reserve(payload)
+                    .then(function (data) {
+                        if (data['response_code'] === 2) {
+
+                        }
+                        else if (data['response_code'] === 3) {
+
+                        }
+                    }, function (error) {
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
+                    });
+            };
+
             $scope.add_waiting_list = function () {
                 dashboardHttpRequest.addWaitingList($scope.new_reserve_data)
                     .then(function (data) {
                         if (data['response_code'] === 2) {
-                            $scope.new_reserve_data.customer_name = "";
-                            $scope.new_reserve_data.start_time = "";
-                            $scope.new_reserve_data.numbers = 0;
-                            $scope.new_reserve_data.phone = "";
+                            $scope.new_reserve_data['reserve_id'] = data['reserve_id'];
+                            $scope.add_waiting_list_offline($scope.new_reserve_data);
                             $scope.get_waiting_list();
                         }
                         else if (data['response_code'] === 3) {
@@ -527,6 +574,25 @@ angular.module("dashboard")
                         }
                     }, function (error) {
                         $scope.error_message = 500;
+                        $scope.openErrorModal();
+                    });
+            };
+
+            $scope.add_waiting_list_offline = function (payload) {
+                offlineAPIHttpRequest.create_waiting_reserve(payload)
+                    .then(function (data) {
+                        $scope.new_reserve_data.customer_name = "";
+                        $scope.new_reserve_data.start_time = "";
+                        $scope.new_reserve_data.numbers = 0;
+                        $scope.new_reserve_data.phone = "";
+                        if (data['response_code'] === 2) {
+
+                        }
+                        else if (data['response_code'] === 3) {
+
+                        }
+                    }, function (error) {
+                        $scope.error_message = error;
                         $scope.openErrorModal();
                     });
             };

@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest) {
+    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
             $scope.current_menu_nav = "MENU";
@@ -50,6 +50,7 @@ angular.module("dashboard")
                 'invoice_id': 0,
                 'shop': [],
                 'menu': [],
+                'menu_items_number_id': [],
                 'game': [],
                 "message": '',
                 'username': $rootScope.user_data.username
@@ -252,6 +253,7 @@ angular.module("dashboard")
                     dashboardHttpRequest.printAfterSave(sending_data_2)
                         .then(function (data) {
                             if (data['response_code'] === 2) {
+                                $scope.print_after_save_offline(sending_data_2);
                                 $scope.disable_print_after_save_all_buttons = false;
                             }
                             else if (data['response_code'] === 3) {
@@ -288,6 +290,9 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.new_invoice_data['invoice_sales_current_created_game_server_primary_key'] = data['new_game_id'];
+                        $scope.new_invoice_data['invoice_sales_server_primary_key'] = data['new_invoice_id'];
+                        $scope.create_invoice_sale_offline($scope.new_invoice_data);
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
@@ -301,6 +306,7 @@ angular.module("dashboard")
                         dashboardHttpRequest.printAfterSave(sending_data)
                             .then(function (data) {
                                 if (data['response_code'] === 2) {
+                                    $scope.print_after_save_offline(sending_data);
                                     $scope.print_data_info = data['printer_data'];
                                     $scope.print_data(sending_data['invoice_id'], "NO-CASH", $scope.print_data_info);
                                 }
@@ -341,6 +347,9 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         var new_invoice_id = data['new_invoice_id'];
+                        $scope.new_invoice_data['invoice_sales_current_created_game_server_primary_key'] = data['new_game_id'];
+                        $scope.new_invoice_data['invoice_sales_server_primary_key'] = data['new_invoice_id'];
+                        $scope.create_invoice_sale_offline($scope.new_invoice_data);
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
@@ -373,7 +382,7 @@ angular.module("dashboard")
                     $scope.first_time_edit_payment_init = false;
                 }, 2000);
             }
-            else{
+            else {
                 $scope.editable_invoice.pos = $scope.editable_invoice.total - $scope.editable_invoice.cash;
             }
         };
@@ -465,6 +474,9 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.new_invoice_data['invoice_sales_current_created_game_server_primary_key'] = data['new_game_id'];
+                        $scope.new_invoice_data['invoice_sales_server_primary_key'] = data['new_invoice_id'];
+                        $scope.create_invoice_sale_offline($scope.new_invoice_data);
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.refreshInvoiceInPayModal(data['new_invoice_id']);
@@ -534,6 +546,7 @@ angular.module("dashboard")
             dashboardHttpRequest.deleteInvoiceSale(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.delete_invoice_offline(sending_data);
                         $scope.invoice_delete_description = "";
                         $scope.closeDeleteInvoiceModal();
                         $scope.closeAddInvoiceModal();
@@ -554,6 +567,7 @@ angular.module("dashboard")
             dashboardHttpRequest.deleteItems($scope.will_delete_items)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.delete_items_offline($scope.will_delete_items);
                         $scope.closeDeleteModal();
                         $scope.closeAddInvoiceModal();
                         $scope.getAllTodayInvoices();
@@ -569,7 +583,8 @@ angular.module("dashboard")
             $scope.closeDeleteModal();
         };
 
-        $scope.will_delete_items_adder = function (deleted_type, p_id) {
+        $scope.will_delete_items_adder = function (deleted_type, p_id, menu_item_number_and_id) {
+            console.log(menu_item_number_and_id);
             if (deleted_type === 'shop') {
                 var found = $scope.will_delete_items.shop.findIndex(function (element) {
                     return element === p_id;
@@ -587,9 +602,11 @@ angular.module("dashboard")
                 });
                 if (found2 !== -1) {
                     $scope.will_delete_items.menu.splice(found2, 1);
+                    $scope.will_delete_items.menu_items_number_id.splice(menu_item_number_and_id, 1);
                 }
                 else if (found2 === -1) {
                     $scope.will_delete_items.menu.push(p_id);
+                    $scope.will_delete_items.menu_items_number_id.push(menu_item_number_and_id);
                 }
             }
             else if (deleted_type === 'game') {
@@ -763,6 +780,7 @@ angular.module("dashboard")
                     }
                 }
             }
+            $rootScope.is_page_loading = false;
         };
 
         $scope.check_table_has_invoice = function () {
@@ -832,6 +850,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.disable_print_after_save_all_buttons = false;
                     if (data['response_code'] === 2) {
+                        $scope.end_current_game_offline(sending_data);
                         $scope.new_invoice_data.current_game = {
                             'id': 0,
                             'numbers': 0,
@@ -917,6 +936,9 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.new_invoice_data['invoice_sales_current_created_game_server_primary_key'] = data['new_game_id'];
+                        $scope.new_invoice_data['invoice_sales_server_primary_key'] = data['new_invoice_id'];
+                        $scope.create_invoice_sale_offline($scope.new_invoice_data);
                         $scope.get_shop_products();
                         $scope.new_invoice_data.current_game.id = data['new_game_id'];
                         $scope.getAllTodayInvoices();
@@ -932,6 +954,96 @@ angular.module("dashboard")
                     $scope.error_message = error;
                     $scope.openErrorModal();
                     $scope.disable_print_after_save_all_buttons = false;
+                });
+        };
+
+        $scope.create_invoice_sale_offline = function (payload) {
+            offlineAPIHttpRequest.create_new_invoice_sales(payload)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.end_current_game_offline = function (payload) {
+            offlineAPIHttpRequest.end_current_game(payload)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.ready_for_settle_offline = function (payload) {
+            offlineAPIHttpRequest.ready_for_settle(payload)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.print_after_save_offline = function (payload) {
+            offlineAPIHttpRequest.print_after_save(payload)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.delete_items_offline = function (payload) {
+            offlineAPIHttpRequest.delete_items(payload)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.delete_invoice_offline = function (payload) {
+            offlineAPIHttpRequest.delete_invoice(payload)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
                 });
         };
 
@@ -1385,6 +1497,7 @@ angular.module("dashboard")
             dashboardHttpRequest.readyForSettle(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.ready_for_settle_offline(sending_data);
                         $scope.getAllTodayInvoices();
                     }
                     else if (data['response_code'] === 3) {
@@ -1404,6 +1517,7 @@ angular.module("dashboard")
                 'invoice_id': 0,
                 'shop': [],
                 'menu': [],
+                'menu_items_number_id': [],
                 'game': [],
                 "message": '',
                 'username': $rootScope.user_data.username

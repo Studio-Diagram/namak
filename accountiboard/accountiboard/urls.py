@@ -160,7 +160,17 @@ urlpatterns = [
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/', OfflineAPIs.sync_member_list),
-    path('api/offline/list/menu_category/<int:last_uuid>/', OfflineAPIs.sync_member_list),
+    path('api/offline/list/menu_category/<int:last_uuid>/', OfflineAPIs.sync_menu_category_list),
+    path('api/offline/list/menu_item/<int:last_uuid>/', OfflineAPIs.sync_menu_item_list),
+    path('api/offline/list/printer/<int:last_uuid>/', OfflineAPIs.sync_printer_list),
+    path('api/offline/list/printer_to_category/<int:last_uuid>/', OfflineAPIs.sync_printer_to_category_list),
+    path('api/offline/list/table_category/<int:last_uuid>/', OfflineAPIs.sync_table_category_list),
+    path('api/offline/list/table/<int:last_uuid>/', OfflineAPIs.sync_table_list),
+    path('api/offline/list/branch/<int:last_uuid>/', OfflineAPIs.sync_branch_list),
+    path('api/offline/list/cash/<int:last_uuid>/', OfflineAPIs.sync_cash_list),
+    path('api/offline/list/employee/<int:last_uuid>/', OfflineAPIs.sync_employee_list),
+    path('api/offline/list/invoice_sale/', OfflineAPIs.sync_invoice_sales_list),
+    path('api/offline/list/reserve/<int:branch_id>/', OfflineAPIs.sync_reserve_list),
     # End of offline APIs URLs
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
     path('template/night-report', InvoiceSaleView.night_report_template),

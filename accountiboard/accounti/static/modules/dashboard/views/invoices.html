@@ -416,7 +416,7 @@
                                         <th class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
-                                        <th class="first"><input ng-click="will_delete_items_adder('menu', old_item.id)"
+                                        <th class="first"><input ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
                                                                  type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index + 1 | persianNumber }}</td>
@@ -555,7 +555,7 @@
                                         <th class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
-                                        <th class="first"><input ng-click="will_delete_items_adder('menu', old_item.id)"
+                                        <th class="first"><input ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
                                                                  type="checkbox"
                                                                  aria-label="Checkbox for following text input"></th>
                                         <td>{{ $index | persianNumber }}</td>

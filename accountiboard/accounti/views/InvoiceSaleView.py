@@ -338,6 +338,7 @@ def get_invoice(request):
         for item in invoice_items:
             invoice_data['menu_items_old'].append({
                 'id': item.pk,
+                'menu_item_id': item.menu_item_id,
                 'name': item.menu_item.name,
                 'price': item.menu_item.price,
                 'nums': item.numbers,
@@ -505,23 +506,23 @@ def get_detail_product_number(shop_product_id):
 
 def create_new_invoice_sales(request):
     if request.method == "POST":
-        new_invoice_id = 0
         rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_sales_id = rec_data['invoice_sales_id']
-        new_game_id = 0
+        invoice_sales_id = rec_data.get('invoice_sales_id')
+
+        table_id = rec_data.get('table_id')
+        member_id = rec_data.get('member_id')
+        guest_numbers = rec_data.get('guest_numbers')
+        current_game = rec_data.get('current_game')
+        menu_items_new = rec_data.get('menu_items_new')
+        shop_items_new = rec_data.get('shop_items_new')
+        branch_id = rec_data.get('branch_id')
+        cash_id = rec_data.get('cash_id')
+        discount = rec_data.get('discount')
+        tip = rec_data.get('tip')
+
+        new_game_id = current_game.get('id')
 
         if invoice_sales_id == 0:
-            table_id = rec_data['table_id']
-            member_id = rec_data['member_id']
-            guest_numbers = rec_data['guest_numbers']
-            current_game = rec_data['current_game']
-            menu_items_new = rec_data['menu_items_new']
-            shop_items_new = rec_data['shop_items_new']
-            branch_id = rec_data['branch_id']
-            cash_id = rec_data['cash_id']
-            discount = rec_data['discount']
-            tip = rec_data['tip']
-
             if tip == "" or discount == "":
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -608,16 +609,6 @@ def create_new_invoice_sales(request):
             return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
         elif invoice_sales_id != 0:
-            table_id = rec_data['table_id']
-            member_id = rec_data['member_id']
-            guest_numbers = rec_data['guest_numbers']
-            current_game = rec_data['current_game']
-            menu_items_new = rec_data['menu_items_new']
-            shop_items_new = rec_data['shop_items_new']
-            branch_id = rec_data['branch_id']
-            discount = rec_data['discount']
-            tip = rec_data['tip']
-
             if tip == "" or discount == "":
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
