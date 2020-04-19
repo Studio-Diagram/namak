@@ -353,3 +353,141 @@ def create_member(request):
                 return JsonResponse({"response_code": 3, "error_msg": DUPLICATE_MEMBER_ENTRY})
 
     return JsonResponse({"response_code": 2})
+
+
+def sync_reserves_from_offline(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    have_to_delete = rec_data.get('have_to_delete')
+    Reservation.objects.filter(pk__in=have_to_delete).delete()
+    all_reserves_data = rec_data.get("all_reserves_data")
+    for item in all_reserves_data:
+        branch_object = Branch.objects.get(pk=item['branch_id'])
+        new_reserve = Reservation(
+            start_time=item['start_time'],
+            end_time=item['end_time'],
+            numbers=item['numbers'],
+            reserve_date=item['reserve_date'],
+            customer_name=item['customer_name'],
+            phone=item['phone'],
+            reserve_state=item['reserve_state'],
+            branch=branch_object
+        )
+        new_reserve.save()
+        for reserve_to_table in item['tables']:
+            table_object = Table.objects.get(pk=reserve_to_table['table_id'])
+            new_reserve_to_table = ReserveToTables(
+                reserve=new_reserve,
+                table=table_object
+            )
+            new_reserve_to_table.save()
+    return JsonResponse({"response_code": 2})
+
+
+def sync_invoice_sales_from_offline(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+
+    for item in rec_data.get('all_invoices_data'):
+        invoice_id = item.get('server_primary_key')
+        branch_object = Branch.objects.get(pk=item['branch_id'])
+        cash_object = Cash.objects.get(pk=item['cash_id'])
+        if item.get("member_id"):
+            member_object = Member.objects.get(pk=item['member_id'])
+        else:
+            member_object = Member.objects.get(card_number=item.get("member_card_number"))
+        table_object = Table.objects.get(pk=item['table_id'])
+
+        if invoice_id == 0:
+            invoice_object = InvoiceSales(
+                factor_number=item['factor_number'],
+                created_time=item['created_time'],
+                settle_time=item['settle_time'],
+                cash=item['cash'],
+                pos=item['pos'],
+                discount=item['discount'],
+                employee_discount=item['employee_discount'],
+                tax=item['tax'],
+                tip=item['tip'],
+                settlement_type=item['settlement_type'],
+                guest_numbers=item['guest_numbers'],
+                is_settled=item['is_settled'],
+                total_price=item['total_price'],
+                member=member_object,
+                table=table_object,
+                ready_for_settle=item['ready_for_settle'],
+                cash_desk=cash_object,
+                branch=branch_object,
+                is_do_not_want_order=item['is_do_not_want_order'],
+                game_state=item['game_state'],
+                is_deleted=item['is_delete']
+            )
+            invoice_object.save()
+
+        else:
+            invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+            invoice_object.factor_number = item['factor_number']
+            invoice_object.created_time = item['created_time']
+            invoice_object.settle_time = item['settle_time']
+            invoice_object.cash = item['cash']
+            invoice_object.pos = item['pos']
+            invoice_object.discount = item['discount']
+            invoice_object.employee_discount = item['employee_discount']
+            invoice_object.tax = item['tax']
+            invoice_object.tip = item['tip']
+            invoice_object.settlement_type = item['settlement_type']
+            invoice_object.guest_numbers = item['guest_numbers']
+            invoice_object.is_settled = item['is_settled']
+            invoice_object.total_price = item['total_price']
+            invoice_object.member = member_object
+            invoice_object.table = table_object
+            invoice_object.ready_for_settle = item['ready_for_settle']
+            invoice_object.cash_desk = cash_object
+            invoice_object.branch = branch_object
+            invoice_object.is_do_not_want_order = item['is_do_not_want_order']
+            invoice_object.game_state = item['game_state']
+            invoice_object.is_deleted = item['is_delete']
+            invoice_object.save()
+
+            InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object).delete()
+            InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_object).delete()
+
+        if item['is_delete']:
+            DeletedInvoiceSale(invoice_sale=invoice_object, description=item['delete_description']).save()
+
+        for game in item['games_list']:
+            if item.get("member_id"):
+                game_member_object = Member.objects.get(pk=game.get('member_id'))
+            else:
+                game_member_object = Member.objects.get(card_number=game.get("member_card_number"))
+            new_game = Game(
+                member=game_member_object,
+                start_time=game['start_time'],
+                end_time=game['end_time'],
+                numbers=game['numbers'],
+                points=game['points'],
+                add_date=game['add_date']
+            )
+            new_game.save()
+            new_invoice_to_game = InvoicesSalesToGame(
+                invoice_sales=invoice_object,
+                game=new_game
+            )
+            new_invoice_to_game.save()
+
+        for menu_item in item['menu_items_list']:
+            menu_item_object = MenuItem.objects.get(pk=menu_item['menu_item_id'])
+            new_invoice_to_menu_item = InvoicesSalesToMenuItem(
+                invoice_sales=invoice_object,
+                menu_item=menu_item_object,
+                numbers=menu_item['numbers'],
+                description=menu_item['description'],
+                is_print=menu_item['is_print']
+            )
+            new_invoice_to_menu_item.save()
+
+    return JsonResponse({"response_code": 2})

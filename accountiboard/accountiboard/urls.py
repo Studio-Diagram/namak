@@ -171,6 +171,8 @@ urlpatterns = [
     path('api/offline/list/employee/<int:last_uuid>/', OfflineAPIs.sync_employee_list),
     path('api/offline/list/invoice_sale/', OfflineAPIs.sync_invoice_sales_list),
     path('api/offline/list/reserve/<int:branch_id>/', OfflineAPIs.sync_reserve_list),
+    path('api/offline/syncReservesFromOffline/', OfflineAPIs.sync_reserves_from_offline),
+    path('api/offline/syncInvoiceSalesFromOffline/', OfflineAPIs.sync_invoice_sales_from_offline),
     # End of offline APIs URLs
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
     path('template/night-report', InvoiceSaleView.night_report_template),
