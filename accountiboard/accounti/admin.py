@@ -6,6 +6,9 @@ class CashAdmin(admin.ModelAdmin):
     readonly_fields = ('created_date_time',)
 
 
+admin.site.register(User)
+admin.site.register(CafeOwner)
+admin.site.register(Organization)
 admin.site.register(Employee)
 admin.site.register(EmployeeToBranch)
 admin.site.register(Branch)

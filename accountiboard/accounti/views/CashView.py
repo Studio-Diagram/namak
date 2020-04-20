@@ -96,7 +96,7 @@ def close_cash(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         branch_obj = Branch.objects.get(pk=branch_id)
-        employee_obj = Employee.objects.filter(phone=username).first()
+        user_object = User.objects.filter(phone=username).first()
         current_cash = Cash.objects.filter(branch=branch_obj, is_close=0)
 
         if current_cash.count() == 1:
@@ -106,7 +106,7 @@ def close_cash(request):
                 return JsonResponse({"response_code": 3, 'error_msg': UNSETTLED_INVOICE})
             current_cash_obj = current_cash.first()
             current_cash_obj.is_close = 1
-            current_cash_obj.employee = employee_obj
+            current_cash_obj.employee = user_object
             current_cash_obj.ended_date_time = now
             current_cash_obj.current_money_in_cash = night_report_inputs['current_money_in_cash']
             current_cash_obj.income_report = night_report_inputs['income_report']

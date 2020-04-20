@@ -1,6 +1,40 @@
 from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
+from django.core.mail import send_mail
+
+
+class User(models.Model):
+    USER_TYPE_CHOICES = (
+        (1, 'cafe_owner'),
+        (2, 'employee')
+    )
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=30, null=False, blank=False, unique=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(null=True, verbose_name='last login', blank=True)
+    is_active = models.BooleanField(default=False)
+    password = models.TextField(null=False, blank=False)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+    birthday_date = models.DateField(null=True, blank=True)
+    home_address = models.CharField(max_length=2500, null=False, blank=True)
+
+    def __str__(self):
+        return self.email
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        send_mail(subject, message, from_email, [self.email], **kwargs)
+
+
+class Organization(models.Model):
+    name = models.CharField(max_length=500, null=False, blank=False)
+    shortcut_login_url = models.CharField(max_length=255, null=False, blank=False)
 
 
 class Branch(models.Model):
@@ -8,30 +42,25 @@ class Branch(models.Model):
     address = models.CharField(max_length=4 * 255, null=False, blank=False)
     start_working_time = models.TimeField(null=True)
     end_working_time = models.TimeField(null=True)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
 
 class Employee(models.Model):
     # Personal Data
-    first_name = models.CharField(max_length=255, null=True, blank=True)
-    last_name = models.CharField(max_length=255, null=True, blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
     national_code = models.CharField(max_length=30, null=True, blank=True)
-    phone = models.CharField(max_length=30, null=False, blank=False)
-    home_address = models.CharField(max_length=2500, null=False, blank=True)
     # Banking Data
     bank_name = models.CharField(max_length=255, null=True, blank=True)
     bank_card_number = models.CharField(max_length=30, null=True, blank=True)
     shaba_number = models.CharField(max_length=255, null=True, blank=True)
-    # Employee Data
-    card_number = models.CharField(max_length=30, null=False, blank=True)
-    password = models.TextField(null=False, blank=False)
-    birthday_date = models.DateField(null=True, blank=True)
-    membership_card_number = models.CharField(max_length=50, null=False, blank=True)
-    base_worksheet_salary = models.FloatField(null=False, blank=False)
-    base_worksheet_count = models.FloatField(null=False, blank=False)
-    discount_percentage = models.FloatField(default=0)
-    created_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    last_login = models.DateTimeField(null=True, verbose_name='last login', blank=True)
+    # User Base
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class CafeOwner(models.Model):
+    # User Base
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class EmployeeToBranch(models.Model):
@@ -170,7 +199,7 @@ class Cash(models.Model):
     outcome_report = models.IntegerField(null=False, default=0)
     event_tickets = models.IntegerField(null=False, default=0)
     current_money_in_cash = models.IntegerField(null=False, default=0)
-    employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.CASCADE)
+    employee = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_close = models.SmallIntegerField(default=0, null=False)
 
@@ -415,7 +444,7 @@ class DeletedItemsInvoiceSales(models.Model):
     item_type = models.CharField(max_length=50, choices=ITEM_TYPES)
     item_numbers = models.IntegerField(null=False)
     message = models.CharField(max_length=255)
-    employee = models.ForeignKey(to=Employee, on_delete=models.SET_NULL, null=True)
+    employee = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
     invoice_sales = models.ForeignKey(to=InvoiceSales, on_delete=models.SET_NULL, null=True)
 
 

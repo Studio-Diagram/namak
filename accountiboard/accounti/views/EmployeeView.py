@@ -41,16 +41,24 @@ def login(request):
             return JsonResponse({"response_code": 3, "error_msg": PASSWORD_ERROR})
 
         try:
-            employee_obj = Employee.objects.get(phone=username)
-            user_pass = employee_obj.password
+            user_obj = User.objects.get(phone=username)
+            user_pass = user_obj.password
             if check_password(password, user_pass):
-                employee_obj.last_login = datetime.now()
-                employee_obj.save()
-                employee_to_branch_obj = EmployeeToBranch.objects.get(employee=employee_obj)
+                user_obj.last_login = datetime.now()
+                user_obj.save()
+                if user_obj.get_user_type_display() == "cafe_owner":
+                    cafe_owner_object = CafeOwner.objects.get(user=user_obj)
+                    organization_object = cafe_owner_object.organization
+                    branch_object = Branch.objects.filter(organization=organization_object).first()
+                elif user_obj.get_user_type_display() == "employee":
+                    branch_object = EmployeeToBranch.objects.get(employee=user_obj).branch
+                else:
+                    return JsonResponse({"response_code": 3})
+
                 request.session['is_logged_in'] = username
                 return JsonResponse(
                     {"response_code": 2,
-                     "user_data": {'username': username, 'branch': employee_to_branch_obj.branch.pk}})
+                     "user_data": {'username': username, 'branch': branch_object.pk}})
             else:
                 return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
         except ObjectDoesNotExist:
