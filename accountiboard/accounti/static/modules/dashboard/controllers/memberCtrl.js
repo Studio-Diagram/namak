@@ -222,6 +222,7 @@ angular.module("dashboard")
         $scope.editMember = function (member_id) {
             var data = {
                 'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch,
                 'member_id': member_id
             };
             dashboardHttpRequest.getMember(data)

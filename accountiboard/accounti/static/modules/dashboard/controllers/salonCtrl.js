@@ -1104,7 +1104,8 @@ angular.module("dashboard")
             var data = {
                 'username': $rootScope.user_data.username,
                 'member_id': 0,
-                'card_number': card_number
+                'card_number': card_number,
+                'branch': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getMember(data)
                 .then(function (data) {
