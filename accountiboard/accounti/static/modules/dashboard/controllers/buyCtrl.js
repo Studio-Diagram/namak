@@ -188,10 +188,7 @@ angular.module("dashboard")
         };
 
         $scope.get_suppliers = function () {
-            var data = {
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getSuppliers(data)
+            dashboardHttpRequest.getSuppliers($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.suppliers = data['suppliers']

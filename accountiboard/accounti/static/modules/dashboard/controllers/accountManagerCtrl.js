@@ -14,7 +14,8 @@ angular.module("dashboard")
             };
             $scope.search_data_supplier = {
                 'search_word': '',
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch
             };
             $scope.is_in_edit_mode_supplier = false;
             $scope.get_suppliers();
@@ -128,10 +129,7 @@ angular.module("dashboard")
         };
 
         $scope.get_suppliers = function () {
-            var data = {
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getSuppliers(data)
+            dashboardHttpRequest.getSuppliers($rootScope.user_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {

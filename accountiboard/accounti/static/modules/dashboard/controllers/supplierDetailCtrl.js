@@ -9,7 +9,8 @@ angular.module("dashboard")
                 $scope.search_data_supplier = {
                     'from_time': '',
                     'to_time': '',
-                    'username': $rootScope.user_data.username
+                    'username': $rootScope.user_data.username,
+                    'branch': $rootScope.user_data.branch
                 };
             }
             else {

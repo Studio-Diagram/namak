@@ -65,57 +65,56 @@ def return_remainder_of_supplier(supplier_id, to_time):
 
 
 def add_supplier(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        supplier_id = rec_data['id']
-        name = rec_data['name']
-        phone = rec_data['phone']
-        salesman_name = rec_data['salesman_name']
-        salesman_phone = rec_data['salesman_phone']
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    supplier_id = rec_data['id']
+    name = rec_data['name']
+    phone = rec_data['phone']
+    salesman_name = rec_data['salesman_name']
+    salesman_phone = rec_data['salesman_phone']
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not phone:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not salesman_name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not salesman_phone:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not name or not phone or not salesman_name or not salesman_phone or not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        if supplier_id == 0:
-            new_supplier = Supplier(
-                name=name,
-                phone=phone,
-                salesman_name=salesman_name,
-                salesman_phone=salesman_phone,
-            )
-            new_supplier.save()
+    organization_object = Branch.objects.get(id=branch_id).organization
 
-            return JsonResponse({"response_code": 2})
-        else:
-            ol_supplier = Supplier.objects.get(pk=supplier_id)
-            ol_supplier.name = name
-            ol_supplier.phone = phone
-            ol_supplier.salesman_name = salesman_name
-            ol_supplier.salesman_phone = salesman_phone
-            ol_supplier.save()
-            return JsonResponse({"response_code": 2})
+    if supplier_id == 0:
+        new_supplier = Supplier(
+            name=name,
+            phone=phone,
+            salesman_name=salesman_name,
+            salesman_phone=salesman_phone,
+            organization=organization_object
+        )
+        new_supplier.save()
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 2})
+    else:
+        ol_supplier = Supplier.objects.get(pk=supplier_id)
+        ol_supplier.name = name
+        ol_supplier.phone = phone
+        ol_supplier.salesman_name = salesman_name
+        ol_supplier.salesman_phone = salesman_phone
+        ol_supplier.save()
+        return JsonResponse({"response_code": 2})
 
 
 def get_suppliers(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
+        username = rec_data.get('username')
+        branch_id = rec_data.get('branch')
 
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-        suppliers = Supplier.objects.all()
+        organization_object = Branch.objects.get(id=branch_id).organization
+        suppliers = Supplier.objects.filter(organization=organization_object)
         suppliers_data = []
         for supplier in suppliers:
             jalali_date = ''
@@ -134,14 +133,16 @@ def get_suppliers(request):
 def search_supplier(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        username = rec_data['username']
+        search_word = rec_data.get('search_word')
+        username = rec_data.get('username')
+        branch_id = rec_data.get('branch')
 
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not search_word:
+        if not search_word or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = Supplier.objects.filter(name__contains=search_word)
+        organization_object = Branch.objects.get(id=branch_id).organization
+        items_searched = Supplier.objects.filter(name__contains=search_word, organization=organization_object)
         suppliers = []
         for supplier in items_searched:
             jalali_date = ''
@@ -159,26 +160,26 @@ def search_supplier(request):
 
 
 def get_supplier(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        else:
-            supplier_id = rec_data['supplier_id']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-            supplier = Supplier.objects.get(pk=supplier_id)
-            supplier_data = {
-                'id': supplier.pk,
-                'name': supplier.name,
-                'phone': supplier.phone,
-                'salesman_name': supplier.salesman_name,
-                'salesman_phone': supplier.salesman_phone,
-                'remainder': return_remainder_of_supplier(supplier.id, ""),
-            }
-            return JsonResponse({"response_code": 2, 'supplier': supplier_data})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    supplier_id = rec_data['supplier_id']
+
+    supplier = Supplier.objects.get(pk=supplier_id)
+    supplier_data = {
+        'id': supplier.pk,
+        'name': supplier.name,
+        'phone': supplier.phone,
+        'salesman_name': supplier.salesman_name,
+        'salesman_phone': supplier.salesman_phone,
+        'remainder': return_remainder_of_supplier(supplier.id, "")
+    }
+    return JsonResponse({"response_code": 2, 'supplier': supplier_data})
 
 
 def get_sum_invoice_purchases_from_supplier(request):
