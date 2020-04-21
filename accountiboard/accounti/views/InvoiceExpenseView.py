@@ -118,10 +118,6 @@ def create_new_invoice_expense(request):
                 )
                 new_service.save()
 
-            if settlement_type == "CREDIT":
-                supplier_obj.remainder += int(total_price)
-                supplier_obj.save()
-
             return JsonResponse({"response_code": 2})
 
         return JsonResponse({"response_code": 3, "error_msg": "Wrong ID!"})
@@ -206,8 +202,6 @@ def delete_invoice_expense(request):
             invoice_obj.delete()
 
         elif invoice_type == "CREDIT":
-            invoice_obj.supplier.remainder -= invoice_obj.price
-            invoice_obj.supplier.save()
             invoice_obj.delete()
 
         return JsonResponse({"response_code": 2})

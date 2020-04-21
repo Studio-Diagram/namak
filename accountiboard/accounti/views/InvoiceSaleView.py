@@ -237,9 +237,6 @@ def settle_invoice_sale(request):
                     for i in range(0, unit_count):
                         buy_counter += 1
                         purchase_to_shop.buy_numbers += 1
-                        if purchase_to_shop.invoice_purchase.settlement_type == "AMANi":
-                            purchase_to_shop.invoice_purchase.supplier.remainder += purchase_to_shop.base_unit_price
-                            purchase_to_shop.invoice_purchase.supplier.save()
                         unit_count -= 1
                         purchase_to_shop.save()
                         if purchase_to_shop.buy_numbers == purchase_to_shop.unit_numbers:
@@ -595,8 +592,6 @@ def create_new_invoice_sales(request):
                     description=shop['description']
                 )
                 new_item_to_invoice.save()
-                shop_obj.real_numbers -= int(shop['nums'])
-                shop_obj.save()
                 new_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
             new_invoice.save()
@@ -668,8 +663,6 @@ def create_new_invoice_sales(request):
                 )
 
                 new_item_to_invoice.save()
-                shop_obj.real_numbers -= int(shop['nums'])
-                shop_obj.save()
                 old_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
             old_invoice.discount = discount
@@ -840,8 +833,6 @@ def delete_items(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             for shop_id in shops:
                 shop_product_obj = InvoicesSalesToShopProducts.objects.get(pk=shop_id)
-                shop_product_obj.shop_product.real_numbers += shop_product_obj.numbers
-                shop_product_obj.save()
                 new_deleted = DeletedItemsInvoiceSales(
                     created_time=datetime.now(),
                     item_type="SHOP",
@@ -1392,11 +1383,6 @@ def delete_invoice(request):
 
     invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
     invoice_obj.is_deleted = True
-
-    all_shop_to_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
-    for shop_p in all_shop_to_invoice:
-        shop_p.shop_product.real_numbers += shop_p.numbers
-        shop_p.shop_product.save()
 
     new_invoice_deleted = DeletedInvoiceSale(
         invoice_sale=invoice_obj,

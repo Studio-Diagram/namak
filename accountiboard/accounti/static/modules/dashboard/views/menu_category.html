@@ -29,7 +29,7 @@
                                 <select ng-model="new_menu_category_data.kind" class="form-control" id="sel1">
                                     <option value="">نوع دسته‌بندی</option>
                                     <option ng-selected="new_menu_category_data.kind === 'KITCHEN'" value="KITCHEN">
-                                      آشپزخانه
+                                        آشپزخانه
                                     </option>
                                     <option ng-selected="new_menu_category_data.kind === 'BAR'" value="BAR">
                                         بار
@@ -41,8 +41,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div ng-repeat="printer in printers" class="col">
-                                <label><input ng-checked="printer.is_checked" class="form-control" type="checkbox" ng-model="is_checked" ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">پرینتر {{ printer.printer_name }}</label>
+                            <div ng-repeat="printer in printers"
+                                 class="checkbox-unit col">
+                                <label class="checkbox-item">
+                                    <input style="float: left;" ng-checked="printer.is_checked" ng-model="printer.is_checked_m"
+                                           type="checkbox"
+                                           ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">میز {{ printer.printer_name }}
+                                </label>
                             </div>
                         </div>
                     </form>
@@ -102,7 +107,8 @@
                                 <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-sort-down"></i></a>
                             </td>
                             <td style="vertical-align: middle" scope="row">{{ category.name }}</td>
-                            <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)" href=""
+                                                                  class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>
                         </tbody>

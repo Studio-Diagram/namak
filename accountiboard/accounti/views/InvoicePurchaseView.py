@@ -146,7 +146,6 @@ def create_new_invoice_purchase(request):
 
             for item in shop_product_items:
                 item_obj = ShopProduct.objects.get(pk=item['id'])
-                item_obj.real_numbers += item['nums']
                 item_obj.price = item['sale_price']
                 item_obj.save()
                 new_item_to_invoice = PurchaseToShopProduct(
@@ -163,10 +162,6 @@ def create_new_invoice_purchase(request):
             new_invoice.total_price = int(new_invoice.total_price) + int(new_invoice.tax) - int(new_invoice.discount)
 
             new_invoice.save()
-
-            if settlement_type == "CREDIT":
-                supplier_obj.remainder += int(new_invoice.total_price)
-                supplier_obj.save()
 
             return JsonResponse({"response_code": 2})
 
@@ -303,7 +298,7 @@ def get_shop_products(request):
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-        shop_products = ShopProduct.objects.all().order_by("-real_numbers")
+        shop_products = ShopProduct.objects.all()
         shop_products_data = []
         for shop in shop_products:
             last_shop_price = 0
@@ -315,8 +310,7 @@ def get_shop_products(request):
                 'name': shop.name,
                 'price': shop.price,
                 'buy_price': last_shop_price,
-                'real_numbers': get_detail_product_number(shop.id),
-                'nums': shop.real_numbers
+                'real_numbers': get_detail_product_number(shop.id)
             })
         shop_products_data = sorted(shop_products_data, key=lambda i: i['real_numbers'])
         shop_products_data.reverse()
@@ -393,8 +387,7 @@ def search_shop_products(request):
                 'name': shop.name,
                 'price': shop.price,
                 'buy_price': last_shop_price,
-                'real_numbers': get_detail_product_number(shop.id),
-                'nums': shop.real_numbers
+                'real_numbers': get_detail_product_number(shop.id)
             })
         return JsonResponse({"response_code": 2, 'shop_products': shops})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -462,8 +455,6 @@ def delete_invoice_purchase(request):
             pass
 
         elif invoice_type == "CREDIT":
-            invoice_obj.supplier.remainder -= invoice_obj.total_price
-            invoice_obj.supplier.save()
             invoice_obj.delete()
 
         return JsonResponse({"response_code": 2})

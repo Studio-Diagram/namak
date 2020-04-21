@@ -81,6 +81,7 @@ class StockToBranch(models.Model):
 
 class Printer(models.Model):
     name = models.CharField(max_length=30, null=True, blank=True)
+    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
 
 class MenuCategory(models.Model):
@@ -92,6 +93,7 @@ class MenuCategory(models.Model):
     name = models.CharField(max_length=30, null=True, blank=True)
     kind = models.CharField(max_length=50, choices=KIND, blank=False, null=False)
     list_order = models.IntegerField(default=0, blank=False, null=False)
+    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -151,6 +153,7 @@ class Member(models.Model):
     year_of_birth = models.IntegerField(null=False)
     month_of_birth = models.IntegerField(null=False)
     day_of_birth = models.IntegerField(null=False)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -158,6 +161,7 @@ class Member(models.Model):
 
 class TableCategory(models.Model):
     name = models.CharField(max_length=255, null=False)
+    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.name)
@@ -178,6 +182,7 @@ class Game(models.Model):
     numbers = models.IntegerField(null=False)
     points = models.IntegerField(null=False, default=0)
     add_date = models.DateField(null=False)
+    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.member.last_name + " " + str(self.start_time))
@@ -186,10 +191,10 @@ class Game(models.Model):
 class ShopProduct(models.Model):
     name = models.CharField(max_length=50, null=False)
     price = models.FloatField(null=False, default=0)
-    real_numbers = models.IntegerField(null=False, default=0)
+    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name + ":" + str(self.price) + ":" + str(self.real_numbers)
+        return self.name + ":" + str(self.price)
 
 
 class Cash(models.Model):
@@ -274,11 +279,7 @@ class Supplier(models.Model):
     phone = models.CharField(max_length=30, null=False)
     salesman_name = models.CharField(max_length=50, null=False)
     salesman_phone = models.CharField(max_length=50, null=False)
-    last_pay = models.DateField(blank=True, null=True)
-    last_buy = models.DateField(blank=True, null=True)
-    last_expense = models.DateField(blank=True, null=True)
-    last_return = models.DateField(blank=True, null=True)
-    remainder = models.FloatField(default=0)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name + ":" + self.phone
@@ -319,6 +320,7 @@ class Material(models.Model):
     )
     name = models.CharField(max_length=50, null=False)
     unit = models.CharField(max_length=30, null=False, choices=UNIT_TYPES, default="NOT_DEFINED")
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name + ":" + self.unit
@@ -382,6 +384,7 @@ class PurchaseToShopProductAdmin(admin.ModelAdmin):
 
 class ExpenseTag(models.Model):
     name = models.CharField(max_length=50, null=False, blank=False)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
 
 class InvoiceExpense(models.Model):
@@ -479,6 +482,7 @@ class AmaniSale(models.Model):
     is_amani = models.BooleanField(default=True)
     return_numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(null=True, blank=True)
+    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "id(" + str(self.id) + ")" + str(self.created_date) + str(self.supplier.name) + str(
@@ -529,11 +533,13 @@ class Lottery(models.Model):
     prize = models.CharField(max_length=255, null=False)
     is_give_prize = models.IntegerField(default=0)
     user = models.ForeignKey(to=Member, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
 
 class GiftCodeSupplier(models.Model):
     name = models.CharField(max_length=150, blank=False, null=False)
     phone = models.CharField(max_length=30, blank=False, null=False)
+    organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

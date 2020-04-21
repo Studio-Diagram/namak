@@ -74,10 +74,6 @@ def create_new_invoice_settlement(request):
             )
             new_invoice.save()
 
-            supplier_obj.remainder -= int(payment_amount)
-            supplier_obj.last_pay = now_time
-            supplier_obj.save()
-
             return JsonResponse({"response_code": 2})
 
         return JsonResponse({"response_code": 3, "error_msg": "Wrong ID!"})
@@ -158,8 +154,6 @@ def delete_invoice_settlement(request):
 
         invoice_obj = InvoiceSettlement.objects.get(pk=invoice_id)
 
-        invoice_obj.supplier.remainder += invoice_obj.payment_amount
-        invoice_obj.supplier.save()
         invoice_obj.delete()
 
         return JsonResponse({"response_code": 2})

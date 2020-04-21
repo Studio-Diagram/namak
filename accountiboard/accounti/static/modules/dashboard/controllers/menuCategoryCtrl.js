@@ -17,20 +17,16 @@ angular.module("dashboard")
             };
             $scope.printers = [];
             $scope.error_message = "";
-            $scope.get_printers_data($rootScope.user_data);
             $scope.get_menu_category_data($rootScope.user_data);
         };
 
         $scope.changePrinterCheckBox = function (is_checked, printer_id) {
-            if (is_checked) {
+            var index_of_printer_id = $scope.new_menu_category_data.printers_id.indexOf(printer_id);
+            if (index_of_printer_id === -1) {
                 $scope.new_menu_category_data.printers_id.push(printer_id);
             }
             else {
-                for (var i = 0; i < $scope.new_menu_category_data.printers_id.length; i++) {
-                    if ($scope.new_menu_category_data.printers_id[i] === printer_id) {
-                        $scope.new_menu_category_data.printers_id.splice(i, 1);
-                    }
-                }
+                $scope.new_menu_category_data.printers_id.splice(index_of_printer_id, 1);
             }
         };
 
@@ -47,22 +43,6 @@ angular.module("dashboard")
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
-        };
-
-        $scope.get_printers_data = function (data) {
-            dashboardHttpRequest.getPrinters(data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.printers = data['printers'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -96,7 +76,6 @@ angular.module("dashboard")
             (function ($) {
                 $('#addMenuCategoryModal').modal('hide');
                 $scope.resetFrom();
-                $scope.get_printers_data($rootScope.user_data);
             })(jQuery);
         };
 
@@ -163,6 +142,7 @@ angular.module("dashboard")
             $scope.is_in_edit_mode_menu_category = true;
             var data = {
                 'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch,
                 'menu_category_id': menu_category_id
             };
             dashboardHttpRequest.getMenuCategory(data)

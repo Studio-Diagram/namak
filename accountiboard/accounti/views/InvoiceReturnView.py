@@ -128,8 +128,6 @@ def create_new_invoice_return(request):
                 new_invoice.save()
 
                 if return_type == "CUSTOMER_TO_CAFE":
-                    shop_obj.real_numbers += int(numbers)
-                    shop_obj.save()
                     return_number_count = int(numbers)
                     all_amani_sales = AmaniSale.objects.filter(invoice_sale_to_shop__shop_product=shop_obj).order_by(
                         '-created_date')
@@ -139,8 +137,6 @@ def create_new_invoice_return(request):
                             if return_number_count == real_number_in_amani_sale or return_number_count < real_number_in_amani_sale:
                                 amani_sale.return_numbers += return_number_count
                                 amani_sale.save()
-                                amani_sale.supplier.remainder -= amani_sale.buy_price * return_number_count
-                                amani_sale.supplier.save()
                                 new_amani_to_return = AmaniSaleToInvoiceReturn(
                                     amani_sale=amani_sale,
                                     invoice_return=new_invoice,
@@ -161,8 +157,6 @@ def create_new_invoice_return(request):
                                 break
                             else:
                                 amani_sale.return_numbers += real_number_in_amani_sale
-                                amani_sale.supplier.remainder -= amani_sale.buy_price * real_number_in_amani_sale
-                                amani_sale.supplier.save()
                                 new_amani_to_return = AmaniSaleToInvoiceReturn(
                                     amani_sale=amani_sale,
                                     invoice_return=new_invoice,
@@ -197,9 +191,6 @@ def create_new_invoice_return(request):
 
                     if can_returned_nums < int(numbers):
                         return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Supplier!"})
-
-                    shop_obj.real_numbers -= int(numbers)
-                    shop_obj.save()
 
                     for purchase in all_purchase_to_shop_p:
                         can_return_num_in_purchase = purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
@@ -320,8 +311,6 @@ def delete_invoice_return(request):
             invoice_obj.delete()
 
         elif invoice_type == "CREDIT":
-            invoice_obj.supplier.remainder -= invoice_obj.total_price
-            invoice_obj.supplier.save()
             invoice_obj.delete()
 
         return JsonResponse({"response_code": 2})

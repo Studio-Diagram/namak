@@ -82,9 +82,6 @@ def register_employee(request):
         bank_card_number = rec_data['bank_card_number']
         shaba = rec_data['shaba']
         position = rec_data['position']
-        membership_card_number = rec_data['membership_card_number']
-        base_worksheet_salary = rec_data['base_worksheet_salary']
-        base_worksheet_count = rec_data['base_worksheet_count']
         auth_level = rec_data['auth_level']
         branch_id = rec_data['branch_id']
 
@@ -96,12 +93,6 @@ def register_employee(request):
 
         if password != re_password:
             return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
-
-        if not base_worksheet_salary:
-            return JsonResponse({"response_code": 3, "error_msg": SHIFT_SALARY_REQUIRED})
-
-        if not base_worksheet_count:
-            return JsonResponse({"response_code": 3, "error_msg": SHIFT_NUMBER_REQUIRED})
 
         if not first_name:
             return JsonResponse({"response_code": 3, "error_msg": FIRST_NAME_REQUIRED})
@@ -130,19 +121,11 @@ def register_employee(request):
         if not position:
             return JsonResponse({"response_code": 3, "error_msg": POSITION_REQUIRED})
 
-        if not membership_card_number:
-            return JsonResponse({"response_code": 3, "error_msg": MEMBER_CARD_REQUIRED})
-
         if auth_level == "":
             return JsonResponse({"response_code": 3, "error_msg": AUTH_LEVEL_REQUIRED})
 
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": BRANCH_REQUIRED})
-
-        membership_card_number = membership_card_number.replace("؟", "")
-        membership_card_number = membership_card_number.replace("٪", "")
-        membership_card_number = membership_card_number.replace("?", "")
-        membership_card_number = membership_card_number.replace("%", "")
 
         if employee_id == 0:
             new_employee = Employee(
@@ -155,10 +138,7 @@ def register_employee(request):
                 home_address=home_address,
                 bank_name=bank_name,
                 bank_card_number=bank_card_number,
-                shaba_number=shaba,
-                base_worksheet_count=base_worksheet_count,
-                base_worksheet_salary=base_worksheet_salary,
-                membership_card_number=membership_card_number,
+                shaba_number=shaba
             )
             new_employee.save()
             new_employee_to_branch = EmployeeToBranch(
@@ -186,9 +166,6 @@ def register_employee(request):
             old_employee.bank_name = bank_name
             old_employee.bank_card_number = bank_card_number
             old_employee.shaba_number = shaba
-            old_employee.base_worksheet_count = base_worksheet_count
-            old_employee.base_worksheet_salary = base_worksheet_salary
-            old_employee.membership_card_number = membership_card_number
 
             old_employee.save()
 
@@ -251,13 +228,15 @@ def get_employees(request):
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
-            branch = rec_data['branch']
-            all_employees = EmployeeToBranch.objects.filter(branch__pk=branch)
+            branch_id = rec_data['branch']
+            organization_object = Branch.objects.get(id=branch_id).organization
+            all_organization_branches = Branch.objects.filter(organization=organization_object)
+            all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
             employees = []
             for employee in all_employees:
                 employees.append({
                     "id": employee.employee.pk,
-                    "last_name": employee.employee.last_name,
+                    "last_name": employee.employee.user.last_name,
                     "position": employee.position,
                     "auth_lvl": employee.auth_level,
                 })
@@ -276,19 +255,16 @@ def get_employee(request):
             employee = Employee.objects.get(pk=employee_id)
             employee_to_branch = EmployeeToBranch.objects.get(employee=employee)
             employee_data = {
-                'first_name': employee.first_name,
-                'last_name': employee.last_name,
+                'first_name': employee.user.first_name,
+                'last_name': employee.user.last_name,
                 'father_name': employee.father_name,
                 'national_code': employee.national_code,
-                'phone': employee.phone,
-                'home_address': employee.home_address,
+                'phone': employee.user.phone,
+                'home_address': employee.user.home_address,
                 'bank_name': employee.bank_name,
                 'bank_card_number': employee.bank_card_number,
                 'shaba': employee.shaba_number,
                 'position': employee_to_branch.position,
-                'membership_card_number': employee.membership_card_number,
-                'base_worksheet_salary': employee.base_worksheet_salary,
-                'base_worksheet_count': employee.base_worksheet_count,
                 'auth_level': employee_to_branch.auth_level,
             }
             return JsonResponse({"response_code": 2, 'employee': employee_data})
@@ -299,10 +275,11 @@ def get_menu_categories(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
+        branch_id = rec_data['branch']
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         else:
-            all_menu_categories = MenuCategory.objects.all().order_by('list_order')
+            all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
             menu_categories = []
             for category in all_menu_categories:
                 menu_categories.append({
@@ -314,88 +291,85 @@ def get_menu_categories(request):
 
 
 def get_menu_category(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        else:
-            menu_category_id = rec_data['menu_category_id']
-            menu_category = MenuCategory.objects.get(pk=menu_category_id)
-            all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-            printers = Printer.objects.all()
-            printers_data = []
-            for printer in printers:
-                printers_data.append({
-                    'printer_id': printer.pk,
-                    'printer_name': printer.name,
-                    'is_checked': 0
-                })
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
+    menu_category_id = rec_data.get('menu_category_id')
 
-            printers_id = []
-            for printer in all_cat_to_printer:
-                printers_id.append(printer.printer.pk)
-                for element in printers_data:
-                    if element['printer_id'] == printer.printer.pk:
-                        element['is_checked'] = 1
-                        break
-            menu_category_data = {
-                'id': menu_category.pk,
-                'name': menu_category.name,
-                'kind': menu_category.kind,
-                'printers_id': printers_id,
-                'printers': printers_data,
-            }
-            return JsonResponse({"response_code": 2, 'menu_category': menu_category_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if not branch_id or not menu_category_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    menu_category = MenuCategory.objects.get(pk=menu_category_id)
+    all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
+
+    printers = Printer.objects.filter(branch_id=branch_id)
+    printers_data = []
+    for printer in printers:
+        printers_data.append({
+            'printer_id': printer.pk,
+            'printer_name': printer.name,
+            'is_checked': 0
+        })
+
+    printers_id = []
+    for printer in all_cat_to_printer:
+        printers_id.append(printer.printer.pk)
+        for element in printers_data:
+            if element['printer_id'] == printer.printer.pk:
+                element['is_checked'] = 1
+                break
+    menu_category_data = {
+        'id': menu_category.pk,
+        'name': menu_category.name,
+        'kind': menu_category.kind,
+        'printers_id': printers_id,
+        'printers': printers_data,
+    }
+    return JsonResponse({"response_code": 2, 'menu_category': menu_category_data})
 
 
 def add_menu_category(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        menu_category_id = rec_data['menu_category_id']
-        name = rec_data['name']
-        kind = rec_data['kind']
-        printers_id = rec_data['printers_id']
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not kind:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if menu_category_id == 0:
-            new_menu_category = MenuCategory(
-                name=name,
-                kind=kind
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    menu_category_id = rec_data['menu_category_id']
+    name = rec_data['name']
+    kind = rec_data['kind']
+    printers_id = rec_data['printers_id']
+    username = rec_data['username']
+    branch_id = rec_data['branch_id']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not name or not kind or not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    if menu_category_id == 0:
+        new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id)
+        new_menu_category.save()
+        for printer_id in printers_id:
+            printer_object = Printer.objects.get(pk=printer_id)
+            new_printer_to_menu_cat = PrinterToCategory(
+                printer=printer_object,
+                menu_category=new_menu_category
             )
-            new_menu_category.save()
-            for printer_id in printers_id:
-                printer_object = Printer.objects.get(pk=printer_id)
-                new_printer_to_menu_cat = PrinterToCategory(
-                    printer=printer_object,
-                    menu_category=new_menu_category
-                )
-                new_printer_to_menu_cat.save()
-            return JsonResponse({"response_code": 2})
-        else:
-            old_menu_category = MenuCategory.objects.get(pk=menu_category_id)
-            old_menu_category_printers = PrinterToCategory.objects.filter(menu_category=old_menu_category)
-            for printer in old_menu_category_printers:
-                printer.delete()
-            old_menu_category.name = name
-            old_menu_category.kind = kind
-            for printer_id in printers_id:
-                printer_object = Printer.objects.get(pk=printer_id)
-                new_printer_to_menu_cat = PrinterToCategory(
-                    printer=printer_object,
-                    menu_category=old_menu_category
-                )
-                new_printer_to_menu_cat.save()
-            old_menu_category.save()
-            return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+            new_printer_to_menu_cat.save()
+        return JsonResponse({"response_code": 2})
+    else:
+        old_menu_category = MenuCategory.objects.get(pk=menu_category_id)
+        PrinterToCategory.objects.filter(menu_category=old_menu_category).delete()
+        old_menu_category.name = name
+        old_menu_category.kind = kind
+        for printer_id in printers_id:
+            printer_object = Printer.objects.get(pk=printer_id)
+            PrinterToCategory(printer=printer_object, menu_category=old_menu_category).save()
+        old_menu_category.save()
+        return JsonResponse({"response_code": 2})
 
 
 def search_menu_category(request):
@@ -403,11 +377,12 @@ def search_menu_category(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
         username = rec_data['username']
+        branch_id = rec_data['branch_id']
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not search_word:
+        if not search_word or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        categories_searched = MenuCategory.objects.filter(name__contains=search_word)
+        categories_searched = MenuCategory.objects.filter(name__contains=search_word, branch_id=branch_id)
         menu_categories = []
         for category in categories_searched:
             menu_categories.append({
@@ -418,24 +393,26 @@ def search_menu_category(request):
 
 
 def get_menu_items(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        else:
-            all_menu_items = MenuItem.objects.filter(is_delete=0).order_by('menu_category__name')
-            menu_items = []
-            for item in all_menu_items:
-                menu_items.append({
-                    "id": item.pk,
-                    "name": item.name,
-                    "price": item.price,
-                    "category_name": item.menu_category.name,
-                    "menu_category_id": item.menu_category.id
-                })
-            return JsonResponse({"response_code": 2, 'menu_items': menu_items})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    all_menu_items = MenuItem.objects.filter(is_delete=0, menu_category__branch_id=branch_id).order_by(
+        'menu_category__name')
+    menu_items = []
+    for item in all_menu_items:
+        menu_items.append({
+            "id": item.pk,
+            "name": item.name,
+            "price": item.price,
+            "category_name": item.menu_category.name,
+            "menu_category_id": item.menu_category.id
+        })
+    return JsonResponse({"response_code": 2, 'menu_items': menu_items})
 
 
 def get_menu_item(request):
@@ -517,11 +494,12 @@ def search_menu_item(request):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
         username = rec_data['username']
+        branch_id = rec_data['branch_id']
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0)
+        items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0, menu_category__branch_id=branch_id)
         menu_items = []
         for item in items_searched:
             menu_items.append({
@@ -549,10 +527,11 @@ def get_menu_items_with_categories(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
         username = rec_data['username']
+        branch_id = rec_data['branch']
         if not request.session.get('is_logged_in', None) == username:
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         menu_items_with_categories_data = []
-        menu_categories = MenuCategory.objects.all().order_by('list_order')
+        menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
         for cat in menu_categories:
             menu_items = MenuItem.objects.filter(menu_category=cat, is_delete=0)
             menu_items_data = []
@@ -571,22 +550,26 @@ def get_menu_items_with_categories(request):
 
 
 def get_printers(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
-        printers = Printer.objects.all()
-        printers_data = []
-        for printer in printers:
-            printers_data.append({
-                'printer_id': printer.pk,
-                'printer_name': printer.name,
-                'is_checked': 0
-            })
-        return JsonResponse({"response_code": 2, 'printers': printers_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    printers = Printer.objects.filter(branch_id=branch_id)
+    printers_data = []
+    for printer in printers:
+        printers_data.append({
+            'printer_id': printer.pk,
+            'printer_name': printer.name,
+            'is_checked': 0
+        })
+    return JsonResponse({"response_code": 2, 'printers': printers_data})
 
 
 def get_today_cash(request):

@@ -119,11 +119,6 @@ def get_suppliers(request):
         suppliers_data = []
         for supplier in suppliers:
             jalali_date = ''
-            if supplier.last_pay:
-                last_pay_date = supplier.last_pay
-                jalali_date = jdatetime.date.fromgregorian(day=last_pay_date.day, month=last_pay_date.month,
-                                                           year=last_pay_date.year)
-                jalali_date = jalali_date.strftime("%Y/%m/%d")
             suppliers_data.append({
                 'id': supplier.pk,
                 'name': supplier.name,
@@ -150,11 +145,6 @@ def search_supplier(request):
         suppliers = []
         for supplier in items_searched:
             jalali_date = ''
-            if supplier.last_pay:
-                last_pay_date = supplier.last_pay
-                jalali_date = jdatetime.date.fromgregorian(day=last_pay_date.day, month=last_pay_date.month,
-                                                           year=last_pay_date.year)
-                jalali_date = jalali_date.strftime("%Y/%m/%d")
             suppliers.append({
                 'id': supplier.pk,
                 'name': supplier.name,
@@ -205,12 +195,7 @@ def get_sum_invoice_purchases_from_supplier(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         supplier = Supplier.objects.get(pk=supplier_id)
-        last_buy = supplier.last_buy
-        if last_buy:
-            jalali_date = jdatetime.date.fromgregorian(day=last_buy.day, month=last_buy.month, year=last_buy.year)
-            purchase_date = jalali_date.strftime("%Y/%m/%d")
-        else:
-            purchase_date = ''
+        purchase_date = ''
 
         if from_time == "" or to_time == "":
             all_invoice_purchases = InvoicePurchase.objects.filter(supplier=supplier)
@@ -254,13 +239,7 @@ def get_sum_invoice_settlements_from_supplier(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         supplier = Supplier.objects.get(pk=supplier_id)
-        last_pay = supplier.last_pay
-        if last_pay:
-            jalali_date = jdatetime.date.fromgregorian(day=last_pay.day, month=last_pay.month,
-                                                       year=last_pay.year)
-            pay_date = jalali_date.strftime("%Y/%m/%d")
-        else:
-            pay_date = ''
+        pay_date = ''
 
         if from_time == "" or to_time == "":
             all_invoice_settlements = InvoiceSettlement.objects.filter(supplier=supplier)
@@ -304,13 +283,7 @@ def get_sum_invoice_expenses_from_supplier(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         supplier = Supplier.objects.get(pk=supplier_id)
-        last_expense = supplier.last_expense
-        if last_expense:
-            jalali_date = jdatetime.date.fromgregorian(day=last_expense.day, month=last_expense.month,
-                                                       year=last_expense.year)
-            expense_date = jalali_date.strftime("%Y/%m/%d")
-        else:
-            expense_date = ''
+        expense_date = ''
 
         if from_time == "" or to_time == "":
             all_invoice_expenses = InvoiceExpense.objects.filter(supplier=supplier)
@@ -354,14 +327,7 @@ def get_sum_invoice_return_from_supplier(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         supplier = Supplier.objects.get(pk=supplier_id)
-        last_return = supplier.last_return
-        if last_return:
-            jalali_date = jdatetime.date.fromgregorian(day=last_return.day, month=last_return.month,
-                                                       year=last_return.year)
-            return_date = jalali_date.strftime("%Y/%m/%d")
-        else:
-            return_date = ''
-
+        return_date = ''
         if from_time == "" or to_time == "":
             all_invoice_returns = InvoiceReturn.objects.filter(supplier=supplier, return_type="CAFE_TO_SUPPLIER")
             all_invoice_returns_sum = all_invoice_returns.aggregate(Sum('total_price'))
@@ -1062,7 +1028,6 @@ def get_supplier_purchase_item_used(request):
     shop_products = PurchaseToShopProduct.objects.filter(invoice_purchase__supplier=supplier_id).values(
         "shop_product__pk",
         "shop_product__name",
-        "shop_product__real_numbers",
         "shop_product__price").distinct()
 
     for shop_p in shop_products:
@@ -1070,7 +1035,6 @@ def get_supplier_purchase_item_used(request):
         favourite_shop_products.append({
             "id": shop_p['shop_product__pk'],
             "name": shop_p['shop_product__name'],
-            "real_numbers": shop_p['shop_product__real_numbers'],
             "price": shop_p['shop_product__price'],
             "buy_price": last_shop_p.base_unit_price
         })
