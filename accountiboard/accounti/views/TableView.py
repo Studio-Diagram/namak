@@ -114,43 +114,47 @@ def add_table_category(request):
 
 
 def get_tables(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        tables = Table.objects.all().order_by('id')
-        tables_data = []
-        for table in tables:
-            tables_data.append({
-                'table_id': table.pk,
-                'table_name': table.name,
-                'table_category_name': table.category.name,
-                'is_checked': 0
-            })
-        return JsonResponse({"response_code": 2, 'tables': tables_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    tables = Table.objects.filter(category__branch_id=branch_id).order_by('id')
+    tables_data = []
+    for table in tables:
+        tables_data.append({
+            'table_id': table.pk,
+            'table_name': table.name,
+            'table_category_name': table.category.name,
+            'is_checked': 0
+        })
+    return JsonResponse({"response_code": 2, 'tables': tables_data})
 
 
 def get_table_category(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        table_cat_id = rec_data['table_cat_id']
-        if not table_cat_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    table_cat_id = rec_data.get('table_cat_id')
 
-        table_cat = TableCategory.objects.get(pk=table_cat_id)
-        table_cat_data = {
-            'id': table_cat.pk,
-            'name': table_cat.name,
-        }
-        return JsonResponse({"response_code": 2, 'table_category': table_cat_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    if not table_cat_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    table_cat = TableCategory.objects.get(pk=table_cat_id)
+    table_cat_data = {
+        'id': table_cat.pk,
+        'name': table_cat.name,
+    }
+    return JsonResponse({"response_code": 2, 'table_category': table_cat_data})
 
 
 def get_table_categories(request):
@@ -158,11 +162,12 @@ def get_table_categories(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-    table_cats = TableCategory.objects.all().order_by('id')
+    table_cats = TableCategory.objects.filter(branch_id=branch_id).order_by('id')
     table_cats_data = []
     for cat in table_cats:
         table_cats_data.append({
