@@ -436,39 +436,40 @@ def get_menu_item(request):
 
 
 def add_menu_item(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        menu_item_id = rec_data['menu_item_id']
-        menu_category_id = rec_data['menu_category_id']
-        name = rec_data['name']
-        price = rec_data['price']
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not price:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not menu_category_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    menu_item_id = rec_data['menu_item_id']
+    menu_category_id = rec_data['menu_category_id']
+    name = rec_data['name']
+    price = rec_data['price']
+    username = rec_data['username']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-        if menu_item_id == 0:
-            new_menu_item = MenuItem(
-                name=name,
-                price=price,
-                menu_category=MenuCategory.objects.get(pk=menu_category_id)
-            )
-            new_menu_item.save()
-            return JsonResponse({"response_code": 2})
-        else:
-            old_menu_item = MenuItem.objects.get(pk=menu_item_id)
-            old_menu_item.name = name
-            old_menu_item.price = price
-            old_menu_item.menu_category = MenuCategory.objects.get(pk=menu_category_id)
-            old_menu_item.save()
-            return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if not name:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not price:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not menu_category_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    if menu_item_id == 0:
+        new_menu_item = MenuItem(
+            name=name,
+            price=price,
+            menu_category=MenuCategory.objects.get(pk=menu_category_id)
+        )
+        new_menu_item.save()
+        return JsonResponse({"response_code": 2})
+    else:
+        old_menu_item = MenuItem.objects.get(pk=menu_item_id)
+        old_menu_item.name = name
+        old_menu_item.price = price
+        old_menu_item.menu_category = MenuCategory.objects.get(pk=menu_category_id)
+        old_menu_item.save()
+        return JsonResponse({"response_code": 2})
 
 
 def delete_menu_item(request):
@@ -499,7 +500,8 @@ def search_menu_item(request):
             return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0, menu_category__branch_id=branch_id)
+        items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0,
+                                                 menu_category__branch_id=branch_id)
         menu_items = []
         for item in items_searched:
             menu_items.append({

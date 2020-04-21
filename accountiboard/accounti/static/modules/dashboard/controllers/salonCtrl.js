@@ -623,10 +623,7 @@ angular.module("dashboard")
         };
 
         $scope.get_shop_products = function () {
-            var data = {
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getShopProducts(data)
+            dashboardHttpRequest.getShopProducts($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.shop_products_original = data['shop_products'];

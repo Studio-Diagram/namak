@@ -482,7 +482,6 @@ class AmaniSale(models.Model):
     is_amani = models.BooleanField(default=True)
     return_numbers = models.IntegerField(null=False, default=0)
     created_date = models.DateTimeField(null=True, blank=True)
-    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "id(" + str(self.id) + ")" + str(self.created_date) + str(self.supplier.name) + str(

@@ -67,41 +67,22 @@ angular.module("dashboard")
             $scope.resetFrom();
         };
 
-        $scope.addMenuItemF = function () {
-            if ($scope.is_in_edit_mode_menu_item) {
-                $scope.is_in_edit_mode_menu_item = false;
-                dashboardHttpRequest.addMenuItem($scope.new_menu_item_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_menu_item_data($rootScope.user_data);
-                            $scope.closeAddMenuItemModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
+        $scope.addMenuItem = function () {
+            dashboardHttpRequest.addMenuItem($scope.new_menu_item_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_menu_item_data($rootScope.user_data);
+                        $scope.resetFrom();
+                        $scope.closeAddMenuItemModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
-                    });
-            }
-            else {
-                dashboardHttpRequest.addMenuItem($scope.new_menu_item_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_menu_item_data($rootScope.user_data);
-                            $scope.resetFrom();
-                            $scope.closeAddMenuItemModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.searchMenuItem = function () {

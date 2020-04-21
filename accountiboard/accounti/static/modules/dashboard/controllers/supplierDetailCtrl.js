@@ -234,6 +234,7 @@ angular.module("dashboard")
         $scope.get_detail_invoice_amani_sales = function () {
             var data = {
                 'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch,
                 'from_time': $scope.search_data_supplier.from_time,
                 'to_time': $scope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id

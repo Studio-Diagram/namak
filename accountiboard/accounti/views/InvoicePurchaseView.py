@@ -291,51 +291,56 @@ def get_detail_product_number(shop_product_id):
 
 
 def get_shop_products(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
-        shop_products = ShopProduct.objects.all()
-        shop_products_data = []
-        for shop in shop_products:
-            last_shop_price = 0
-            last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
-            if last_shop:
-                last_shop_price = last_shop.base_unit_price
-            shop_products_data.append({
-                'id': shop.pk,
-                'name': shop.name,
-                'price': shop.price,
-                'buy_price': last_shop_price,
-                'real_numbers': get_detail_product_number(shop.id)
-            })
-        shop_products_data = sorted(shop_products_data, key=lambda i: i['real_numbers'])
-        shop_products_data.reverse()
-        return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    shop_products = ShopProduct.objects.filter(branch_id=branch_id)
+    shop_products_data = []
+    for shop in shop_products:
+        last_shop_price = 0
+        last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
+        if last_shop:
+            last_shop_price = last_shop.base_unit_price
+        shop_products_data.append({
+            'id': shop.pk,
+            'name': shop.name,
+            'price': shop.price,
+            'buy_price': last_shop_price,
+            'real_numbers': get_detail_product_number(shop.id)
+        })
+    shop_products_data = sorted(shop_products_data, key=lambda i: i['real_numbers'])
+    shop_products_data.reverse()
+    return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
 
 
 def get_last_buy_price(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        shop_product_id = rec_data['shop_product_id']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not shop_product_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    shop_product_id = rec_data['shop_product_id']
 
-        shop_product = ShopProduct.objects.get(pk=shop_product_id)
-        last_invoice_purchase = PurchaseToShopProduct.objects.filter(shop_product=shop_product).last()
-        if last_invoice_purchase:
-            last_price = last_invoice_purchase.base_unit_price
-        else:
-            last_price = 0
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not shop_product_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        return JsonResponse({"response_code": 2, 'last_buy_price': last_price})
+    shop_product = ShopProduct.objects.get(pk=shop_product_id)
+    last_invoice_purchase = PurchaseToShopProduct.objects.filter(shop_product=shop_product).last()
+    if last_invoice_purchase:
+        last_price = last_invoice_purchase.base_unit_price
+    else:
+        last_price = 0
+
+    return JsonResponse({"response_code": 2, 'last_buy_price': last_price})
 
 
 def search_materials(request):
@@ -366,31 +371,33 @@ def search_materials(request):
 
 
 def search_shop_products(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not search_word:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = ShopProduct.objects.filter(name__icontains=search_word)
-        shops = []
-        for shop in items_searched:
-            last_shop_price = 0
-            last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
-            if last_shop:
-                last_shop_price = last_shop.base_unit_price
-            shops.append({
-                'id': shop.pk,
-                'name': shop.name,
-                'price': shop.price,
-                'buy_price': last_shop_price,
-                'real_numbers': get_detail_product_number(shop.id)
-            })
-        return JsonResponse({"response_code": 2, 'shop_products': shops})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    search_word = rec_data.get('search_word')
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
+
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not search_word or not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    items_searched = ShopProduct.objects.filter(name__icontains=search_word, branch_id=branch_id)
+    shops = []
+    for shop in items_searched:
+        last_shop_price = 0
+        last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
+        if last_shop:
+            last_shop_price = last_shop.base_unit_price
+        shops.append({
+            'id': shop.pk,
+            'name': shop.name,
+            'price': shop.price,
+            'buy_price': last_shop_price,
+            'real_numbers': get_detail_product_number(shop.id)
+        })
+    return JsonResponse({"response_code": 2, 'shop_products': shops})
 
 
 def add_material(request):
@@ -418,15 +425,16 @@ def add_shop_product(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    shop_product_name = rec_data['shop_product_name']
-    username = rec_data['username']
+    shop_product_name = rec_data.get('shop_product_name')
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not shop_product_name:
+    if not shop_product_name or not branch_id:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    new_shop_product = ShopProduct(name=shop_product_name)
+    new_shop_product = ShopProduct(name=shop_product_name, branch_id=branch_id)
     new_shop_product.save()
 
     return JsonResponse({"response_code": 2,

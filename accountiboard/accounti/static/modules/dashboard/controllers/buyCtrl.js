@@ -207,10 +207,7 @@ angular.module("dashboard")
         };
 
         $scope.get_shop_products = function () {
-            var data = {
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getShopProducts(data)
+            dashboardHttpRequest.getShopProducts($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.shop_products = data['shop_products']
@@ -472,7 +469,8 @@ angular.module("dashboard")
         $scope.add_shop_product_to_data_base_after_search = function (shop_product_name) {
             var sending_data = {
                 'shop_product_name': shop_product_name,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch
             };
             dashboardHttpRequest.addShopProduct(sending_data)
                 .then(function (data) {

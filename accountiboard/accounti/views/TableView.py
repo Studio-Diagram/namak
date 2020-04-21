@@ -89,28 +89,29 @@ def get_table(request):
 
 
 def add_table_category(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        name = rec_data['name']
-        table_cat_id = rec_data['id']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    name = rec_data.get('name')
+    table_cat_id = rec_data.get('id')
+    branch_id = rec_data.get('branch')
 
-        if not name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not name or not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        if table_cat_id == 0:
-            new_table_category = TableCategory(
-                name=name,
-            )
-            new_table_category.save()
+    if table_cat_id == 0:
+        new_table_category = TableCategory(
+            name=name,
+            branch_id=branch_id
+        )
+        new_table_category.save()
 
-            return JsonResponse({"response_code": 2})
-        else:
-            old_table_cat = TableCategory.objects.get(pk=table_cat_id)
-            old_table_cat.name = name
-            old_table_cat.save()
-            return JsonResponse({"response_code": 2})
-
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 2})
+    else:
+        old_table_cat = TableCategory.objects.get(pk=table_cat_id)
+        old_table_cat.name = name
+        old_table_cat.save()
+        return JsonResponse({"response_code": 2})
 
 
 def get_tables(request):
