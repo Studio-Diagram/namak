@@ -583,7 +583,8 @@ angular.module("dashboard")
                 'invoice_id': invoice_id,
                 'card_number': $scope.wait_game_invoices_data[invoice_index].card_number,
                 'numbers': $scope.wait_game_invoices_data[invoice_index].player_numbers,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch
             };
             dashboardHttpRequest.startInvoiceGame(sending_data)
                 .then(function (data) {

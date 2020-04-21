@@ -470,7 +470,8 @@ def sync_invoice_sales_from_offline(request):
                 end_time=game['end_time'],
                 numbers=game['numbers'],
                 points=game['points'],
-                add_date=game['add_date']
+                add_date=game['add_date'],
+                branch=branch_object
             )
             new_game.save()
             new_invoice_to_game = InvoicesSalesToGame(

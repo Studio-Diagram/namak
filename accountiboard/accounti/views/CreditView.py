@@ -101,7 +101,7 @@ def perform_credit_on_invoice_sale(request):
     except InvoiceSales.DoesNotExist:
         return JsonResponse({"response_code": 3, "error_msg": INVOICE_NOT_EXIST})
 
-    if invoice_object.member.card_number == "0000":
+    if not invoice_object.member:
         return JsonResponse({"response_code": 3, "error_msg": MEMBER_NOT_SELCETD})
 
     all_member_credits = Credit.objects.filter(member=invoice_object.member, expire_time__gte=datetime.now())

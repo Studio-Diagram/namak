@@ -25,6 +25,11 @@ DO_NOT_WANT_GAME = "بازی نمی‌خواهد"
 NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
 WAIT_FOR_SETTLE = "منتظر تسویه"
 PRICE_PER_POINT_IN_GAME = 5000
+PRICE_PER_HOUR_IN_GAME = 80000
+SECONDS_PER_POINT = 225
+CHUNKS_PER_HOUR = 16
+GUEST_LAST_NAME = "مهمان"
+GUEST_FIRST_NAME = "مهمان"
 
 
 def start_invoice_game(request):
@@ -32,30 +37,29 @@ def start_invoice_game(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
-    invoice_id = rec_data['invoice_id']
-    numbers = rec_data['numbers']
-    card_number = rec_data['card_number']
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
+    invoice_id = rec_data.get('invoice_id')
+    numbers = rec_data.get('numbers')
+    card_number = rec_data.get('card_number')
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     if not invoice_id or not numbers:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
     invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-    if invoice_object.member.card_number == "0000":
-        if card_number == '':
-            member_obj = Member.objects.get(pk=1)
-        else:
-            member_obj = Member.objects.get(card_number=card_number)
-            invoice_object.member = member_obj
-    else:
+    if invoice_object.member:
         member_obj = invoice_object.member
+    else:
+        member_obj = Member.objects.get(card_number=card_number)
+        invoice_object.member = member_obj
 
     new_game = Game(
         member=member_obj,
         start_time=datetime.strftime(datetime.now(), '%H:%M'),
         add_date=datetime.now(),
-        numbers=numbers
+        numbers=numbers,
+        branch_id=branch_id
     )
     new_game.save()
     new_invoice_to_game = InvoicesSalesToGame(
@@ -152,7 +156,7 @@ def get_dashboard_quick_access_invoices(request):
             })
 
         elif invoice.game_state == "WAIT_GAME":
-            if invoice.member.card_number == "0000":
+            if not invoice.member:
                 has_member = False
                 card_number = ''
             else:
@@ -269,168 +273,165 @@ def settle_invoice_sale(request):
 
 
 def get_invoice(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        invoice_id = rec_data['invoice_id']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-        invoice_data = {
-            'invoice_sales_id': invoice_object.pk,
-            'table_id': invoice_object.table.pk,
-            'table_name': invoice_object.table.name,
-            'member_id': invoice_object.member.pk,
-            'guest_numbers': invoice_object.guest_numbers,
-            'member_name': invoice_object.member.first_name + " " + invoice_object.member.last_name,
-            'member_data': invoice_object.member.first_name + " " + invoice_object.member.last_name,
-            'current_game': {
-                'id': 0,
-                'numbers': 0,
-                'start_time': ''
-            },
-            'total_price': invoice_object.total_price,
-            "discount": invoice_object.discount,
-            "tip": invoice_object.tip,
-            'menu_items_old': [],
-            'shop_items_old': [],
-            'games': [],
-            'used_credit': 0,
-            'total_credit': 0,
-            'cash_amount': invoice_object.cash,
-            "pos_amount": invoice_object.pos
-        }
-        invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
-        for game in invoice_games:
-            if str(game.game.end_time) != "00:00:00":
-                game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
-                hour_points = int(game_total_secs / 3600)
-                min_points = int((game_total_secs / 60) % 60)
-                if len(str(hour_points)) == 1:
-                    hour_points_string = "0" + str(hour_points)
-                else:
-                    hour_points_string = str(hour_points)
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-                if len(str(min_points)) == 1:
-                    min_points_string = "0" + str(min_points)
-                else:
-                    min_points_string = str(min_points)
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    invoice_id = rec_data['invoice_id']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+    invoice_data = {
+        'invoice_sales_id': invoice_object.pk,
+        'table_id': invoice_object.table.pk,
+        'table_name': invoice_object.table.name,
+        'member_id': invoice_object.member.pk if invoice_object.member else 0,
+        'guest_numbers': invoice_object.guest_numbers,
+        'member_name': invoice_object.member.get_full_name() if invoice_object.member else GUEST_LAST_NAME,
+        'member_data': invoice_object.member.get_full_name() if invoice_object.member else GUEST_LAST_NAME,
+        'current_game': {
+            'id': 0,
+            'numbers': 0,
+            'start_time': ''
+        },
+        'total_price': invoice_object.total_price,
+        "discount": invoice_object.discount,
+        "tip": invoice_object.tip,
+        'menu_items_old': [],
+        'shop_items_old': [],
+        'games': [],
+        'used_credit': 0,
+        'total_credit': 0,
+        'cash_amount': invoice_object.cash,
+        "pos_amount": invoice_object.pos
+    }
+    invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
+    for game in invoice_games:
+        if str(game.game.end_time) != "00:00:00":
+            game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+            hour_points = int(game_total_secs / 3600)
+            min_points = int((game_total_secs / 60) % 60)
+            if len(str(hour_points)) == 1:
+                hour_points_string = "0" + str(hour_points)
+            else:
+                hour_points_string = str(hour_points)
 
-                invoice_data['games'].append({
-                    'id': game.game.pk,
-                    'numbers': game.game.numbers,
-                    'start_time': game.game.start_time.strftime('%H:%M'),
-                    'end_time': game.game.end_time.strftime('%H:%M'),
-                    'points': "%s:%s'" % (hour_points_string, min_points_string),
-                    'total': game.game.points * 5000
-                })
-            elif str(game.game.end_time) == "00:00:00":
-                invoice_data['current_game']['id'] = game.game.pk
-                invoice_data['current_game']['numbers'] = game.game.numbers
-                invoice_data['current_game']['start_time'] = game.game.start_time
+            if len(str(min_points)) == 1:
+                min_points_string = "0" + str(min_points)
+            else:
+                min_points_string = str(min_points)
 
-        invoice_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_object)
-        for item in invoice_items:
-            invoice_data['menu_items_old'].append({
-                'id': item.pk,
-                'menu_item_id': item.menu_item_id,
-                'name': item.menu_item.name,
-                'price': item.menu_item.price,
-                'nums': item.numbers,
-                'total': int(item.menu_item.price) * int(item.numbers),
-                'description': item.description
+            invoice_data['games'].append({
+                'id': game.game.pk,
+                'numbers': game.game.numbers,
+                'start_time': game.game.start_time.strftime('%H:%M'),
+                'end_time': game.game.end_time.strftime('%H:%M'),
+                'points': "%s:%s'" % (hour_points_string, min_points_string),
+                'total': game.game.points * PRICE_PER_POINT_IN_GAME
             })
-        invoice_shops = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
-        for item in invoice_shops:
-            invoice_data['shop_items_old'].append({
-                'id': item.pk,
-                'name': item.shop_product.name,
-                'price': item.shop_product.price,
-                'nums': item.numbers,
-                'total': int(item.shop_product.price) * int(item.numbers),
-                'description': item.description
-            })
+        elif str(game.game.end_time) == "00:00:00":
+            invoice_data['current_game']['id'] = game.game.pk
+            invoice_data['current_game']['numbers'] = game.game.numbers
+            invoice_data['current_game']['start_time'] = game.game.start_time
 
-        sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object).aggregate(
-            Sum('used_price'))
+    invoice_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_object)
+    for item in invoice_items:
+        invoice_data['menu_items_old'].append({
+            'id': item.pk,
+            'menu_item_id': item.menu_item_id,
+            'name': item.menu_item.name,
+            'price': item.menu_item.price,
+            'nums': item.numbers,
+            'total': int(item.menu_item.price) * int(item.numbers),
+            'description': item.description
+        })
+    invoice_shops = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
+    for item in invoice_shops:
+        invoice_data['shop_items_old'].append({
+            'id': item.pk,
+            'name': item.shop_product.name,
+            'price': item.shop_product.price,
+            'nums': item.numbers,
+            'total': int(item.shop_product.price) * int(item.numbers),
+            'description': item.description
+        })
 
-        if sum_all_used_credit_on_this_invoice['used_price__sum']:
-            invoice_data['used_credit'] = sum_all_used_credit_on_this_invoice['used_price__sum']
+    sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object).aggregate(
+        Sum('used_price'))
 
-        if invoice_object.member.card_number != "0000":
-            total_member_credit = Credit.objects.filter(member=invoice_object.member,
-                                                        expire_time__gte=datetime.now()).aggregate(
-                total_credit=(Sum('total_price') - Sum('used_price')))
-            if total_member_credit['total_credit']:
-                invoice_data['total_credit'] = total_member_credit['total_credit']
+    if sum_all_used_credit_on_this_invoice['used_price__sum']:
+        invoice_data['used_credit'] = sum_all_used_credit_on_this_invoice['used_price__sum']
 
-        return JsonResponse({"response_code": 2, "invoice": invoice_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if invoice_object.member:
+        total_member_credit = Credit.objects.filter(member=invoice_object.member,
+                                                    expire_time__gte=datetime.now()).aggregate(
+            total_credit=(Sum('total_price') - Sum('used_price')))
+        if total_member_credit['total_credit']:
+            invoice_data['total_credit'] = total_member_credit['total_credit']
+
+    return JsonResponse({"response_code": 2, "invoice": invoice_data})
 
 
 def get_all_today_invoices(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        branch_id = rec_data['branch_id']
-        cash_id = rec_data['cash_id']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not branch_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not cash_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch_id')
+    cash_id = rec_data.get('cash_id')
 
-        branch_obj = Branch.objects.get(pk=branch_id)
-        cash_obj = Cash.objects.get(pk=cash_id)
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not branch_id or not cash_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        all_invoices = InvoiceSales.objects.filter(branch=branch_obj, cash_desk=cash_obj, is_deleted=False).order_by(
-            "is_settled")
-        all_invoices_list = []
-        for invoice in all_invoices:
-            if invoice.settle_time:
-                st_time = invoice.settle_time.time()
+    all_invoices = InvoiceSales.objects.filter(branch_id=branch_id, cash_desk_id=cash_id, is_deleted=False).order_by(
+        "is_settled")
+    all_invoices_list = []
+    for invoice in all_invoices:
+        if invoice.settle_time:
+            st_time = invoice.settle_time.time()
+        else:
+            st_time = 0
+
+        invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
+            menu_item__menu_category__kind='OTHER')
+
+        if invoice.ready_for_settle:
+            invoice_status = {"status": "WAIT_FOR_SETTLE", "text": WAIT_FOR_SETTLE}
+        else:
+            if invoice_to_menu_items.count():
+                invoice_status = {"status": "ORDERED", "text": ORDERED}
             else:
-                st_time = 0
-
-            invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
-                menu_item__menu_category__kind='OTHER')
-
-            if invoice.ready_for_settle:
-                invoice_status = {"status": "WAIT_FOR_SETTLE", "text": WAIT_FOR_SETTLE}
-            else:
-                if invoice_to_menu_items.count():
-                    invoice_status = {"status": "ORDERED", "text": ORDERED}
+                if invoice.is_do_not_want_order:
+                    invoice_status = {"status": "DO_NOT_WANT_ORDER", "text": DO_NOT_WANT_ORDER}
                 else:
-                    if invoice.is_do_not_want_order:
-                        invoice_status = {"status": "DO_NOT_WANT_ORDER", "text": DO_NOT_WANT_ORDER}
-                    else:
-                        invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
+                    invoice_status = {"status": "NOT_ORDERED", "text": NOT_ORDERED}
 
-            sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(
-                invoice_sale=invoice).aggregate(
-                Sum('used_price'))
+        sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(
+            invoice_sale=invoice).aggregate(
+            Sum('used_price'))
 
-            all_invoices_list.append({
-                "invoice_id": invoice.pk,
-                "guest_name": invoice.member.last_name,
-                "table_name": invoice.table.name,
-                "guest_nums": invoice.guest_numbers,
-                "total_price": invoice.total_price,
-                "discount": invoice.discount,
-                "tip": invoice.tip,
-                "settle_time": st_time,
-                "is_settled": invoice.is_settled,
-                "game_status": {"status": invoice.game_state, "text": invoice.get_game_state_display()},
-                "invoice_status": invoice_status,
-                'used_credit': sum_all_used_credit_on_this_invoice['used_price__sum']
-            })
+        all_invoices_list.append({
+            "invoice_id": invoice.pk,
+            "guest_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
+            "table_name": invoice.table.name,
+            "guest_nums": invoice.guest_numbers,
+            "total_price": invoice.total_price,
+            "discount": invoice.discount,
+            "tip": invoice.tip,
+            "settle_time": st_time,
+            "is_settled": invoice.is_settled,
+            "game_status": {"status": invoice.game_state, "text": invoice.get_game_state_display()},
+            "invoice_status": invoice_status,
+            'used_credit': sum_all_used_credit_on_this_invoice['used_price__sum']
+        })
 
-        return JsonResponse({"response_code": 2, "all_today_invoices": all_invoices_list})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 2, "all_today_invoices": all_invoices_list})
 
 
 def get_menu_items_from_invoice_sales(invoice_sale_id):
@@ -502,183 +503,178 @@ def get_detail_product_number(shop_product_id):
 
 
 def create_new_invoice_sales(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_sales_id = rec_data.get('invoice_sales_id')
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    invoice_sales_id = rec_data.get('invoice_sales_id')
 
-        table_id = rec_data.get('table_id')
-        member_id = rec_data.get('member_id')
-        guest_numbers = rec_data.get('guest_numbers')
-        current_game = rec_data.get('current_game')
-        menu_items_new = rec_data.get('menu_items_new')
-        shop_items_new = rec_data.get('shop_items_new')
-        branch_id = rec_data.get('branch_id')
-        cash_id = rec_data.get('cash_id')
-        discount = rec_data.get('discount')
-        tip = rec_data.get('tip')
+    table_id = rec_data.get('table_id')
+    member_id = rec_data.get('member_id')
+    guest_numbers = rec_data.get('guest_numbers')
+    current_game = rec_data.get('current_game')
+    menu_items_new = rec_data.get('menu_items_new')
+    shop_items_new = rec_data.get('shop_items_new')
+    branch_id = rec_data.get('branch_id')
+    cash_id = rec_data.get('cash_id')
+    discount = rec_data.get('discount')
+    tip = rec_data.get('tip')
 
-        new_game_id = current_game.get('id')
+    new_game_id = current_game.get('id')
 
-        if invoice_sales_id == 0:
-            if tip == "" or discount == "":
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    member_obj = None
+    if member_id:
+        member_obj = Member.objects.get(pk=member_id)
 
-            if not table_id:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if invoice_sales_id == 0:
+        if tip == "" or discount == "":
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-            if not guest_numbers and not guest_numbers == 0:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not table_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-            for shop_p in shop_items_new:
-                shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
-                if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
-                    return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
+        if not guest_numbers and not guest_numbers == 0:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-            cash_obj = Cash.objects.get(pk=cash_id)
+        for shop_p in shop_items_new:
+            shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
+            if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
+                return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
-            branch_obj = Branch.objects.get(pk=branch_id)
-            table_obj = Table.objects.get(pk=table_id)
+        cash_obj = Cash.objects.get(pk=cash_id)
 
-            if member_id == 0:
-                # HardCode for Guest member
-                member_obj = Member.objects.get(pk=1)
-            else:
-                member_obj = Member.objects.get(pk=member_id)
+        branch_obj = Branch.objects.get(pk=branch_id)
+        table_obj = Table.objects.get(pk=table_id)
 
-            new_invoice = InvoiceSales(
-                branch=branch_obj,
-                table=table_obj,
-                guest_numbers=guest_numbers,
+        new_invoice = InvoiceSales(
+            branch=branch_obj,
+            table=table_obj,
+            guest_numbers=guest_numbers,
+            created_time=datetime.now(),
+            cash_desk=cash_obj,
+            discount=discount,
+            tip=tip,
+            member=member_obj
+        )
+
+        new_invoice.save()
+
+        new_invoice_id = new_invoice.pk
+        if current_game['start_time']:
+            new_game = Game(
                 member=member_obj,
-                created_time=datetime.now(),
-                cash_desk=cash_obj,
-                discount=discount,
-                tip=tip,
+                start_time=datetime.strptime(current_game['start_time'], '%H:%M'),
+                add_date=datetime.now(),
+                numbers=current_game['numbers'],
+                branch=branch_obj
             )
+            new_game.save()
+            new_game_id = new_game.pk
+            new_invoice_to_game = InvoicesSalesToGame(
+                game=new_game,
+                invoice_sales=new_invoice
+            )
+            new_invoice_to_game.save()
+            new_invoice.game_state = "PLAYING"
+        for item in menu_items_new:
+            item_obj = MenuItem.objects.get(pk=item['id'])
+            new_item_to_invoice = InvoicesSalesToMenuItem(
+                invoice_sales=new_invoice,
+                menu_item=item_obj,
+                numbers=item['nums'],
+                description=item['description']
+            )
+            new_item_to_invoice.save()
+            new_invoice.total_price += int(item_obj.price) * int(item['nums'])
+
+        for shop in shop_items_new:
+            shop_obj = ShopProduct.objects.get(pk=shop['id'])
+            new_item_to_invoice = InvoicesSalesToShopProducts(
+                invoice_sales=new_invoice,
+                shop_product=shop_obj,
+                numbers=shop['nums'],
+                description=shop['description']
+            )
+            new_item_to_invoice.save()
+            new_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
+
+        new_invoice.save()
+        valid_total_price = get_invoice_sale_total_price(new_invoice.id)
+        if valid_total_price != new_invoice.total_price:
+            new_invoice.total_price = valid_total_price
             new_invoice.save()
-            new_invoice_id = new_invoice.pk
-            if current_game['start_time']:
-                new_game = Game(
-                    member=member_obj,
-                    start_time=datetime.strptime(current_game['start_time'], '%H:%M'),
-                    add_date=datetime.now(),
-                    numbers=current_game['numbers']
-                )
-                new_game.save()
-                new_game_id = new_game.pk
-                new_invoice_to_game = InvoicesSalesToGame(
-                    game=new_game,
-                    invoice_sales=new_invoice
-                )
-                new_invoice_to_game.save()
-                new_invoice.game_state = "PLAYING"
-            for item in menu_items_new:
-                item_obj = MenuItem.objects.get(pk=item['id'])
-                new_item_to_invoice = InvoicesSalesToMenuItem(
-                    invoice_sales=new_invoice,
-                    menu_item=item_obj,
-                    numbers=item['nums'],
-                    description=item['description']
-                )
-                new_item_to_invoice.save()
-                new_invoice.total_price += int(item_obj.price) * int(item['nums'])
+            logger_specific_bug.info('%s : [WrongTotalPrice] Body field is: %s', str(datetime.now()), str(rec_data))
+        logger.info('%s : [CreateNewInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
+        return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
-            for shop in shop_items_new:
-                shop_obj = ShopProduct.objects.get(pk=shop['id'])
-                new_item_to_invoice = InvoicesSalesToShopProducts(
-                    invoice_sales=new_invoice,
-                    shop_product=shop_obj,
-                    numbers=shop['nums'],
-                    description=shop['description']
-                )
-                new_item_to_invoice.save()
-                new_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
+    elif invoice_sales_id != 0:
+        if tip == "" or discount == "":
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-            new_invoice.save()
-            valid_total_price = get_invoice_sale_total_price(new_invoice.id)
-            if valid_total_price != new_invoice.total_price:
-                new_invoice.total_price = valid_total_price
-                new_invoice.save()
-                logger_specific_bug.info('%s : [WrongTotalPrice] Body field is: %s', str(datetime.now()), str(rec_data))
-            logger.info('%s : [CreateNewInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
-            return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
+        branch_obj = Branch.objects.get(pk=branch_id)
+        table_obj = Table.objects.get(pk=table_id)
 
-        elif invoice_sales_id != 0:
-            if tip == "" or discount == "":
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        for shop_p in shop_items_new:
+            shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
+            if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
+                return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
-            branch_obj = Branch.objects.get(pk=branch_id)
-            table_obj = Table.objects.get(pk=table_id)
+        old_invoice = InvoiceSales.objects.get(pk=invoice_sales_id)
+        old_invoice.table = table_obj
+        old_invoice.guest_numbers = guest_numbers
+        old_invoice.member = member_obj
 
-            for shop_p in shop_items_new:
-                shop_obj = ShopProduct.objects.get(pk=shop_p['id'])
-                if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
-                    return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
+        if current_game['id'] == 0 and current_game['start_time']:
+            new_game = Game(
+                member=member_obj,
+                start_time=datetime.strptime(current_game['start_time'], '%H:%M'),
+                add_date=datetime.now(),
+                numbers=current_game['numbers'],
+                branch=branch_obj
+            )
+            new_game.save()
+            new_game_id = new_game.pk
+            new_invoice_to_game = InvoicesSalesToGame(
+                game=new_game,
+                invoice_sales=old_invoice
+            )
+            new_invoice_to_game.save()
+            old_invoice.game_state = "PLAYING"
 
-            if member_id == 0:
-                # HardCode for Guest member
-                member_obj = Member.objects.get(pk=1)
-            else:
-                member_obj = Member.objects.get(pk=member_id)
+        for item in menu_items_new:
+            item_obj = MenuItem.objects.get(pk=item['id'])
+            new_item_to_invoice = InvoicesSalesToMenuItem(
+                invoice_sales=old_invoice,
+                menu_item=item_obj,
+                numbers=item['nums'],
+                description=item['description']
+            )
+            new_item_to_invoice.save()
+            old_invoice.total_price += int(item_obj.price) * int(item['nums'])
 
-            old_invoice = InvoiceSales.objects.get(pk=invoice_sales_id)
-            old_invoice.table = table_obj
-            old_invoice.guest_numbers = guest_numbers
-            old_invoice.member = member_obj
+        for shop in shop_items_new:
+            shop_obj = ShopProduct.objects.get(pk=shop['id'])
+            new_item_to_invoice = InvoicesSalesToShopProducts(
+                invoice_sales=old_invoice,
+                shop_product=shop_obj,
+                numbers=shop['nums'],
+                description=shop['description']
+            )
 
-            if current_game['id'] == 0 and current_game['start_time']:
-                new_game = Game(
-                    member=member_obj,
-                    start_time=datetime.strptime(current_game['start_time'], '%H:%M'),
-                    add_date=datetime.now(),
-                    numbers=current_game['numbers']
-                )
-                new_game.save()
-                new_game_id = new_game.pk
-                new_invoice_to_game = InvoicesSalesToGame(
-                    game=new_game,
-                    invoice_sales=old_invoice
-                )
-                new_invoice_to_game.save()
-                old_invoice.game_state = "PLAYING"
+            new_item_to_invoice.save()
+            old_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
 
-            for item in menu_items_new:
-                item_obj = MenuItem.objects.get(pk=item['id'])
-                new_item_to_invoice = InvoicesSalesToMenuItem(
-                    invoice_sales=old_invoice,
-                    menu_item=item_obj,
-                    numbers=item['nums'],
-                    description=item['description']
-                )
-                new_item_to_invoice.save()
-                old_invoice.total_price += int(item_obj.price) * int(item['nums'])
-
-            for shop in shop_items_new:
-                shop_obj = ShopProduct.objects.get(pk=shop['id'])
-                new_item_to_invoice = InvoicesSalesToShopProducts(
-                    invoice_sales=old_invoice,
-                    shop_product=shop_obj,
-                    numbers=shop['nums'],
-                    description=shop['description']
-                )
-
-                new_item_to_invoice.save()
-                old_invoice.total_price += int(shop_obj.price) * int(shop['nums'])
-
-            old_invoice.discount = discount
-            old_invoice.tip = tip
+        old_invoice.discount = discount
+        old_invoice.tip = tip
+        old_invoice.save()
+        new_invoice_id = old_invoice.pk
+        valid_total_price = get_invoice_sale_total_price(old_invoice.id)
+        if valid_total_price != old_invoice.total_price:
+            old_invoice.total_price = valid_total_price
             old_invoice.save()
-            new_invoice_id = old_invoice.pk
-            valid_total_price = get_invoice_sale_total_price(old_invoice.id)
-            if valid_total_price != old_invoice.total_price:
-                old_invoice.total_price = valid_total_price
-                old_invoice.save()
-                logger_specific_bug.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()),
-                                         str(rec_data))
-            logger.info('%s : [EditInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
-            return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
-
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+            logger_specific_bug.info('%s : [EditInvoiceSaleWrongTotalPRICE] Body field is: %s', str(datetime.now()),
+                                     str(rec_data))
+        logger.info('%s : [EditInvoiceSale] Body field is: %s', str(datetime.now()), str(rec_data))
+        return JsonResponse({"response_code": 2, "new_game_id": new_game_id, "new_invoice_id": new_invoice_id})
 
 
 def get_invoice_sale_total_price(invoice_id):
@@ -758,15 +754,15 @@ def end_current_game(request):
     timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute, seconds=end_time.second)
 
     t = timedelta_end - timedelta_start
-    point = int(round(t.total_seconds() / 225))
-    if game_object.member.id == 1:
-        if point % 16 != 0:
-            point = (int(point / 16) + 1) * 16
+    point = int(round(t.total_seconds() / SECONDS_PER_POINT))
+    if not game_object.member:
+        if point % CHUNKS_PER_HOUR != 0:
+            point = (int(point / CHUNKS_PER_HOUR) + 1) * CHUNKS_PER_HOUR
     game_numbers = game_object.numbers
 
     game_object.points = point * game_numbers
     game_object.save()
-    invoice_object.total_price += point * game_numbers * 5000
+    invoice_object.total_price += point * game_numbers * PRICE_PER_POINT_IN_GAME
     invoice_object.game_state = "END_GAME"
     invoice_object.save()
     return JsonResponse({"response_code": 2})
@@ -787,7 +783,7 @@ def get_all_invoice_games(request):
             games = []
             for game in invoice_games:
                 if str(game.game.end_time) != "00:00:00":
-                    game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
+                    game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
                     hour_points = int(game_total_secs / 3600)
                     min_points = int((game_total_secs / 60) % 60)
                     if len(str(hour_points)) == 1:
@@ -805,7 +801,7 @@ def get_all_invoice_games(request):
                         'start_time': game.game.start_time,
                         'end_time': game.game.end_time,
                         'points': "%s:%s'" % (hour_points_string, min_points_string),
-                        'total': game.game.points * 5000
+                        'total': game.game.points * PRICE_PER_POINT_IN_GAME
                     })
             return JsonResponse({"response_code": 2, 'games': games})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -870,7 +866,7 @@ def delete_items(request):
                     employee=employee
                 )
                 new_deleted.save()
-                invoice_object.total_price -= int(game_obj.game.points) * 5000
+                invoice_object.total_price -= int(game_obj.game.points) * PRICE_PER_POINT_IN_GAME
                 invoice_object.save()
                 game_obj.delete()
 
@@ -952,7 +948,7 @@ def get_today_status(request):
 
         all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
         for invoice_to_game in all_invoice_games:
-            status['all_games'] += invoice_to_game.game.points * 5000
+            status['all_games'] += invoice_to_game.game.points * PRICE_PER_POINT_IN_GAME
 
     if now_time > time3am:
         all_invoice_purchase = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
@@ -1127,8 +1123,8 @@ def calec_time(request):
                                     seconds=0)
         timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute, seconds=end_time.second)
         t = timedelta_end - timedelta_start
-        point = int(round(t.total_seconds() / 225))
-        return JsonResponse({"response_code": 2, 'price': point * 5000})
+        point = int(round(t.total_seconds() / SECONDS_PER_POINT))
+        return JsonResponse({"response_code": 2, 'price': point * PRICE_PER_POINT_IN_GAME})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
@@ -1201,8 +1197,8 @@ def print_cash(request):
             print_data['items'].append({
                 'name': 'بازی',
                 'numbers': game.game.numbers,
-                'item_price': 5000,
-                'price': game.game.points * 5000
+                'item_price': PRICE_PER_POINT_IN_GAME,
+                'price': game.game.points * PRICE_PER_POINT_IN_GAME
             })
         all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
         for shop_p in all_shop_invoice:
@@ -1265,7 +1261,7 @@ def print_cash_with_template(request):
 
         all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
         for game in all_game_invoice:
-            game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=225)).total_seconds()
+            game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
             hour_points = int(game_total_secs / 3600)
             min_points = int((game_total_secs / 60) % 60)
             if len(str(hour_points)) == 1:
@@ -1283,8 +1279,8 @@ def print_cash_with_template(request):
                 'item_kind': 'GAME',
                 'name': 'بازی %d نفره' % game.game.numbers,
                 'numbers': "%s:%s'" % (hour_points_string, min_points_string),
-                'item_price': format(int(80000) * game.game.numbers, ',d'),
-                'price': int(game.game.points * 5000)
+                'item_price': format(int(PRICE_PER_HOUR_IN_GAME) * game.game.numbers, ',d'),
+                'price': int(game.game.points * PRICE_PER_POINT_IN_GAME)
             })
         all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
         for shop_p in all_shop_invoice:

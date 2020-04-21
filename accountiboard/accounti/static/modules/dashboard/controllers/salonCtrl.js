@@ -1168,9 +1168,6 @@ angular.module("dashboard")
             (function ($) {
                 $('#addInvoiceModal').modal('show');
             })(jQuery);
-            if ($scope.new_invoice_data.member_id === 0) {
-                $scope.get_member_data('0000');
-            }
         };
 
         $scope.closeAddInvoiceModal = function () {
