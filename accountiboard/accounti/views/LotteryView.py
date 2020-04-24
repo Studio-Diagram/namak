@@ -36,12 +36,14 @@ def lottery(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    start_date = rec_data['start_date']
-    end_date = rec_data['end_date']
-    prize = rec_data['prize']
-    if not start_date or not end_date or not prize:
+    start_date = rec_data.get('start_date')
+    end_date = rec_data.get('end_date')
+    prize = rec_data.get('prize')
+    branch_id = rec_data.get('branch')
+    if not start_date or not end_date or not prize or not branch_id:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
+    organization_object = Branch.objects.get(id=branch_id).organization
     start_date_split = start_date.split('/')
     start_date_g = jdatetime.date(int(start_date_split[2]), int(start_date_split[1]),
                                   int(start_date_split[0])).togregorian()
@@ -51,7 +53,7 @@ def lottery(request):
                                 int(end_date_split[0])).togregorian()
 
     all_games = Game.objects.filter(add_date__gte=start_date_g, add_date__lte=end_date_g).order_by('add_date').exclude(
-        member__card_number='0000')
+        member=None)
 
     lottery_data = []
     for game in all_games:
@@ -75,8 +77,8 @@ def lottery(request):
             })
     winner = do_lottery(lottery_data)
     user = Member.objects.filter(card_number=winner).first()
-    new_lot = Lottery(user=user, prize=prize, start_date=start_date_g, end_date=end_date_g)
-    new_lot.save()
+    Lottery(user=user, prize=prize, start_date=start_date_g, end_date=end_date_g,
+                      organization=organization_object).save()
 
     return JsonResponse({"response_code": 2})
 
@@ -86,12 +88,14 @@ def lottery_list(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-    all_lot = Lottery.objects.all().order_by("-id")[:100]
+    organization_object = Branch.objects.get(id=branch_id).organization
+    all_lot = Lottery.objects.filter(organization=organization_object).order_by("-id")[:100]
     all_lot_data = []
     for lot in all_lot:
         start_date = lot.start_date
@@ -128,4 +132,3 @@ def give_prize(request):
     lot_obj.save()
 
     return JsonResponse({"response_code": 2})
-

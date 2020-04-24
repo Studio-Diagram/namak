@@ -13,6 +13,7 @@ SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 FACTOR_NUMBER_INVALID = "شماره فاکتور تطابق ندارد."
+ZERO_PRICE = 0
 
 
 def get_invoice(request):
@@ -230,27 +231,31 @@ def get_all_invoice_games(request):
 
 
 def get_materials(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
-        materials = Material.objects.all()
-        materials_data = []
-        for material in materials:
-            last_material_price = 0
-            last_material = PurchaseToMaterial.objects.filter(material=material).last()
-            if last_material:
-                last_material_price = last_material.base_unit_price
-            materials_data.append({
-                'id': material.pk,
-                'name': material.name,
-                'unit': material.unit,
-                'price': last_material_price
-            })
-        return JsonResponse({"response_code": 2, 'materials': materials_data})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
+    organization_object = Branch.objects.get(id=branch_id).organization
+    materials = Material.objects.filter(organization=organization_object)
+    materials_data = []
+    for material in materials:
+        last_material_price = 0
+        last_material = PurchaseToMaterial.objects.filter(material=material).last()
+        if last_material:
+            last_material_price = last_material.base_unit_price
+        materials_data.append({
+            'id': material.pk,
+            'name': material.name,
+            'unit': material.unit,
+            'price': last_material_price
+        })
+    return JsonResponse({"response_code": 2, 'materials': materials_data})
 
 
 def get_detail_product_number(shop_product_id):
@@ -405,19 +410,21 @@ def add_material(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    material_name = rec_data['material_name']
-    username = rec_data['username']
+    material_name = rec_data.get('material_name')
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not material_name:
+    if not material_name or not branch_id:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    new_material = Material(name=material_name)
+    organization_object = Branch.objects.get(id=branch_id).organization
+    new_material = Material(name=material_name, organization=organization_object)
     new_material.save()
 
     return JsonResponse(
-        {"response_code": 2, "new_material": {"id": new_material.pk, "name": new_material.name, "price": 0}})
+        {"response_code": 2, "new_material": {"id": new_material.pk, "name": new_material.name, "price": ZERO_PRICE}})
 
 
 def add_shop_product(request):
@@ -438,32 +445,33 @@ def add_shop_product(request):
     new_shop_product.save()
 
     return JsonResponse({"response_code": 2,
-                         "new_shop_product": {"id": new_shop_product.pk, "name": new_shop_product.name, "sale_price": 0,
-                                              "buy_price": 0}})
+                         "new_shop_product": {"id": new_shop_product.pk, "name": new_shop_product.name,
+                                              "sale_price": ZERO_PRICE,
+                                              "buy_price": ZERO_PRICE}})
 
 
 def delete_invoice_purchase(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_id = rec_data['invoice_id']
-        username = rec_data['username']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    invoice_id = rec_data['invoice_id']
+    username = rec_data['username']
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        invoice_obj = InvoicePurchase.objects.get(pk=invoice_id)
-        invoice_type = invoice_obj.settlement_type
+    invoice_obj = InvoicePurchase.objects.get(pk=invoice_id)
+    invoice_type = invoice_obj.settlement_type
 
-        if invoice_type == "CASH":
-            invoice_obj.delete()
+    if invoice_type == "CASH":
+        invoice_obj.delete()
 
-        elif invoice_type == "AMANi":
-            pass
+    elif invoice_type == "AMANi":
+        pass
 
-        elif invoice_type == "CREDIT":
-            invoice_obj.delete()
+    elif invoice_type == "CREDIT":
+        invoice_obj.delete()
 
-        return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 2})

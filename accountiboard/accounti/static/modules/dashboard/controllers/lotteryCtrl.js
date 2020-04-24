@@ -14,7 +14,8 @@ angular.module("dashboard")
                 'start_date': '',
                 'end_date': '',
                 'prize': '',
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch
             };
 
             $scope.get_lotteries_data($rootScope.user_data);
@@ -41,7 +42,8 @@ angular.module("dashboard")
         $scope.give_prize = function (lottery_id) {
             var sending_data = {
                 "lottery_id": lottery_id,
-                "username": $rootScope.user_data.username
+                "username": $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch
             };
             dashboardHttpRequest.givePrize(sending_data)
                 .then(function (data) {

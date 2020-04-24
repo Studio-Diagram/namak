@@ -99,7 +99,8 @@ def create_new_invoice_expense(request):
                     tag_obj = ExpenseTag.objects.filter(id=tag['id']).first()
                 else:
                     tag_obj = ExpenseTag(
-                        name=tag['name']
+                        name=tag['name'],
+                        organization=branch_obj.organization
                     )
                     tag_obj.save()
 
@@ -213,12 +214,14 @@ def get_all_tags(request):
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
+    username = rec_data.get('username')
+    branch_id = rec_data.get('branch')
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-    all_tags = ExpenseTag.objects.all().order_by("name")
+    organization_object = Branch.objects.get(id=branch_id).organization
+    all_tags = ExpenseTag.objects.filter(organization=organization_object).order_by("name")
     all_tags_data = []
     for tag in all_tags:
         all_tags_data.append({

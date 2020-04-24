@@ -47,10 +47,7 @@ angular.module("dashboard")
         };
 
         $scope.get_all_expense_tags = function () {
-            var sending_data = {
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getAllExpenseTags(sending_data)
+            dashboardHttpRequest.getAllExpenseTags($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.expense_tags = data['tags'];

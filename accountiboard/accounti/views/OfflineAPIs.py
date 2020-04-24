@@ -144,8 +144,8 @@ def sync_employee_list(request, last_uuid):
 
     have_to_add_objects = Employee.objects.filter(pk__gt=last_uuid).order_by('pk')
     have_to_add_data = [{
-        "phone": item.phone,
-        "password": item.password,
+        "phone": item.user.phone,
+        "password": item.user.password,
         "server_primary_key": item.pk
     } for item in have_to_add_objects]
 
@@ -398,8 +398,10 @@ def sync_invoice_sales_from_offline(request):
         cash_object = Cash.objects.get(pk=item['cash_id'])
         if item.get("member_id"):
             member_object = Member.objects.get(pk=item['member_id'])
-        else:
+        elif item.get("member_card_number"):
             member_object = Member.objects.get(card_number=item.get("member_card_number"))
+        else:
+            member_object = None
         table_object = Table.objects.get(pk=item['table_id'])
 
         if invoice_id == 0:

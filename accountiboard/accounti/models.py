@@ -190,7 +190,7 @@ class Game(models.Model):
     branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.member.last_name + " " + str(self.start_time))
+        return str(self.member) + " " + str(self.start_time)
 
 
 class ShopProduct(models.Model):

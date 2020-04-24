@@ -374,10 +374,7 @@ angular.module("dashboard")
         };
 
         $scope.get_materials = function () {
-            var data = {
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getMaterials(data)
+            dashboardHttpRequest.getMaterials($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.materials = data['materials'];
@@ -436,7 +433,8 @@ angular.module("dashboard")
         $scope.add_material_to_data_base_after_search = function (material_name) {
             var sending_data = {
                 'material_name': material_name,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'branch': $rootScope.user_data.branch
             };
             dashboardHttpRequest.addMaterial(sending_data)
                 .then(function (data) {
