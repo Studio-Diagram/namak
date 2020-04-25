@@ -209,7 +209,6 @@ class Cash(models.Model):
     outcome_report = models.IntegerField(null=False, default=0)
     event_tickets = models.IntegerField(null=False, default=0)
     current_money_in_cash = models.IntegerField(null=False, default=0)
-    employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
     new_employee = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_close = models.SmallIntegerField(default=0, null=False)
@@ -453,7 +452,6 @@ class DeletedItemsInvoiceSales(models.Model):
     item_type = models.CharField(max_length=50, choices=ITEM_TYPES)
     item_numbers = models.IntegerField(null=False)
     message = models.CharField(max_length=255)
-    employee = models.ForeignKey(to=Employee, on_delete=models.SET_NULL, null=True)
     new_employee = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
     invoice_sales = models.ForeignKey(to=InvoiceSales, on_delete=models.SET_NULL, null=True)
 
