@@ -453,7 +453,8 @@ class DeletedItemsInvoiceSales(models.Model):
     item_type = models.CharField(max_length=50, choices=ITEM_TYPES)
     item_numbers = models.IntegerField(null=False)
     message = models.CharField(max_length=255)
-    employee = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
+    employee = models.ForeignKey(to=Employee, on_delete=models.SET_NULL, null=True)
+    new_employee = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
     invoice_sales = models.ForeignKey(to=InvoiceSales, on_delete=models.SET_NULL, null=True)
 
 
