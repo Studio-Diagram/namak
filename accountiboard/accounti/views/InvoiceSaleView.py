@@ -212,64 +212,65 @@ def get_dashboard_quick_access_invoices(request):
 
 
 def settle_invoice_sale(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        invoice_id = rec_data['invoice_id']
-        cash = rec_data['cash']
-        pos = rec_data['card']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id or (not pos and not pos == 0) or (not cash and not cash == 0):
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-        invoice_object.is_settled = 1
-        invoice_object.cash = int(cash)
-        invoice_object.pos = int(pos)
-        invoice_object.settle_time = datetime.now()
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-        shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
-        for shop_product in shop_products:
-            if get_detail_product_number(shop_product.shop_product.id) < int(shop_product.numbers):
-                return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
-        for shop_p in shop_products:
-            shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
-            unit_count = shop_p.numbers
-            for purchase_to_shop in shop_to_purchases:
-                if purchase_to_shop.buy_numbers + purchase_to_shop.return_numbers < purchase_to_shop.unit_numbers and unit_count != 0:
-                    buy_counter = 0
-                    for i in range(0, unit_count):
-                        buy_counter += 1
-                        purchase_to_shop.buy_numbers += 1
-                        unit_count -= 1
-                        purchase_to_shop.save()
-                        if purchase_to_shop.buy_numbers == purchase_to_shop.unit_numbers:
-                            break
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data.get('username')
+    invoice_id = rec_data.get('invoice_id')
+    cash = rec_data.get('cash')
+    pos = rec_data.get('card')
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id or (not pos and not pos == 0) or (not cash and not cash == 0):
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+    invoice_object.is_settled = 1
+    invoice_object.cash = int(cash)
+    invoice_object.pos = int(pos)
+    invoice_object.settle_time = datetime.now()
 
-                    new_amani_sale = AmaniSale(invoice_sale_to_shop=shop_p,
-                                               supplier=purchase_to_shop.invoice_purchase.supplier,
-                                               sale_price=shop_p.shop_product.price,
-                                               buy_price=purchase_to_shop.base_unit_price, created_date=datetime.now(),
-                                               numbers=buy_counter)
+    shop_products = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_object)
+    for shop_product in shop_products:
+        if get_detail_product_number(shop_product.shop_product.id) < int(shop_product.numbers):
+            return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
+    for shop_p in shop_products:
+        shop_to_purchases = PurchaseToShopProduct.objects.filter(shop_product=shop_p.shop_product)
+        unit_count = shop_p.numbers
+        for purchase_to_shop in shop_to_purchases:
+            if purchase_to_shop.buy_numbers + purchase_to_shop.return_numbers < purchase_to_shop.unit_numbers and unit_count != 0:
+                buy_counter = 0
+                for i in range(0, unit_count):
+                    buy_counter += 1
+                    purchase_to_shop.buy_numbers += 1
+                    unit_count -= 1
+                    purchase_to_shop.save()
+                    if purchase_to_shop.buy_numbers == purchase_to_shop.unit_numbers:
+                        break
+
+                new_amani_sale = AmaniSale(invoice_sale_to_shop=shop_p,
+                                           supplier=purchase_to_shop.invoice_purchase.supplier,
+                                           sale_price=shop_p.shop_product.price,
+                                           buy_price=purchase_to_shop.base_unit_price, created_date=datetime.now(),
+                                           numbers=buy_counter)
+                new_amani_sale.save()
+                new_amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct(
+                    amani_sale=new_amani_sale,
+                    invoice_purchase_to_shop_product=purchase_to_shop,
+                    numbers=buy_counter,
+                )
+                new_amani_to_purchase.save()
+
+                if purchase_to_shop.invoice_purchase.settlement_type != "AMANi":
+                    new_amani_sale.is_amani = False
                     new_amani_sale.save()
-                    new_amani_to_purchase = AmaniSaleToInvoicePurchaseShopProduct(
-                        amani_sale=new_amani_sale,
-                        invoice_purchase_to_shop_product=purchase_to_shop,
-                        numbers=buy_counter,
-                    )
-                    new_amani_to_purchase.save()
 
-                    if purchase_to_shop.invoice_purchase.settlement_type != "AMANi":
-                        new_amani_sale.is_amani = False
-                        new_amani_sale.save()
+            elif unit_count == 0:
+                break
 
-                elif unit_count == 0:
-                    break
+    invoice_object.save()
 
-        invoice_object.save()
-
-        return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 2})
 
 
 def get_invoice(request):
@@ -311,7 +312,8 @@ def get_invoice(request):
     invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
     for game in invoice_games:
         if str(game.game.end_time) != "00:00:00":
-            game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+            game_total_secs = (
+            game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
             hour_points = int(game_total_secs / 3600)
             min_points = int((game_total_secs / 60) % 60)
             if len(str(hour_points)) == 1:
@@ -783,7 +785,8 @@ def get_all_invoice_games(request):
             games = []
             for game in invoice_games:
                 if str(game.game.end_time) != "00:00:00":
-                    game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+                    game_total_secs = (
+                    game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
                     hour_points = int(game_total_secs / 3600)
                     min_points = int((game_total_secs / 60) % 60)
                     if len(str(hour_points)) == 1:
@@ -1261,7 +1264,8 @@ def print_cash_with_template(request):
 
         all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
         for game in all_game_invoice:
-            game_total_secs = (game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+            game_total_secs = (
+            game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
             hour_points = int(game_total_secs / 3600)
             min_points = int((game_total_secs / 60) % 60)
             if len(str(hour_points)) == 1:

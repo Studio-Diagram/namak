@@ -197,6 +197,7 @@ angular.module("dashboard")
             dashboardHttpRequest.settleInvoiceSale(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.settle_invoice_offline();
                         $scope.closePayModal();
                         $scope.getAllTodayInvoices();
                         $scope.closeAddInvoiceModal();
@@ -213,13 +214,34 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.settle_invoice_offline = function () {
+            var sending_data = {
+                'invoice_id': $scope.new_invoice_data.invoice_sales_id,
+                'cash': $scope.new_invoice_data.cash,
+                'card': $scope.new_invoice_data.card
+            };
+            offlineAPIHttpRequest.settle_invoice_sale(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.print_data = function (invoice_id, print_kind, invoice_data) {
             $scope.disable_print_after_save_all_buttons = true;
             if (print_kind === "CASH") {
                 $scope.ready_for_settle(invoice_id);
                 var sending_data = {
                     'is_customer_print': 1,
-                    'invoice_id': invoice_id
+                    'invoice_id': invoice_id,
+                    'location_url': "https://namak.works/"
                 };
                 $http({
                     method: 'POST',
@@ -238,7 +260,8 @@ angular.module("dashboard")
                 var sending_data = {
                     'is_customer_print': 0,
                     'invoice_id': invoice_id,
-                    'invoice_data': invoice_data
+                    'invoice_data': invoice_data,
+                    'location_url': "https://namak.works/"
                 };
                 $http({
                     method: 'POST',

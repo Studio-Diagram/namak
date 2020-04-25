@@ -249,7 +249,7 @@ class InvoiceSales(models.Model):
 
     def __str__(self):
         return "num: " + str(self.factor_number) + " total_p: " + str(self.total_price) + " Is Settled: " + str(
-            self.is_settled) + " member: " + self.member.last_name
+            self.is_settled)
 
 
 class InvoicesSalesToMenuItem(models.Model):

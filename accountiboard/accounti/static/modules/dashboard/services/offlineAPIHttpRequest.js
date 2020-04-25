@@ -109,6 +109,13 @@ angular.module('dashboard')
                     'url': "delete_invoice/",
                     'data': data
                 });
+            },
+            'settle_invoice_sale': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "settle_invoice_sale/",
+                    'data': data
+                });
             }
         };
         return service;
