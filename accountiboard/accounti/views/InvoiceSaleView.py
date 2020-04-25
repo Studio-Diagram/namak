@@ -1315,13 +1315,11 @@ def print_after_save_template(request):
     if request.method == "GET":
         all_cashes = Cash.objects.all()
         for cash in all_cashes:
-            if not cash.new_employee:
-                cash.new_employee = cash.employee.user
+            cash.new_employee = cash.employee.user
             cash.save()
         all_deleted = DeletedItemsInvoiceSales.objects.all()
         for deleted in all_deleted:
-            if not deleted.new_employee:
-                deleted.new_employee = deleted.employee.user
+            deleted.new_employee = deleted.employee.user
             deleted.save()
         now_time = jdatetime.datetime.now()
         invoice_id = request.GET['invoice_id']
