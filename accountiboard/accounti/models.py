@@ -209,8 +209,8 @@ class Cash(models.Model):
     outcome_report = models.IntegerField(null=False, default=0)
     event_tickets = models.IntegerField(null=False, default=0)
     current_money_in_cash = models.IntegerField(null=False, default=0)
-    employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.CASCADE)
-    new_employee = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
+    new_employee = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_close = models.SmallIntegerField(default=0, null=False)
 
