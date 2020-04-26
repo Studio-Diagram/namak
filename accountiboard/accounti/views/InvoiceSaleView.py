@@ -1313,7 +1313,7 @@ def print_cash_with_template(request):
 
 def print_after_save_template(request):
     if request.method == "GET":
-        user_obj = User.objects.get(id=4)
+        user_obj = User.objects.get(id=1)
         branch_obj = Branch.objects.get(id=1)
         organ_obj = Organization.objects.get(id=1)
         for item in DeletedItemsInvoiceSales.objects.all():
