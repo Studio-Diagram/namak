@@ -1,5 +1,5 @@
 angular.module('dashboard')
-    .service('dashboardHttpRequest', function dashboardHttpRequest($q, $http, $auth, $cookies, $window) {
+    .service('dashboardHttpRequest', function dashboardHttpRequest($q, $http, $auth, $cookies, $window, $rootScope) {
         var service = {
             'API_URL': window.location.origin,
             'use_session': false,
@@ -31,7 +31,7 @@ angular.module('dashboard')
                         console.log("error syncing with: " + url);
                         // There is a timeout or connection error in server
                         if (data.status === -1){
-                            $window.location.href = "http://127.0.0.1:8000/dashboard";
+                            $window.location.href = "http://127.0.0.1:8000/dashboard#!/?user=" + $rootScope.user_data.username ;
                         }
                         deferred.reject(data, status, headers, config);
                     }));

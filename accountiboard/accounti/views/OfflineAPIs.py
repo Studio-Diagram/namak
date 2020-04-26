@@ -391,11 +391,62 @@ def sync_invoice_sales_from_offline(request):
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
+    all_cash_data = rec_data.get('all_cash_desk_data')
+    for cash_desk in all_cash_data:
+        cash_server_primary_key = cash_desk.get("cash_server_primary_key")
+        created_date_time = cash_desk.get("created_date_time")
+        ended_date_time = cash_desk.get("ended_date_time")
+        income_report = cash_desk.get("income_report")
+        outcome_report = cash_desk.get("outcome_report")
+        event_tickets = cash_desk.get("event_tickets")
+        current_money_in_cash = cash_desk.get("current_money_in_cash")
+        employee_phone = cash_desk.get("employee")
+        branch_server_primary_key = cash_desk.get("branch_server_primary_key")
+        is_close = cash_desk.get("is_close")
+
+        if employee_phone:
+            user_object = User.objects.get(phone=employee_phone)
+        else:
+            user_object = None
+
+        if cash_server_primary_key:
+            cash_desk_object = Cash.objects.get(id=cash_server_primary_key)
+            if is_close:
+                cash_desk_object.is_close = 1
+                cash_desk_object.ended_date_time = ended_date_time
+                cash_desk_object.current_money_in_cash = current_money_in_cash
+                cash_desk_object.income_report = income_report
+                cash_desk_object.outcome_report = outcome_report
+                cash_desk_object.event_tickets = event_tickets
+                cash_desk_object.employee = user_object
+                cash_desk_object.save()
+        else:
+            new_cash = Cash(
+                created_date_time=created_date_time,
+                ended_date_time=ended_date_time,
+                income_report=income_report,
+                outcome_report=outcome_report,
+                event_tickets=event_tickets,
+                current_money_in_cash=current_money_in_cash,
+                branch_id=branch_server_primary_key,
+                is_close=is_close,
+                employee=user_object
+            )
+            new_cash.save()
+            cash_desk['cash_server_primary_key'] = new_cash.id
 
     for item in rec_data.get('all_invoices_data'):
         invoice_id = item.get('server_primary_key')
         branch_object = Branch.objects.get(pk=item['branch_id'])
-        cash_object = Cash.objects.get(pk=item['cash_id'])
+        invoice_cash_server_primary_key = item['cash_id']
+        invoice_cash_offline_id = item['cash_offline_id']
+        if invoice_cash_server_primary_key:
+            cash_object = Cash.objects.get(id=invoice_cash_server_primary_key)
+        else:
+            for cash_desk in all_cash_data:
+                if cash_desk['cash_offline_id'] == invoice_cash_offline_id:
+                    cash_object = Cash.objects.get(id=cash_desk['cash_server_primary_key'])
+
         if item.get("member_id"):
             member_object = Member.objects.get(pk=item['member_id'])
         elif item.get("member_card_number"):
