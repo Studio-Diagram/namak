@@ -1313,33 +1313,6 @@ def print_cash_with_template(request):
 
 def print_after_save_template(request):
     if request.method == "GET":
-        user_obj = User.objects.get(id=1)
-        branch_obj = Branch.objects.get(id=1)
-        organ_obj = Organization.objects.get(id=1)
-        for item in DeletedItemsInvoiceSales.objects.all():
-            if not item.employee:
-                item.employee = user_obj
-                item.save()
-        for item in Game.objects.all():
-            if not item.branch:
-                item.branch = branch_obj
-                item.save()
-
-        for item in Material.objects.all():
-            if not item.organization:
-                item.organization = organ_obj
-                item.save()
-
-        for item in ShopProduct.objects.all():
-            if not item.branch:
-                item.branch = branch_obj
-                item.save()
-
-        for item in Member.objects.all():
-            if not item.organization:
-                item.organization = organ_obj
-                item.save()
-
         now_time = jdatetime.datetime.now()
         invoice_id = request.GET['invoice_id']
         printer_name = request.GET['printer_name']
