@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("closeOpenCashCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
+    .controller("closeOpenCashCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, offlineAPIHttpRequest) {
         var initialize = function () {
             $scope.error_message = '';
             $scope.get_all_cashes();
@@ -52,11 +52,32 @@ angular.module("dashboard")
             dashboardHttpRequest.closeCash(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $scope.close_cash_offline();
                         $scope.log_out();
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.close_cash_offline = function () {
+            var sending_data = {
+                'night_report_inputs': $scope.night_report_inputs,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            offlineAPIHttpRequest.close_cash(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
                     }
                 }, function (error) {
                     $scope.error_message = error;

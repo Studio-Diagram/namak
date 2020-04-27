@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import jdatetime
 
 UUID_EMPTY_ERROR = "UUID is empty!"
+BRANCH_EMPTY_ERROR = "Branch is empty!"
 METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED"
 DUPLICATE_MEMBER_ENTRY = "شماره تلفن یا کارت تکراری است."
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
@@ -17,14 +18,17 @@ def status_of_server(request):
     return JsonResponse({"response_code": 2})
 
 
-def sync_member_list(request, last_uuid):
+def sync_member_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = Member.objects.filter(pk__gt=last_uuid).order_by('pk')
+    organization_object = Branch.objects.get(id=branch).organization
+    have_to_add_objects = Member.objects.filter(pk__gt=last_uuid, organization=organization_object).order_by('pk')
     have_to_add_data = [{
         "last_name": item.last_name,
         "card_number": item.card_number,
@@ -34,14 +38,16 @@ def sync_member_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'members': have_to_add_data})
 
 
-def sync_menu_category_list(request, last_uuid):
+def sync_menu_category_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = MenuCategory.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = MenuCategory.objects.filter(pk__gt=last_uuid, branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "name": item.name,
         "kind": item.kind,
@@ -51,14 +57,16 @@ def sync_menu_category_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'menu_categories': have_to_add_data})
 
 
-def sync_menu_item_list(request, last_uuid):
+def sync_menu_item_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = MenuItem.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = MenuItem.objects.filter(pk__gt=last_uuid, menu_category__branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "name": item.name,
         "price": item.price,
@@ -70,14 +78,16 @@ def sync_menu_item_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'menu_items': have_to_add_data})
 
 
-def sync_printer_list(request, last_uuid):
+def sync_printer_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = Printer.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = Printer.objects.filter(pk__gt=last_uuid, branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "name": item.name,
         "server_primary_key": item.pk
@@ -86,14 +96,16 @@ def sync_printer_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'printers': have_to_add_data})
 
 
-def sync_printer_to_category_list(request, last_uuid):
+def sync_printer_to_category_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = PrinterToCategory.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = PrinterToCategory.objects.filter(pk__gt=last_uuid, printer__branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "printer_id": item.printer_id,
         "menu_category_id": item.menu_category_id
@@ -102,14 +114,16 @@ def sync_printer_to_category_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'printer_to_category_data': have_to_add_data})
 
 
-def sync_table_category_list(request, last_uuid):
+def sync_table_category_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = TableCategory.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = TableCategory.objects.filter(pk__gt=last_uuid, branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "name": item.name,
         "server_primary_key": item.pk
@@ -118,14 +132,16 @@ def sync_table_category_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'table_categories': have_to_add_data})
 
 
-def sync_table_list(request, last_uuid):
+def sync_table_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = Table.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = Table.objects.filter(pk__gt=last_uuid, category__branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "name": item.name,
         "table_category_id": item.category_id,
@@ -135,31 +151,31 @@ def sync_table_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'tables': have_to_add_data})
 
 
-def sync_employee_list(request, last_uuid):
+def sync_employee_list(request, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
-    if last_uuid == "" or last_uuid is None:
-        return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = Employee.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = EmployeeToBranch.objects.filter(branch_id=branch).order_by('pk')
     have_to_add_data = [{
-        "phone": item.user.phone,
-        "password": item.user.password,
-        "server_primary_key": item.pk
+        "phone": item.employee.user.phone,
+        "password": item.employee.user.password,
+        "server_primary_key": item.employee.pk
     } for item in have_to_add_objects]
 
     return JsonResponse({"response_code": 2, 'employees': have_to_add_data})
 
 
-def sync_branch_list(request, last_uuid):
+def sync_branch_list(request, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
-    if last_uuid == "" or last_uuid is None:
+    if branch == "" or branch is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
 
-    have_to_add_objects = Branch.objects.filter(pk__gt=last_uuid).order_by('pk')
+    have_to_add_objects = Branch.objects.filter(id=branch)
     have_to_add_data = [{
         "name": item.name,
         "start_working_time": item.start_working_time,
@@ -170,14 +186,16 @@ def sync_branch_list(request, last_uuid):
     return JsonResponse({"response_code": 2, 'branches': have_to_add_data})
 
 
-def sync_cash_list(request, last_uuid):
+def sync_cash_list(request, last_uuid, branch):
     if request.method != "GET":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     if last_uuid == "" or last_uuid is None:
         return JsonResponse({"response_code": 4, "error_msg": UUID_EMPTY_ERROR})
+    elif branch == "" or branch is None:
+        return JsonResponse({"response_code": 4, "error_msg": BRANCH_EMPTY_ERROR})
 
-    have_to_add_objects = Cash.objects.filter(pk__gt=last_uuid, is_close=0).order_by('pk')
+    have_to_add_objects = Cash.objects.filter(pk__gt=last_uuid, is_close=0, branch_id=branch).order_by('pk')
     have_to_add_data = [{
         "created_date_time": item.created_date_time,
         "ended_date_time": item.ended_date_time,

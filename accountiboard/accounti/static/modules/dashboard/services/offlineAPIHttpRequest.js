@@ -116,6 +116,20 @@ angular.module('dashboard')
                     'url': "settle_invoice_sale/",
                     'data': data
                 });
+            },
+            'close_cash': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "close_cash/",
+                    'data': data
+                });
+            },
+            'open_cash': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "open_cash/",
+                    'data': data
+                });
             }
         };
         return service;

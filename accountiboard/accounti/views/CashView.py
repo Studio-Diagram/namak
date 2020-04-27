@@ -123,7 +123,7 @@ def close_cash(request):
 def open_cash(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data['branch_id']
+        branch_id = rec_data['branch']
         username = rec_data['username']
 
         if not username:
@@ -137,7 +137,7 @@ def open_cash(request):
         new_cash = Cash(branch=branch_obj)
         new_cash.save()
 
-        return JsonResponse({"response_code": 2})
+        return JsonResponse({"response_code": 2, "new_cash_id": new_cash.id})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 

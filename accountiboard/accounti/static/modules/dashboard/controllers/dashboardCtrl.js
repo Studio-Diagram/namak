@@ -12,7 +12,6 @@ angular.module("dashboard")
                     };
                     $rootScope.get_today_var = $scope.get_today();
                     $scope.is_user_login($rootScope.user_data);
-                    //$scope.check_cash($rootScope.user_data);
                     $scope.get_today_cash();
                 }
                 else {
@@ -56,68 +55,6 @@ angular.module("dashboard")
 
             $scope.isActive = function (path) {
                 return ($location.path().substr(0, path.length) === path);
-            };
-
-            $scope.check_cash = function () {
-                var sending_data = {
-                    'branch_id': $rootScope.user_data.branch,
-                    'username': $rootScope.user_data.username
-                };
-                dashboardHttpRequest.checkCashExist(sending_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-
-                        }
-                        else if (data['response_code'] === 3) {
-                            if (data['error_mode'] === "NO_CASH") {
-                                $scope.openOpenCashModal();
-                            }
-                            if (data['error_mode'] === "OLD_CASH") {
-                                $scope.openCloseCashModal();
-                            }
-                        }
-                    }, function (error) {
-                        console.log(error);
-                    });
-            };
-
-            $scope.open_cash = function () {
-                var sending_data = {
-                    'branch_id': $rootScope.user_data.branch,
-                    'username': $rootScope.user_data.username
-                };
-                dashboardHttpRequest.openCash(sending_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_today_cash();
-                            $scope.closeOpenCashModal();
-                        }
-                        else if (data['response_code'] === 3) {
-
-                        }
-                    }, function (error) {
-                        console.log(error);
-                    });
-            };
-
-            $scope.close_cash = function () {
-                var sending_data = {
-                    'branch_id': $rootScope.user_data.branch,
-                    'username': $rootScope.user_data.username
-                };
-                dashboardHttpRequest.closeCash(sending_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.closeCloseCashModal();
-                            $scope.openOpenCashModal();
-                        }
-                        else if (data['response_code'] === 3) {
-
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
             };
 
             $scope.is_user_login = function (user_data) {
