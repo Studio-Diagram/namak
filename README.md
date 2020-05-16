@@ -52,10 +52,7 @@ $ virtualenv namak_enviroment
 $ source namak_enviroment/bin/activate
 ```
 Now your are in namak enviroment
-#
-```
-(namak_enviroment)$ pip install django psycopg2-binary
-```
+
 Then we must clone the project in namak workspace:
 with SSH mode (for this way you have to add your SSH public key to gitlab):
 ```
