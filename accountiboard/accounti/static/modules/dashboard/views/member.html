@@ -134,9 +134,9 @@
                                     <div class="col-md-12 pr-0">
                                         <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
                                     </div>
-                                    <div ng-repeat="credit_category in credit_categories" class="col-md-4">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" ng-model="is_checked"
+                                    <div ng-repeat="credit_category in credit_categories" class="checkbox-unit col-md-4">
+                                        <label class="checkbox-item">
+                                            <input style="float: left;" ng-checked="credit_category.is_checked" type="checkbox" ng-model="credit_category.is_checked_m"
                                                    ng-click="change_credit_category_checkBox(is_checked, credit_category[0])">{{ credit_category[1] }}
                                         </label>
                                     </div>

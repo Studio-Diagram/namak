@@ -98,15 +98,12 @@ angular.module("dashboard")
         };
 
         $scope.change_credit_category_checkBox = function (is_checked, category_name) {
-            if (is_checked) {
+            var index_of_category_id = $scope.new_credit_data.credit_categories.indexOf(category_name);
+            if (index_of_category_id === -1) {
                 $scope.new_credit_data.credit_categories.push(category_name);
             }
             else {
-                for (var i = 0; i < $scope.new_credit_data.credit_categories.length; i++) {
-                    if ($scope.new_credit_data.credit_categories[i] === category_name) {
-                        $scope.new_credit_data.credit_categories.splice(i, 1);
-                    }
-                }
+                $scope.new_credit_data.credit_categories.splice(category_name, 1);
             }
         };
 
