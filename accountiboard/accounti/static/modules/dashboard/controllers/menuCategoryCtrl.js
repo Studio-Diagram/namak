@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("menuCategoryCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            console.log(222);
             $scope.is_in_edit_mode_menu_category = false;
             $scope.new_menu_category_data = {
                 'menu_category_id': 0,
