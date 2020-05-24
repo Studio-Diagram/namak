@@ -10,7 +10,7 @@ NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
 PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-
+LOTTERY_CAN_NOT_BE_DONE = "قرعه کشی به دلیل نبود بازی انجام شده توسط مشتریان وجود ندارد."
 
 def do_lottery(lot_data):
     all_luck_points_sum = 0
@@ -24,6 +24,9 @@ def do_lottery(lot_data):
         for j in range(0, int(lot['luck_points'])):
             num_luck = randint(0, len(sum_list) - 1)
             lot['numbers_luck'].append(sum_list.pop(num_luck))
+
+    if all_luck_points_sum == 0:
+        return False
     final_winner_num_luck = randint(1, all_luck_points_sum)
     for lot in lot_data:
         if final_winner_num_luck in lot['numbers_luck']:
@@ -76,9 +79,12 @@ def lottery(request):
                 'luck_points': float(game.points) / float(16)
             })
     winner = do_lottery(lottery_data)
-    user = Member.objects.filter(card_number=winner).first()
-    Lottery(user=user, prize=prize, start_date=start_date_g, end_date=end_date_g,
-                      organization=organization_object).save()
+    if winner:
+        user = Member.objects.filter(card_number=winner).first()
+        Lottery(user=user, prize=prize, start_date=start_date_g, end_date=end_date_g,
+                          organization=organization_object).save()
+    else:
+        return JsonResponse({"response_code": 3, "error_msg": LOTTERY_CAN_NOT_BE_DONE})
 
     return JsonResponse({"response_code": 2})
 
