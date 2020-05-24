@@ -478,8 +478,6 @@ angular.module("dashboard")
                             (function ($) {
 
                                 $scope.all_today_reserves.forEach(function insert_code(item, index) {
-
-                                    console.log('#tablename-' + item.table_id, $('#tablename-' + item.table_id));
                                     var div_data = $compile("<div ng-click='edit_reserve(" + item.id + ")' class=\"reservationItem " + item.reserve_state + " " + item.duration_class_name + "\" role=\"button\" href=\"\">\n" +
                                         "                                        <span class=\"reservationCount\"><i class=\"fas fa-users\"></i>" + $filter('persianNumber')(item.numbers) + "</span>\n" +
                                         "                                        <span class=\"reservationName\">\n" +
