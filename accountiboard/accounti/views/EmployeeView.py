@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 import json
+from django.db import IntegrityError
 from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
@@ -27,9 +28,10 @@ SHIFT_NUMBER_REQUIRED = 'تعداد شیفت پایه را وارد کنید.'
 AUTH_LEVEL_REQUIRED = 'سطح دسترسی را وارد کنید.'
 MEMBER_CARD_REQUIRED = 'شماره کارت عضویت را وارد کنید.'
 BRANCH_REQUIRED = 'شعبه وارد نشده است.'
+PHONE_ALREADY_EXIST = 'شماره تلفن تکراری است.'
 USER_TYPE = {
-    "employee": 1,
-    "cafe_owner": 2
+    "cafe_owner": 1,
+    "employee": 2
 }
 
 
@@ -55,7 +57,7 @@ def login(request):
                     organization_object = cafe_owner_object.organization
                     branch_object = Branch.objects.filter(organization=organization_object).first()
                 elif user_obj.get_user_type_display() == "employee":
-                    branch_object = EmployeeToBranch.objects.get(employee=user_obj).branch
+                    branch_object = EmployeeToBranch.objects.get(employee=Employee.objects.get(user=user_obj)).branch
                 else:
                     return JsonResponse({"response_code": 3})
 
@@ -71,232 +73,238 @@ def login(request):
 
 
 def register_employee(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        employee_id = rec_data['employee_id']
-        first_name = rec_data['first_name']
-        last_name = rec_data['last_name']
-        father_name = rec_data['father_name']
-        national_code = rec_data['national_code']
-        phone = rec_data['phone']
-        password = rec_data['password']
-        re_password = rec_data['re_password']
-        home_address = rec_data['home_address']
-        bank_name = rec_data['bank_name']
-        bank_card_number = rec_data['bank_card_number']
-        shaba = rec_data['shaba']
-        position = rec_data['position']
-        auth_level = rec_data['auth_level']
-        branch_id = rec_data['branch_id']
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    employee_id = rec_data['employee_id']
+    first_name = rec_data['first_name']
+    last_name = rec_data['last_name']
+    father_name = rec_data['father_name']
+    national_code = rec_data['national_code']
+    phone = rec_data['phone']
+    password = rec_data['password']
+    re_password = rec_data['re_password']
+    home_address = rec_data['home_address']
+    bank_name = rec_data['bank_name']
+    bank_card_number = rec_data['bank_card_number']
+    shaba = rec_data['shaba']
+    position = rec_data['position']
+    auth_level = rec_data['auth_level']
+    branch_id = rec_data['branch_id']
 
-        if not phone:
-            return JsonResponse({"response_code": 3, "error_msg": PHONE_ERROR})
+    if not phone:
+        return JsonResponse({"response_code": 3, "error_msg": PHONE_ERROR})
 
-        if not password and employee_id == '':
-            return JsonResponse({"response_code": 3, "error_msg": PASSWORD_ERROR})
+    if not password and employee_id == '':
+        return JsonResponse({"response_code": 3, "error_msg": PASSWORD_ERROR})
 
-        if password != re_password:
-            return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
+    if password != re_password:
+        return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
 
-        if not first_name:
-            return JsonResponse({"response_code": 3, "error_msg": FIRST_NAME_REQUIRED})
+    if not first_name:
+        return JsonResponse({"response_code": 3, "error_msg": FIRST_NAME_REQUIRED})
 
-        if not last_name:
-            return JsonResponse({"response_code": 3, "error_msg": LAST_NAME_REQUIRED})
+    if not last_name:
+        return JsonResponse({"response_code": 3, "error_msg": LAST_NAME_REQUIRED})
 
-        if not father_name:
-            return JsonResponse({"response_code": 3, "error_msg": FATHER_NAME_REQUIRED})
+    if not father_name:
+        return JsonResponse({"response_code": 3, "error_msg": FATHER_NAME_REQUIRED})
 
-        if not national_code:
-            return JsonResponse({"response_code": 3, "error_msg": NATIONAL_ID_REQUIRED})
+    if not national_code:
+        return JsonResponse({"response_code": 3, "error_msg": NATIONAL_ID_REQUIRED})
 
-        if not home_address:
-            return JsonResponse({"response_code": 3, "error_msg": ADDRESS_REQUIRED})
+    if not home_address:
+        return JsonResponse({"response_code": 3, "error_msg": ADDRESS_REQUIRED})
 
-        if not bank_name:
-            return JsonResponse({"response_code": 3, "error_msg": BANK_NAME_REQUIRED})
+    if not bank_name:
+        return JsonResponse({"response_code": 3, "error_msg": BANK_NAME_REQUIRED})
 
-        if not bank_card_number:
-            return JsonResponse({"response_code": 3, "error_msg": CREDIT_CARD_REQUIRED})
+    if not bank_card_number:
+        return JsonResponse({"response_code": 3, "error_msg": CREDIT_CARD_REQUIRED})
 
-        if not shaba:
-            return JsonResponse({"response_code": 3, "error_msg": SHABA_REQUIRED})
+    if not shaba:
+        return JsonResponse({"response_code": 3, "error_msg": SHABA_REQUIRED})
 
-        if not position:
-            return JsonResponse({"response_code": 3, "error_msg": POSITION_REQUIRED})
+    if not position:
+        return JsonResponse({"response_code": 3, "error_msg": POSITION_REQUIRED})
 
-        if auth_level == "":
-            return JsonResponse({"response_code": 3, "error_msg": AUTH_LEVEL_REQUIRED})
+    if auth_level == "":
+        return JsonResponse({"response_code": 3, "error_msg": AUTH_LEVEL_REQUIRED})
 
-        if not branch_id:
-            return JsonResponse({"response_code": 3, "error_msg": BRANCH_REQUIRED})
+    if not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": BRANCH_REQUIRED})
 
-        if employee_id == 0:
+    if employee_id == 0:
+        try:
             new_user = User(
                 first_name=first_name,
                 last_name=last_name,
                 phone=phone,
+                email=phone + "@gmail.com",
                 password=make_password(password),
                 home_address=home_address,
                 user_type=USER_TYPE['employee']
             )
             new_user.save()
-            new_employee = Employee(
-                father_name=father_name,
-                national_code=national_code,
-                bank_name=bank_name,
-                bank_card_number=bank_card_number,
-                shaba_number=shaba,
-                user=new_user
-            )
-            new_employee.save()
-            new_employee_to_branch = EmployeeToBranch(
-                branch=Branch.objects.get(pk=branch_id),
-                employee=new_employee,
-                position=position,
-                auth_level=int(auth_level)
-            )
-            new_employee_to_branch.save()
-            return JsonResponse({"response_code": 2})
-        else:
-            old_employee = Employee.objects.get(pk=employee_id)
-            old_employee_to_branch = EmployeeToBranch.objects.get(employee=old_employee)
-            old_employee.first_name = first_name
-            old_employee.last_name = last_name
-            old_employee.father_name = father_name
-            old_employee.national_code = national_code
-            old_employee.phone = phone
-            if password != '' and re_password != '':
-                if password == re_password:
-                    old_employee.password = make_password(password)
-                else:
-                    return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
-            old_employee.home_address = home_address
-            old_employee.bank_name = bank_name
-            old_employee.bank_card_number = bank_card_number
-            old_employee.shaba_number = shaba
+        except IntegrityError:
+            return JsonResponse({"response_code": 3, "error_msg": PHONE_ALREADY_EXIST})
 
-            old_employee.save()
+        new_employee = Employee(
+            father_name=father_name,
+            national_code=national_code,
+            bank_name=bank_name,
+            bank_card_number=bank_card_number,
+            shaba_number=shaba,
+            user=new_user
+        )
+        new_employee.save()
+        new_employee_to_branch = EmployeeToBranch(
+            branch=Branch.objects.get(pk=branch_id),
+            employee=new_employee,
+            position=position,
+            auth_level=int(auth_level)
+        )
+        new_employee_to_branch.save()
+        return JsonResponse({"response_code": 2})
+    else:
+        old_employee = Employee.objects.get(pk=employee_id)
+        old_employee_to_branch = EmployeeToBranch.objects.get(employee=old_employee)
+        old_employee.user.first_name = first_name
+        old_employee.user.last_name = last_name
+        old_employee.user.phone = phone
+        old_employee.father_name = father_name
+        old_employee.national_code = national_code
+        if password != '' and re_password != '':
+            if password == re_password:
+                old_employee.user.password = make_password(password)
+            else:
+                return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
+        old_employee.user.home_address = home_address
+        old_employee.bank_name = bank_name
+        old_employee.bank_card_number = bank_card_number
+        old_employee.shaba_number = shaba
 
-            old_employee_to_branch.position = position
-            old_employee_to_branch.auth_level = int(auth_level)
-            old_employee_to_branch.save()
-            return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        old_employee.user.save()
+        old_employee.save()
+
+        old_employee_to_branch.position = position
+        old_employee_to_branch.auth_level = int(auth_level)
+        old_employee_to_branch.save()
+        return JsonResponse({"response_code": 2})
 
 
 def search_employee(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        branch_id = rec_data['branch_id']
-        if not search_word:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not branch_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        employees_from_branch = EmployeeToBranch.objects.filter(branch=Branch.objects.get(pk=branch_id))
-        employees = []
-        for employee in employees_from_branch:
-            if search_word in employee.employee.last_name:
-                employees.append({
-                    "last_name": employee.employee.last_name,
-                    "position": employee.position,
-                    "auth_lvl": employee.auth_level,
-                })
-        return JsonResponse({"response_code": 2, 'employees': employees})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    search_word = rec_data['search_word']
+    branch_id = rec_data['branch_id']
+    if not search_word:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    employees_from_branch = EmployeeToBranch.objects.filter(branch=Branch.objects.get(pk=branch_id))
+    employees = []
+    for employee in employees_from_branch:
+        if search_word in employee.employee.last_name:
+            employees.append({
+                "last_name": employee.employee.last_name,
+                "position": employee.position,
+                "auth_lvl": employee.auth_level,
+            })
+    return JsonResponse({"response_code": 2, 'employees': employees})
 
 
 def check_login(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 2})
-        else:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    if request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 2})
+    else:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
 
 def log_out(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if request.session.get('is_logged_in', None) == username:
-            request.session['is_logged_in'] = {}
-            return JsonResponse({"response_code": 2})
-        else:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    if request.session.get('is_logged_in', None) == username:
+        request.session['is_logged_in'] = {}
+        return JsonResponse({"response_code": 2})
+    else:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
 
 def get_employees(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        else:
-            branch_id = rec_data['branch']
-            organization_object = Branch.objects.get(id=branch_id).organization
-            all_organization_branches = Branch.objects.filter(organization=organization_object)
-            all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
-            employees = []
-            for employee in all_employees:
-                employees.append({
-                    "id": employee.employee.pk,
-                    "last_name": employee.employee.user.last_name,
-                    "position": employee.position,
-                    "auth_lvl": employee.auth_level,
-                })
-            return JsonResponse({"response_code": 2, 'employees': employees})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    else:
+        branch_id = rec_data['branch']
+        organization_object = Branch.objects.get(id=branch_id).organization
+        all_organization_branches = Branch.objects.filter(organization=organization_object)
+        all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
+        employees = []
+        for employee in all_employees:
+            employees.append({
+                "id": employee.employee.pk,
+                "last_name": employee.employee.user.last_name,
+                "position": employee.position,
+                "auth_lvl": employee.auth_level,
+            })
+        return JsonResponse({"response_code": 2, 'employees': employees})
 
 
 def get_employee(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        else:
-            employee_id = rec_data['employee_id']
-            employee = Employee.objects.get(pk=employee_id)
-            employee_to_branch = EmployeeToBranch.objects.get(employee=employee)
-            employee_data = {
-                'first_name': employee.user.first_name,
-                'last_name': employee.user.last_name,
-                'father_name': employee.father_name,
-                'national_code': employee.national_code,
-                'phone': employee.user.phone,
-                'home_address': employee.user.home_address,
-                'bank_name': employee.bank_name,
-                'bank_card_number': employee.bank_card_number,
-                'shaba': employee.shaba_number,
-                'position': employee_to_branch.position,
-                'auth_level': employee_to_branch.auth_level,
-            }
-            return JsonResponse({"response_code": 2, 'employee': employee_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    else:
+        employee_id = rec_data['employee_id']
+        employee = Employee.objects.get(pk=employee_id)
+        employee_to_branch = EmployeeToBranch.objects.get(employee=employee)
+        employee_data = {
+            'first_name': employee.user.first_name,
+            'last_name': employee.user.last_name,
+            'father_name': employee.father_name,
+            'national_code': employee.national_code,
+            'phone': employee.user.phone,
+            'home_address': employee.user.home_address,
+            'bank_name': employee.bank_name,
+            'bank_card_number': employee.bank_card_number,
+            'shaba': employee.shaba_number,
+            'position': employee_to_branch.position,
+            'auth_level': employee_to_branch.auth_level,
+        }
+        return JsonResponse({"response_code": 2, 'employee': employee_data})
 
 
 def get_menu_categories(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        branch_id = rec_data['branch']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        else:
-            all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
-            menu_categories = []
-            for category in all_menu_categories:
-                menu_categories.append({
-                    "id": category.pk,
-                    "name": category.name,
-                })
-            return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    else:
+        all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
+        menu_categories = []
+        for category in all_menu_categories:
+            menu_categories.append({
+                "id": category.pk,
+                "name": category.name,
+            })
+        return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
 
 
 def get_menu_category(request):
