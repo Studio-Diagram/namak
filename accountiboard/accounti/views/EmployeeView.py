@@ -27,6 +27,10 @@ SHIFT_NUMBER_REQUIRED = 'تعداد شیفت پایه را وارد کنید.'
 AUTH_LEVEL_REQUIRED = 'سطح دسترسی را وارد کنید.'
 MEMBER_CARD_REQUIRED = 'شماره کارت عضویت را وارد کنید.'
 BRANCH_REQUIRED = 'شعبه وارد نشده است.'
+USER_TYPE = {
+    "employee": 1,
+    "cafe_owner": 2
+}
 
 
 def login(request):
@@ -128,17 +132,22 @@ def register_employee(request):
             return JsonResponse({"response_code": 3, "error_msg": BRANCH_REQUIRED})
 
         if employee_id == 0:
-            new_employee = Employee(
+            new_user = User(
                 first_name=first_name,
                 last_name=last_name,
-                father_name=father_name,
-                national_code=national_code,
                 phone=phone,
                 password=make_password(password),
                 home_address=home_address,
+                user_type=USER_TYPE['employee']
+            )
+            new_user.save()
+            new_employee = Employee(
+                father_name=father_name,
+                national_code=national_code,
                 bank_name=bank_name,
                 bank_card_number=bank_card_number,
-                shaba_number=shaba
+                shaba_number=shaba,
+                user=new_user
             )
             new_employee.save()
             new_employee_to_branch = EmployeeToBranch(
