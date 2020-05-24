@@ -150,6 +150,7 @@ def get_reserves(request):
                         reserve_duration.strftime("%H"), reserve_duration.strftime("%M")),
                     'numbers': reserve.numbers,
                     'table_name': table_reserve.table.name,
+                    'table_id': table_reserve.table.pk,
                     'reserve_state': reserve.reserve_state
                 })
         return JsonResponse({"response_code": 2, 'all_today_reserves': reserves_data})
