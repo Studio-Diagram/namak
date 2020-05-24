@@ -289,22 +289,17 @@ myApp.run(function ($window, $rootScope, $http) {
     }).then(function successCallback(response) {
         // this callback will be called asynchronously
         // when the response is available
-        console.log('succcess');
     }, function errorCallback(response) {
         // called asynchronously if an error occurs
         // or server returns response with an error status.
-        console.log('error 1');
-        console.log(response);
     });
     $rootScope.online = navigator.onLine;
     $window.addEventListener("offline", function () {
-        console.log("offline");
         $rootScope.$apply(function () {
             $rootScope.online = false;
         });
     }, false);
     $window.addEventListener("online", function () {
-        console.log("online");
         $rootScope.$apply(function () {
             $rootScope.online = true;
         });
