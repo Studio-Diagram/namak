@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("tableCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            console.log(111);
             $scope.is_in_edit_mode = false;
             $scope.new_table_data = {
                 'table_id': 0,
