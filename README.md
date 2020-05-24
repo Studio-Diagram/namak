@@ -141,7 +141,20 @@ Follow these steps:
 
 * Save the cafe Owner
 
+* Now go to Branch Model
+
+* Click on ( Add Branch + )
+
+* Fill the name and address with your own data
+
+* Fill Starting and Ending work time (for example 8:00 to 23:00)
+
+* Select Organization that you had created
+
+* Save the Branch
+
 * Now go to the following Url and login to Namak:
+
 ```
 Url : http://127.0.0.1:8000
 Username: <Your_phone_number_on_User_model>
