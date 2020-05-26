@@ -473,7 +473,7 @@
                                             ( {{ game.start_time | persianNumber }}
                                             تا {{ game.end_time | persianNumber }} )
                                         </td>
-                                        <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
+                                        <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
                                         <td style="direction: ltr">{{ game.points | persianNumber }}</td>
                                         <td>{{ game.total | number | persianNumber }}</td>
                                         <td></td>
@@ -612,7 +612,7 @@
                                             ( {{ game.start_time | persianNumber }}
                                             تا {{ game.end_time | persianNumber }} )
                                         </td>
-                                        <td>{{ game.numbers * 80000 | number | persianNumber }}</td>
+                                        <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
                                         <td style="direction: ltr">{{ game.points | persianNumber }}</td>
                                         <td>{{ game.total | number | persianNumber }}</td>
                                         <td></td>

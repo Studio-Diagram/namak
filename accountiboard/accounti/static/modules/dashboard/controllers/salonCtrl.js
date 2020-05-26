@@ -7,6 +7,7 @@ angular.module("dashboard")
             $scope.disable_print_after_save_all_buttons = false;
             $scope.is_in_edit_mode_invoice = false;
             $scope.first_time_edit_payment_init = true;
+            $scope.price_per_hour_person = 100000;
             $scope.selected_category = {
                 "items": []
             };
