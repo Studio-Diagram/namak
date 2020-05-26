@@ -1132,43 +1132,43 @@ def calec_time(request):
 
 
 def print_after_save(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_id = rec_data['invoice_id']
-        activate_is_print = rec_data['activate_is_print']
-        invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
-        print_data = {
-            'is_customer_print': 0,
-            'invoice_id': invoice_obj.pk,
-            'table_name': invoice_obj.table.name,
-            'data': []
-        }
-        all_printers = Printer.objects.all().order_by("id")
-        for printer in all_printers:
-            print_data['data'].append({
-                'printer_name': printer.name,
-                'items': []
-            })
-        all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj, is_print=0)
-        for menu_item in all_menu_item_invoice:
-            printer_obj = PrinterToCategory.objects.filter(menu_category=menu_item.menu_item.menu_category)
-            for printer in printer_obj:
-                for real_printer in print_data['data']:
-                    if real_printer['printer_name'] == printer.printer.name:
-                        real_printer['items'].append({
-                            'name': menu_item.menu_item.name,
-                            'numbers': menu_item.numbers,
-                            'description': menu_item.description,
-                            'price': int(menu_item.menu_item.price) * int(menu_item.numbers)
-                        })
-                        break
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    invoice_id = rec_data['invoice_id']
+    activate_is_print = rec_data['activate_is_print']
+    invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
+    print_data = {
+        'is_customer_print': 0,
+        'invoice_id': invoice_obj.pk,
+        'table_name': invoice_obj.table.name,
+        'data': []
+    }
+    all_printers = Printer.objects.filter(branch=invoice_obj.branch).order_by("id")
+    for printer in all_printers:
+        print_data['data'].append({
+            'printer_name': printer.name,
+            'items': []
+        })
+    all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj, is_print=0)
+    for menu_item in all_menu_item_invoice:
+        printer_obj = PrinterToCategory.objects.filter(menu_category=menu_item.menu_item.menu_category)
+        for printer in printer_obj:
+            for real_printer in print_data['data']:
+                if real_printer['printer_name'] == printer.printer.name:
+                    real_printer['items'].append({
+                        'name': menu_item.menu_item.name,
+                        'numbers': menu_item.numbers,
+                        'description': menu_item.description,
+                        'price': int(menu_item.menu_item.price) * int(menu_item.numbers)
+                    })
+                    break
 
-                if activate_is_print:
-                    menu_item.is_print = 1
-                    menu_item.save()
+            if activate_is_print:
+                menu_item.is_print = 1
+                menu_item.save()
 
-        return JsonResponse({"response_code": 2, 'printer_data': print_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    return JsonResponse({"response_code": 2, 'printer_data': print_data})
 
 
 def print_cash(request):
