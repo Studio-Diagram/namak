@@ -102,7 +102,6 @@
             </div>
         </div>
     </div>
-
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addWalkedModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -399,7 +398,7 @@
                 </div>
                 <div class="table-category-separation" ng-repeat="table_category in categorized_tables_data">
                     <div ng-repeat="table in table_category.tables" class="reservationTable tableName-a1"
-                         id="tablename-{{ table.table_name }}">
+                         id="tablename-{{ table.table_id }}">
                         <div class="reservationCell reservationHeaderCell">
                             {{ table.table_name }}
                         </div>

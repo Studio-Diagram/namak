@@ -142,14 +142,14 @@ def get_dashboard_quick_access_invoices(request):
             invoice_current_game = InvoicesSalesToGame.objects.filter(invoice_sales=invoice,
                                                                       game__end_time="00:00:00").first()
             playing_game_invoices_data.append({
-                "customer_name": invoice.member.last_name,
+                "customer_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                 "numbers": invoice_current_game.game.numbers,
                 "table_name": invoice.table.name,
                 "game_id": invoice_current_game.game.pk
             })
         elif invoice.game_state == "END_GAME":
             end_game_invoices_data.append({
-                "customer_name": invoice.member.last_name,
+                "customer_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                 "numbers": invoice.guest_numbers,
                 "table_name": invoice.table.name,
                 "invoice_id": invoice.pk
@@ -164,12 +164,12 @@ def get_dashboard_quick_access_invoices(request):
                 card_number = invoice.member.card_number
 
             wait_game_invoices_data.append({
-                "customer_name": invoice.member.last_name,
+                "customer_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                 "numbers": invoice.guest_numbers,
                 "table_name": invoice.table.name,
                 "invoice_id": invoice.pk,
                 "has_member": has_member,
-                'member_name': invoice.member.first_name + " " + invoice.member.last_name,
+                'member_name': invoice.member.first_name + " " + invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                 "card_number": card_number,
                 "player_numbers": 0
             })
@@ -179,7 +179,7 @@ def get_dashboard_quick_access_invoices(request):
 
         if invoice.ready_for_settle:
             wait_for_settle_invoices_data.append({
-                "customer_name": invoice.member.last_name,
+                "customer_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                 "numbers": invoice.guest_numbers,
                 "table_name": invoice.table.name,
                 "invoice_id": invoice.pk,
@@ -190,14 +190,14 @@ def get_dashboard_quick_access_invoices(request):
         else:
             if invoice_to_menu_items.count():
                 ordered_invoices_data.append({
-                    "customer_name": invoice.member.last_name,
+                    "customer_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                     "numbers": invoice.guest_numbers,
                     "table_name": invoice.table.name
                 })
             else:
                 if not invoice.is_do_not_want_order:
                     not_order_invoices_data.append({
-                        "customer_name": invoice.member.last_name,
+                        "customer_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
                         "numbers": invoice.guest_numbers,
                         "table_name": invoice.table.name,
                         "invoice_id": invoice.pk
@@ -313,7 +313,7 @@ def get_invoice(request):
     for game in invoice_games:
         if str(game.game.end_time) != "00:00:00":
             game_total_secs = (
-            game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+                game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
             hour_points = int(game_total_secs / 3600)
             min_points = int((game_total_secs / 60) % 60)
             if len(str(hour_points)) == 1:
@@ -786,7 +786,7 @@ def get_all_invoice_games(request):
             for game in invoice_games:
                 if str(game.game.end_time) != "00:00:00":
                     game_total_secs = (
-                    game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+                        game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
                     hour_points = int(game_total_secs / 3600)
                     min_points = int((game_total_secs / 60) % 60)
                     if len(str(hour_points)) == 1:
@@ -1172,143 +1172,143 @@ def print_after_save(request):
 
 
 def print_cash(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        print_data = {
-            'is_customer_print': 1,
-            'invoice_id': '',
-            'table_name': '',
-            'customer_name': '',
-            'printers': ['Cash'],
-            'items': []
-        }
-        invoice_id = rec_data['invoice_id']
-        invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
-        print_data['customer_name'] = invoice_obj.member.last_name
-        print_data['invoice_id'] = invoice_obj.pk
-        print_data['table_name'] = invoice_obj.table.name
-        all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj)
-        for menu_item in all_menu_item_invoice:
-            print_data['items'].append({
-                'name': menu_item.menu_item.name,
-                'numbers': menu_item.numbers,
-                'item_price': menu_item.menu_item.price,
-                'price': int(menu_item.menu_item.price) * int(menu_item.numbers)
-            })
-        all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
-        for game in all_game_invoice:
-            print_data['items'].append({
-                'name': 'بازی',
-                'numbers': game.game.numbers,
-                'item_price': PRICE_PER_POINT_IN_GAME,
-                'price': game.game.points * PRICE_PER_POINT_IN_GAME
-            })
-        all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
-        for shop_p in all_shop_invoice:
-            print_data['items'].append({
-                'name': shop_p.shop_product.name,
-                'numbers': shop_p.numbers,
-                'item_price': shop_p.shop_product.price,
-                'price': shop_p.numbers * shop_p.shop_product.price
-            })
-        return JsonResponse({"response_code": 2, 'printer_data': print_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    print_data = {
+        'is_customer_print': 1,
+        'invoice_id': '',
+        'table_name': '',
+        'customer_name': '',
+        'printers': ['Cash'],
+        'items': []
+    }
+    invoice_id = rec_data['invoice_id']
+    invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
+    print_data['customer_name'] = invoice_obj.member.last_name if invoice_obj.member else GUEST_LAST_NAME
+    print_data['invoice_id'] = invoice_obj.pk
+    print_data['table_name'] = invoice_obj.table.name
+    all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj)
+    for menu_item in all_menu_item_invoice:
+        print_data['items'].append({
+            'name': menu_item.menu_item.name,
+            'numbers': menu_item.numbers,
+            'item_price': menu_item.menu_item.price,
+            'price': int(menu_item.menu_item.price) * int(menu_item.numbers)
+        })
+    all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
+    for game in all_game_invoice:
+        print_data['items'].append({
+            'name': 'بازی',
+            'numbers': game.game.numbers,
+            'item_price': PRICE_PER_POINT_IN_GAME,
+            'price': game.game.points * PRICE_PER_POINT_IN_GAME
+        })
+    all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
+    for shop_p in all_shop_invoice:
+        print_data['items'].append({
+            'name': shop_p.shop_product.name,
+            'numbers': shop_p.numbers,
+            'item_price': shop_p.shop_product.price,
+            'price': shop_p.numbers * shop_p.shop_product.price
+        })
+    return JsonResponse({"response_code": 2, 'printer_data': print_data})
 
 
 def print_cash_with_template(request):
-    if request.method == "GET":
-        now_time = jdatetime.datetime.now()
-        print_data = {
-            'is_customer_print': 1,
-            'invoice_id': '',
-            'factor_number': '',
-            'table_name': '',
-            'customer_name': '',
-            'printers': ['Cash'],
-            'items': [],
-            'total_price': '',
-            'service': 0,
-            'tax': 0,
-            'discount': 0,
-            'payable': 0,
-            'time': now_time.strftime("%H:%M"),
-            'date': now_time.strftime("%Y/%m/%d"),
-        }
-        invoice_id = request.GET['invoice_id']
-        invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
-        print_data['customer_name'] = invoice_obj.member.last_name
-        print_data['invoice_id'] = invoice_obj.pk
-        print_data['factor_number'] = invoice_obj.pk * 1234
-        print_data['table_name'] = invoice_obj.table.name
-        print_data['total_price'] = format(int(invoice_obj.total_price), ',d')
-        print_data['discount'] = format(int(invoice_obj.discount), ',d')
-        print_data['payable'] = format(int(invoice_obj.total_price - invoice_obj.discount), ',d')
-        all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj)
-        for menu_item in all_menu_item_invoice:
-            is_append = False
-            for item in print_data['items']:
-                if menu_item.menu_item.pk == item['item_id'] and item['item_kind'] == "MENU":
-                    item['numbers'] += menu_item.numbers
-                    item['price'] += int(menu_item.menu_item.price) * int(menu_item.numbers)
-                    is_append = True
-                    break
-            if not is_append:
-                print_data['items'].append({
-                    'item_id': menu_item.menu_item.pk,
-                    'item_kind': 'MENU',
-                    'name': menu_item.menu_item.name,
-                    'numbers': menu_item.numbers,
-                    'item_price': format(int(menu_item.menu_item.price), ',d'),
-                    'price': int(menu_item.menu_item.price) * int(menu_item.numbers)
-                })
-
-        all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
-        for game in all_game_invoice:
-            game_total_secs = (
-            game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
-            hour_points = int(game_total_secs / 3600)
-            min_points = int((game_total_secs / 60) % 60)
-            if len(str(hour_points)) == 1:
-                hour_points_string = "0" + str(hour_points)
-            else:
-                hour_points_string = str(hour_points)
-
-            if len(str(min_points)) == 1:
-                min_points_string = "0" + str(min_points)
-            else:
-                min_points_string = str(min_points)
-
+    if request.method != "GET":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    now_time = jdatetime.datetime.now()
+    print_data = {
+        'is_customer_print': 1,
+        'invoice_id': '',
+        'factor_number': '',
+        'table_name': '',
+        'customer_name': '',
+        'printers': ['Cash'],
+        'items': [],
+        'total_price': '',
+        'service': 0,
+        'tax': 0,
+        'discount': 0,
+        'payable': 0,
+        'time': now_time.strftime("%H:%M"),
+        'date': now_time.strftime("%Y/%m/%d"),
+    }
+    invoice_id = request.GET['invoice_id']
+    invoice_obj = InvoiceSales.objects.get(pk=invoice_id)
+    print_data['customer_name'] = invoice_obj.member.last_name if invoice_obj.member else GUEST_LAST_NAME
+    print_data['invoice_id'] = invoice_obj.pk
+    print_data['factor_number'] = invoice_obj.pk * 1234
+    print_data['table_name'] = invoice_obj.table.name
+    print_data['total_price'] = format(int(invoice_obj.total_price), ',d')
+    print_data['discount'] = format(int(invoice_obj.discount), ',d')
+    print_data['payable'] = format(int(invoice_obj.total_price - invoice_obj.discount), ',d')
+    all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj)
+    for menu_item in all_menu_item_invoice:
+        is_append = False
+        for item in print_data['items']:
+            if menu_item.menu_item.pk == item['item_id'] and item['item_kind'] == "MENU":
+                item['numbers'] += menu_item.numbers
+                item['price'] += int(menu_item.menu_item.price) * int(menu_item.numbers)
+                is_append = True
+                break
+        if not is_append:
             print_data['items'].append({
-                'item_id': game.game.pk,
-                'item_kind': 'GAME',
-                'name': 'بازی %d نفره' % game.game.numbers,
-                'numbers': "%s:%s'" % (hour_points_string, min_points_string),
-                'item_price': format(int(PRICE_PER_HOUR_IN_GAME) * game.game.numbers, ',d'),
-                'price': int(game.game.points * PRICE_PER_POINT_IN_GAME)
+                'item_id': menu_item.menu_item.pk,
+                'item_kind': 'MENU',
+                'name': menu_item.menu_item.name,
+                'numbers': menu_item.numbers,
+                'item_price': format(int(menu_item.menu_item.price), ',d'),
+                'price': int(menu_item.menu_item.price) * int(menu_item.numbers)
             })
-        all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
-        for shop_p in all_shop_invoice:
-            is_append = False
-            for item in print_data['items']:
-                if shop_p.shop_product.pk == item['item_id'] and item['item_kind'] == "SHOP":
-                    item['numbers'] += shop_p.numbers
-                    item['price'] += int(shop_p.shop_product.price) * int(shop_p.numbers)
-                    is_append = True
-                    break
-            if not is_append:
-                print_data['items'].append({
-                    'item_id': shop_p.shop_product.pk,
-                    'item_kind': 'SHOP',
-                    'name': shop_p.shop_product.name,
-                    'numbers': shop_p.numbers,
-                    'item_price': format(int(shop_p.shop_product.price), ',d'),
-                    'price': int(shop_p.numbers * shop_p.shop_product.price)
-                })
 
-        for price_item in print_data['items']:
-            price_item['price'] = format(price_item['price'], ",d")
-        return render(request, "invoice_cash.html", {"invoice_data": print_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
+    for game in all_game_invoice:
+        game_total_secs = (
+            game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
+        hour_points = int(game_total_secs / 3600)
+        min_points = int((game_total_secs / 60) % 60)
+        if len(str(hour_points)) == 1:
+            hour_points_string = "0" + str(hour_points)
+        else:
+            hour_points_string = str(hour_points)
+
+        if len(str(min_points)) == 1:
+            min_points_string = "0" + str(min_points)
+        else:
+            min_points_string = str(min_points)
+
+        print_data['items'].append({
+            'item_id': game.game.pk,
+            'item_kind': 'GAME',
+            'name': 'بازی %d نفره' % game.game.numbers,
+            'numbers': "%s:%s'" % (hour_points_string, min_points_string),
+            'item_price': format(int(PRICE_PER_HOUR_IN_GAME) * game.game.numbers, ',d'),
+            'price': int(game.game.points * PRICE_PER_POINT_IN_GAME)
+        })
+    all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
+    for shop_p in all_shop_invoice:
+        is_append = False
+        for item in print_data['items']:
+            if shop_p.shop_product.pk == item['item_id'] and item['item_kind'] == "SHOP":
+                item['numbers'] += shop_p.numbers
+                item['price'] += int(shop_p.shop_product.price) * int(shop_p.numbers)
+                is_append = True
+                break
+        if not is_append:
+            print_data['items'].append({
+                'item_id': shop_p.shop_product.pk,
+                'item_kind': 'SHOP',
+                'name': shop_p.shop_product.name,
+                'numbers': shop_p.numbers,
+                'item_price': format(int(shop_p.shop_product.price), ',d'),
+                'price': int(shop_p.numbers * shop_p.shop_product.price)
+            })
+
+    for price_item in print_data['items']:
+        price_item['price'] = format(price_item['price'], ",d")
+    return render(request, "invoice_cash.html", {"invoice_data": print_data})
 
 
 def print_after_save_template(request):
@@ -1323,7 +1323,7 @@ def print_after_save_template(request):
             'factor_number': invoice_obj.pk * 1234,
             'printer_name': printer_name,
             'table_name': invoice_obj.table.name,
-            'customer_name': invoice_obj.member.last_name,
+            'customer_name': invoice_obj.member.last_name if invoice_obj.member else GUEST_LAST_NAME,
             'guest_numbers': invoice_obj.guest_numbers,
             'time': now_time.strftime("%H:%M"),
             'date': now_time.strftime("%Y/%m/%d"),

@@ -58,8 +58,8 @@ angular.module("dashboard")
 
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    // $scope.error_message = error;
+                    // $scope.openErrorModal();
                 });
         };
 
@@ -78,8 +78,8 @@ angular.module("dashboard")
 
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    // $scope.error_message = error;
+                    // $scope.openErrorModal();
                 });
         };
 

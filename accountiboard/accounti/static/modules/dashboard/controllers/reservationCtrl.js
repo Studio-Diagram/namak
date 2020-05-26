@@ -137,7 +137,7 @@ angular.module("dashboard")
                 if ($scope.last_table_hover) {
                     jQuery.noConflict();
                     (function ($) {
-                        $('#tablename-' + $scope.last_table_hover.table_name).css("background", "none");
+                        $('#tablename-' + $scope.last_table_hover.table_id).css("background", "none");
                     })(jQuery);
                 }
                 if ($scope.last_row_hover) {
@@ -150,7 +150,7 @@ angular.module("dashboard")
                 $scope.last_table_hover = table;
                 jQuery.noConflict();
                 (function ($) {
-                    $('#tablename-' + table.table_name).css("background", "#fff");
+                    $('#tablename-' + table.table_id).css("background", "#fff");
                     $('.' + 'H' + hour + 'M' + min).css("background", "#fff");
                 })(jQuery);
                 if ($scope.starting_selected_time.class_name) {
@@ -254,7 +254,7 @@ angular.module("dashboard")
                 (function ($) {
                     $scope.all_today_reserves.forEach(function insert_code(item, index) {
                         var div_data = "";
-                        $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
+                        $('#tablename-' + item.table_id).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                     });
                 })(jQuery);
                 var sending_data = {
@@ -324,8 +324,8 @@ angular.module("dashboard")
 
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        // $scope.error_message = error;
+                        // $scope.openErrorModal();
                     });
             };
 
@@ -365,8 +365,8 @@ angular.module("dashboard")
 
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        // $scope.error_message = error;
+                        // $scope.openErrorModal();
                     });
             };
 
@@ -389,7 +389,7 @@ angular.module("dashboard")
                 (function ($) {
                     $scope.all_today_reserves.forEach(function insert_code(item, index) {
                         var div_data = "";
-                        $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
+                        $('#tablename-' + item.table_id).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                     });
                 })(jQuery);
                 $scope.grey_past_hours();
@@ -404,7 +404,7 @@ angular.module("dashboard")
                 (function ($) {
                     $scope.all_today_reserves.forEach(function insert_code(item, index) {
                         var div_data = "";
-                        $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
+                        $('#tablename-' + item.table_id).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                     });
                 })(jQuery);
                 $scope.kill_grey_background();
@@ -430,12 +430,7 @@ angular.module("dashboard")
             };
 
             $scope.categorize_tables = function (tables_data) {
-                $scope.categorized_tables_data = [
-                    {
-                        "table_category_name": "A",
-                        "tables": []
-                    }
-                ];
+                $scope.categorized_tables_data = [];
                 for (var i = 0; i < tables_data.length; i++) {
                     var category_find = $filter('filter')($scope.categorized_tables_data, {'table_category_name': tables_data[i].table_category_name});
                     if (category_find.length === 0) {
@@ -456,6 +451,7 @@ angular.module("dashboard")
                         $scope.max_category_size = $scope.categorized_tables_data[j].tables.length;
                     }
                 }
+                console.log($scope.categorized_tables_data);
             };
 
             $scope.get_tables_data = function () {
@@ -480,6 +476,7 @@ angular.module("dashboard")
                             $scope.all_today_reserves = data['all_today_reserves'];
                             jQuery.noConflict();
                             (function ($) {
+
                                 $scope.all_today_reserves.forEach(function insert_code(item, index) {
                                     var div_data = $compile("<div ng-click='edit_reserve(" + item.id + ")' class=\"reservationItem " + item.reserve_state + " " + item.duration_class_name + "\" role=\"button\" href=\"\">\n" +
                                         "                                        <span class=\"reservationCount\"><i class=\"fas fa-users\"></i>" + $filter('persianNumber')(item.numbers) + "</span>\n" +
@@ -487,7 +484,7 @@ angular.module("dashboard")
                                         "                                            " + item.customer_name + "\n" +
                                         "                                        </span>\n" +
                                         "                                    </div>")($scope);
-                                    $('#tablename-' + item.table_name).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
+                                    $('#tablename-' + item.table_id).find($(".H" + item.start_time_hour + "M" + item.start_time_min)).html(div_data);
                                 });
                             })(jQuery);
                             $scope.grey_past_hours();
@@ -555,8 +552,8 @@ angular.module("dashboard")
 
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        // $scope.error_message = error;
+                        // $scope.openErrorModal();
                     });
             };
 
@@ -592,8 +589,8 @@ angular.module("dashboard")
 
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        // $scope.error_message = error;
+                        // $scope.openErrorModal();
                     });
             };
 
