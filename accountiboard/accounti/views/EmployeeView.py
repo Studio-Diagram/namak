@@ -33,6 +33,13 @@ USER_TYPE = {
     "cafe_owner": 1,
     "employee": 2
 }
+USER_ROLES = {
+    "CAFE_OWNER": "CAFE_OWNER",
+    "MANAGER": "MANAGER",
+    "CASHIER": "CASHIER",
+    "ACCOUNTANT": "ACCOUNTANT",
+    "STAFF": "STAFF"
+}
 
 
 def login(request):
@@ -56,7 +63,11 @@ def login(request):
                     cafe_owner_object = CafeOwner.objects.get(user=user_obj)
                     organization_object = cafe_owner_object.organization
                     branch_object = Branch.objects.filter(organization=organization_object).first()
+                    request.session['user_role'] = USER_ROLES['CAFE_OWNER']
                 elif user_obj.get_user_type_display() == "employee":
+                    employee_object = Employee.objects.get(user=user_obj)
+                    print(employee_object.employee_roles)
+                    request.session['user_role'] = employee_object.employee_roles
                     branch_object = EmployeeToBranch.objects.get(employee=Employee.objects.get(user=user_obj)).branch
                 else:
                     return JsonResponse({"response_code": 3})

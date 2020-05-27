@@ -22,7 +22,7 @@ class User(models.Model):
     home_address = models.CharField(max_length=2500, null=False, blank=True)
 
     def __str__(self):
-        return self.email
+        return self.phone
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -46,6 +46,13 @@ class Branch(models.Model):
 
 
 class Employee(models.Model):
+    EMPLOYEE_ROLE_CHOICES = (
+        ('MANAGER', 'MANAGER'),
+        ('CASHIER', 'CASHIER'),
+        ('ACCOUNTANT', 'ACCOUNTANT'),
+        ('STAFF', 'STAFF')
+    )
+    employee_roles = MultiSelectField(max_length=50, choices=EMPLOYEE_ROLE_CHOICES, default='STAFF')
     # Personal Data
     father_name = models.CharField(max_length=255, null=True, blank=True)
     national_code = models.CharField(max_length=30, null=True, blank=True)
@@ -55,6 +62,9 @@ class Employee(models.Model):
     shaba_number = models.CharField(max_length=255, null=True, blank=True)
     # User Base
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.phone
 
 
 class CafeOwner(models.Model):

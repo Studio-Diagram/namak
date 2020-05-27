@@ -2,6 +2,7 @@ from django.http import JsonResponse
 import json, jdatetime, datetime
 from accounti.models import *
 from django.db.models import Sum
+from functools import wraps
 
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
@@ -16,6 +17,23 @@ OLD_CASH = 'انقضای صندوق گذشته است.'
 UNSETTLED_INVOICE = "فاکتور تسویه نشده وجود دارد."
 
 
+def passing_permission_decorator(permission_func):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if permission_func(request.session['is_logged_in'], request.session['user_role']):
+                return view_func(request, *args, **kwargs)
+            return JsonResponse({"response_code": 401, "error_msg": UNATHENTICATED})
+        return _wrapped_view
+    return decorator
+
+
+def my_custom_permission(i, j):
+    print(i, j)
+    return False
+
+
+@passing_permission_decorator(my_custom_permission)
 def get_all_cash(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
