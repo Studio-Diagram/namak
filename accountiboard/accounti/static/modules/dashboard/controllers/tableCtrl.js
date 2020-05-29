@@ -260,6 +260,7 @@ angular.module("dashboard")
         $scope.resetFrom = function () {
             $scope.new_table_data = {
                 'table_id': 0,
+                'table_cat_id': 0,
                 'name': '',
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
