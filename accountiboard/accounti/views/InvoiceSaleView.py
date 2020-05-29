@@ -821,7 +821,7 @@ def delete_items(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         else:
             invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-            employee = Employee.objects.get(phone=username)
+            employee = User.objects.get(phone=username)
             shops = rec_data['shop']
             menus = rec_data['menu']
             games = rec_data['game']
