@@ -120,13 +120,25 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col">
+                                        <label>تاریخ شروع<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_credit_data.start_date" type="text"
+                                               class="form-control" placeholder="تاریخ شروع" id="start_credit_date">
+                                    </div>
+                                    <div class="col">
+                                        <label>ساعت شروع<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_credit_data.start_time" type="text"
+                                               class="form-control" placeholder="ساعت شروع" id="start_credit_time">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
                                         <label>تاریخ انقضا<i class="fas fa-star-of-life"></i></label>
-                                        <input ng-model="new_credit_data.expire_date" type="text" aria-label="Last name"
+                                        <input ng-model="new_credit_data.expire_date" type="text"
                                                class="form-control" placeholder="تاریخ انقضا" id="expire_credit_date">
                                     </div>
                                     <div class="col">
                                         <label>ساعت انقضا<i class="fas fa-star-of-life"></i></label>
-                                        <input ng-model="new_credit_data.expire_time" type="text" aria-label="Last name"
+                                        <input ng-model="new_credit_data.expire_time" type="text"
                                                class="form-control" placeholder="ساعت انقضا" id="expire_credit_time">
                                     </div>
                                 </div>
@@ -156,6 +168,8 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">#</th>
+                                            <th scope="col">تاریخ شروع</th>
+                                            <th scope="col">ساعت شروع</th>
                                             <th scope="col">تاریخ انقضا</th>
                                             <th scope="col">ساعت انقضا</th>
                                             <th scope="col">اعتبار</th>
@@ -167,6 +181,8 @@
                                         <tbody>
                                         <tr ng-repeat="credit in member_credit_data">
                                             <th scope="row">{{ $index + 1 | persianNumber }}</th>
+                                            <td scope="row">{{ credit.start_date | persianNumber }}</td>
+                                            <td scope="row">{{ credit.start_time | persianNumber }}</td>
                                             <td scope="row">{{ credit.expire_date | persianNumber }}</td>
                                             <td scope="row">{{ credit.expire_time | persianNumber }}</td>
                                             <td scope="row">{{ credit.total_price | persianNumber }}</td>

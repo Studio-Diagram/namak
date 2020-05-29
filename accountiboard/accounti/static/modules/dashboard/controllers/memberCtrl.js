@@ -11,12 +11,17 @@ angular.module("dashboard")
                 $(document).ready(function () {
                     $("#expire_credit_date").datepicker();
                 });
+                $(document).ready(function () {
+                    $("#start_credit_date").datepicker();
+                });
             })(jQuery);
             $scope.new_credit_data = {
                 'member_id': 0,
                 'total_credit': 0,
                 'expire_date': '',
                 'expire_time': '',
+                'start_date': '',
+                'start_time': '',
                 'credit_categories': [],
                 'username': $rootScope.user_data.username
             };
@@ -68,6 +73,24 @@ angular.module("dashboard")
                         }
                         else {
                             $scope.new_reserve_data.start_time = $('#expire_credit_time').val();
+                        }
+                    }
+                });
+                $('#start_credit_time').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#start_credit_time').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start_credit_time').val("");
+                        }
+                        else {
+                            $scope.new_reserve_data.start_time = $('#start_credit_time').val();
                         }
                     }
                 });
@@ -128,6 +151,8 @@ angular.module("dashboard")
         $scope.create_credit = function () {
             $scope.new_credit_data.expire_date = $("#expire_credit_date").val();
             $scope.new_credit_data.expire_time = $("#expire_credit_time").val();
+            $scope.new_credit_data.start_date = $("#start_credit_date").val();
+            $scope.new_credit_data.start_time = $("#start_credit_time").val();
             dashboardHttpRequest.createCredit($scope.new_credit_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

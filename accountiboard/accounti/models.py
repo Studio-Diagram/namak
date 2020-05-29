@@ -590,6 +590,7 @@ class Credit(models.Model):
     )
     credit_categories = MultiSelectField(max_length=50, choices=CATEGORIES)
     created_time = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(null=False, blank=False)
     expire_time = models.DateTimeField(null=False, blank=False)
     total_price = models.IntegerField(null=False, blank=False)
     used_price = models.IntegerField(default=0)

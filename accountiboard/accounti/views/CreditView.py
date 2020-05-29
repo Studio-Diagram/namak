@@ -37,12 +37,17 @@ def get_all_credits_data_from_user(request):
     all_credit_data = []
     all_credits_from_user = Credit.objects.filter(member=member_object)
     for credit in all_credits_from_user:
-        jalali_date = jdatetime.date.fromgregorian(day=credit.expire_time.day, month=credit.expire_time.month,
-                                                   year=credit.expire_time.year)
+        expire_jalali_date = jdatetime.date.fromgregorian(day=credit.expire_time.day, month=credit.expire_time.month,
+                                                          year=credit.expire_time.year)
+        start_jalali_date = jdatetime.date.fromgregorian(day=credit.start_time.day, month=credit.start_time.month,
+                                                         year=credit.start_time.year)
+
         all_credit_data.append({
             "credit_categories": str(credit.credit_categories),
-            "expire_date": jalali_date.strftime("%Y/%m/%d"),
-            "expire_time": jalali_date.strftime("%H:%M"),
+            "expire_date": expire_jalali_date.strftime("%Y/%m/%d"),
+            "expire_time": credit.expire_time.strftime("%H:%M"),
+            "start_date": start_jalali_date.strftime("%Y/%m/%d"),
+            "start_time": credit.start_time.strftime("%H:%M"),
             "total_price": credit.total_price,
             "used_price": credit.used_price,
             "kind": credit.gift_code.gift_code_supplier.name if credit.gift_code else "دستی"
@@ -60,12 +65,14 @@ def create_credit(request):
     credit_categories = rec_data['credit_categories']
     expire_date = rec_data['expire_date']
     expire_time = rec_data['expire_time']
+    start_date = rec_data['start_date']
+    start_time = rec_data['start_time']
     total_credit = rec_data['total_credit']
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-    if not credit_categories or not expire_date or not expire_time or not total_credit:
+    if not credit_categories or not expire_date or not expire_time or not total_credit or not start_time or not start_date:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
     try:
@@ -78,7 +85,14 @@ def create_credit(request):
     expire_date_g = jdatetime.datetime(int(expire_date_split[2]), int(expire_date_split[1]),
                                        int(expire_date_split[0]), int(expire_time_split[0]),
                                        int(expire_time_split[1]), 0).togregorian()
+
+    start_date_split = start_date.split('/')
+    start_time_split = start_time.split(':')
+    start_date_g = jdatetime.datetime(int(start_date_split[2]), int(start_date_split[1]),
+                                      int(start_date_split[0]), int(start_time_split[0]),
+                                      int(start_time_split[1]), 0).togregorian()
     new_credit = Credit(member=member_object, total_price=total_credit, expire_time=expire_date_g,
+                        start_time=start_date_g,
                         credit_categories=credit_categories)
     new_credit.save()
     return JsonResponse({"response_code": 2})
@@ -104,7 +118,8 @@ def perform_credit_on_invoice_sale(request):
     if not invoice_object.member:
         return JsonResponse({"response_code": 3, "error_msg": MEMBER_NOT_SELCETD})
 
-    all_member_credits = Credit.objects.filter(member=invoice_object.member, expire_time__gte=datetime.now())
+    all_member_credits = Credit.objects.filter(member=invoice_object.member, expire_time__gte=datetime.now(),
+                                               start_time__lte=datetime.now())
     for credit in all_member_credits:
         if credit.total_price == credit.used_price:
             continue
