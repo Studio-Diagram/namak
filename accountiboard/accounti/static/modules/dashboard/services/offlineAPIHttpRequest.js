@@ -1,7 +1,7 @@
 angular.module('dashboard')
     .service('offlineAPIHttpRequest', function offlineAPIHttpRequest($q, $http, $auth, $cookies, $window) {
         var service = {
-            'API_URL': "http://127.0.0.1:8000/offline_api/v1/",
+            'API_URL': "http://127.0.0.1:8001/offline_api/v1/",
             'use_session': false,
             'authenticated': null,
             'authPromise': null,
