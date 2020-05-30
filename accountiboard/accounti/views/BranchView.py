@@ -61,23 +61,24 @@ def add_branch(request):
 
 
 def get_branches(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        branches = Branch.objects.all()
-        branches_data = []
-        for branch in branches:
-            branches_data.append({
-                'id': branch.pk,
-                'name': branch.name,
-                'address': branch.address,
-                'start_time': branch.start_working_time.strftime("%H:%M"),
-                'end_time': branch.end_working_time.strftime("%H:%M")
-            })
-        return JsonResponse({"response_code": 2, 'branches': branches_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    branch_id = rec_data['branch']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    branches = Branch.objects.filter(organization=Branch.objects.get(pk=branch_id).organization)
+    branches_data = []
+    for branch in branches:
+        branches_data.append({
+            'id': branch.pk,
+            'name': branch.name,
+            'address': branch.address,
+            'start_time': branch.start_working_time.strftime("%H:%M"),
+            'end_time': branch.end_working_time.strftime("%H:%M")
+        })
+    return JsonResponse({"response_code": 2, 'branches': branches_data})
 
 
 def search_branch(request):
@@ -161,4 +162,3 @@ def get_working_time_for_reserve(request):
 
         return JsonResponse({"response_code": 2, 'working_data': working_data})
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-
