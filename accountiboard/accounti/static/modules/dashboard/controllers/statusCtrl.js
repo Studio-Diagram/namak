@@ -223,7 +223,8 @@ angular.module("dashboard")
 
         $scope.print_night_report = function () {
             var sending_data = {
-                'cash_id': $rootScope.cash_data.cash_id
+                'cash_id': $rootScope.cash_data.cash_id,
+                'location_url': "https://namak.works/"
             };
             $http({
                 method: 'POST',
