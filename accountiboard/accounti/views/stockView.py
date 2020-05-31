@@ -7,14 +7,7 @@ from io import BytesIO
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
+from accountiboard.constants import *
 
 
 def add_stock(request):

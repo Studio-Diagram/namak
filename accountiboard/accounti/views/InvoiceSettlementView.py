@@ -2,16 +2,7 @@ from django.http import JsonResponse
 from accounti.models import *
 from datetime import datetime
 import jdatetime, json
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-FACTOR_NUMBER_INVALID = "شماره فاکتور تطابق ندارد."
+from accountiboard.constants import *
 
 
 def create_new_invoice_settlement(request):

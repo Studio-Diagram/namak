@@ -3,16 +3,7 @@ import json
 from datetime import datetime
 from accounti.models import *
 import jdatetime, random
-
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-INVOICE_NOT_EXIST = "فاکتور وجود ندارد."
-MEMBER_NOT_SELCETD = "عضوی به این فاکتور وصل نشده است."
-MEMBER_NOT_EXIST = "عضوی یافت نشد."
-CREDIT_CATEGORY_NOT_HANDLED = "این دسته‌بندی برای اعتبار بررسی نشده است."
-GIFT_CODE_NOT_EXIST = "این کد وجود ندارد."
-GIFT_CODE_NOT_USABLE = "کد قابل استفاده نیست."
-GAME_PER_POINT_PRICE = 5000
+from accountiboard.constants import *
 
 
 def get_all_credits_data_from_user(request):

@@ -4,16 +4,7 @@ from accounti.models import *
 from django.db.models.functions import Concat
 from django.db.models import CharField, Value as V
 from django.db import IntegrityError
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-DUPLICATE_MEMBER_ENTRY = "شماره تلفن یا کارت تکراری است."
-MEMBER_NOT_FOUND = "عضوی یافت نشد."
+from accountiboard.constants import *
 
 
 def add_member(request):

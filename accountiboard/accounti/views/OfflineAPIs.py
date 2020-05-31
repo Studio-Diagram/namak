@@ -4,12 +4,7 @@ from accounti.models import *
 from django.db import IntegrityError
 from datetime import datetime, timedelta
 import jdatetime
-
-UUID_EMPTY_ERROR = "UUID is empty!"
-BRANCH_EMPTY_ERROR = "Branch is empty!"
-METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED"
-DUPLICATE_MEMBER_ENTRY = "شماره تلفن یا کارت تکراری است."
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
+from accountiboard.constants import *
 
 
 def status_of_server(request):

@@ -3,15 +3,7 @@ import json, jdatetime, datetime, xlwt
 from accounti.models import *
 from django.db.models import Sum
 from accountiboard import settings
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-METHOD_NOT_ALLOWED = "Method not allowed."
+from accountiboard.constants import *
 
 
 def return_remainder_of_supplier(supplier_id, to_time):

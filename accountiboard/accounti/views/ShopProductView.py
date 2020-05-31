@@ -3,8 +3,7 @@ import json, jdatetime, datetime, xlwt
 from accounti.models import *
 from django.db.models import Sum
 from accountiboard import settings
-
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
+from accountiboard.constants import *
 
 
 def get_detail_product_number(request):

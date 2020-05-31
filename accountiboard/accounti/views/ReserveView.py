@@ -3,16 +3,7 @@ import json
 from accounti.models import *
 from datetime import datetime, timedelta
 import jdatetime
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-TIME_NOT_IN_CORRECT_FORMAT = 'زمان را به حالت درستی وارد کنید.'
-METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED"
+from accountiboard.constants import *
 
 
 def add_reserve(request):

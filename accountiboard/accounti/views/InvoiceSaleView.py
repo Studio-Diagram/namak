@@ -5,31 +5,10 @@ from accounti.models import *
 from datetime import datetime, timedelta, date
 from django.db.models import Sum
 import logging
+from accountiboard.constants import *
 
 logger = logging.getLogger("accounti_info")
 logger_specific_bug = logging.getLogger("specific_bug")
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-IN_GAME = "در حال بازی"
-END_GAME = "بازی تمام شده"
-WAIT_GAME = "منتظر بازی"
-ORDERED = "سفارش داده"
-NOT_ORDERED = "سفارش نداده"
-DO_NOT_WANT_ORDER = "سفارش ندارد"
-DO_NOT_WANT_GAME = "بازی نمی‌خواهد"
-NO_SHOP_PRODUCTS_IN_STOCK = "محصول فروشی در انبار نیست."
-WAIT_FOR_SETTLE = "منتظر تسویه"
-PRICE_PER_POINT_IN_GAME = 5000
-PRICE_PER_HOUR_IN_GAME = 100000
-SECONDS_PER_POINT = 180
-CHUNKS_PER_HOUR = 20
-GUEST_LAST_NAME = "مهمان"
-GUEST_FIRST_NAME = "مهمان"
 
 
 def start_invoice_game(request):
