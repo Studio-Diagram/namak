@@ -87,77 +87,41 @@ Then migrate changes in database:
 (namak_enviroment)$ ./manage.py makemigrations
 (namak_enviroment)$ ./manage.py migrate
 ```
-### Time to Test:
-```
-(namak_enviroment)$ ./manage.py runserver 0.0.0.0:8000
-```
-check this url in your browser
-```
-http://127.0.0.1:8000
-```
 
-#### Creating Superuser
+#### Creating Superuser (optional)
 
 ```
 (namak_enviroment)$ ./manage.py createsuperuser
 ```
 
-#### Then Complete the creating with your own data.
-#
-After that, go to Django Admin Panel with your superuser data and login:
-```
-http://127.0.0.1:8000/admin/
-```
-Follow these steps:
-* Go to Users and click on ( Add User + )
+### Insert test data into database:
 
-* Fill First Name and Last name and phone and email with your own data.
-
-* Leaving the Last Login Field blank
-
-* Check the Is active Checkbox
-
-* Fill Password with pbkdf2_sha256$120000$eFM2jCGCoaQg$Wnziyp9xaIrKGkw9Dd3o+mFxFSgp5bMGMFTkdz5u3S0=
-
-* Select cafe_owner option for User Type field
-
-* Fill Birthday Date and Home Address with your own data
-
-* Then Click on save
-
-* Now go to Organization Model
-
-* Click on ( Add Organization + )
-
-* Fill all fields and click on save
-
-* Now go to Cafe Owners Model
-
-* Click on ( Add Cafe Owner + )
-
-* Select your User for User Field
-
-* Select your Organization for Organization Field
-
-* Save the cafe Owner
-
-* Now go to Branch Model
-
-* Click on ( Add Branch + )
-
-* Fill the name and address with your own data
-
-* Fill Starting and Ending work time (for example 8:00 to 23:00)
-
-* Select Organization that you had created
-
-* Save the Branch
-
-* Now go to the following Url and login to Namak:
+From `namak/accountiboard/accountiboard` copy file `database_testdata.sql` into a system directory (not under your home directory) such as /tmp. You can ignore this step on windows.
 
 ```
-Url : http://127.0.0.1:8000
-Username: <Your_phone_number_on_User_model>
+cd accountiboard
+cp database_testdata.sql /tmp
+```
+Login to psql as the user created above:
+
+```
+sudo -iu postgres
+psql --username=<DATABASE_USERNAME> --dbname=<DATABASE_NAME>
+```
+
+Insert the sql file into database. Give the correct path for file if you didn't copy it into /tmp
+```
+\i /tmp/database_testdata.sql
+```
+
+### Time to Test:
+```
+exit
+cd ..
+./manage.py runserver
+
+Go to this Url : http://127.0.0.1:8000
+Username: 0912
 Password: 1234
 ```
 
