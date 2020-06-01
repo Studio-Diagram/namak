@@ -11,45 +11,53 @@ from accountiboard.constants import *
 
 
 def add_branch(request):
-    if request.method == "POST":
-        correct_mins = ["00", "15", "30", "45"]
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data['branch_id']
-        name = rec_data['name']
-        address = rec_data['address']
-        start_time = rec_data['start_time']
-        end_time = rec_data['end_time']
-        if start_time.split(":")[1] not in correct_mins or end_time.split(":")[1] not in correct_mins:
-            return JsonResponse({"response_code": 3, "error_msg": WRONG_TIME_REGEX})
-        if not name:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not address:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not start_time:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not end_time:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    correct_mins = ["00", "15", "30", "45"]
+    rec_data = json.loads(request.read().decode('utf-8'))
+    branch_id = rec_data.get('branch_id')
+    name = rec_data.get('name')
+    address = rec_data.get('address')
+    start_time = rec_data.get('start_time')
+    end_time = rec_data.get('end_time')
+    min_paid_price = rec_data.get('min_paid_price')
+    game_data = rec_data.get('game_data')
+    game_data_list = []
+    # TODO: Adding Organization
+    if not name or not address or not start_time or not end_time:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        if branch_id == 0:
-            new_branch = Branch(
-                name=name,
-                address=address,
-                start_working_time=datetime.strptime(start_time, '%H:%M'),
-                end_working_time=datetime.strptime(end_time, '%H:%M')
-            )
-            new_branch.save()
+    if start_time.split(":")[1] not in correct_mins or end_time.split(":")[1] not in correct_mins:
+        return JsonResponse({"response_code": 3, "error_msg": WRONG_TIME_REGEX})
 
-            return JsonResponse({"response_code": 2})
-        else:
-            old_branch = Branch.objects.get(pk=branch_id)
-            old_branch.name = name
-            old_branch.address = address
-            old_branch.start_working_time = datetime.strptime(start_time, '%H:%M')
-            old_branch.end_working_time = datetime.strptime(end_time, '%H:%M')
-            old_branch.save()
-            return JsonResponse({"response_code": 2})
+    if game_data and min_paid_price:
+        game_data_list = [json.dumps({
+            "which_hour": game_data_object.get('which_hour'),
+            "price_per_hour": game_data_object.get('price_per_hour')
+        }) for game_data_object in game_data]
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if branch_id == 0:
+        new_branch = Branch(
+            name=name,
+            address=address,
+            start_working_time=datetime.strptime(start_time, '%H:%M'),
+            end_working_time=datetime.strptime(end_time, '%H:%M'),
+            min_paid_price=min_paid_price,
+            game_data=game_data_list if game_data_list else None
+        )
+        new_branch.save()
+
+        return JsonResponse({"response_code": 2})
+    else:
+        old_branch = Branch.objects.get(pk=branch_id)
+        old_branch.name = name
+        old_branch.address = address
+        old_branch.start_working_time = datetime.strptime(start_time, '%H:%M')
+        old_branch.end_working_time = datetime.strptime(end_time, '%H:%M')
+        old_branch.min_paid_price = min_paid_price
+        old_branch.game_data = game_data_list
+        old_branch.save()
+        return JsonResponse({"response_code": 2})
 
 
 def get_branches(request):
@@ -97,23 +105,25 @@ def search_branch(request):
 
 
 def get_branch(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-        branch_id = rec_data['branch_id']
-        branch = Branch.objects.get(pk=branch_id)
-        branch_data = {
-            'id': branch.pk,
-            'name': branch.name,
-            'address': branch.address,
-            'start_time': branch.start_working_time.strftime("%H:%M"),
-            'end_time': branch.end_working_time.strftime("%H:%M")
-        }
-        return JsonResponse({"response_code": 2, 'branch': branch_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    branch_id = rec_data['branch']
+    branch = Branch.objects.get(pk=branch_id)
+    branch_data = {
+        'id': branch.pk,
+        'name': branch.name,
+        'address': branch.address,
+        'start_time': branch.start_working_time.strftime("%H:%M"),
+        'end_time': branch.end_working_time.strftime("%H:%M"),
+        'game_data': [json.loads(game_data_single_object) for game_data_single_object in branch.game_data],
+        'min_paid_price': branch.min_paid_price
+    }
+    return JsonResponse({"response_code": 2, 'branch': branch_data})
 
 
 def get_working_time_for_reserve(request):

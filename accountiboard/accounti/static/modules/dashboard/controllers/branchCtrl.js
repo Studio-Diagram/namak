@@ -8,6 +8,17 @@ angular.module("dashboard")
                 'address': '',
                 'start_time': '',
                 'end_time': '',
+                "min_paid_price": 5000,
+                'game_data': [
+                    {
+                        "which_hour": 1,
+                        "price_per_hour": 0
+                    },
+                    {
+                        "which_hour": 2,
+                        "price_per_hour": 0
+                    }
+                ],
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
@@ -53,7 +64,6 @@ angular.module("dashboard")
                         }).remove();
                     },
                     afterHide: function () {
-                        console.log($('#end-time-clock').val());
                         var seleceted_min = $('#end-time-clock').val().split(":")[1];
                         if (!choices.includes(seleceted_min)) {
                             $('#end-time-clock').val("");
@@ -101,40 +111,21 @@ angular.module("dashboard")
         $scope.addBranch = function () {
             $scope.new_branch_data.start_time = $('#start-time-clock').val();
             $scope.new_branch_data.end_time = $('#end-time-clock').val();
-            if ($scope.is_in_edit_mode) {
-                $scope.is_in_edit_mode = false;
-                dashboardHttpRequest.addBranch($scope.new_branch_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_branches_data($rootScope.user_data);
-                            $scope.closeAddBranchModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
+            dashboardHttpRequest.addBranch($scope.new_branch_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_branches_data($rootScope.user_data);
+                        $scope.resetFrom();
+                        $scope.closeAddBranchModal();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
-                    });
-            }
-            else {
-                dashboardHttpRequest.addBranch($scope.new_branch_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_branches_data($rootScope.user_data);
-                            $scope.resetFrom();
-                            $scope.closeAddBranchModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.searchBranch = function () {
@@ -158,32 +149,11 @@ angular.module("dashboard")
             }
         };
 
-        $scope.getBranch = function (branch_id) {
-            var data = {
-                'username': $rootScope.user_data.username,
-                'branch_id': branch_id
-            };
-            dashboardHttpRequest.getBranch(data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        return data['branch'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
-        };
-
-
         $scope.editBranch = function (branch_id) {
             $scope.is_in_edit_mode = true;
             var data = {
                 'username': $rootScope.user_data.username,
-                'branch_id': branch_id
+                'branch': branch_id
             };
             dashboardHttpRequest.getBranch(data)
                 .then(function (data) {
@@ -193,7 +163,9 @@ angular.module("dashboard")
                             'name': data['branch']['name'],
                             'address': data['branch']['address'],
                             'start_time': data['branch']['start_time'],
-                            'end_time': data['branch']['end_time']
+                            'end_time': data['branch']['end_time'],
+                            'game_data': data['branch']['game_data'],
+                            'min_paid_price': data['branch']['min_paid_price']
                         };
                         $scope.openAddBranchModal();
                     }
@@ -215,6 +187,17 @@ angular.module("dashboard")
                 'address': '',
                 'start_time': '',
                 'end_time': '',
+                "min_paid_price": 5000,
+                'game_data': [
+                    {
+                        "which_hour": 1,
+                        "price_per_hour": 0
+                    },
+                    {
+                        "which_hour": 2,
+                        "price_per_hour": 0
+                    }
+                ],
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
