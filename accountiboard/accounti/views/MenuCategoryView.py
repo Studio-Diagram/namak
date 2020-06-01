@@ -1,9 +1,7 @@
 from django.http import JsonResponse
 import json
 from accounti.models import *
-
-UNAUTHENTICATED = 'لطفا ابتدا وارد شوید.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
+from accountiboard.constants import *
 
 
 def change_list_order(request):

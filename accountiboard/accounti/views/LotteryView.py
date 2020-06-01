@@ -2,15 +2,7 @@ from django.http import JsonResponse
 import json, jdatetime
 from accounti.models import *
 from random import randint
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود  را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود  را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-LOTTERY_CAN_NOT_BE_DONE = "قرعه کشی به دلیل نبود بازی انجام شده توسط مشتریان وجود ندارد."
+from accountiboard.constants import *
 
 def do_lottery(lot_data):
     all_luck_points_sum = 0

@@ -10,9 +10,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timedelta, date
 from pytz import timezone
-
-UNAUTHENTICATED = 'لطفا ابتدا وارد شوید.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
+from accountiboard.constants import *
 
 
 def get_invoice_number(request):

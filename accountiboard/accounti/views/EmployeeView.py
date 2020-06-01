@@ -5,41 +5,7 @@ from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
-
-WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
-USERNAME_ERROR = 'نام کاربری خود را وارد کنید.'
-PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
-NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
-DATA_REQUIRE = "اطلاعات را به شکل کامل وارد کنید."
-PHONE_ERROR = 'شماره تلفن خود را وارد کنید.'
-UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
-CASH_ERROR = "خطای صندوق"
-FIRST_NAME_REQUIRED = 'نام را وارد کنید.'
-LAST_NAME_REQUIRED = 'نام خانوادگی را وارد کنید.'
-FATHER_NAME_REQUIRED = 'نام پدر را وارد کنید.'
-NATIONAL_ID_REQUIRED = 'شماره شناسنامه را وارد کنید.'
-ADDRESS_REQUIRED = 'آدرس را وارد کنید.'
-BANK_NAME_REQUIRED = 'نام بانک را وارد کنید.'
-CREDIT_CARD_REQUIRED = 'شماره کارت اعتباری را وارد کنید.'
-SHABA_REQUIRED = 'شماره شبا را وارد کنید.'
-POSITION_REQUIRED = 'سمت را وارد کنید.'
-SHIFT_SALARY_REQUIRED = 'حقوق شیفت پایه را وارد کنید.'
-SHIFT_NUMBER_REQUIRED = 'تعداد شیفت پایه را وارد کنید.'
-AUTH_LEVEL_REQUIRED = 'سطح دسترسی را وارد کنید.'
-MEMBER_CARD_REQUIRED = 'شماره کارت عضویت را وارد کنید.'
-BRANCH_REQUIRED = 'شعبه وارد نشده است.'
-PHONE_ALREADY_EXIST = 'شماره تلفن تکراری است.'
-USER_TYPE = {
-    "cafe_owner": 1,
-    "employee": 2
-}
-USER_ROLES = {
-    "CAFE_OWNER": "CAFE_OWNER",
-    "MANAGER": "MANAGER",
-    "CASHIER": "CASHIER",
-    "ACCOUNTANT": "ACCOUNTANT",
-    "STAFF": "STAFF"
-}
+from accountiboard.constants import *
 
 
 def login(request):
