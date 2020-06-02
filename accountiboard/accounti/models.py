@@ -45,6 +45,7 @@ class Branch(models.Model):
     start_working_time = models.TimeField(null=True)
     end_working_time = models.TimeField(null=True)
     min_paid_price = models.FloatField(default=5000)
+    guest_pricing = models.BooleanField(default=False)
     game_data = JSONField(null=True, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 

@@ -11,6 +11,15 @@ logger = logging.getLogger("accounti_info")
 logger_specific_bug = logging.getLogger("specific_bug")
 
 
+def getting_delta_time_to_seconds(start_time, end_time):
+    timedelta_start = timedelta(hours=start_time.hour, minutes=start_time.minute,
+                                seconds=start_time.second)
+    timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute,
+                              seconds=end_time.second)
+    t = timedelta_end - timedelta_start
+    return t.total_seconds()
+
+
 def start_invoice_game(request):
     if not request.method == "POST":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -291,9 +300,8 @@ def get_invoice(request):
     invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
     for game in invoice_games:
         if str(game.game.end_time) != "00:00:00":
-            game_total_secs = (
-                game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
-            hour_points = int(game_total_secs / 3600)
+            game_total_secs = getting_delta_time_to_seconds(game.game.start_time, game.game.end_time)
+            hour_points = int(game_total_secs / ONE_HOUR_SECONDS)
             min_points = int((game_total_secs / 60) % 60)
             if len(str(hour_points)) == 1:
                 hour_points_string = "0" + str(hour_points)
@@ -311,7 +319,7 @@ def get_invoice(request):
                 'start_time': game.game.start_time.strftime('%H:%M'),
                 'end_time': game.game.end_time.strftime('%H:%M'),
                 'points': "%s:%s'" % (hour_points_string, min_points_string),
-                'total': game.game.points * PRICE_PER_POINT_IN_GAME
+                'total': game.game.points * invoice_object.branch.min_paid_price
             })
         elif str(game.game.end_time) == "00:00:00":
             invoice_data['current_game']['id'] = game.game.pk
@@ -671,7 +679,7 @@ def get_invoice_sale_total_price(invoice_id):
 
     all_invoice_sales_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object).exclude(game__points=0)
     for invoice_to_game in all_invoice_sales_games:
-        total_price += invoice_to_game.game.points * PRICE_PER_POINT_IN_GAME
+        total_price += invoice_to_game.game.points * invoice_object.branch.min_paid_price
 
     return total_price
 
@@ -710,18 +718,38 @@ def get_member(request):
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
+def calculating_game_data(total_seconds, guest_pricing, member, seconds_per_point,
+                          chunks_per_hour, computing_all_seconds_check_box):
+    if (total_seconds < ONE_HOUR_SECONDS) or computing_all_seconds_check_box:
+        remaining_seconds = 0
+        computing_seconds = total_seconds
+    else:
+        remaining_seconds = total_seconds - ONE_HOUR_SECONDS
+        computing_seconds = ONE_HOUR_SECONDS
+
+    point_per_person = int(round(computing_seconds / seconds_per_point))
+    if guest_pricing and not member:
+        if point_per_person % chunks_per_hour != 0:
+            point_per_person = (int(point_per_person / chunks_per_hour) + 1) * chunks_per_hour
+
+    return point_per_person, remaining_seconds
+
+
 def end_current_game(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
-    game_id = rec_data['game_id']
+    username = rec_data.get('username')
+    game_id = rec_data.get('game_id')
+    branch_id = rec_data.get('branch_id')
     end_time = datetime.now().time()
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not game_id:
+    if not game_id or not branch_id:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    branch_object = Branch.objects.get(id=branch_id)
 
     game_object = Game.objects.get(pk=game_id, end_time="00:00:00")
     invoice_to_sales_object = InvoicesSalesToGame.objects.get(game=game_object)
@@ -729,64 +757,84 @@ def end_current_game(request):
     invoice_object = InvoiceSales.objects.get(pk=invoice_id)
     start_time = game_object.start_time
     game_object.end_time = end_time
+    game_data_list = branch_object.game_data
+    min_paid_price = branch_object.min_paid_price
+    calculated_game_points = 0
+    calculated_game_price = 0
+    chunks_per_hour = 0
 
-    timedelta_start = timedelta(hours=start_time.hour, minutes=start_time.minute, seconds=start_time.second)
+    if not game_data_list:
+        return JsonResponse({"response_code": 3, "error_msg": CAN_NOT_CALCULATE_GAME})
 
-    timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute, seconds=end_time.second)
+    total_seconds = getting_delta_time_to_seconds(start_time, end_time)
+    for game_data_object in game_data_list:
+        game_data_json_object = json.loads(game_data_object)
+        price_per_hour = game_data_json_object.get('price_per_hour')
+        chunks_per_hour = int(price_per_hour) / int(min_paid_price)
+        calculated_game_data = calculating_game_data(total_seconds, branch_object.guest_pricing,
+                                                     game_object.member,
+                                                     ONE_HOUR_SECONDS / chunks_per_hour, chunks_per_hour,
+                                                     computing_all_seconds_check_box=False)
+        calculated_game_points += calculated_game_data[0]
+        calculated_game_price += calculated_game_data[0] * game_object.numbers * branch_object.min_paid_price
+        total_seconds = calculated_game_data[1]
+        if not total_seconds:
+            break
 
-    t = timedelta_end - timedelta_start
-    point = int(round(t.total_seconds() / SECONDS_PER_POINT))
-    if not game_object.member:
-        if point % CHUNKS_PER_HOUR != 0:
-            point = (int(point / CHUNKS_PER_HOUR) + 1) * CHUNKS_PER_HOUR
-    game_numbers = game_object.numbers
+    if total_seconds and chunks_per_hour:
+        calculated_game_data = calculating_game_data(total_seconds, branch_object.guest_pricing,
+                                                     game_object.member,
+                                                     ONE_HOUR_SECONDS / chunks_per_hour, chunks_per_hour,
+                                                     computing_all_seconds_check_box=True)
+        calculated_game_points += calculated_game_data[0]
+        calculated_game_price += calculated_game_data[0] * game_object.numbers * branch_object.min_paid_price
 
-    game_object.points = point * game_numbers
+    game_object.points = calculated_game_points * game_object.numbers
     game_object.save()
-    invoice_object.total_price += point * game_numbers * PRICE_PER_POINT_IN_GAME
+
+    invoice_object.total_price += calculated_game_price
     invoice_object.game_state = "END_GAME"
     invoice_object.save()
     return JsonResponse({"response_code": 2})
 
 
 def get_all_invoice_games(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        invoice_id = rec_data['invoice_id']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        else:
-            invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-            invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
-            games = []
-            for game in invoice_games:
-                if str(game.game.end_time) != "00:00:00":
-                    game_total_secs = (
-                        game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
-                    hour_points = int(game_total_secs / 3600)
-                    min_points = int((game_total_secs / 60) % 60)
-                    if len(str(hour_points)) == 1:
-                        hour_points_string = "0" + str(hour_points)
-                    else:
-                        hour_points_string = str(hour_points)
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    invoice_id = rec_data['invoice_id']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    else:
+        invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+        invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
+        games = []
+        for game in invoice_games:
+            if str(game.game.end_time) != "00:00:00":
+                game_total_secs = getting_delta_time_to_seconds(game.game.start_time, game.game.end_time)
+                hour_points = int(game_total_secs / ONE_HOUR_SECONDS)
+                min_points = int((game_total_secs / 60) % 60)
+                if len(str(hour_points)) == 1:
+                    hour_points_string = "0" + str(hour_points)
+                else:
+                    hour_points_string = str(hour_points)
 
-                    if len(str(min_points)) == 1:
-                        min_points_string = "0" + str(min_points)
-                    else:
-                        min_points_string = str(min_points)
-                    games.append({
-                        'id': game.game.pk,
-                        'numbers': game.game.numbers,
-                        'start_time': game.game.start_time,
-                        'end_time': game.game.end_time,
-                        'points': "%s:%s'" % (hour_points_string, min_points_string),
-                        'total': game.game.points * PRICE_PER_POINT_IN_GAME
-                    })
-            return JsonResponse({"response_code": 2, 'games': games})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+                if len(str(min_points)) == 1:
+                    min_points_string = "0" + str(min_points)
+                else:
+                    min_points_string = str(min_points)
+                games.append({
+                    'id': game.game.pk,
+                    'numbers': game.game.numbers,
+                    'start_time': game.game.start_time,
+                    'end_time': game.game.end_time,
+                    'points': "%s:%s'" % (hour_points_string, min_points_string),
+                    'total': game.game.points * invoice_object.branch.min_paid_price
+                })
+        return JsonResponse({"response_code": 2, 'games': games})
 
 
 def delete_items(request):
@@ -848,7 +896,7 @@ def delete_items(request):
                     employee=employee
                 )
                 new_deleted.save()
-                invoice_object.total_price -= int(game_obj.game.points) * PRICE_PER_POINT_IN_GAME
+                invoice_object.total_price -= int(game_obj.game.points) * invoice_object.branch.min_paid_price
                 invoice_object.save()
                 game_obj.delete()
 
@@ -930,7 +978,7 @@ def get_today_status(request):
 
         all_invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice)
         for invoice_to_game in all_invoice_games:
-            status['all_games'] += invoice_to_game.game.points * PRICE_PER_POINT_IN_GAME
+            status['all_games'] += invoice_to_game.game.points * invoice.branch.min_paid_price
 
     if now_time > time3am:
         all_invoice_purchase = InvoicePurchase.objects.filter(branch=branch_obj, created_time__date=now_date)
@@ -1097,17 +1145,10 @@ def get_other_sail_detail(request):
 
 
 def calec_time(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        start_time = rec_data['start_time']
-        end_time = datetime.now()
-        timedelta_start = timedelta(hours=int(start_time.split(":")[0]), minutes=int(start_time.split(":")[1]),
-                                    seconds=0)
-        timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute, seconds=end_time.second)
-        t = timedelta_end - timedelta_start
-        point = int(round(t.total_seconds() / SECONDS_PER_POINT))
-        return JsonResponse({"response_code": 2, 'price': point * PRICE_PER_POINT_IN_GAME})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+
+    return JsonResponse({"response_code": 2, 'price': 0})
 
 
 def print_after_save(request):
@@ -1180,8 +1221,8 @@ def print_cash(request):
         print_data['items'].append({
             'name': 'بازی',
             'numbers': game.game.numbers,
-            'item_price': PRICE_PER_POINT_IN_GAME,
-            'price': game.game.points * PRICE_PER_POINT_IN_GAME
+            'item_price': invoice_obj.branch.min_paid_price,
+            'price': game.game.points * invoice_obj.branch.min_paid_price
         })
     all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
     for shop_p in all_shop_invoice:
@@ -1244,9 +1285,8 @@ def print_cash_with_template(request):
 
     all_game_invoice = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_obj)
     for game in all_game_invoice:
-        game_total_secs = (
-            game.game.points / game.game.numbers * timedelta(seconds=SECONDS_PER_POINT)).total_seconds()
-        hour_points = int(game_total_secs / 3600)
+        game_total_secs = getting_delta_time_to_seconds(game.game.start_time, game.game.end_time)
+        hour_points = int(game_total_secs / ONE_HOUR_SECONDS)
         min_points = int((game_total_secs / 60) % 60)
         if len(str(hour_points)) == 1:
             hour_points_string = "0" + str(hour_points)
@@ -1263,8 +1303,9 @@ def print_cash_with_template(request):
             'item_kind': 'GAME',
             'name': 'بازی %d نفره' % game.game.numbers,
             'numbers': "%s:%s'" % (hour_points_string, min_points_string),
-            'item_price': format(int(PRICE_PER_HOUR_IN_GAME) * game.game.numbers, ',d'),
-            'price': int(game.game.points * PRICE_PER_POINT_IN_GAME)
+            'item_price': format(
+                int(json.loads(invoice_obj.branch.game_data[0]).get('price_per_hour')) * game.game.numbers, ',d'),
+            'price': int(game.game.points * invoice_obj.branch.min_paid_price)
         })
     all_shop_invoice = InvoicesSalesToShopProducts.objects.filter(invoice_sales=invoice_obj)
     for shop_p in all_shop_invoice:

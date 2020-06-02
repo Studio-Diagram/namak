@@ -8,6 +8,7 @@ angular.module("dashboard")
                 'address': '',
                 'start_time': '',
                 'end_time': '',
+                "guest_pricing": false,
                 "min_paid_price": 5000,
                 'game_data': [
                     {
@@ -165,7 +166,8 @@ angular.module("dashboard")
                             'start_time': data['branch']['start_time'],
                             'end_time': data['branch']['end_time'],
                             'game_data': data['branch']['game_data'],
-                            'min_paid_price': data['branch']['min_paid_price']
+                            'min_paid_price': data['branch']['min_paid_price'],
+                            'guest_pricing': data['branch']['guest_pricing']
                         };
                         $scope.openAddBranchModal();
                     }
@@ -188,6 +190,7 @@ angular.module("dashboard")
                 'start_time': '',
                 'end_time': '',
                 "min_paid_price": 5000,
+                "guest_pricing": false,
                 'game_data': [
                     {
                         "which_hour": 1,
