@@ -7,18 +7,19 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from accountiboard.constants import *
 from accountiboard.utils import make_new_JWT_token, decode_JWT_return_user
+from accounti.validators.EmployeeValidator import *
 
 
 def login(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
+
+        validator = Login_Validator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
         username = rec_data['username']
         password = rec_data['password']
-        if not username:
-            return JsonResponse({"response_code": 3, "error_msg": USERNAME_ERROR})
-
-        if not password:
-            return JsonResponse({"response_code": 3, "error_msg": PASSWORD_ERROR})
 
         try:
             user_obj = User.objects.get(phone=username)
@@ -58,7 +59,12 @@ def login(request):
 def register_employee(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+
     rec_data = json.loads(request.read().decode('utf-8'))
+    validator = Register_Employee_Validator(rec_data)
+    if not validator.is_valid():
+        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+    
     employee_id = rec_data['employee_id']
     first_name = rec_data['first_name']
     last_name = rec_data['last_name']
@@ -74,48 +80,6 @@ def register_employee(request):
     position = rec_data['position']
     auth_level = rec_data['auth_level']
     branch_id = rec_data['branch_id']
-
-    if not phone:
-        return JsonResponse({"response_code": 3, "error_msg": PHONE_ERROR})
-
-    if not password and employee_id == '':
-        return JsonResponse({"response_code": 3, "error_msg": PASSWORD_ERROR})
-
-    if password != re_password:
-        return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
-
-    if not first_name:
-        return JsonResponse({"response_code": 3, "error_msg": FIRST_NAME_REQUIRED})
-
-    if not last_name:
-        return JsonResponse({"response_code": 3, "error_msg": LAST_NAME_REQUIRED})
-
-    if not father_name:
-        return JsonResponse({"response_code": 3, "error_msg": FATHER_NAME_REQUIRED})
-
-    if not national_code:
-        return JsonResponse({"response_code": 3, "error_msg": NATIONAL_ID_REQUIRED})
-
-    if not home_address:
-        return JsonResponse({"response_code": 3, "error_msg": ADDRESS_REQUIRED})
-
-    if not bank_name:
-        return JsonResponse({"response_code": 3, "error_msg": BANK_NAME_REQUIRED})
-
-    if not bank_card_number:
-        return JsonResponse({"response_code": 3, "error_msg": CREDIT_CARD_REQUIRED})
-
-    if not shaba:
-        return JsonResponse({"response_code": 3, "error_msg": SHABA_REQUIRED})
-
-    if not position:
-        return JsonResponse({"response_code": 3, "error_msg": POSITION_REQUIRED})
-
-    if auth_level == "":
-        return JsonResponse({"response_code": 3, "error_msg": AUTH_LEVEL_REQUIRED})
-
-    if not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": BRANCH_REQUIRED})
 
     if employee_id == 0:
         try:
@@ -180,12 +144,13 @@ def search_employee(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
     rec_data = json.loads(request.read().decode('utf-8'))
+    validator = Search_Employee_Validator(rec_data)
+    if not validator.is_valid():
+        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
     search_word = rec_data['search_word']
     branch_id = rec_data['branch_id']
-    if not search_word:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-    if not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
     employees_from_branch = EmployeeToBranch.objects.filter(branch=Branch.objects.get(pk=branch_id))
     employees = []
     for employee in employees_from_branch:
@@ -225,9 +190,6 @@ def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
     rec_data = json.loads(request.read().decode('utf-8'))
-    # username = rec_data['username']
-    # if not request.session.get('is_logged_in', None) == username:
-    #     return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
@@ -252,9 +214,6 @@ def get_employee(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
     rec_data = json.loads(request.read().decode('utf-8'))
-    # username = rec_data['username']
-    # if not request.session.get('is_logged_in', None) == username:
-    #     return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
@@ -282,10 +241,7 @@ def get_menu_categories(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
     rec_data = json.loads(request.read().decode('utf-8'))
-    # username = rec_data['username']
     branch_id = rec_data['branch']
-    # if not request.session.get('is_logged_in', None) == username:
-    #     return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
@@ -351,6 +307,10 @@ def add_menu_category(request):
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
 
     rec_data = json.loads(request.read().decode('utf-8'))
+    validator = Add_Menu_Category_Validator(rec_data)
+    if not validator.is_valid():
+        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
     menu_category_id = rec_data['menu_category_id']
     name = rec_data['name']
     kind = rec_data['kind']
@@ -390,6 +350,10 @@ def add_menu_category(request):
 def search_menu_category(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
+        validator = Search_Employee_Validator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
         payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
@@ -458,6 +422,10 @@ def add_menu_item(request):
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
 
     rec_data = json.loads(request.read().decode('utf-8'))
+    validator = Add_Menu_Item_Validator(rec_data)
+    if not validator.is_valid():
+        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
     menu_item_id = rec_data['menu_item_id']
     menu_category_id = rec_data['menu_category_id']
     name = rec_data['name']
@@ -467,12 +435,6 @@ def add_menu_item(request):
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
-    if not name:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-    if not price:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-    if not menu_category_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
     if menu_item_id == 0:
         new_menu_item = MenuItem(
@@ -513,14 +475,17 @@ def delete_menu_item(request):
 def search_menu_item(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
+        validator = Search_Employee_Validator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
         payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
         if not payload:
             # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
             return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-        if not search_word:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
         items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0,
                                                  menu_category__branch_id=branch_id)
         menu_items = []
