@@ -1454,4 +1454,5 @@ def night_report_template(request):
     report_data['difference'] = cash_object.current_money_in_cash - report_data['total_cash_desk']
     report_data['total_cash_desk'] = format(report_data['total_cash_desk'], ',d')
     report_data['difference'] = format(report_data['difference'], ',d')
+    report_data['cashier_name'] = "%s %s" % (cash_object.employee.first_name, cash_object.employee.last_name) if cash_object.employee else UNKNOWN_CASHIER
     return render(request, 'night_report.html', {"report_data": report_data})
