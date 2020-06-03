@@ -47,28 +47,29 @@ def login(request):
                 request.session['is_logged_in'] = username
                 # TODO: branch should come as a list
                 jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_object.pk)
+
                 return JsonResponse(
                     {"response_code": 2,
                      "user_data": {'username': username, 'branch': branch_object.pk},
-                     "token" : jwt_token.decode("utf-8")
+                     "token": jwt_token.decode("utf-8")
                      }
                 )
             else:
                 return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
         except ObjectDoesNotExist:
             return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def register_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     validator = Register_Employee_Validator(rec_data)
     if not validator.is_valid():
         return JsonResponse({"response_code": 3, "error_msg": validator.errors})
-    
+
     employee_id = rec_data['employee_id']
     first_name = rec_data['first_name']
     last_name = rec_data['last_name']
@@ -146,7 +147,7 @@ def register_employee(request):
 
 def search_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     validator = Search_Employee_Validator(rec_data)
     if not validator.is_valid():
@@ -192,7 +193,7 @@ def log_out(request):
 @permission_decorator(token_authenticate, min_role='CAFE_OWNER')
 def get_employees(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
 
@@ -213,7 +214,7 @@ def get_employees(request):
 
 def get_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
@@ -240,7 +241,7 @@ def get_employee(request):
 
 def get_menu_categories(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data['branch']
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
@@ -260,7 +261,7 @@ def get_menu_categories(request):
 
 def get_menu_category(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data.get('branch')
@@ -272,7 +273,6 @@ def get_menu_category(request):
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-
 
     menu_category = MenuCategory.objects.get(pk=menu_category_id)
     all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
@@ -305,7 +305,7 @@ def get_menu_category(request):
 
 def add_menu_category(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     validator = Add_Menu_Category_Validator(rec_data)
@@ -370,12 +370,12 @@ def search_menu_category(request):
                 "name": category.name,
             })
         return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_menu_items(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data['branch']
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
@@ -415,12 +415,12 @@ def get_menu_item(request):
                 "menu_category_id": menu_item.menu_category.id
             }
             return JsonResponse({"response_code": 2, 'menu_item': menu_item_data})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def add_menu_item(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     validator = Add_Menu_Item_Validator(rec_data)
@@ -470,7 +470,7 @@ def delete_menu_item(request):
         old_menu_item.is_delete = 1
         old_menu_item.save()
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def search_menu_item(request):
@@ -509,7 +509,7 @@ def search_menu_item(request):
                 "menu_category_id": item.menu_category.id
             })
         return JsonResponse({"response_code": 2, 'menu_items': menu_items})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_menu_items_with_categories(request):
@@ -578,4 +578,4 @@ def get_today_cash(request):
             return JsonResponse({"response_code": 2, 'cash_id': cash_obj[0].id})
         else:
             return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
