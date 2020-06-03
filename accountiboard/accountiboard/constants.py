@@ -73,3 +73,6 @@ USER_ROLES = {
     "ACCOUNTANT": "ACCOUNTANT",
     "STAFF": "STAFF"
 }
+
+ONE_HOUR_SECONDS = 3600
+CAN_NOT_CALCULATE_GAME = "به دلیل نبود قیمت‌های ساعت اول و دوم امکان محاسبه قیمت وجود ندارد."
