@@ -30,34 +30,34 @@ def login(request):
                     cafe_owner_object = CafeOwner.objects.get(user=user_obj)
                     organization_object = cafe_owner_object.organization
                     branch_object = Branch.objects.filter(organization=organization_object).first()
-                    # request.session['user_role'] = USER_ROLES['CAFE_OWNER']
+                    request.session['user_role'] = USER_ROLES['CAFE_OWNER']
                     user_role = USER_ROLES['CAFE_OWNER']
                 elif user_obj.get_user_type_display() == "employee":
                     employee_object = Employee.objects.get(user=user_obj)
-                    # request.session['user_role'] = employee_object.employee_roles
+                    request.session['user_role'] = employee_object.employee_roles
                     user_role = employee_object.employee_roles
                     branch_object = EmployeeToBranch.objects.get(employee=employee_object).branch
                 else:
                     return JsonResponse({"response_code": 3})
 
-                # request.session['is_logged_in'] = username
+                request.session['is_logged_in'] = username
                 jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role)
                 return JsonResponse(
                     {"response_code": 2,
                      "user_data": {'username': username, 'branch': branch_object.pk},
-                     "token" : jwt_token.decode("utf-8")
+                     "token": jwt_token.decode("utf-8")
                      }
                 )
             else:
                 return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
         except ObjectDoesNotExist:
             return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def register_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     employee_id = rec_data['employee_id']
     first_name = rec_data['first_name']
@@ -178,7 +178,7 @@ def register_employee(request):
 
 def search_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     search_word = rec_data['search_word']
     branch_id = rec_data['branch_id']
@@ -198,36 +198,10 @@ def search_employee(request):
     return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-def check_login(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
-    if request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 2})
-    else:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-
-
-def log_out(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
-    if request.session.get('is_logged_in', None) == username:
-        request.session['is_logged_in'] = {}
-        return JsonResponse({"response_code": 2})
-    else:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-
-
 def get_employees(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
-    # username = rec_data['username']
-    # if not request.session.get('is_logged_in', None) == username:
-    #     return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
@@ -250,11 +224,8 @@ def get_employees(request):
 
 def get_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
-    # username = rec_data['username']
-    # if not request.session.get('is_logged_in', None) == username:
-    #     return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
@@ -280,12 +251,9 @@ def get_employee(request):
 
 def get_menu_categories(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
-    # username = rec_data['username']
     branch_id = rec_data['branch']
-    # if not request.session.get('is_logged_in', None) == username:
-    #     return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
@@ -303,7 +271,7 @@ def get_menu_categories(request):
 
 def get_menu_category(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data.get('branch')
@@ -315,7 +283,6 @@ def get_menu_category(request):
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-
 
     menu_category = MenuCategory.objects.get(pk=menu_category_id)
     all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
@@ -348,7 +315,7 @@ def get_menu_category(request):
 
 def add_menu_category(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     menu_category_id = rec_data['menu_category_id']
@@ -405,12 +372,12 @@ def search_menu_category(request):
                 "name": category.name,
             })
         return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_menu_items(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data['branch']
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
@@ -450,12 +417,12 @@ def get_menu_item(request):
                 "menu_category_id": menu_item.menu_category.id
             }
             return JsonResponse({"response_code": 2, 'menu_item': menu_item_data})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def add_menu_item(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     menu_item_id = rec_data['menu_item_id']
@@ -507,7 +474,7 @@ def delete_menu_item(request):
         old_menu_item.is_delete = 1
         old_menu_item.save()
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def search_menu_item(request):
@@ -543,7 +510,7 @@ def search_menu_item(request):
                 "menu_category_id": item.menu_category.id
             })
         return JsonResponse({"response_code": 2, 'menu_items': menu_items})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_menu_items_with_categories(request):
@@ -570,12 +537,12 @@ def get_menu_items_with_categories(request):
                 'items': menu_items_data,
             })
         return JsonResponse({"response_code": 2, 'menu_items_with_categories': menu_items_with_categories_data})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
 def get_printers(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data.get('branch')
 
@@ -612,4 +579,4 @@ def get_today_cash(request):
             return JsonResponse({"response_code": 2, 'cash_id': cash_obj[0].id})
         else:
             return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})

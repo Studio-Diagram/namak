@@ -1,5 +1,5 @@
 angular.module("mainpage")
-    .controller("loginCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, mainpageHttpRequest) {
+    .controller("loginCtrl", function ($scope, $interval, $rootScope, $filter, $http, $auth, $timeout, $window, mainpageHttpRequest) {
         var initialize = function () {
             $scope.user_login_data = {
                 "username": '',
@@ -16,27 +16,25 @@ angular.module("mainpage")
         $scope.send_login_data = function () {
             $scope.is_loading = true;
             $scope.buttonText = "";
-            $timeout(function () {
-                $scope.is_loading = false;
-                $scope.buttonText = "ورود";
-                mainpageHttpRequest.loginUser($scope.user_login_data)
-                    .then(function (data) {
-                        console.log(data);
-                        if (data['response_code'] === 2) {
-                            var logged_in_user = data['user_data']['username'];
-                            var branch = data['user_data']['branch'];
-                            localStorage.user = JSON.stringify(logged_in_user);
-                            localStorage.branch = JSON.stringify(branch);
-                            $window.location.href = '/dashboard';
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.is_error = true;
-                            $scope.error_msg = data['error_msg'];
-                        }
-                    }, function (error) {
-                        console.log(error);
-                    });
-            }, 300);
+            $scope.is_loading = false;
+            $scope.buttonText = "ورود";
+            mainpageHttpRequest.loginUser($scope.user_login_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        var logged_in_user = data['user_data']['username'];
+                        var branch = data['user_data']['branch'];
+                        localStorage.user = JSON.stringify(logged_in_user);
+                        localStorage.branch = JSON.stringify(branch);
+                        $auth.setToken(data['token']);
+                        $window.location.href = '/dashboard';
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.is_error = true;
+                        $scope.error_msg = data['error_msg'];
+                    }
+                }, function (error) {
+                    console.log(error);
+                });
         };
 
         $scope.get_today = function () {
