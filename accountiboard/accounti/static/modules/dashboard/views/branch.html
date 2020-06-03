@@ -57,6 +57,26 @@
                         </div>
                         <div class="row">
                             <div class="col">
+                                <div class="form-check-inline mt-3 mb-3 mr-0">
+                                    <label class="form-check-label">
+                                    <input ng-model="new_branch_data.guest_pricing" class="form-check-input" type="checkbox">
+                                    اگر عضو نباشد تخفیف اعمال نمی‌گردد و قیمت‌ها به بالا رند می‌شوند.</label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>کمترین واحد پولی دریافتی برای بازی<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_branch_data.min_paid_price" class="form-control" placeholder="قیمت ( ریال )">
+                            </div>
+                            <div ng-repeat="game_data_object in new_branch_data.game_data" class="col">
+                                <label>هزینه ساعت {{ game_data_object.which_hour | persianNumber }} بازی<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="game_data_object.price_per_hour" class="form-control" placeholder="قیمت به ازای یک ساعت ( ریال )" format>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <label>آدرس<i class="fas fa-star-of-life"></i></label>
                                 <textarea style="font-size: 13px;font-weight: 100;"
                                           ng-model="new_branch_data.address"

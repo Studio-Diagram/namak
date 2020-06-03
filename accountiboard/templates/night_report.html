@@ -49,6 +49,7 @@
         *, ::after, ::before {
             box-sizing: border-box;
         }
+
         table {
             border-collapse: collapse;
         }
@@ -71,6 +72,10 @@
 <body>
 <br>
 <div class="tableWrapper">
+    <p style="width: 100%" class="small-text">
+        <span>صندوقدار: </span>
+        {{ report_data.cashier_name }}
+    </p>
     <table class="table">
         <tbody>
         <tr>

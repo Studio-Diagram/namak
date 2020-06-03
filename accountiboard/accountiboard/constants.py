@@ -60,6 +60,7 @@ WAIT_GAME = "منتظر بازی"
 WRONG_TIME_REGEX = "زمان را با شکل مضارب ۱۵ دقیقه وارد کنید."
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 ZERO_PRICE = 0
+UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است."
 
 USER_TYPE = {
     "cafe_owner": 1,
@@ -72,3 +73,6 @@ USER_ROLES = {
     "ACCOUNTANT": "ACCOUNTANT",
     "STAFF": "STAFF"
 }
+
+ONE_HOUR_SECONDS = 3600
+CAN_NOT_CALCULATE_GAME = "به دلیل نبود قیمت‌های ساعت اول و دوم امکان محاسبه قیمت وجود ندارد."

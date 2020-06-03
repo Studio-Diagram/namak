@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
+from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField
 
 
 class User(models.Model):
@@ -42,6 +44,9 @@ class Branch(models.Model):
     address = models.CharField(max_length=4 * 255, null=False, blank=False)
     start_working_time = models.TimeField(null=True)
     end_working_time = models.TimeField(null=True)
+    min_paid_price = models.FloatField(default=5000)
+    guest_pricing = models.BooleanField(default=False)
+    game_data = JSONField(null=True, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
 
