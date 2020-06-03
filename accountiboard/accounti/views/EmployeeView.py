@@ -142,7 +142,7 @@ def register_employee(request):
 
 def search_employee(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     validator = Search_Employee_Validator(rec_data)
     if not validator.is_valid():
@@ -511,7 +511,7 @@ def get_menu_items_with_categories(request):
                 'items': menu_items_data,
             })
         return JsonResponse({"response_code": 2, 'menu_items_with_categories': menu_items_with_categories_data})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
 
 
 def get_printers(request):
@@ -553,4 +553,4 @@ def get_today_cash(request):
             return JsonResponse({"response_code": 2, 'cash_id': cash_obj[0].id})
         else:
             return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
