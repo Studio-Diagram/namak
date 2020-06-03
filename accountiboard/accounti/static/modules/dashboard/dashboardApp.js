@@ -15,7 +15,7 @@ myApp.directive('ngEnter', function () {
 });
 
 myApp.config(function ($stateProvider, $authProvider) {
-    $authProvider.tokenType = 'Token';
+    $authProvider.tokenType = 'Bearer';
     var registerEmployee = {
         name: 'manager',
         url: '/manager',

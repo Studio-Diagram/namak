@@ -1,18 +1,22 @@
 angular.module("dashboard")
-    .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
+    .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $auth, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
             var initialize = function () {
                 $rootScope.is_page_loading = true;
+                $rootScope.get_today_var = $scope.get_today();
                 if (localStorage.user && localStorage.branch) {
-                    $rootScope.user_data = {
-                        "username": JSON.parse(localStorage.user),
-                        "branch": JSON.parse(localStorage.branch)
-                    };
-                    $rootScope.cash_data = {
-                        'cash_id': 0
-                    };
-                    $rootScope.get_today_var = $scope.get_today();
-                    $scope.is_user_login($rootScope.user_data);
-                    $scope.get_today_cash();
+                    if (!$scope.isAuthenticated()) {
+                        $window.location.href = '/';
+                    }
+                    else {
+                        $rootScope.user_data = {
+                            "username": JSON.parse(localStorage.user),
+                            "branch": JSON.parse(localStorage.branch)
+                        };
+                        $rootScope.cash_data = {
+                            'cash_id': 0
+                        };
+                        $scope.get_today_cash();
+                    }
                 }
                 else {
                     window.location.replace("/");
@@ -57,40 +61,13 @@ angular.module("dashboard")
                 return ($location.path().substr(0, path.length) === path);
             };
 
-            $scope.is_user_login = function (user_data) {
-                dashboardHttpRequest.checkLogin(user_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-
-                        }
-                        else if (data['response_code'] === 3) {
-                            $window.location.href = '/';
-                        }
-                    }, function (error) {
-                        console.log(error);
-                    });
+            $scope.log_out = function () {
+                $auth.logout();
+                $window.location.href = '/';
             };
 
-            $scope.log_out = function () {
-                dashboardHttpRequest.logOut($rootScope.user_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $window.location.href = '/';
-                            $rootScope.user_data = {
-                                "username": '',
-                                "branch": ''
-                            };
-                        }
-                        else if (data['response_code'] === 3) {
-                            $window.location.href = '/';
-                            $rootScope.user_data = {
-                                "username": '',
-                                "branch": ''
-                            };
-                        }
-                    }, function (error) {
-                        console.log(error);
-                    });
+            $scope.isAuthenticated = function () {
+                return $auth.isAuthenticated();
             };
 
             $scope.get_today_cash = function () {
