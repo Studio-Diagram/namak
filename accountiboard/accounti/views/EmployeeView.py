@@ -8,7 +8,7 @@ from datetime import datetime
 from accountiboard.constants import *
 from accountiboard.utils import make_new_JWT_token, decode_JWT_return_user
 from accounti.validators.EmployeeValidator import *
-
+from accountiboard.custom_permissions import *
 
 def login(request):
     if request.method == "POST":
@@ -31,18 +31,22 @@ def login(request):
                     cafe_owner_object = CafeOwner.objects.get(user=user_obj)
                     organization_object = cafe_owner_object.organization
                     branch_object = Branch.objects.filter(organization=organization_object).first()
-                    # request.session['user_role'] = USER_ROLES['CAFE_OWNER']
+                    # Remove next line when fully token based auth
+                    request.session['user_role'] = USER_ROLES['CAFE_OWNER']
                     user_role = USER_ROLES['CAFE_OWNER']
                 elif user_obj.get_user_type_display() == "employee":
                     employee_object = Employee.objects.get(user=user_obj)
-                    # request.session['user_role'] = employee_object.employee_roles
+                    # Remove next line when fully token based auth
+                    request.session['user_role'] = employee_object.employee_roles
                     user_role = employee_object.employee_roles
                     branch_object = EmployeeToBranch.objects.get(employee=employee_object).branch
                 else:
                     return JsonResponse({"response_code": 3})
 
-                # request.session['is_logged_in'] = username
-                jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role)
+                # Remove next line when fully token based auth
+                request.session['is_logged_in'] = username
+                # TODO: branch should come as a list
+                jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_object.pk)
                 return JsonResponse(
                     {"response_code": 2,
                      "user_data": {'username': username, 'branch': branch_object.pk},
@@ -185,29 +189,26 @@ def log_out(request):
     else:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-
+@permission_decorator(token_authenticate, min_role='CAFE_OWNER')
 def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
     rec_data = json.loads(request.read().decode('utf-8'))
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-    else:
-        branch_id = rec_data['branch']
-        organization_object = Branch.objects.get(id=branch_id).organization
-        all_organization_branches = Branch.objects.filter(organization=organization_object)
-        all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
-        employees = []
-        for employee in all_employees:
-            employees.append({
-                "id": employee.employee.pk,
-                "last_name": employee.employee.user.last_name,
-                "position": employee.position,
-                "auth_lvl": employee.auth_level,
-            })
-        return JsonResponse({"response_code": 2, 'employees': employees})
+
+    branch_id = rec_data['branch']
+    organization_object = Branch.objects.get(id=branch_id).organization
+    all_organization_branches = Branch.objects.filter(organization=organization_object)
+    all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
+    employees = []
+    for employee in all_employees:
+        employees.append({
+            "id": employee.employee.pk,
+            "last_name": employee.employee.user.last_name,
+            "position": employee.position,
+            "auth_lvl": employee.auth_level,
+        })
+    return JsonResponse({"response_code": 2, 'employees': employees})
 
 
 def get_employee(request):
