@@ -3,13 +3,14 @@ import jwt
 import datetime
 
 
-def make_new_JWT_token(id, phone, roles):
+def make_new_JWT_token(id, phone, roles, branch):
     payload = {
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
             'iat': datetime.datetime.utcnow(),
             'sub_id': id, 
             'sub_phone': phone,
-            'sub_roles' : roles
+            'sub_roles' : roles,
+            'sub_branch' : branch,
     }
     return jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
