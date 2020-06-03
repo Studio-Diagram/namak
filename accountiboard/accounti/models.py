@@ -3,7 +3,6 @@ from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
 from django.contrib.postgres.fields import JSONField
-from django.contrib.postgres.fields import ArrayField
 
 
 class User(models.Model):

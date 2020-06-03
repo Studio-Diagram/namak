@@ -14,7 +14,7 @@ def login(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
 
-        validator = Login_Validator(rec_data)
+        validator = LoginValidator(rec_data)
         if not validator.is_valid():
             return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
@@ -66,7 +66,7 @@ def register_employee(request):
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    validator = Register_Employee_Validator(rec_data)
+    validator = RegisterEmployeeValidator(rec_data)
     if not validator.is_valid():
         return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
@@ -149,7 +149,7 @@ def search_employee(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
-    validator = Search_Employee_Validator(rec_data)
+    validator = SearchEmployeeValidator(rec_data)
     if not validator.is_valid():
         return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
@@ -286,7 +286,7 @@ def add_menu_category(request):
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    validator = Add_Menu_Category_Validator(rec_data)
+    validator = AddMenuCategoryValidator(rec_data)
     if not validator.is_valid():
         return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
@@ -329,7 +329,7 @@ def add_menu_category(request):
 def search_menu_category(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
-        validator = Search_Employee_Validator(rec_data)
+        validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
             return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
@@ -401,7 +401,7 @@ def add_menu_item(request):
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
-    validator = Add_Menu_Item_Validator(rec_data)
+    validator = AddMenuItemValidator(rec_data)
     if not validator.is_valid():
         return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
@@ -454,7 +454,7 @@ def delete_menu_item(request):
 def search_menu_item(request):
     if request.method == "POST":
         rec_data = json.loads(request.read().decode('utf-8'))
-        validator = Search_Employee_Validator(rec_data)
+        validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
             return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 

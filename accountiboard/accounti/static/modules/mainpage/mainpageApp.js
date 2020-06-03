@@ -2,13 +2,25 @@ var myApp = angular.module('mainpage', ['ui.router', 'ngCookies', 'satellizer'])
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Token';
-    var loginState = {
-        name: 'login',
+    var main = {
+        name: 'main',
         url: '',
+        templateUrl: 'static/modules/mainpage/views/index.html'
+    };
+    var login = {
+        name: 'login',
+        url: '/login',
         templateUrl: 'static/modules/mainpage/views/login.html'
     };
+    var register = {
+        name: 'register',
+        url: '/register',
+        templateUrl: 'static/modules/mainpage/views/register.html'
+    };
 
-    $stateProvider.state(loginState);
+    $stateProvider.state(main);
+    $stateProvider.state(login);
+    $stateProvider.state(register);
 });
 
 angular.module("mainpage")

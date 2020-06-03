@@ -153,7 +153,7 @@ aside.mainAside {
     height: calc(100vh - 85px);
 }
 
-form#systemLogin {
+form.generalForm {
     border: 5px solid #BFD5A8;
     width: 450px;
     text-align: center;
@@ -162,18 +162,18 @@ form#systemLogin {
     padding: 25px;
 }
 
-form#systemLogin .form-group {
+form.generalForm .form-group {
     margin-bottom: 10px;
 }
 
-form#systemLogin .submitButton {
+form.generalForm .submitButton {
     width: 100%;
     background: var(--myGreen);
     border: none;
     margin-bottom: 15px;
 }
 
-form#systemLogin .submitButton:hover {
+form.generalForm .submitButton:hover {
     background: var(--myGreen);
 }
 

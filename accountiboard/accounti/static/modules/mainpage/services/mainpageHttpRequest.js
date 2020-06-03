@@ -68,6 +68,13 @@ angular.module('mainpage')
                     'url': "/api/login/",
                     'data': data
                 });
+            },
+            'registerUser': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/user/",
+                    'data': data
+                });
             }
         };
         return service;

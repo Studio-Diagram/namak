@@ -1,3 +1,6 @@
+from datetime import datetime
+from json import dumps
+
 ADDRESS_REQUIRED = 'آدرس را وارد کنید.'
 AUTH_LEVEL_REQUIRED = 'سطح دسترسی را وارد کنید.'
 BANK_NAME_REQUIRED = 'نام بانک را وارد کنید.'
@@ -39,6 +42,8 @@ OLD_CASH = 'انقضای صندوق گذشته است.'
 ORDERED = "سفارش داده"
 OTHER_SUPPLIER_REQUIRE = "در صورت خالی بودن تامین کننده باید تامین‌کننده‌ای با نام سایر در تامین کنندگان وارد نمایید."
 PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
+PASSWORD_WEAK = 'رمز عبور شما باید حداقل ۸ کاراکتر باشد.'
+ERROR_IN_CREATING = "عملیات با مشگلی مواجه شده است."
 PHONE_ALREADY_EXIST = 'شماره تلفن تکراری است.'
 PHONE_ERROR = 'شماره تلفن خود را وارد کنید.'
 POSITION_REQUIRED = 'سمت را وارد کنید.'
@@ -76,3 +81,18 @@ USER_ROLES = {
 
 ONE_HOUR_SECONDS = 3600
 CAN_NOT_CALCULATE_GAME = "به دلیل نبود قیمت‌های ساعت اول و دوم امکان محاسبه قیمت وجود ندارد."
+BRANCH_DEFAULT_DATA = {
+    "NAME": "شعبه مرکزی",
+    "STARTING_TIME": datetime.strptime("08:00", '%H:%M'),
+    "ENDING_TIME": datetime.strptime("08:00", '%H:%M'),
+    "MIN_PAID_PRICE": 5000,
+    "GAME_DATA": [dumps({
+        "which_hour": 1,
+        "price_per_hour": 100000
+    }), dumps({
+        "which_hour": 2,
+        "price_per_hour": 100000
+    })]
+}
+
+CHARACHTER_TOO_LONG = "تعداد کاراکترها بیشتر از حد مجاز است."

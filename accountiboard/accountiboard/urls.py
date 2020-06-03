@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
-    OfflineAPIs
+    OfflineAPIs, UserView
 from accountiboard import settings
 from django.views.static import serve
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/login/', EmployeeView.login),
     path('api/getEmployees/', EmployeeView.get_employees),
     path('api/registerEmployee/', EmployeeView.register_employee),
+    path('api/user/', UserView.register_user),
     path('api/searchEmployee/', EmployeeView.search_employee),
     path('api/getEmployee/', EmployeeView.get_employee),
     path('api/getMenuCategory/', EmployeeView.get_menu_category),
@@ -146,7 +147,8 @@ urlpatterns = [
     path('api/offline/list/menu_category/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_menu_category_list),
     path('api/offline/list/menu_item/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_menu_item_list),
     path('api/offline/list/printer/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_printer_list),
-    path('api/offline/list/printer_to_category/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_printer_to_category_list),
+    path('api/offline/list/printer_to_category/<int:last_uuid>/<str:branch>/',
+         OfflineAPIs.sync_printer_to_category_list),
     path('api/offline/list/table_category/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_table_category_list),
     path('api/offline/list/table/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_table_list),
     path('api/offline/list/branch/<str:branch>/', OfflineAPIs.sync_branch_list),

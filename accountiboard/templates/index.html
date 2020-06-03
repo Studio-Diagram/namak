@@ -40,6 +40,7 @@
     <script src="{% static 'modules/mainpage/mainpageApp.js' %}"></script>
     <script src="{% static 'modules/mainpage/services/mainpageHttpRequest.js' %}"></script>
     <script src="{% static 'modules/mainpage/controllers/loginCtrl.js' %}"></script>
+    <script src="{% static 'modules/mainpage/controllers/registerCtrl.js' %}"></script>
 
 </head>
 <body ng-app="mainpage">
@@ -55,8 +56,6 @@
 
         </div>
         <div class="col-sm-4 time_container">
-            <time ng-bind="clock | date:'HH:mm' | persianNumber"></time>
-            <time ng-bind="get_today_var | persianNumber"></time>
         </div>
     </div>
 </div>
