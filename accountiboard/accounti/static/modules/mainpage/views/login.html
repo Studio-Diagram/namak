@@ -3,10 +3,10 @@
         <div class="col-md-4"></div>
         <div class="col-md-4">
             <a class="bigLogo" href=""><img src="static/img/namak_logo.svg"></a>
-            <form id="systemLogin">
-                <h2>ورود به سیستم</h2>
-                <div ng-show="is_error" class="alert alert-danger alert-dismissible">
-                    <strong style="text-align: right!important;">{{ error_msg }}</strong>
+            <form class="generalForm">
+                <h2>ورود به نمک</h2>
+                <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
+                    <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
                 </div>
                 <div class="form-group input-group">
                     <div class="input-group-append">
@@ -26,8 +26,10 @@
                 </div>
 
                 <button ng-click="send_login_data()" type="submit" class="submitButton btn btn-primary">
-                    <span><i ng-class="{'fa fa-spinner fa-spin': is_loading}"></i></span>{{ buttonText }}</button>
-                <a class="smallLink" href="users.html">رمز عبور خود را فراموش کرده‌اید؟</a>
+                    <span ng-show="form_state.is_loading"><i ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
+                    <span ng-hide="form_state.is_loading">ورود</span>
+                </button>
+                <a class="smallLink" ui-sref="register">ثبت نام در نمک</a>
             </form>
         </div>
     </div>

@@ -1,10 +1,12 @@
 from django import forms
 
-class Login_Validator(forms.Form):
+
+class LoginValidator(forms.Form):
     username = forms.CharField(max_length=255)
     password = forms.CharField(max_length=255)
 
-class Register_Employee_Validator(forms.Form):
+
+class RegisterEmployeeValidator(forms.Form):
     first_name = forms.CharField(max_length=255)
     last_name = forms.CharField(max_length=255)
     phone = forms.CharField(max_length=30)
@@ -26,19 +28,21 @@ class Register_Employee_Validator(forms.Form):
     auth_level = forms.IntegerField()
     branch_id = forms.IntegerField()
 
-class Search_Employee_Validator(forms.Form):
+
+class SearchEmployeeValidator(forms.Form):
     search_word = forms.CharField(max_length=255)
     branch_id = forms.IntegerField()
 
-class Add_Menu_Category_Validator(forms.Form):
+
+class AddMenuCategoryValidator(forms.Form):
     name = forms.CharField(max_length=255)
     kind = forms.CharField(max_length=255)
     printers_id = forms.IntegerField()
     branch_id = forms.IntegerField()
 
-class Add_Menu_Item_Validator(forms.Form):
+
+class AddMenuItemValidator(forms.Form):
     menu_item_id = forms.IntegerField()
     menu_category_id = forms.IntegerField()
     name = forms.CharField(max_length=255)
     price = forms.FloatField()
-
