@@ -2,9 +2,10 @@ from django.http import JsonResponse
 import json
 from accounti.models import *
 from django.db.models.functions import Concat
-from django.db.models import CharField, Value as V
+from django.db.models import Value as V
 from django.db import IntegrityError
 from accountiboard.constants import *
+from accountiboard.custom_permissions import *
 
 
 def add_member(request):
@@ -130,6 +131,7 @@ def search_member(request):
     return JsonResponse({"response_code": 2, 'members': members})
 
 
+@permission_decorator(session_authenticate, [USER_ROLES.get('CAFE_OWNER'), USER_ROLES.get('MANAGER'), USER_ROLES.get('CASHIER')])
 def get_member(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})

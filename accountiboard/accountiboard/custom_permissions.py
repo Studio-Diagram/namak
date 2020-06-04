@@ -1,29 +1,37 @@
-from accountiboard.constants import UNAUTHENTICATED
+from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
 from django.http import JsonResponse
 
-def permission_decorator(permission_func, min_role):
+
+def permission_decorator(permission_func, permitted_roles):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
-            if permission_func(request, min_role, *args, **kwargs):
+            permission_result = permission_func(request, permitted_roles, *args, **kwargs)
+            if permission_result[0]:
                 return view_func(request, *args, **kwargs)
-            return JsonResponse({"response_code": 401, "error_msg": UNAUTHENTICATED})
+            return JsonResponse({"response_code": 3, "error_msg": permission_result[1]})
+
         return _wrapped_view
+
     return decorator
 
 
-def session_authenticate(request, min_role):
-    if request.session['is_logged_in'] and request.session['user_role']:
-        return True
-    return False
+def session_authenticate(request, permitted_roles):
+    user_roles = request.session.get('user_role', None)
+    if request.session.get('is_logged_in', None) or user_roles:
+        for role in user_roles:
+            if role in permitted_roles:
+                return True, NO_MESSAGE
+        return False, ACCESS_DENIED
+    return False, UNAUTHENTICATED
 
 
-def token_authenticate(request, min_role):
+def token_authenticate(request, permitted_roles):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     if not payload:
         return False
-    if min_role in payload['sub_roles']:
+    if permitted_roles in payload['sub_roles']:
         return True
     return False
