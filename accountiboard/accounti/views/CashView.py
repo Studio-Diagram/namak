@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-import json, jdatetime, datetime
+import json, jdatetime
+from datetime import datetime
 from accounti.models import *
 from django.db.models import Sum
 from functools import wraps
@@ -77,7 +78,7 @@ def get_all_cash(request):
 
 def close_cash(request):
     if request.method == "POST":
-        now = datetime.datetime.now()
+        now = datetime.now()
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch_id']
         username = rec_data['username']
