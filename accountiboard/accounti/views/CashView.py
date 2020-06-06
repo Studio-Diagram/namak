@@ -168,7 +168,7 @@ def check_cash_exist(request):
 
         if current_cash.count() == 0:
             return JsonResponse({"response_code": 3, 'error_msg': NO_CASH, 'error_mode': 'NO_CASH'})
-        elif (datetime.datetime.today().date() - current_cash_obj.created_date_time.date()).days:
+        elif (datetime.today().date() - current_cash_obj.created_date_time.date()).days:
             return JsonResponse({"response_code": 3, 'error_msg': OLD_CASH, 'error_mode': 'OLD_CASH'})
         if current_cash.count() == 1:
             return JsonResponse({"response_code": 2})
