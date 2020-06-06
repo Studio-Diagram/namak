@@ -87,12 +87,17 @@
             </a>
         </div>
         <div class="col-sm-6 userInfo">
-                    <span>
-                        سلام!
-                    </span>
-            <a class="mainButton blackButton" href="#"><i class="fas fa-user-cog"></i> تنظیمات کاربری</a>
-            <a class="mainButton blackButton" href="#"><i class="fas fa-star"></i> میانبرها</a>
-            <a ng-click="log_out()" class="mainButton blackButton" href="#"><i class="fas fa-sign-out-alt"></i> خروج</a>
+            <div class="row">
+                <div class="col-md-4">
+                    <select ng-change="changeBranch()" ng-model="user_data.branch" class="form-control blackSelect">
+                        <option ng-repeat="user_branch in user_data.branches" ng-selected="user_data.branch === user_branch.id" ng-value="user_branch.id" ng-bind="user_branch.name"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <a ng-click="log_out()" class="mainButton blackButton" href="#"><i class="fas fa-sign-out-alt"></i>
+                        خروج</a>
+                </div>
+            </div>
         </div>
         <div class="col-sm-4 time_container">
             <time ng-bind="clock | date:'HH:mm' | persianNumber"></time>
@@ -108,7 +113,7 @@
                 <ul>
                     <li class="nav-item">
                         <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد</a>
+                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد{{ user_branches }}</a>
                     </li>
                     <li class="nav-item">
                         <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
@@ -121,7 +126,8 @@
                            class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="member_manager.member" href="" ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
+                        <a ui-sref="member_manager.member" href=""
+                           ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-id-card"></i>عضویت</a>
                     </li>
 

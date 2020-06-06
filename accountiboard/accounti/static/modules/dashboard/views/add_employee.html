@@ -22,19 +22,18 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal" id="addUserModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel"
+    <div class="modal fade mainModal" id="addUserModal" tabindex="-1" role="dialog" data-keyboard="false"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت کارمند جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()"  aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeAddEmployeeModal()"  aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <a ng-click="registerEmployee()" href=""  class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="InitializeAndResetForm()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن صفحه</a>
                 </div>
                 <div class="modal-body">
@@ -112,36 +111,16 @@
                                 <input ng-model="new_employee_data.position" type="text" aria-label="First name"
                                        class="form-control" placeholder="سمت" autocomplete="off">
                             </div>
-                            <div class="col">
-                                <label>حقوق شیفت پایه<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_employee_data.base_worksheet_salary" type="text"
-                                       aria-label="Last name"
-                                       class="form-control" placeholder="حقوق شیفت پایه" autocomplete="off">
-                            </div>
-                            <div class="col">
-                                <label>تعداد شیفت پایه<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_employee_data.base_worksheet_count" type="text"
-                                       aria-label="Last name"
-                                       class="form-control"
-                                       placeholder="تعداد شیفت پایه" autocomplete="off">
-                            </div>
-                            <div class="col">
-                                <label>سطح دسترسی<i class="fas fa-star-of-life"></i></label>
-                                <select ng-model="new_employee_data.auth_level" class="form-control" id="sel1">
-                                    <option>سطح دسترسی</option>
-                                    <option ng-selected="new_employee_data.auth_level === 0" value="0">۰</option>
-                                    <option ng-selected="new_employee_data.auth_level === 1" value="1">۱</option>
-                                    <option ng-selected="new_employee_data.auth_level === 2" value="2">۲</option>
-                                    <option ng-selected="new_employee_data.auth_level === 3" value="3">۳</option>
-                                    <option ng-selected="new_employee_data.auth_level === 4" value="4">۴</option>
-                                </select>
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col">
-                                <label>شماره کارت عضویت<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_employee_data.membership_card_number" type="text"
-                                       class="form-control" placeholder="شماره کارت عضویت" autocomplete="off">
+                            <label class="fullWidthButton">سطح دسترسی<i class="fas fa-star-of-life"></i></label><br>
+                            <div ng-repeat="auth_level in new_employee_data.auth_levels"
+                                 class="checkbox-unit col">
+                                <label class="checkbox-item">
+                                    <input style="float: left;" ng-checked="auth_level.is_checked" ng-model="auth_level.is_checked_m"
+                                           type="checkbox"
+                                           ng-click="changeAuthCheckBox(auth_level.id)">{{ auth_level.name }}
+                                </label>
                             </div>
                         </div>
                     </form>
