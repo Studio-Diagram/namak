@@ -89,9 +89,8 @@ def register_employee(request):
     bank_name = rec_data['bank_name']
     bank_card_number = rec_data['bank_card_number']
     shaba = rec_data['shaba']
-    position = rec_data['position']
     auth_levels = rec_data['auth_levels']
-    branch_id = rec_data['branch_id']
+    employee_branches = rec_data['employee_branches']
 
     if employee_id == 0:
         try:
@@ -115,26 +114,27 @@ def register_employee(request):
             bank_card_number=bank_card_number,
             shaba_number=shaba,
             user=new_user,
-            employee_roles=[auth_level.get('id') for auth_level in rec_data['auth_levels'] if
+            employee_roles=[auth_level.get('id') for auth_level in auth_levels if
                             auth_level.get('is_checked') == 1]
         )
         new_employee.save()
-        new_employee_to_branch = EmployeeToBranch(
-            branch=Branch.objects.get(pk=branch_id),
-            employee=new_employee,
-            position=position
-        )
-        new_employee_to_branch.save()
+        for employee_branch in employee_branches:
+            new_employee_to_branch = EmployeeToBranch(
+                branch=Branch.objects.get(pk=employee_branch.get('id')),
+                employee=new_employee,
+                position=DEFAULT_POSITTION  # TODO: Remove posittion from models
+            )
+            new_employee_to_branch.save()
         return JsonResponse({"response_code": 2})
     else:
         old_employee = Employee.objects.get(pk=employee_id)
-        old_employee_to_branch = EmployeeToBranch.objects.get(employee=old_employee)
+        EmployeeToBranch.objects.filter(employee=old_employee).delete()
         old_employee.user.first_name = first_name
         old_employee.user.last_name = last_name
         old_employee.user.phone = phone
         old_employee.father_name = father_name
         old_employee.national_code = national_code
-        old_employee.employee_roles = [auth_level.get('id') for auth_level in rec_data['auth_levels'] if
+        old_employee.employee_roles = [auth_level.get('id') for auth_level in auth_levels if
                                        auth_level.get('is_checked') == 1]
         if password != '' and re_password != '':
             if password == re_password:
@@ -149,8 +149,16 @@ def register_employee(request):
         old_employee.user.save()
         old_employee.save()
 
-        old_employee_to_branch.position = position
-        old_employee_to_branch.save()
+        #  TODO: Needs to improve this section
+        for employee_branch in employee_branches:
+            if employee_branch.get('is_checked'):
+                new_employee_to_branch = EmployeeToBranch(
+                    branch=Branch.objects.get(pk=employee_branch.get('id')),
+                    employee=old_employee,
+                    position=DEFAULT_POSITTION  # TODO: Remove posittion from models
+                )
+                new_employee_to_branch.save()
+
         return JsonResponse({"response_code": 2})
 
 
@@ -171,7 +179,6 @@ def search_employee(request):
         if search_word in employee.employee.last_name:
             employees.append({
                 "last_name": employee.employee.last_name,
-                "position": employee.position,
                 "auth_lvl": employee.auth_level,
             })
     return JsonResponse({"response_code": 2, 'employees': employees})
@@ -186,14 +193,19 @@ def get_employees(request):
     branch_id = rec_data['branch']
     organization_object = Branch.objects.get(id=branch_id).organization
     all_organization_branches = Branch.objects.filter(organization=organization_object)
-    all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
+    all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches).values('employee').distinct()
     employees = []
     for employee in all_employees:
+        employee_object = Employee.objects.get(id=employee.get('employee'))
+        employee_branches = EmployeeToBranch.objects.filter(employee=employee_object)
         employees.append({
-            "id": employee.employee.pk,
-            "last_name": employee.employee.user.last_name,
-            "position": employee.position,
-            "auth_lvl": employee.auth_level,
+            "id": employee_object.pk,
+            "full_name": employee_object.user.get_full_name(),
+            "auth_levels": employee_object.employee_roles,
+            "branches": [{
+                "id": employee_branch.branch.id,
+                "name": employee_branch.branch.name
+            }for employee_branch in employee_branches],
         })
     return JsonResponse({"response_code": 2, 'employees': employees})
 
@@ -208,7 +220,7 @@ def get_employee(request):
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
     employee_id = rec_data['employee_id']
     employee = Employee.objects.get(pk=employee_id)
-    employee_to_branch = EmployeeToBranch.objects.get(employee=employee)
+    employee_to_branches = EmployeeToBranch.objects.filter(employee=employee)
     employee_data = {
         'first_name': employee.user.first_name,
         'last_name': employee.user.last_name,
@@ -219,8 +231,8 @@ def get_employee(request):
         'bank_name': employee.bank_name,
         'bank_card_number': employee.bank_card_number,
         'shaba': employee.shaba_number,
-        'position': employee_to_branch.position,
-        'auth_levels': employee_to_branch.employee.employee_roles
+        'auth_levels': employee.employee_roles,
+        'branches': [employee_branch.branch.id for employee_branch in employee_to_branches]
     }
     return JsonResponse({"response_code": 2, 'employee': employee_data})
 

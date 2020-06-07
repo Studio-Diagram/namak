@@ -93,3 +93,4 @@ BRANCH_DEFAULT_DATA = {
 }
 
 CHARACHTER_TOO_LONG = "تعداد کاراکترها بیشتر از حد مجاز است."
+DEFAULT_POSITTION = "سمت فعلی"

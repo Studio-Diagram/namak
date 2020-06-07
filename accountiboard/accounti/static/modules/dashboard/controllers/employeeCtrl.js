@@ -2,13 +2,15 @@ angular.module("dashboard")
     .controller("employeeCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
-            $scope.InitializeAndResetForm();
             $scope.serach_data_employee = {
                 'search_word': '',
                 'branch_id': $rootScope.user_data.branch
             };
             $scope.employeeSearchWord = '';
+            $scope.branches = [];
+            $scope.get_branches_data();
             $scope.get_employees_data($rootScope.user_data);
+            $scope.InitializeAndResetForm();
         };
 
         $scope.get_employees_data = function (data) {
@@ -17,6 +19,24 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.employees = data['employees'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_branches_data = function () {
+            dashboardHttpRequest.getBranches($rootScope.user_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.branches = data['branches'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -145,10 +165,10 @@ angular.module("dashboard")
                             'bank_name': data['employee']['bank_name'],
                             'bank_card_number': data['employee']['bank_card_number'],
                             'shaba': data['employee']['shaba'],
-                            'position': data['employee']['position'],
                             'membership_card_number': data['employee']['membership_card_number'],
                             'base_worksheet_salary': data['employee']['base_worksheet_salary'],
                             'base_worksheet_count': data['employee']['base_worksheet_count'],
+                            'employee_branches': $scope.branches,
                             'auth_levels': $scope.auth_levels,
                             'branch_id': $rootScope.user_data.branch,
                             'username': $rootScope.user_data.username
@@ -159,6 +179,15 @@ angular.module("dashboard")
                                 if (employee_auth_level === auth_level.id) {
                                     auth_level.is_checked = 1;
                                     auth_level.is_checked_m = 1;
+                                }
+                            })
+                        });
+                        var employee_branches = data['employee']['branches'];
+                        employee_branches.forEach(function (employee_branch_id) {
+                            $scope.new_employee_data.employee_branches.forEach(function (branch) {
+                                if (employee_branch_id === branch.id) {
+                                    branch.is_checked = 1;
+                                    branch.is_checked_m = 1;
                                 }
                             })
                         });
@@ -190,6 +219,21 @@ angular.module("dashboard")
             });
         };
 
+        $scope.changeEmployeeBranchCheckBox = function (branch_name) {
+            $scope.new_employee_data.employee_branches.forEach(function (branch) {
+                if (branch_name === branch.id) {
+                    if (branch.is_checked === 1) {
+                        branch.is_checked = 0;
+                        branch.is_checked_m = 0;
+                    }
+                    else {
+                        branch.is_checked = 1;
+                        branch.is_checked_m = 1;
+                    }
+                }
+            });
+        };
+
         $scope.openErrorModal = function () {
             jQuery.noConflict();
             (function ($) {
@@ -204,6 +248,23 @@ angular.module("dashboard")
                 $('#errorModal').modal('hide');
                 $('#addUserModal').css('z-index', "");
             })(jQuery);
+        };
+
+        $scope.clearEmployeeBranchesCheckboxes = function () {
+            $scope.branches.forEach(function (branch) {
+                branch.is_checked = 0;
+                branch.is_checked_m = 0;
+            });
+        };
+
+        $scope.showAuthName = function (employee_auth_level) {
+            var auth_display;
+            angular.forEach($scope.auth_levels, function (item, index) {
+                if (employee_auth_level === item.id) {
+                    auth_display = item.name;
+                }
+            }, $scope);
+            return auth_display;
         };
 
         $scope.InitializeAndResetForm = function () {
@@ -246,11 +307,12 @@ angular.module("dashboard")
                 'bank_name': '',
                 'bank_card_number': '',
                 'shaba': '',
-                'position': '',
                 'auth_levels': $scope.auth_levels,
+                'employee_branches': $scope.branches,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            $scope.clearEmployeeBranchesCheckboxes();
         };
         initialize();
     });

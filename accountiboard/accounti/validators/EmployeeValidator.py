@@ -20,7 +20,6 @@ class RegisterEmployeeValidator(forms.Form):
     employee_roles = forms.MultipleChoiceField(required=False)
     father_name = forms.CharField(max_length=255)
     national_code = forms.CharField(max_length=30)
-    position = forms.CharField(max_length=255)
 
     bank_name = forms.CharField(max_length=255)
     bank_card_number = forms.CharField(max_length=30)
