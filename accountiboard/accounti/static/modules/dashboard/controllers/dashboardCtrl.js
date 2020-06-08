@@ -82,7 +82,8 @@ angular.module("dashboard")
                             $rootScope.cash_data.cash_id = 0;
                         }
                     }, function (error) {
-                        console.log(error);
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
                     });
             };
 

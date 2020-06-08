@@ -46,7 +46,6 @@ angular.module("dashboard")
                         }).remove();
                     },
                     afterDone: function () {
-                        console.log(1);
                         var seleceted_min = $('#start-time-clock').val().split(":")[1];
                         if (!choices.includes(seleceted_min)) {
                             $('#start-time-clock').val("");

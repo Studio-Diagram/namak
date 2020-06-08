@@ -274,7 +274,8 @@ angular.module("dashboard")
 
                         }
                     }, function (error) {
-                        console.log(error);
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
                     });
             };
 
@@ -451,7 +452,6 @@ angular.module("dashboard")
                         $scope.max_category_size = $scope.categorized_tables_data[j].tables.length;
                     }
                 }
-                console.log($scope.categorized_tables_data);
             };
 
             $scope.get_tables_data = function () {
