@@ -78,3 +78,4 @@ USER_ROLES = {
 
 ONE_HOUR_SECONDS = 3600
 CAN_NOT_CALCULATE_GAME = "به دلیل نبود قیمت‌های ساعت اول و دوم امکان محاسبه قیمت وجود ندارد."
+BRANCH_NOT_IN_SESSION_ERROR = "system error: branch list not found in session."

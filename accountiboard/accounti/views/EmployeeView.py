@@ -46,12 +46,13 @@ def login(request):
                     branch_object = EmployeeToBranch.objects.get(employee=employee_object).branch
                     branch_filter_query = EmployeeToBranch.objects.filter(employee=employee_object)
                     branch_list = [row.branch.id for row in branch_filter_query]
-                    print(branch_list)
                 else:
                     return JsonResponse({"response_code": 3})
 
                 # Remove next line when fully token based auth
                 request.session['is_logged_in'] = username
+                # Remove next line when fully token based auth
+                request.session['branch_list'] = branch_list
 
                 jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_list)
 

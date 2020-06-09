@@ -131,15 +131,12 @@ def search_member(request):
     return JsonResponse({"response_code": 2, 'members': members})
 
 
-@permission_decorator(session_authenticate, [USER_ROLES.get('CAFE_OWNER'), USER_ROLES.get('MANAGER'), USER_ROLES.get('CASHIER')])
+@permission_decorator(session_authenticate, {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER']})
 def get_member(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
     rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
     branch_id = rec_data['branch']
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
     if rec_data.get('member_id'):
         member_id = rec_data['member_id']

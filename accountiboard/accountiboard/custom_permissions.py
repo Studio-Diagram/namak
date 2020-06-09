@@ -1,4 +1,4 @@
-from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE
+from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
 from django.http import JsonResponse
@@ -21,10 +21,15 @@ def permission_decorator(permission_func, permitted_roles):
 
 def session_authenticate(request, permitted_roles):
     user_roles = request.session.get('user_role', None)
-    if request.session.get('is_logged_in', None) or user_roles:
+    if request.session.get('is_logged_in', None) and user_roles:
+        request_branch = get_branch(request)
+        session_branch = request.session.get('branch_list', None)
+        if not session_branch:
+            return False, BRANCH_NOT_IN_SESSION_ERROR
         for role in user_roles:
             if role in permitted_roles:
-                return True, NO_MESSAGE
+                if request_branch in session_branch:
+                    return True, NO_MESSAGE
         return False, ACCESS_DENIED
     return False, UNAUTHENTICATED
 
@@ -40,6 +45,7 @@ def token_authenticate(request, permitted_roles):
             if request_branch in payload['sub_branch_list']:
                 return True, NO_MESSAGE
     return False, ACCESS_DENIED
+
 
 def get_branch(request):
     body_unicode = request.body.decode('utf-8')
