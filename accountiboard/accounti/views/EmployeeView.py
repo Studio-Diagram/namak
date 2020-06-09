@@ -30,29 +30,43 @@ def login(request):
                 if user_obj.get_user_type_display() == "cafe_owner":
                     cafe_owner_object = CafeOwner.objects.get(user=user_obj)
                     organization_object = cafe_owner_object.organization
+                    # Remove next line
                     branch_object = Branch.objects.filter(organization=organization_object).first()
+                    branch_filter_query = Branch.objects.filter(organization=organization_object)
                     # Remove next line when fully token based auth
                     request.session['user_role'] = USER_ROLES['CAFE_OWNER']
-                    user_role = USER_ROLES['CAFE_OWNER']
+                    user_role = [USER_ROLES['CAFE_OWNER']]
+                    branch_list = [row.id for row in branch_filter_query]
                 elif user_obj.get_user_type_display() == "employee":
                     employee_object = Employee.objects.get(user=user_obj)
                     # Remove next line when fully token based auth
                     request.session['user_role'] = employee_object.employee_roles
                     user_role = employee_object.employee_roles
+                    # Remove next line
                     branch_object = EmployeeToBranch.objects.get(employee=employee_object).branch
+                    branch_filter_query = EmployeeToBranch.objects.filter(employee=employee_object)
+                    branch_list = [row.branch.id for row in branch_filter_query]
+                    print(branch_list)
                 else:
                     return JsonResponse({"response_code": 3})
 
                 # Remove next line when fully token based auth
                 request.session['is_logged_in'] = username
-                # TODO: branch should come as a list
-                jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_object.pk)
+
+                jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_list)
 
                 return JsonResponse(
-                    {"response_code": 2,
-                     "user_data": {'username': username, 'branch': branch_object.pk},
-                     "token": jwt_token.decode("utf-8")
-                     }
+                    {
+                        "response_code": 2,
+                        "user_data": {
+                            'username': username,
+                            'role':user_role,
+                            'branch_list':branch_list,
+                            # remove next line
+                            'branch': branch_object.pk,
+                        },
+                        "token": jwt_token.decode("utf-8"),
+                    }
                 )
             else:
                 return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
@@ -85,6 +99,7 @@ def register_employee(request):
     position = rec_data['position']
     auth_level = rec_data['auth_level']
     branch_id = rec_data['branch_id']
+    employee_roles = rec_data['employee_roles']
 
     if employee_id == 0:
         try:
@@ -102,6 +117,7 @@ def register_employee(request):
             return JsonResponse({"response_code": 3, "error_msg": PHONE_ALREADY_EXIST})
 
         new_employee = Employee(
+            employee_roles = employee_roles,
             father_name=father_name,
             national_code=national_code,
             bank_name=bank_name,
@@ -168,7 +184,7 @@ def search_employee(request):
     return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-@permission_decorator(token_authenticate, permitted_roles='CAFE_OWNER')
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
 def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
@@ -186,6 +202,7 @@ def get_employees(request):
             "last_name": employee.employee.user.last_name,
             "position": employee.position,
             "auth_lvl": employee.auth_level,
+            "employee_roles": employee.employee.employee_roles,
         })
     return JsonResponse({"response_code": 2, 'employees': employees})
 
