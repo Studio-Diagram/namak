@@ -36,15 +36,11 @@ def session_authenticate(request, permitted_roles):
 
 def token_authenticate(request, permitted_roles):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    print(payload)
     request_branch = get_branch(request)
-    print(request_branch)
     if not payload:
         return False, UNAUTHENTICATED
 
-    print(any(branch.get('id') == request_branch for branch in payload['sub_branch_list']))
     for role in payload['sub_roles']:
-        print(role, permitted_roles)
         if role in permitted_roles:
             if any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
                 return True, NO_MESSAGE
