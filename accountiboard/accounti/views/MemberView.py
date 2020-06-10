@@ -131,7 +131,7 @@ def search_member(request):
     return JsonResponse({"response_code": 2, 'members': members})
 
 
-@permission_decorator(session_authenticate, {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER']})
+# @permission_decorator(session_authenticate, {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER']})
 def get_member(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})

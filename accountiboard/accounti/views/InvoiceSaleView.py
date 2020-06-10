@@ -407,7 +407,7 @@ def get_all_today_invoices(request):
 
         all_invoices_list.append({
             "invoice_id": invoice.pk,
-            "guest_name": invoice.member.last_name if invoice.member else GUEST_LAST_NAME,
+            "guest_name": invoice.member.get_full_name() if invoice.member else GUEST_LAST_NAME,
             "table_name": invoice.table.name,
             "guest_nums": invoice.guest_numbers,
             "total_price": invoice.total_price,
