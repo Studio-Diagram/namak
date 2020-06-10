@@ -18,10 +18,10 @@ angular.module("mainpage")
                 .then(function (data) {
                     $scope.form_state.is_loading = false;
                     if (data['response_code'] === 2) {
-                        var logged_in_user = data['user_data']['username'];
-                        var branch = data['user_data']['branch'];
-                        localStorage.user = JSON.stringify(logged_in_user);
-                        localStorage.branch = JSON.stringify(branch);
+                        localStorage.user = JSON.stringify(data['user_data']['username']);
+                        localStorage.branch = JSON.stringify(data['user_data']['branch']);
+                        localStorage.branches = JSON.stringify(data['user_data']['branches']);
+                        localStorage.user_roles = JSON.stringify(data['user_data']['user_roles']);
                         $auth.setToken(data['token']);
                         $window.location.href = '/dashboard';
                     }

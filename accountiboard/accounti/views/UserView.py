@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from accounti.models import *
 from django.contrib.auth.hashers import make_password
 from accountiboard.constants import *
@@ -40,10 +41,10 @@ def register_user(request):
         ).save()
         Branch(
             name=BRANCH_DEFAULT_DATA.get('NAME'),
-            start_working_time=BRANCH_DEFAULT_DATA.get('STARTING_TIME'),
-            end_working_time=BRANCH_DEFAULT_DATA.get('ENDING_TIME'),
+            start_working_time=datetime.strptime(BRANCH_DEFAULT_DATA.get('STARTING_TIME'), "%H:%M"),
+            end_working_time=datetime.strptime(BRANCH_DEFAULT_DATA.get('ENDING_TIME'), "%H:%M"),
             min_paid_price=BRANCH_DEFAULT_DATA.get('MIN_PAID_PRICE'),
-            game_data=BRANCH_DEFAULT_DATA.get('GAME_DATA'),
+            game_data=[json.dumps(game_json) for game_json in BRANCH_DEFAULT_DATA.get('GAME_DATA')],
             organization=new_organization
         ).save()
     except Exception as e:

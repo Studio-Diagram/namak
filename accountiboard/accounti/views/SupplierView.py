@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-import json, jdatetime, datetime, xlwt
+import json, jdatetime, xlwt
+from datetime import timedelta, datetime
 from accounti.models import *
 from django.db.models import Sum
 from accountiboard import settings
@@ -8,11 +9,11 @@ from accountiboard.constants import *
 
 def return_remainder_of_supplier(supplier_id, to_time):
     if not to_time:
-        remainder_to_date = datetime.datetime.now()
+        remainder_to_date = datetime.now()
     else:
         to_time_split = to_time.split('/')
         remainder_to_date = jdatetime.date(int(to_time_split[2]), int(to_time_split[1]),
-                                           int(to_time_split[0])).togregorian() + datetime.timedelta(days=1)
+                                           int(to_time_split[0])).togregorian() + timedelta(days=1)
     if not supplier_id:
         return False
     supplier_obj = Supplier.objects.filter(id=supplier_id).first()

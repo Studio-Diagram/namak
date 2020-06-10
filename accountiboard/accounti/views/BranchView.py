@@ -64,6 +64,7 @@ def get_branches(request):
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
     branch_id = rec_data['branch']
+    print(request.session.get('is_logged_in', None), username)
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
     branches = Branch.objects.filter(organization=Branch.objects.get(pk=branch_id).organization)

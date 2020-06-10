@@ -3,15 +3,17 @@ angular.module("dashboard")
             var initialize = function () {
                 $rootScope.is_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
-                if (localStorage.user && localStorage.branch) {
+                if (localStorage.user && localStorage.branch && localStorage.branches) {
                     if (!$scope.isAuthenticated()) {
                         $window.location.href = '/';
                     }
                     else {
                         $rootScope.user_data = {
                             "username": JSON.parse(localStorage.user),
-                            "branch": JSON.parse(localStorage.branch)
+                            "branch": JSON.parse(localStorage.branch),
+                            "branches": JSON.parse(localStorage.branches)
                         };
+                        $rootScope.user_branches = JSON.parse(localStorage.branches);
                         $rootScope.cash_data = {
                             'cash_id': 0
                         };
@@ -80,7 +82,8 @@ angular.module("dashboard")
                             $rootScope.cash_data.cash_id = 0;
                         }
                     }, function (error) {
-                        console.log(error);
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
                     });
             };
 
@@ -273,6 +276,10 @@ angular.module("dashboard")
                         $('#' + modal_has_to_fade_out).css('z-index', 1000);
                     })(jQuery);
                 }
+            };
+
+            $rootScope.changeBranch = function () {
+                $state.go("cash_manager", {}, {reload: true});
             };
 
             $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {

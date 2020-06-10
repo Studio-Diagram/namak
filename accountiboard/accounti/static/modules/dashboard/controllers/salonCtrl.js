@@ -608,7 +608,6 @@ angular.module("dashboard")
         };
 
         $scope.will_delete_items_adder = function (deleted_type, p_id, menu_item_number_and_id) {
-            console.log(menu_item_number_and_id);
             if (deleted_type === 'shop') {
                 var found = $scope.will_delete_items.shop.findIndex(function (element) {
                     return element === p_id;

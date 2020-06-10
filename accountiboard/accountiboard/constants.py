@@ -1,6 +1,3 @@
-from datetime import datetime
-from json import dumps
-
 ADDRESS_REQUIRED = 'آدرس را وارد کنید.'
 AUTH_LEVEL_REQUIRED = 'سطح دسترسی را وارد کنید.'
 BANK_NAME_REQUIRED = 'نام بانک را وارد کنید.'
@@ -57,6 +54,8 @@ SUPPLIER_REQUIRE = "تامین کننده وارد کنید."
 TIME_NOT_IN_CORRECT_FORMAT = 'زمان را به حالت درستی وارد کنید.'
 UNATHENTICATED = 'لطفا ابتدا وارد شوید.'
 UNAUTHENTICATED = 'لطفا ابتدا وارد شوید.'
+ACCESS_DENIED = 'شما دسترسی‌های لازم را ندارید.'
+NO_MESSAGE = ''
 UNSETTLED_INVOICE = "فاکتور تسویه نشده وجود دارد."
 USERNAME_ERROR = 'نام کاربری خود را وارد کنید.'
 UUID_EMPTY_ERROR = "UUID is empty!"
@@ -83,16 +82,18 @@ ONE_HOUR_SECONDS = 3600
 CAN_NOT_CALCULATE_GAME = "به دلیل نبود قیمت‌های ساعت اول و دوم امکان محاسبه قیمت وجود ندارد."
 BRANCH_DEFAULT_DATA = {
     "NAME": "شعبه مرکزی",
-    "STARTING_TIME": datetime.strptime("08:00", '%H:%M'),
-    "ENDING_TIME": datetime.strptime("08:00", '%H:%M'),
+    "STARTING_TIME": "08:00",
+    "ENDING_TIME": "23:00",
     "MIN_PAID_PRICE": 5000,
-    "GAME_DATA": [dumps({
+    "GAME_DATA": [{
         "which_hour": 1,
         "price_per_hour": 100000
-    }), dumps({
+    },{
         "which_hour": 2,
         "price_per_hour": 100000
-    })]
+    }]
 }
 
 CHARACHTER_TOO_LONG = "تعداد کاراکترها بیشتر از حد مجاز است."
+DEFAULT_POSITTION = "سمت فعلی"
+BRANCH_NOT_IN_SESSION_ERROR = "system error: branch list not found in session."

@@ -10,55 +10,62 @@ from accountiboard.utils import make_new_JWT_token, decode_JWT_return_user
 from accounti.validators.EmployeeValidator import *
 from accountiboard.custom_permissions import *
 
+
 def login(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    rec_data = json.loads(request.read().decode('utf-8'))
 
-        validator = LoginValidator(rec_data)
-        if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+    validator = LoginValidator(rec_data)
+    if not validator.is_valid():
+        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
 
-        username = rec_data['username']
-        password = rec_data['password']
+    username = rec_data['username']
+    password = rec_data['password']
 
-        try:
-            user_obj = User.objects.get(phone=username)
-            user_pass = user_obj.password
-            if check_password(password, user_pass):
-                user_obj.last_login = datetime.now()
-                user_obj.save()
-                if user_obj.get_user_type_display() == "cafe_owner":
-                    cafe_owner_object = CafeOwner.objects.get(user=user_obj)
-                    organization_object = cafe_owner_object.organization
-                    branch_object = Branch.objects.filter(organization=organization_object).first()
-                    # Remove next line when fully token based auth
-                    request.session['user_role'] = USER_ROLES['CAFE_OWNER']
-                    user_role = USER_ROLES['CAFE_OWNER']
-                elif user_obj.get_user_type_display() == "employee":
-                    employee_object = Employee.objects.get(user=user_obj)
-                    # Remove next line when fully token based auth
-                    request.session['user_role'] = employee_object.employee_roles
-                    user_role = employee_object.employee_roles
-                    branch_object = EmployeeToBranch.objects.get(employee=employee_object).branch
-                else:
-                    return JsonResponse({"response_code": 3})
+    try:
+        user_obj = User.objects.get(phone=username)
+    except ObjectDoesNotExist:
+        return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
 
-                # Remove next line when fully token based auth
-                request.session['is_logged_in'] = username
-                # TODO: branch should come as a list
-                jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_object.pk)
+    if not check_password(password, user_obj.password):
+        return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
 
-                return JsonResponse(
-                    {"response_code": 2,
-                     "user_data": {'username': username, 'branch': branch_object.pk},
-                     "token": jwt_token.decode("utf-8")
-                     }
-                )
-            else:
-                return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
-        except ObjectDoesNotExist:
-            return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    user_obj.last_login = datetime.now()
+    user_obj.save()
+    if user_obj.get_user_type_display() == "cafe_owner":
+        cafe_owner_object = CafeOwner.objects.get(user=user_obj)
+        organization_object = cafe_owner_object.organization
+        branch_object = Branch.objects.filter(organization=organization_object).first().id
+        user_branch_objects = Branch.objects.filter(organization=organization_object)
+        user_branches = [{
+            "id": cafe_owner_to_branch.id,
+            "name": cafe_owner_to_branch.name
+        } for cafe_owner_to_branch in user_branch_objects]
+        user_role = [USER_ROLES['CAFE_OWNER']]
+        request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
+    elif user_obj.get_user_type_display() == "employee":
+        employee_object = Employee.objects.get(user=user_obj)
+        request.session['user_role'] = employee_object.employee_roles
+        user_role = employee_object.employee_roles
+        branches = EmployeeToBranch.objects.filter(employee=employee_object)
+        branch_object = branches.first().branch.id
+        user_branches = [{
+            "id": employee_to_branch.branch.id,
+            "name": employee_to_branch.branch.name,
+        } for employee_to_branch in branches]
+    else:
+        return JsonResponse({"response_code": 3})
+
+    request.session['is_logged_in'] = username
+    jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
+    return JsonResponse(
+        {"response_code": 2,
+         "user_data": {'username': username, 'branch': branch_object, 'branches': user_branches,
+                       'user_roles': user_role},
+         "token": jwt_token.decode("utf-8")
+         }
+    )
 
 
 def register_employee(request):
@@ -82,9 +89,8 @@ def register_employee(request):
     bank_name = rec_data['bank_name']
     bank_card_number = rec_data['bank_card_number']
     shaba = rec_data['shaba']
-    position = rec_data['position']
-    auth_level = rec_data['auth_level']
-    branch_id = rec_data['branch_id']
+    auth_levels = rec_data['auth_levels']
+    employee_branches = rec_data['employee_branches']
 
     if employee_id == 0:
         try:
@@ -107,25 +113,29 @@ def register_employee(request):
             bank_name=bank_name,
             bank_card_number=bank_card_number,
             shaba_number=shaba,
-            user=new_user
+            user=new_user,
+            employee_roles=[auth_level.get('id') for auth_level in auth_levels if
+                            auth_level.get('is_checked') == 1]
         )
         new_employee.save()
-        new_employee_to_branch = EmployeeToBranch(
-            branch=Branch.objects.get(pk=branch_id),
-            employee=new_employee,
-            position=position,
-            auth_level=int(auth_level)
-        )
-        new_employee_to_branch.save()
+        for employee_branch in employee_branches:
+            new_employee_to_branch = EmployeeToBranch(
+                branch=Branch.objects.get(pk=employee_branch.get('id')),
+                employee=new_employee,
+                position=DEFAULT_POSITTION  # TODO: Remove posittion from models
+            )
+            new_employee_to_branch.save()
         return JsonResponse({"response_code": 2})
     else:
         old_employee = Employee.objects.get(pk=employee_id)
-        old_employee_to_branch = EmployeeToBranch.objects.get(employee=old_employee)
+        EmployeeToBranch.objects.filter(employee=old_employee).delete()
         old_employee.user.first_name = first_name
         old_employee.user.last_name = last_name
         old_employee.user.phone = phone
         old_employee.father_name = father_name
         old_employee.national_code = national_code
+        old_employee.employee_roles = [auth_level.get('id') for auth_level in auth_levels if
+                                       auth_level.get('is_checked') == 1]
         if password != '' and re_password != '':
             if password == re_password:
                 old_employee.user.password = make_password(password)
@@ -139,9 +149,16 @@ def register_employee(request):
         old_employee.user.save()
         old_employee.save()
 
-        old_employee_to_branch.position = position
-        old_employee_to_branch.auth_level = int(auth_level)
-        old_employee_to_branch.save()
+        #  TODO: Needs to improve this section
+        for employee_branch in employee_branches:
+            if employee_branch.get('is_checked'):
+                new_employee_to_branch = EmployeeToBranch(
+                    branch=Branch.objects.get(pk=employee_branch.get('id')),
+                    employee=old_employee,
+                    position=DEFAULT_POSITTION  # TODO: Remove posittion from models
+                )
+                new_employee_to_branch.save()
+
         return JsonResponse({"response_code": 2})
 
 
@@ -162,30 +179,32 @@ def search_employee(request):
         if search_word in employee.employee.last_name:
             employees.append({
                 "last_name": employee.employee.last_name,
-                "position": employee.position,
                 "auth_lvl": employee.auth_level,
             })
     return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-@permission_decorator(token_authenticate, min_role='CAFE_OWNER')
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
 def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-
     branch_id = rec_data['branch']
     organization_object = Branch.objects.get(id=branch_id).organization
     all_organization_branches = Branch.objects.filter(organization=organization_object)
-    all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches)
+    all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches).values('employee').distinct()
     employees = []
     for employee in all_employees:
+        employee_object = Employee.objects.get(id=employee.get('employee'))
+        employee_branches = EmployeeToBranch.objects.filter(employee=employee_object)
         employees.append({
-            "id": employee.employee.pk,
-            "last_name": employee.employee.user.last_name,
-            "position": employee.position,
-            "auth_lvl": employee.auth_level,
+            "id": employee_object.pk,
+            "full_name": employee_object.user.get_full_name(),
+            "auth_levels": employee_object.employee_roles,
+            "branches": [{
+                "id": employee_branch.branch.id,
+                "name": employee_branch.branch.name
+            }for employee_branch in employee_branches],
         })
     return JsonResponse({"response_code": 2, 'employees': employees})
 
@@ -200,7 +219,7 @@ def get_employee(request):
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
     employee_id = rec_data['employee_id']
     employee = Employee.objects.get(pk=employee_id)
-    employee_to_branch = EmployeeToBranch.objects.get(employee=employee)
+    employee_to_branches = EmployeeToBranch.objects.filter(employee=employee)
     employee_data = {
         'first_name': employee.user.first_name,
         'last_name': employee.user.last_name,
@@ -211,8 +230,8 @@ def get_employee(request):
         'bank_name': employee.bank_name,
         'bank_card_number': employee.bank_card_number,
         'shaba': employee.shaba_number,
-        'position': employee_to_branch.position,
-        'auth_level': employee_to_branch.auth_level,
+        'auth_levels': employee.employee_roles,
+        'branches': [employee_branch.branch.id for employee_branch in employee_to_branches]
     }
     return JsonResponse({"response_code": 2, 'employee': employee_data})
 
@@ -413,7 +432,6 @@ def add_menu_item(request):
     if not payload:
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-
 
     if menu_item_id == 0:
         new_menu_item = MenuItem(

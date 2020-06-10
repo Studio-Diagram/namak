@@ -355,6 +355,16 @@ button.blueButton:hover {
     cursor: pointer;
 }
 
+button.blackButton {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+}
+
+button.blackButton:hover {
+    background: var(--myBlackBorder);
+    color: white;
+}
+
 a.blackButton {
     background: var(--myBlack);
     border-color: var(--myBlackBorder);
@@ -363,6 +373,24 @@ a.blackButton {
 a.blackButton:hover {
     background: var(--myBlackBorder);
     color: white;
+}
+
+select.blackSelect {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+    color: white;
+}
+
+select.blackSelect:focus {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+    color: white;
+    box-shadow: none;
+}
+
+select.blackSelect:hover {
+    background: var(--myBlackBorder);
+    cursor: pointer;
 }
 
 a.grayButton {

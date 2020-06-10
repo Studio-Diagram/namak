@@ -39,7 +39,8 @@ angular.module("dashboard")
                         };
                     }
                 }, function (error) {
-                    console.log(error);
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
                 });
         };
 

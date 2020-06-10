@@ -6,6 +6,7 @@ angular.module('dashboard')
             'authenticated': null,
             'authPromise': null,
             'request': function (args) {
+                console.log($auth.getToken());
                 if ($auth.getToken()) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + $auth.getToken();
                 }

@@ -2,33 +2,15 @@ angular.module("dashboard")
     .controller("employeeCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
-            $scope.new_employee_data = {
-                'employee_id': 0,
-                'first_name': '',
-                'last_name': '',
-                'father_name': '',
-                'national_code': '',
-                'phone': '',
-                'password': '',
-                're_password': '',
-                'home_address': '',
-                'bank_name': '',
-                'bank_card_number': '',
-                'shaba': '',
-                'position': '',
-                'membership_card_number': '',
-                'base_worksheet_salary': '',
-                'base_worksheet_count': '',
-                'auth_level': '4',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
             $scope.serach_data_employee = {
                 'search_word': '',
                 'branch_id': $rootScope.user_data.branch
             };
             $scope.employeeSearchWord = '';
+            $scope.branches = [];
+            $scope.get_branches_data();
             $scope.get_employees_data($rootScope.user_data);
+            $scope.InitializeAndResetForm();
         };
 
         $scope.get_employees_data = function (data) {
@@ -37,6 +19,24 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.employees = data['employees'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_branches_data = function () {
+            dashboardHttpRequest.getBranches($rootScope.user_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.branches = data['branches'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -60,6 +60,7 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $('#addUserModal').modal('hide');
+                $scope.InitializeAndResetForm();
             })(jQuery);
         };
 
@@ -86,7 +87,7 @@ angular.module("dashboard")
                     .then(function (data) {
                         if (data['response_code'] === 2) {
                             $scope.get_employees_data($rootScope.user_data);
-                            $scope.resetFrom();
+                            $scope.InitializeAndResetForm();
                             $scope.closeAddEmployeeModal();
                         }
                         else if (data['response_code'] === 3) {
@@ -164,14 +165,32 @@ angular.module("dashboard")
                             'bank_name': data['employee']['bank_name'],
                             'bank_card_number': data['employee']['bank_card_number'],
                             'shaba': data['employee']['shaba'],
-                            'position': data['employee']['position'],
                             'membership_card_number': data['employee']['membership_card_number'],
                             'base_worksheet_salary': data['employee']['base_worksheet_salary'],
                             'base_worksheet_count': data['employee']['base_worksheet_count'],
-                            'auth_level': data['employee']['auth_level'],
+                            'employee_branches': $scope.branches,
+                            'auth_levels': $scope.auth_levels,
                             'branch_id': $rootScope.user_data.branch,
                             'username': $rootScope.user_data.username
                         };
+                        var employee_auth_levels = data['employee']['auth_levels'];
+                        employee_auth_levels.forEach(function (employee_auth_level) {
+                            $scope.new_employee_data.auth_levels.forEach(function (auth_level) {
+                                if (employee_auth_level === auth_level.id) {
+                                    auth_level.is_checked = 1;
+                                    auth_level.is_checked_m = 1;
+                                }
+                            })
+                        });
+                        var employee_branches = data['employee']['branches'];
+                        employee_branches.forEach(function (employee_branch_id) {
+                            $scope.new_employee_data.employee_branches.forEach(function (branch) {
+                                if (employee_branch_id === branch.id) {
+                                    branch.is_checked = 1;
+                                    branch.is_checked_m = 1;
+                                }
+                            })
+                        });
                         $scope.openAddEmployeeModal();
                     }
                     else if (data['response_code'] === 3) {
@@ -183,6 +202,36 @@ angular.module("dashboard")
                     $scope.openErrorModal();
                 });
 
+        };
+
+        $scope.changeAuthCheckBox = function (auth_level_name) {
+            $scope.new_employee_data.auth_levels.forEach(function (auth_level) {
+                if (auth_level_name === auth_level.id) {
+                    if (auth_level.is_checked === 1) {
+                        auth_level.is_checked = 0;
+                        auth_level.is_checked_m = 0;
+                    }
+                    else {
+                        auth_level.is_checked = 1;
+                        auth_level.is_checked_m = 1;
+                    }
+                }
+            });
+        };
+
+        $scope.changeEmployeeBranchCheckBox = function (branch_name) {
+            $scope.new_employee_data.employee_branches.forEach(function (branch) {
+                if (branch_name === branch.id) {
+                    if (branch.is_checked === 1) {
+                        branch.is_checked = 0;
+                        branch.is_checked_m = 0;
+                    }
+                    else {
+                        branch.is_checked = 1;
+                        branch.is_checked_m = 1;
+                    }
+                }
+            });
         };
 
         $scope.openErrorModal = function () {
@@ -201,7 +250,50 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.resetFrom = function () {
+        $scope.clearEmployeeBranchesCheckboxes = function () {
+            $scope.branches.forEach(function (branch) {
+                branch.is_checked = 0;
+                branch.is_checked_m = 0;
+            });
+        };
+
+        $scope.showAuthName = function (employee_auth_level) {
+            var auth_display;
+            angular.forEach($scope.auth_levels, function (item, index) {
+                if (employee_auth_level === item.id) {
+                    auth_display = item.name;
+                }
+            }, $scope);
+            return auth_display;
+        };
+
+        $scope.InitializeAndResetForm = function () {
+            $scope.auth_levels = [
+                {
+                    id: "MANAGER",
+                    name: "مدیر",
+                    is_checked: 0,
+                    is_checked_m: 0
+                },
+                {
+                    id: "CASHIER",
+                    name: "صندوق‌دار",
+                    is_checked: 0,
+                    is_checked_m: 0
+                },
+                {
+                    id: "ACCOUNTANT",
+                    name: "حساب‌دار",
+                    is_checked: 0,
+                    is_checked_m: 0
+                },
+                {
+                    id: "STAFF",
+                    name: "کارمند",
+                    is_checked: 0,
+                    is_checked_m: 0
+                }
+            ];
             $scope.new_employee_data = {
                 'employee_id': 0,
                 'first_name': '',
@@ -215,19 +307,12 @@ angular.module("dashboard")
                 'bank_name': '',
                 'bank_card_number': '',
                 'shaba': '',
-                'position': '',
-                'membership_card_number': '',
-                'base_worksheet_salary': '',
-                'base_worksheet_count': '',
-                'auth_level': '4',
+                'auth_levels': $scope.auth_levels,
+                'employee_branches': $scope.branches,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-        };
-
-        $scope.closeForm = function () {
-            $scope.resetFrom();
-            $scope.closeAddEmployeeModal();
+            $scope.clearEmployeeBranchesCheckboxes();
         };
         initialize();
     });

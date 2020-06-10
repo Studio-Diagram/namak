@@ -7,25 +7,29 @@ class LoginValidator(forms.Form):
 
 
 class RegisterEmployeeValidator(forms.Form):
+    EMPLOYEE_ROLE_CHOICES = (
+        ('MANAGER', 'MANAGER'),
+        ('CASHIER', 'CASHIER'),
+        ('ACCOUNTANT', 'ACCOUNTANT'),
+        ('STAFF', 'STAFF')
+    )
     first_name = forms.CharField(max_length=255)
     last_name = forms.CharField(max_length=255)
     phone = forms.CharField(max_length=30)
-    email = forms.EmailField()
-    password = forms.CharField(max_length=255)
-    re_password = forms.CharField(max_length=255)
+    email = forms.EmailField(required=False)
+    password = forms.CharField(max_length=255, required=False)
+    re_password = forms.CharField(max_length=255, required=False)
     birthday_date = forms.DateField(required=False)
     home_address = forms.CharField(max_length=2500)
 
     employee_id = forms.IntegerField()
-    employee_roles = forms.MultipleChoiceField(required=False)
+    employee_roles = forms.MultipleChoiceField(required=False, choices=EMPLOYEE_ROLE_CHOICES)
     father_name = forms.CharField(max_length=255)
     national_code = forms.CharField(max_length=30)
-    position = forms.CharField(max_length=255)
 
     bank_name = forms.CharField(max_length=255)
     bank_card_number = forms.CharField(max_length=30)
     shaba = forms.CharField(max_length=255)
-    auth_level = forms.IntegerField()
     branch_id = forms.IntegerField()
 
 
