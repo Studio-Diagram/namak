@@ -58,7 +58,7 @@ def login(request):
     else:
         return JsonResponse({"response_code": 3})
 
-    jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, branch_object)
+    jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
     return JsonResponse(
         {"response_code": 2,
          "user_data": {'username': username, 'branch': branch_object, 'branches': user_branches,
@@ -184,6 +184,7 @@ def search_employee(request):
     return JsonResponse({"response_code": 2, 'employees': employees})
 
 
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
 def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})

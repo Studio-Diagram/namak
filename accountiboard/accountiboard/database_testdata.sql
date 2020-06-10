@@ -41,11 +41,15 @@ INSERT INTO accounti_branch (
 	address,
 	start_working_time,
 	end_working_time,
-	organization_id)
+	organization_id,
+	min_paid_price,
+	guest_pricing)
 VALUES (
 	'test_branch',
 	'test_branch address',
 	'09:00:00',
 	'17:00:00',
-	(SELECT id FROM accounti_organization WHERE name='test_organization')
+	(SELECT id FROM accounti_organization WHERE name='test_organization'),
+	5000,
+	false
 );

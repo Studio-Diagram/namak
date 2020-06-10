@@ -1,7 +1,8 @@
-from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE
+from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
 from django.http import JsonResponse
+import json
 
 
 def permission_decorator(permission_func, permitted_roles):
@@ -20,18 +21,42 @@ def permission_decorator(permission_func, permitted_roles):
 
 def session_authenticate(request, permitted_roles):
     user_roles = request.session.get('user_role', None)
-    if request.session.get('is_logged_in', None) or user_roles:
+    if request.session.get('is_logged_in', None) and user_roles:
+        request_branch = get_branch(request)
+        session_branch = request.session.get('branch_list', None)
+        if not session_branch:
+            return False, BRANCH_NOT_IN_SESSION_ERROR
         for role in user_roles:
             if role in permitted_roles:
-                return True, NO_MESSAGE
+                if request_branch in session_branch:
+                    return True, NO_MESSAGE
         return False, ACCESS_DENIED
     return False, UNAUTHENTICATED
 
 
 def token_authenticate(request, permitted_roles):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
+    request_branch = get_branch(request)
     if not payload:
-        return False
-    if permitted_roles in payload['sub_roles']:
-        return True
-    return False
+        return False, UNAUTHENTICATED
+
+    for role in payload['sub_roles']:
+        if role in permitted_roles:
+            if request_branch in payload['sub_branch_list']:
+                return True, NO_MESSAGE
+    return False, ACCESS_DENIED
+
+
+def get_branch(request):
+    body_unicode = request.body.decode('utf-8')
+    rec_data = json.loads(body_unicode)
+    branch = None
+    if 'branch' in rec_data:
+        branch = rec_data['branch']
+    elif 'branch_id' in rec_data:
+        branch = rec_data['branch_id']
+    # elif 'pk' in request.kwargs:
+    #     branch = request.kwargs['pk']
+
+    return branch
+
