@@ -36,13 +36,13 @@ def login(request):
     if user_obj.get_user_type_display() == "cafe_owner":
         cafe_owner_object = CafeOwner.objects.get(user=user_obj)
         organization_object = cafe_owner_object.organization
-        branch_object = Branch.objects.filter(organization=organization_object).first()
-        user_branche_objects = Branch.objects.filter(organization=organization_object)
+        branch_object = Branch.objects.filter(organization=organization_object).first().id
+        user_branch_objects = Branch.objects.filter(organization=organization_object)
         user_branches = [{
             "id": cafe_owner_to_branch.id,
             "name": cafe_owner_to_branch.name
-        } for cafe_owner_to_branch in user_branche_objects]
-        user_role = USER_ROLES['CAFE_OWNER']
+        } for cafe_owner_to_branch in user_branch_objects]
+        user_role = [USER_ROLES['CAFE_OWNER']]
         request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
     elif user_obj.get_user_type_display() == "employee":
         employee_object = Employee.objects.get(user=user_obj)
@@ -54,10 +54,10 @@ def login(request):
             "id": employee_to_branch.branch.id,
             "name": employee_to_branch.branch.name,
         } for employee_to_branch in branches]
-        request.session['is_logged_in'] = username
     else:
         return JsonResponse({"response_code": 3})
 
+    request.session['is_logged_in'] = username
     jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
     return JsonResponse(
         {"response_code": 2,
@@ -189,8 +189,6 @@ def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-
     branch_id = rec_data['branch']
     organization_object = Branch.objects.get(id=branch_id).organization
     all_organization_branches = Branch.objects.filter(organization=organization_object)
