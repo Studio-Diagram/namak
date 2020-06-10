@@ -37,6 +37,7 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.branches = data['branches'];
+                        $scope.new_employee_data.employee_branches = $scope.branches;
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
