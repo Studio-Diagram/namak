@@ -85,12 +85,15 @@
                      class="d-inline-block align-top namak_logo">
             </a>
         </div>
+        <div class="col-sm-1 time_container">
+            <label class="switch"><input type="checkbox" id="togBtn" checked disabled><div class="slider round"><!--ADDED HTML --><span class="on">آنلاین</span><span class="off">آفلاین</span><!--END--></div></label>
+        </div>
         <div class="col-sm-2 time_container">
             <span class="time_slot" ng-bind="clock | date:'HH:mm' | persianNumber"></span>
             <span class="time_slot">/</span>
             <span class="time_slot" ng-bind="get_today_var | persianNumber"></span>
         </div>
-        <div class="col-sm-6"></div>
+        <div class="col-sm-5"></div>
         <div class="col-sm-3 userInfo">
             <div class="row">
                 <div class="col-md-6">
