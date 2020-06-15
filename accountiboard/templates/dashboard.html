@@ -79,28 +79,32 @@
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
 <div class="topHeader container-fluid">
     <div class="row">
-        <div class="col-sm-2 mainLogo">
+        <div class="col-sm-1 mainLogo">
             <a class="" href="index.html">
                 <img src="{% static 'img/namak_logo.svg' %}" width="104" height="26"
                      class="d-inline-block align-top namak_logo">
             </a>
         </div>
-        <div class="col-sm-6 userInfo">
+        <div class="col-sm-2 time_container">
+            <span class="time_slot" ng-bind="clock | date:'HH:mm' | persianNumber"></span>
+            <span class="time_slot">/</span>
+            <span class="time_slot" ng-bind="get_today_var | persianNumber"></span>
+        </div>
+        <div class="col-sm-6"></div>
+        <div class="col-sm-3 userInfo">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <select ng-change="changeBranch()" ng-model="user_data.branch" class="form-control blackSelect">
                         <option ng-repeat="user_branch in user_data.branches" ng-selected="user_data.branch === user_branch.id" ng-value="user_branch.id" ng-bind="user_branch.name"></option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <a ng-click="log_out()" class="mainButton blackButton" href="#"><i class="fas fa-sign-out-alt"></i>
-                        خروج</a>
+                <div class="col-md-6">
+                    <a ng-click="log_out()" class="mainButton blackButton" style="padding: 7px" href="">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span ng-bind="user_full_name"></span>
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-4 time_container">
-            <time ng-bind="clock | date:'HH:mm' | persianNumber"></time>
-            <time ng-bind="get_today_var | persianNumber"></time>
         </div>
     </div>
 </div>

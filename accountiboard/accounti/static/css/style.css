@@ -1687,6 +1687,11 @@ tags-input .tags .tag-item {
     align-items: center;
 }
 
+.time_slot {
+    color: #ffffff;
+    padding: 9px;
+}
+
 .namak_logo {
     display: block;
     height: auto;

@@ -13,6 +13,7 @@ angular.module("dashboard")
                             "branch": JSON.parse(localStorage.branch),
                             "branches": JSON.parse(localStorage.branches)
                         };
+                        $rootScope.user_full_name =  JSON.parse(localStorage.full_name);
                         $rootScope.user_branches = JSON.parse(localStorage.branches);
                         $rootScope.cash_data = {
                             'cash_id': 0
@@ -226,7 +227,8 @@ angular.module("dashboard")
                             break;
                     }
                 }
-                return week[d] + " " + day + " " + months[month - 1] + " " + year;
+                // return week[d] + " " + day + " " + months[month - 1] + " " + year;
+                return day + " " + months[month - 1];
             };
 
             var tick = function () {

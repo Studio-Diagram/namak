@@ -61,7 +61,7 @@ def login(request):
     jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
     return JsonResponse(
         {"response_code": 2,
-         "user_data": {'username': username, 'branch': branch_object, 'branches': user_branches,
+         "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(), 'branches': user_branches,
                        'user_roles': user_role},
          "token": jwt_token.decode("utf-8")
          }
