@@ -25,6 +25,8 @@ def register_user(request):
     try:
         new_user = User(
             phone=rec_data.get('phone'),
+            first_name=rec_data.get('first_name'),
+            last_name=rec_data.get('last_name'),
             email=rec_data.get('email'),
             password=make_password(rec_data.get('password')),
             user_type=USER_TYPE['cafe_owner']

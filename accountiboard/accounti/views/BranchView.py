@@ -1,10 +1,10 @@
-from django.http import JsonResponse
-import json
 from accounti.models import *
 from datetime import datetime, timedelta
 from accountiboard.constants import *
+from accountiboard.custom_permissions import *
 
 
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
 def add_branch(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
@@ -40,7 +40,8 @@ def add_branch(request):
             end_working_time=datetime.strptime(end_time, '%H:%M'),
             min_paid_price=min_paid_price,
             game_data=game_data_list if game_data_list else None,
-            guest_pricing=guest_pricing
+            guest_pricing=guest_pricing,
+            organization=CafeOwner.objects.get(user_id=request.payload.get('sub_id')).organization
         )
         new_branch.save()
 

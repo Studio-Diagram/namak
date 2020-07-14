@@ -1,12 +1,10 @@
-from django.http import JsonResponse
-import json
 from django.db import IntegrityError
 from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from accountiboard.constants import *
-from accountiboard.utils import make_new_JWT_token, decode_JWT_return_user
+from accountiboard.utils import make_new_JWT_token
 from accounti.validators.EmployeeValidator import *
 from accountiboard.custom_permissions import *
 

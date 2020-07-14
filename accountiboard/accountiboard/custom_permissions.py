@@ -10,9 +10,11 @@ def permission_decorator(permission_func, permitted_roles):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             permission_result = permission_func(request, permitted_roles, *args, **kwargs)
-            if permission_result[0]:
+            if permission_result.get('state'):
+                if permission_result.get('payload'):
+                    request.payload = permission_result.get('payload')
                 return view_func(request, *args, **kwargs)
-            return JsonResponse({"response_code": 3, "error_msg": permission_result[1]})
+            return JsonResponse({"response_code": 3, "error_msg": permission_result.get('message')})
 
         return _wrapped_view
 
@@ -25,26 +27,48 @@ def session_authenticate(request, permitted_roles):
         request_branch = get_branch(request)
         session_branch = request.session.get('branch_list', None)
         if not session_branch:
-            return False, BRANCH_NOT_IN_SESSION_ERROR
+            return {
+                "state": False,
+                "message": BRANCH_NOT_IN_SESSION_ERROR
+            }
         for role in user_roles:
             if role in permitted_roles:
                 if request_branch in session_branch:
-                    return True, NO_MESSAGE
-        return False, ACCESS_DENIED
-    return False, UNAUTHENTICATED
+                    return {
+                        "state": True,
+                        "message": NO_MESSAGE
+                    }
+        return {
+            "state": False,
+            "message": ACCESS_DENIED
+        }
+    return {
+        "state": False,
+        "message": UNAUTHENTICATED
+    }
 
 
 def token_authenticate(request, permitted_roles):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     request_branch = get_branch(request)
     if not payload:
-        return False, UNAUTHENTICATED
+        return {
+            "state": False,
+            "message": UNAUTHENTICATED
+        }
 
     for role in payload['sub_roles']:
         if role in permitted_roles:
             if any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
-                return True, NO_MESSAGE
-    return False, ACCESS_DENIED
+                return {
+                    "state": True,
+                    "message": NO_MESSAGE,
+                    "payload": payload
+                }
+    return {
+        "state": False,
+        "message": ACCESS_DENIED
+    }
 
 
 def get_branch(request):
@@ -59,4 +83,3 @@ def get_branch(request):
     #     branch = request.kwargs['pk']
 
     return branch
-
