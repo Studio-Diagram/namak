@@ -97,6 +97,9 @@ class Printer(models.Model):
     name = models.CharField(max_length=30, null=True, blank=True)
     branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class MenuCategory(models.Model):
     KIND = (

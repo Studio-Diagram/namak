@@ -47,6 +47,8 @@ urlpatterns = [
     path('api/searchTable/', TableView.search_table),
     path('api/getTable/', TableView.get_table),
     path('api/getPrinters/', EmployeeView.get_printers),
+    path('api/getPrinter/<int:printer_id>/', EmployeeView.get_printer),
+    path('api/addPrinter/', EmployeeView.add_printer),
     path('api/addInvoiceSales/', InvoiceSaleView.create_new_invoice_sales),
     path('api/getAllTodayInvoices/', InvoiceSaleView.get_all_today_invoices),
     path('api/getInvoice/', InvoiceSaleView.get_invoice),

@@ -107,6 +107,19 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'addPrinter': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/addPrinter/",
+                    'data': data
+                });
+            },
+            'getPrinter': function (printer_id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/getPrinter/" + printer_id + "/"
+                });
+            },
             'addMenuItem': function (data) {
                 return this.request({
                     'method': "POST",

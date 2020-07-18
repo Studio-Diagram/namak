@@ -41,6 +41,11 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/menuItem',
         templateUrl: 'static/modules/dashboard/views/menu_item.html'
     };
+    var printers = {
+        name: 'manager.printers',
+        url: '/printers',
+        templateUrl: 'static/modules/dashboard/views/printer.html'
+    };
     var member_manager = {
         name: 'member_manager',
         url: '/member_manager',
@@ -199,6 +204,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);
     $stateProvider.state(quick_access);
+    $stateProvider.state(printers);
 });
 
 angular.module("dashboard")

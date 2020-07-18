@@ -7,6 +7,7 @@ from accountiboard.constants import *
 from accountiboard.utils import make_new_JWT_token
 from accounti.validators.EmployeeValidator import *
 from accountiboard.custom_permissions import *
+from django.shortcuts import get_object_or_404
 
 
 def login(request):
@@ -59,7 +60,8 @@ def login(request):
     jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
     return JsonResponse(
         {"response_code": 2,
-         "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(), 'branches': user_branches,
+         "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),
+                       'branches': user_branches,
                        'user_roles': user_role},
          "token": jwt_token.decode("utf-8")
          }
@@ -202,7 +204,7 @@ def get_employees(request):
             "branches": [{
                 "id": employee_branch.branch.id,
                 "name": employee_branch.branch.name
-            }for employee_branch in employee_branches],
+            } for employee_branch in employee_branches],
         })
     return JsonResponse({"response_code": 2, 'employees': employees})
 
@@ -535,16 +537,12 @@ def get_menu_items_with_categories(request):
 
 def get_printers(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
     rec_data = json.loads(request.read().decode('utf-8'))
     branch_id = rec_data.get('branch')
 
     if not branch_id:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
     printers = Printer.objects.filter(branch_id=branch_id)
     printers_data = []
@@ -557,19 +555,49 @@ def get_printers(request):
     return JsonResponse({"response_code": 2, 'printers': printers_data})
 
 
-def get_today_cash(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data['branch']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+def get_printer(request, printer_id):
+    if request.method != "GET":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
-        branch_obj = Branch.objects.get(pk=branch_id)
-        cash_obj = Cash.objects.filter(branch=branch_obj, is_close=0)
-        if len(cash_obj) == 1:
-            return JsonResponse({"response_code": 2, 'cash_id': cash_obj[0].id})
-        else:
-            return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    printer_object = get_object_or_404(Printer, pk=printer_id)
+
+    return JsonResponse({"response_code": 2, 'printer': {
+        'printer_id': printer_object.id,
+        'name': printer_object.name,
+        'branch': printer_object.branch_id
+    }})
+
+
+def add_printer(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    printer_id = rec_data.get('printer_id')
+    branch_id = rec_data.get('branch')
+    printer_name = rec_data.get('name')
+
+    if not printer_name or not branch_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+    if printer_id:
+        printer_object = get_object_or_404(Printer, pk=printer_id)
+        printer_object.name = printer_name
+        printer_object.save()
+    else:
+        Printer(name=printer_name, branch_id=branch_id).save()
+
+    return JsonResponse({"response_code": 2})
+
+
+def get_today_cash(request):
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+
+    rec_data = json.loads(request.read().decode('utf-8'))
+    branch_id = rec_data['branch']
+    branch_obj = Branch.objects.get(pk=branch_id)
+    cash_obj = Cash.objects.filter(branch=branch_obj, is_close=0)
+    if len(cash_obj) == 1:
+        return JsonResponse({"response_code": 2, 'cash_id': cash_obj.first().pk})
+    else:
+        return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})

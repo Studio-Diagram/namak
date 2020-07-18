@@ -18,6 +18,25 @@ angular.module("dashboard")
             $scope.printers = [];
             $scope.error_message = "";
             $scope.get_menu_category_data($rootScope.user_data);
+            $scope.get_printers_data();
+        };
+
+        $scope.get_printers_data = function () {
+            dashboardHttpRequest.getPrinters($rootScope.user_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.printers = data['printers'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.changePrinterCheckBox = function (is_checked, printer_id) {

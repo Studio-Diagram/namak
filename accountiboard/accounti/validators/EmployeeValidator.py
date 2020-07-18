@@ -41,7 +41,6 @@ class SearchEmployeeValidator(forms.Form):
 class AddMenuCategoryValidator(forms.Form):
     name = forms.CharField(max_length=255)
     kind = forms.CharField(max_length=255)
-    printers_id = forms.IntegerField()
     branch_id = forms.IntegerField()
 
 
