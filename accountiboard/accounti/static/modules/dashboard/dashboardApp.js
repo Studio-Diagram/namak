@@ -129,6 +129,11 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/suppliers',
         templateUrl: 'static/modules/dashboard/views/suppliers.html'
     };
+    var reports = {
+        name: 'account_manager.reports',
+        url: '/reports',
+        templateUrl: 'static/modules/dashboard/views/reports.html'
+    };
     var supplier = {
         name: 'account_manager.supplier',
         url: '/supplier/:supplier',
@@ -193,6 +198,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(pay);
     $stateProvider.state(expense);
     $stateProvider.state(suppliers);
+    $stateProvider.state(reports);
     $stateProvider.state(supplier);
     $stateProvider.state(detail);
     $stateProvider.state(invoiceReturn);

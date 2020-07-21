@@ -1789,3 +1789,20 @@ input:checked + .slider .off {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.ui-select-container.ui-select-multiple.ui-select-bootstrap.dropdown.form-control.ng-valid.ng-not-empty.ng-dirty.ng-touched .ui-select-match {
+    border: none;
+}
+
+.close.ui-select-match-close {
+    padding-top: 4px;
+    padding-left: 10px;
+    margin-right: -15px;
+}
+
+.ui-select-container.ui-select-multiple.ui-select-bootstrap.dropdown.form-control.ng-valid.ng-not-empty.ng-dirty.ng-touched .ui-select-match > span {
+    border: thin solid var(--pageBorder);
+    padding: 4px;
+    margin-right: 5px;
+    border-radius: 8px;
+}
