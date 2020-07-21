@@ -143,6 +143,7 @@ urlpatterns = [
     path('api/getYourInvoices/', InvoiceSaleView.get_all_invoices_with_date),
     path('api/createManualGiftCode/', CreditView.create_gift_code_manual),
     path('api/checkGiftCode/', CreditView.check_gift_code),
+    path('api/profile/', UserView.ProfileView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

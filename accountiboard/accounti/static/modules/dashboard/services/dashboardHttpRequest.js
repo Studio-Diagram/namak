@@ -938,6 +938,19 @@ angular.module('dashboard')
                     'url': "/api/editPaymentInvoiceSale/",
                     'data': data
                 });
+            },
+            'getUserProfile': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/profile/"
+                });
+            },
+            'updateProfile': function (data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/profile/",
+                    'data': data
+                });
             }
 
 

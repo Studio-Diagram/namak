@@ -3,6 +3,8 @@ from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
 from django.http import JsonResponse
 import json
+import jwt
+from accountiboard.settings import JWT_SECRET
 
 
 def permission_decorator(permission_func, permitted_roles):
@@ -83,3 +85,20 @@ def get_branch(request):
     #     branch = request.kwargs['pk']
 
     return branch
+
+
+def jwt_decoder_decorator_class_based():
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(self, request, *args, **kwargs):
+            token = request.META.get('HTTP_AUTHORIZATION').replace('Bearer ', '').strip()
+            try:
+                payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+                request.jwt_payload = payload
+                return view_func(self, request, *args, **kwargs)
+            except Exception as e:
+                return JsonResponse({"response_code": 3, "error_msg": "Invalid Token!"})
+
+        return _wrapped_view
+
+    return decorator

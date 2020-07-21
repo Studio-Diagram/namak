@@ -16,6 +16,15 @@ class RegisterUserValidator(forms.Form):
                                   error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
 
 
+class ProfileValidator(forms.Form):
+    first_name = forms.CharField(max_length=255,
+                                 error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    last_name = forms.CharField(max_length=255,
+                                error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    phone = forms.CharField(max_length=30, error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    email = forms.EmailField(error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+
+
 class PasswordValidator:
     def __init__(self, min_digits=0):
         self.min_digits = min_digits

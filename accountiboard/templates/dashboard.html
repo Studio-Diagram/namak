@@ -78,6 +78,93 @@
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
+<div class="modal fade mainModal alertModal redAlertModal" id="mainErrorModal" data-backdrop="static"
+     data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">خطا</h2>
+                <a ng-click="close_modal('mainErrorModal', 'userProfileModal')" class="mainButton redButton" href=""
+                   aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <main class="col-sm-12">
+                            <span class="alertText" ng-bind="error_message"></span>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade mainModal" id="userProfileModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">اطلاعات کاربری</h2>
+                <a class="mainButton redButton closeModal" ng-click="close_modal('userProfileModal')"
+                   aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+                <a ng-click="update_profile()" href="" class="mainButton greenButton"><i
+                        class="fas fa-save"></i> ثبت</a>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <h3>اطلاعات کاربری</h3>
+                    <div class="row">
+                        <div class="col">
+                            <label>نام<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="user_profile_data.first_name" type="text"
+                                   class="form-control" placeholder="نام">
+
+                            <label>نام خانوادگی<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="user_profile_data.last_name" type="text"
+                                   class="form-control" placeholder="نام خانوادگی">
+
+                            <label>ایمیل<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="user_profile_data.email" type="email"
+                                   class="form-control" placeholder="ایمیل">
+
+                            <label>آدرس<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="user_profile_data.home_address" type="text"
+                                   class="form-control" placeholder="آدرس">
+
+                            <label>موبایل<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="user_profile_data.phone" type="text"
+                                   class="form-control" placeholder="موبایل">
+                        </div>
+                    </div>
+                    <h3>تغییر رمز عبور</h3>
+                    <div class="row">
+                        <div class="col">
+                            <label>رمز عبور قدیمی</i></label>
+                            <input ng-model="user_profile_data.old_password" type="password"
+                                   class="form-control" placeholder="رمز عبور قدیمی">
+
+                            <label>رمز عبور جدید</label>
+                            <input ng-model="user_profile_data.new_password" type="password"
+                                   class="form-control" placeholder="رمز عبور جدید">
+
+                            <label>تکرار رمز عبور جدید</label>
+                            <input ng-model="user_profile_data.re_new_password" type="password"
+                                   class="form-control" placeholder="تکرار رمز عبور جدید">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
 <div class="topHeader container-fluid">
     <div class="row">
         <div class="col-sm-1 mainLogo">
@@ -87,7 +174,10 @@
             </a>
         </div>
         <div class="col-sm-1 time_container">
-            <label class="switch"><input type="checkbox" id="togBtn" checked disabled><div class="slider round"><!--ADDED HTML --><span class="on">آنلاین</span><span class="off">آفلاین</span><!--END--></div></label>
+            <label class="switch"><input type="checkbox" id="togBtn" checked disabled>
+                <div class="slider round"><!--ADDED HTML --><span class="on">آنلاین</span><span
+                        class="off">آفلاین</span><!--END--></div>
+            </label>
         </div>
         <div class="col-sm-2 time_container">
             <span class="time_slot" ng-bind="clock | date:'HH:mm' | persianNumber"></span>
@@ -99,13 +189,18 @@
             <div class="row">
                 <div class="col-md-6">
                     <select ng-change="changeBranch()" ng-model="user_data.branch" class="form-control blackSelect">
-                        <option ng-repeat="user_branch in user_data.branches" ng-selected="user_data.branch === user_branch.id" ng-value="user_branch.id" ng-bind="user_branch.name"></option>
+                        <option ng-repeat="user_branch in user_data.branches"
+                                ng-selected="user_data.branch === user_branch.id" ng-value="user_branch.id"
+                                ng-bind="user_branch.name"></option>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <a ng-click="log_out()" class="mainButton blackButton" style="padding: 7px" href="">
                         <i class="fas fa-sign-out-alt"></i>
                         <span ng-bind="user_full_name"></span>
+                    </a>
+                    <a ng-click="open_user_profile()" class="mainButton blackButton" style="padding: 7px" href="">
+                        <i class="fas fa-user-cog"></i>
                     </a>
                 </div>
             </div>
@@ -120,7 +215,8 @@
                 <ul>
                     <li class="nav-item">
                         <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد{{ user_branches }}</a>
+                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد{{ user_branches }}
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"

@@ -13,7 +13,7 @@ angular.module("dashboard")
                             "branch": JSON.parse(localStorage.branch),
                             "branches": JSON.parse(localStorage.branches)
                         };
-                        $rootScope.user_full_name =  JSON.parse(localStorage.full_name);
+                        $rootScope.user_full_name = JSON.parse(localStorage.full_name);
                         $rootScope.user_branches = JSON.parse(localStorage.branches);
                         $rootScope.cash_data = {
                             'cash_id': 0
@@ -31,7 +31,7 @@ angular.module("dashboard")
 
                 $window.onkeyup = function (event) {
                     if (event.ctrlKey && event.keyCode === 49) {
-
+                        $state.go('quickAccess');
                     }
                     if (event.ctrlKey && event.keyCode === 50) {
                         $state.go('cash_manager.salon');
@@ -40,7 +40,7 @@ angular.module("dashboard")
                         $state.go('reservation');
                     }
                     if (event.ctrlKey && event.keyCode === 52) {
-                        $state.go('member');
+                        $state.go('member_manager.member');
                     }
                     if (event.ctrlKey && event.keyCode === 53) {
                         $state.go('boardgame');
@@ -295,6 +295,27 @@ angular.module("dashboard")
                         $('#' + modal_has_to_fade_in).css('z-index', "");
                     })(jQuery);
                 }
+            };
+
+            $scope.open_user_profile = function () {
+                dashboardHttpRequest.getUserProfile()
+                    .then(function (data) {
+                        $scope.user_profile_data = data['_item'];
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('mainErrorModal', 'userProfileModal');
+                    });
+                $rootScope.open_modal('userProfileModal');
+            };
+
+            $scope.update_profile = function () {
+                dashboardHttpRequest.updateProfile($scope.user_profile_data)
+                    .then(function (data) {
+                        $rootScope.close_modal('userProfileModal');
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('mainErrorModal', 'userProfileModal');
+                    });
             };
 
 
