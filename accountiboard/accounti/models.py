@@ -3,6 +3,7 @@ from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
 from django.contrib.postgres.fields import JSONField
+from uuid import uuid4
 
 
 class User(models.Model):
@@ -30,12 +31,17 @@ class User(models.Model):
         return full_name.strip()
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+        if send_mail(subject, message, from_email, [self.email], **kwargs):
+            return True
+        return False
 
 
 class Organization(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
     shortcut_login_url = models.CharField(max_length=255, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Branch(models.Model):
@@ -47,6 +53,9 @@ class Branch(models.Model):
     guest_pricing = models.BooleanField(default=False)
     game_data = JSONField(null=True, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Organization: %s - Branch: %s" % (self.organization.name, self.name)
 
 
 class Employee(models.Model):
@@ -75,6 +84,39 @@ class CafeOwner(models.Model):
     # User Base
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return "Phone: %s - %s" % (self.user.phone, self.user.get_full_name())
+
+
+class Transaction(models.Model):
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    token = models.CharField(max_length=1020, null=False, blank=False)
+    amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
+    mobile = models.CharField(max_length=20, null=True, blank=True)
+    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
+    description = models.CharField(max_length=1275, null=True, blank=True)
+    redirect = models.CharField(max_length=1020, null=True, blank=True)
+    cardNumber = models.CharField(max_length=25, null=True, blank=True)
+    transId = models.CharField(max_length=100, null=True, blank=True)
+    message = models.CharField(max_length=255, null=True, blank=True)
+
+
+class Bundle(models.Model):
+    USER_PLANS_CHOICES = (
+        ('FREE', 'FREE'),
+        ('STANDARD_NORMAL', 'STANDARD_NORMAL'),
+        ('STANDARD_BG', 'STANDARD_BG'),
+        ('ENTERPRISE', 'ENTERPRISE')
+    )
+    bundle_plan = models.PositiveSmallIntegerField(choices=USER_PLANS_CHOICES)
+    bundle_duration = models.IntegerField(null=False, blank=False)
+    starting_datetime_plan = models.DateTimeField(null=False, blank=False)
+    expiry_datetime_plan = models.DateTimeField(null=False, blank=False)
+    is_active = models.BooleanField(null=False, blank=False)
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
+    transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)
 
 
 class EmployeeToBranch(models.Model):
@@ -178,7 +220,6 @@ class Member(models.Model):
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
-
 
 
 class TableCategory(models.Model):
@@ -369,7 +410,8 @@ class InvoicePurchase(models.Model):
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "FactorNumber: " + str(self.factor_number) + " Time: " + str(self.created_time) + str(self.supplier.name) + str(self.total_price)
+        return "FactorNumber: " + str(self.factor_number) + " Time: " + str(self.created_time) + str(
+            self.supplier.name) + str(self.total_price)
 
 
 class InvoicePurchaseAdmin(admin.ModelAdmin):
@@ -395,7 +437,8 @@ class PurchaseToShopProduct(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "FactorNumber: " + str(self.invoice_purchase.factor_number) + " id(" + str(self.id) + ")" + str(self.shop_product.name) + "InvoicePId(" + str(
+        return "FactorNumber: " + str(self.invoice_purchase.factor_number) + " id(" + str(self.id) + ")" + str(
+            self.shop_product.name) + "InvoicePId(" + str(
             self.invoice_purchase.id) + ")" + str(
             self.invoice_purchase.supplier.name)
 

@@ -3,7 +3,7 @@ angular.module("dashboard")
             var initialize = function () {
                 $rootScope.is_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
-                if (localStorage.user && localStorage.branch && localStorage.branches) {
+                if (localStorage.user && localStorage.branch && localStorage.branches && localStorage.user_roles) {
                     if (!$scope.isAuthenticated()) {
                         $window.location.href = '/';
                     }
@@ -15,6 +15,7 @@ angular.module("dashboard")
                         };
                         $rootScope.user_full_name = JSON.parse(localStorage.full_name);
                         $rootScope.user_branches = JSON.parse(localStorage.branches);
+                        $rootScope.user_roles = JSON.parse(localStorage.user_roles);
                         $rootScope.cash_data = {
                             'cash_id': 0
                         };
