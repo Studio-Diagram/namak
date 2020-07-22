@@ -131,7 +131,29 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
     var reports = {
         name: 'account_manager.reports',
-        url: '/reports',
+        url: '/reports?type&start&end&suppliers&s_types',
+        params: {
+            "type": {
+                dynamic: true,
+                value: null
+            },
+            "start": {
+                dynamic: true,
+                value: null
+            },
+            "end": {
+                dynamic: true,
+                value: null
+            },
+            "suppliers": {
+                dynamic: true,
+                value: null
+            },
+            "s_types": {
+                dynamic: true,
+                value: null
+            }
+        },
         templateUrl: 'static/modules/dashboard/views/reports.html'
     };
     var supplier = {

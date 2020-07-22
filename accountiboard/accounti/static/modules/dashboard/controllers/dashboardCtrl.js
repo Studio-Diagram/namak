@@ -27,7 +27,9 @@ angular.module("dashboard")
                 }
 
                 $transitions.onBefore({}, function (transition) {
-                    $rootScope.is_page_loading = true;
+                    if (transition._targetState._identifier !== $state.current.name){
+                        $rootScope.is_page_loading = true;
+                    }
                 });
 
                 $window.onkeyup = function (event) {

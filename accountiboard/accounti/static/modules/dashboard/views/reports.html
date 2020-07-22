@@ -38,15 +38,14 @@
                         <div class="col">
                             <select class="form-control" ng-model="report_data.report_category">
                                 <option value="">دسته‌ی گزارش را انتخاب کنید</option>
-                                <option value="INVOICE_SALE">فاکتور فروش</option>
-                                <option value="INVOICE_PURCHASE">فاکتور خرید</option>
-                                <option value="INVOICE_PAY">فاکتور پرداخت</option>
-                                <option value="INVOICE_EXPENSE">فاکتور هزینه</option>
-                                <option value="INVOICE_RETURN">فاکتور مرجوعی</option>
+                                <option ng-repeat="type in invoice_types"
+                                        ng-value="type.id"
+                                        ng-selected="report_data.report_category === type.id"
+                                        ng-bind="type.name"></option>
                             </select>
                         </div>
                         <div class="col">
-                            <button class="mainButton greenButton" type="button">گزارش</button>
+                            <button ng-click="get_report();change_url_params()" class="mainButton greenButton" type="button">گزارش</button>
                         </div>
                     </div>
                     <div class="row">
@@ -72,7 +71,8 @@
                             </ui-select>
                         </div>
                     </div>
-                    <div ng-hide="['INVOICE_SALE', 'INVOICE_PAY', 'INVOICE_RETURN'].indexOf(report_data.report_category) !== -1" class="row">
+                    <div ng-hide="['INVOICE_SALE', 'INVOICE_PAY', 'INVOICE_RETURN'].indexOf(report_data.report_category) !== -1"
+                         class="row">
                         <div class="col">
                             <ui-select search-enabled="false" multiple ng-model="report_data.settlement_types">
                                 <ui-select-match placeholder="انتخاب نوع پرداخت">{{ $item.name }}</ui-select-match>
@@ -88,29 +88,16 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col"></th>
-                            <th scope="col">عنوان</th>
-                            <th scope="col">مسول فروش</th>
-                            <th scope="col">شماره تماس</th>
-                            <th scope="col">تاریخ آخرین پرداختی</th>
-                            <th scope="col">مانده حساب</th>
-                            <th scope="col"></th>
+                            <th scope="col">شماره فاکتور</th>
+                            <th scope="col">قیمت کل</th>
+                            <th scope="col">تاریخ ساخت</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="supplier in suppliers">
-                            <td><a ng-click="editSupplier(supplier.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">ویرایش</a></td>
-                            <th scope="row">{{ supplier.name }}</th>
-                            <td>{{ supplier.salesman_name }}</td>
-                            <td>{{ supplier.salesman_phone }}</td>
-                            <td>{{ supplier.last_pay | persianNumber }}</td>
-                            <td><span
-                                    ng-class="supplier.remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ supplier.remainder | number | persianNumber }} ریال</span>
-                            </td>
-                            <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
-                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
+                        <tr ng-repeat="invoice in reports_result">
+                            <th scope="row">{{ invoice.id | persianNumber }}</th>
+                            <td>{{ invoice.price | number | persianNumber }}</td>
+                            <td>{{ invoice.created_time | persianNumber }}</td>
                         </tr>
                         </tbody>
                     </table>

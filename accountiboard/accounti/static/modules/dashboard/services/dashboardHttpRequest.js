@@ -951,6 +951,12 @@ angular.module('dashboard')
                     'url': "/api/profile/",
                     'data': data
                 });
+            },
+            'getReport': function (data) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/report/" + data
+                });
             }
 
 
