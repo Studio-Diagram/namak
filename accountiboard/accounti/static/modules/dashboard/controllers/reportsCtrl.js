@@ -103,8 +103,8 @@ angular.module("dashboard")
 
         $scope.get_report = function () {
             dashboardHttpRequest.getReport('?type=' + $scope.report_data.report_category +
-                '&start=' + $scope.report_data.start_date +
-                '&end=' + $scope.report_data.end_date +
+                '&start=' + $("#start_date_picker").val() +
+                '&end=' + $("#end_date_picker").val() +
                 '&suppliers=' + $scope.report_data.suppliers +
                 '&s_types=' + $scope.report_data.settlement_types)
                 .then(function (data) {
