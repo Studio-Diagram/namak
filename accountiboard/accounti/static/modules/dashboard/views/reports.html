@@ -84,7 +84,24 @@
                         </div>
                     </div>
                 </form>
-                <div class="tableWrapper">
+                <div ng-show="reports_result" class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">تعداد کل</th>
+                            <th scope="col">قیمت کل</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">{{ reports_result.total_invoices | persianNumber }}</th>
+                            <td scope="row">{{ reports_result.total_price | number | persianNumber }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div ng-show="reports_result" class="tableWrapper">
                     <table class="table">
                         <thead>
                         <tr>
@@ -94,7 +111,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="invoice in reports_result">
+                        <tr ng-repeat="invoice in reports_result.results">
                             <th scope="row">{{ invoice.id | persianNumber }}</th>
                             <td>{{ invoice.price | number | persianNumber }}</td>
                             <td>{{ invoice.created_time | persianNumber }}</td>

@@ -108,7 +108,7 @@ angular.module("dashboard")
                 '&suppliers=' + $scope.report_data.suppliers +
                 '&s_types=' + $scope.report_data.settlement_types)
                 .then(function (data) {
-                    $scope.reports_result = data['results'];
+                    $scope.reports_result = data;
                 }, function (error) {
                     $scope.error_message = error;
                     $scope.openErrorModal();

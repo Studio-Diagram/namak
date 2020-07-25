@@ -4,6 +4,7 @@ from accountiboard.custom_permissions import *
 from django.views import View
 from django.shortcuts import get_object_or_404
 import jdatetime
+from django.db.models import Sum
 
 
 class ReportView(View):
@@ -32,6 +33,8 @@ class ReportView(View):
             invoice_objects = InvoiceSales.objects.filter(created_time__gte=start_date_gregorian,
                                                           created_time__lte=end_date_gregorian, is_deleted=False,
                                                           is_settled=True)
+            total_price_sum = invoice_objects.aggregate(Sum('total_price'))
+            total_invoices = invoice_objects.count()
             reports_data = [{
                 "id": invoice.pk,
                 "price": invoice.total_price,
@@ -39,5 +42,8 @@ class ReportView(View):
                                                              month=invoice.created_time.month,
                                                              year=invoice.created_time.year).strftime('%Y/%m/%d')
             } for invoice in invoice_objects]
+
+            return JsonResponse({"results": reports_data, "total_invoices": total_invoices,
+                                 "total_price": total_price_sum.get('total_price__sum')})
 
         return JsonResponse({"results": reports_data})
