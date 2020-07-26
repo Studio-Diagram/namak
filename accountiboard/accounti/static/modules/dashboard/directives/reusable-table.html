@@ -1,0 +1,19 @@
+<div class="tableWrapper">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th ng-repeat="header in headers" scope="col" ng-bind="header.name"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in rows">
+            <td scope="row" ng-bind="$index + 1 | persianNumber"></td>
+            <td scope="row" ng-repeat="header in headers">
+                <span ng-if="priceFields.indexOf(header.key) === -1">{{ item[header.key] | persianNumber }}</span>
+                <span ng-if="priceFields.indexOf(header.key) !== -1">{{ item[header.key] | number | persianNumber }}</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -339,3 +339,16 @@ myApp.run(function ($window, $rootScope, $http) {
         });
     }, false);
 });
+
+myApp.directive('tableDirective', function () {
+    return {
+        restrict: 'EA',
+        scope: {
+            headers: '=',
+            rows: '=',
+            priceFields: '@'
+        },
+        templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
+    }
+
+});
