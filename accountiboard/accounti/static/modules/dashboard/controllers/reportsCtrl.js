@@ -148,31 +148,49 @@ angular.module("dashboard")
                 }
             ];
 
+            $scope.invoice_type_configs = {
+                INVOICE_SALE: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                },
+                INVOICE_PURCHASE: {
+                    price_fields: ["price"],
+                    has_detail_button: true
+                },
+                INVOICE_PAY: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                },
+                INVOICE_EXPENSE: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                },
+                INVOICE_RETURN: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                }
+            };
+
             $scope.invoice_types = [
                 {
                     id: "INVOICE_SALE",
-                    name: "فاکتور فروش",
-                    price_fields: ["price"]
+                    name: "فاکتور فروش"
                 },
                 {
                     id: "INVOICE_PURCHASE",
-                    name: "فاکتور خرید",
-                    price_fields: ["price"]
+                    name: "فاکتور خرید"
                 },
                 {
                     id: "INVOICE_PAY",
-                    name: "فاکتور پرداخت",
-                    price_fields: ["price"]
+                    name: "فاکتور پرداخت"
                 },
                 {
                     id: "INVOICE_EXPENSE",
-                    name: "فاکتور هزینه",
-                    price_fields: ["price"]
+                    name: "فاکتور هزینه"
                 },
                 {
                     id: "INVOICE_RETURN",
-                    name: "فاکتور مرجوعی",
-                    price_fields: ["price"]
+                    name: "فاکتور مرجوعی"
                 }
             ];
             $rootScope.is_page_loading = false;

@@ -206,8 +206,8 @@
 
                 </div>
                 <table-directive ng-if="reports_result" headers="headers[selected_table_report_category]"
-                                 price-fields="{{ ['price'] }}"
-                                 rows="reports_result.results"></table-directive>
+                                 config="invoice_type_configs[selected_table_report_category]"
+                                 rows="reports_result.results" detail-callback="showInvoicePurchase(item_id)"></table-directive>
             </main>
 
 

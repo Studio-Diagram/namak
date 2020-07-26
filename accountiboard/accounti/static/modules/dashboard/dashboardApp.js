@@ -346,7 +346,8 @@ myApp.directive('tableDirective', function () {
         scope: {
             headers: '=',
             rows: '=',
-            priceFields: '@'
+            config: '=',
+            detailCallback: '&'
         },
         templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
     }
