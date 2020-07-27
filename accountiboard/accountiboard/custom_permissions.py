@@ -23,11 +23,11 @@ def permission_decorator(permission_func, permitted_roles, bundles, branch_disab
     return decorator
 
 
-def permission_decorator_class_based(permission_func, permitted_roles, branch_disable=False):
+def permission_decorator_class_based(permission_func, permitted_roles, bundles, branch_disable=False):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(self, request, *args, **kwargs):
-            permission_result = permission_func(request, permitted_roles, branch_disable, *args, **kwargs)
+            permission_result = permission_func(request, permitted_roles, bundles, branch_disable, *args, **kwargs)
             if permission_result.get('state'):
                 if permission_result.get('payload'):
                     request.payload = permission_result.get('payload')
