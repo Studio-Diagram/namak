@@ -98,3 +98,10 @@ BRANCH_DEFAULT_DATA = {
 CHARACHTER_TOO_LONG = "تعداد کاراکترها بیشتر از حد مجاز است."
 DEFAULT_POSITTION = "سمت فعلی"
 BRANCH_NOT_IN_SESSION_ERROR = "system error: branch list not found in session."
+
+USER_PLANS_CHOICES = {
+    "FREE":"FREE",
+    "STANDARD_NORMAL":"STANDARD_NORMAL",
+    "STANDARD_BG":"STANDARD_BG",
+    "ENTERPRISE":"ENTERPRISE",
+}

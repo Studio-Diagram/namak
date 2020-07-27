@@ -53,16 +53,25 @@ def login(request):
             "id": employee_to_branch.branch.id,
             "name": employee_to_branch.branch.name,
         } for employee_to_branch in branches]
+        cafe_owner_object = CafeOwner.objects.get(organization=branches.first().branch.organization)
     else:
         return JsonResponse({"response_code": 3})
 
     request.session['is_logged_in'] = username
-    jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
+
+    try:
+        bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
+    except:
+        bundle = USER_PLANS_CHOICES['FREE']
+
+    jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
     return JsonResponse(
         {"response_code": 2,
          "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),
                        'branches': user_branches,
-                       'user_roles': user_role},
+                       'user_roles': user_role,
+                       'bundle': bundle,
+                       },
          "token": jwt_token.decode("utf-8")
          }
     )
@@ -184,7 +193,7 @@ def search_employee(request):
     return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']}, {USER_PLANS_CHOICES['STANDARD_NORMAL']})
 def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
