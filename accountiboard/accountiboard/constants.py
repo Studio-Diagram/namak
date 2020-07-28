@@ -66,6 +66,8 @@ WRONG_TIME_REGEX = "زمان را با شکل مضارب ۱۵ دقیقه وار�
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 ZERO_PRICE = 0
 UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است."
+BUNDLE_NOT_AVAILABLE = "بسته انتخاب شده وجود ندارد"
+BUNDLE_DURATION_NOT_AVAILABLE = "زمان بسته انتخاب شده وجود ندارد"
 
 USER_TYPE = {
     "cafe_owner": 1,
@@ -104,4 +106,23 @@ USER_PLANS_CHOICES = {
     "STANDARD_NORMAL":"STANDARD_NORMAL",
     "STANDARD_BG":"STANDARD_BG",
     "ENTERPRISE":"ENTERPRISE",
+}
+
+# prices in IR RIAL
+AVAILABLE_BUNDLES = {
+    "STANDARD_NORMAL": {
+        "1MONTH" :  10000,
+        "3MONTH" :  30000,
+        "12MONTH" : 100000,
+    },
+    "STANDARD_BG": {
+        "1MONTH" :  10000,
+        "3MONTH" :  30000,
+        "12MONTH" : 100000,
+    },
+    "ENTERPRISE": {
+        "1MONTH" :  20000,
+        "3MONTH" :  50000,
+        "12MONTH" : 200000,
+    }, 
 }

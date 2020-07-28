@@ -1,6 +1,7 @@
 from accountiboard.settings import JWT_SECRET
 import jwt
 import datetime
+import json
 
 
 def make_new_JWT_token(id, phone, roles, bundle, branch_list):
@@ -24,3 +25,12 @@ def decode_JWT_return_user(token):
 
     except Exception as e:
         return False
+
+
+def get_json(response):
+    """
+        Parses a returned response as json when sending a request
+            using 'requests' module.
+    """
+
+    return json.loads(response.content.decode('utf-8'))

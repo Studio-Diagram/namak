@@ -110,11 +110,13 @@ class Bundle(models.Model):
         ('STANDARD_BG', 'STANDARD_BG'),
         ('ENTERPRISE', 'ENTERPRISE')
     )
-    bundle_plan = models.PositiveSmallIntegerField(choices=USER_PLANS_CHOICES)
+    bundle_plan = models.CharField(max_length=100, choices=USER_PLANS_CHOICES)
     bundle_duration = models.IntegerField(null=False, blank=False)
     starting_datetime_plan = models.DateTimeField(null=False, blank=False)
     expiry_datetime_plan = models.DateTimeField(null=False, blank=False)
     is_active = models.BooleanField(null=False, blank=False)
+    is_reserved = models.BooleanField(null=False, blank=False, default=False)
+    is_expired = models.BooleanField(null=False, blank=False, default=False)
     cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
     transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)
 

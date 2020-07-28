@@ -106,6 +106,8 @@ def get_branch(request):
         return None
 
 
+# This function is not needed:
+# permission_decorator & permission_decorator_class_based already set request.payload
 def jwt_decoder_decorator_class_based():
     def decorator(view_func):
         @wraps(view_func)
