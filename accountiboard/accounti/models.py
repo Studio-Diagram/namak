@@ -655,3 +655,15 @@ class CreditToInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
     used_price = models.IntegerField(default=0)
+
+
+class SubscriptionDiscount(models.Model):
+    TYPE = (
+        ('amount', 'amount'),
+        ('percent', 'percent'),
+    )
+    type = models.CharField(max_length=10, choices=TYPE)
+    name = models.CharField(max_length=150, blank=True, null=True)
+    code = models.CharField(max_length=150, blank=False, null=False)
+    quantity = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    created_time = models.DateTimeField(auto_now_add=True)

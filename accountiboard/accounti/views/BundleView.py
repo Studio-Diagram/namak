@@ -12,22 +12,76 @@ import requests
 
 
 class BundleView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #                                   {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-    #                                   {},)
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=True
+    )
+    def get(self, request, *args, **kwargs):
+        payload = request.payload
 
-    # def get(self, request, *args, **kwargs):
+        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
 
+        active_bundle = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True)
+        reserved_bundles = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_reserved=True)
+        expired_bundles = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_expired=True)
+        not_successfully_paid_bundles = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=False, is_expired=False, is_reserved=False)
 
-    @permission_decorator_class_based(token_authenticate, {USER_ROLES['CAFE_OWNER']}, {USER_PLANS_CHOICES['FREE']}, branch_disable=True)
+        return JsonResponse({
+                    'active_bundle': [{
+                    "bundle_plan": bundle.bundle_plan,
+                    "bundle_duration": bundle.bundle_duration,
+                    "starting_datetime_plan": bundle.starting_datetime_plan,
+                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "is_active": bundle.is_active,
+                    "is_reserved": bundle.is_reserved,
+                    "is_expired": bundle.is_expired,
+                    } for bundle in active_bundle],
+
+                    'reserved_bundles': [{
+                    "bundle_plan": bundle.bundle_plan,
+                    "bundle_duration": bundle.bundle_duration,
+                    "starting_datetime_plan": bundle.starting_datetime_plan,
+                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "is_active": bundle.is_active,
+                    "is_reserved": bundle.is_reserved,
+                    "is_expired": bundle.is_expired,
+                    } for bundle in reserved_bundles],
+
+                    'expired_bundles': [{
+                    "bundle_plan": bundle.bundle_plan,
+                    "bundle_duration": bundle.bundle_duration,
+                    "starting_datetime_plan": bundle.starting_datetime_plan,
+                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "is_active": bundle.is_active,
+                    "is_reserved": bundle.is_reserved,
+                    "is_expired": bundle.is_expired,
+                    } for bundle in expired_bundles],
+
+                    'not_successfully_paid_bundles': [{
+                    "bundle_plan": bundle.bundle_plan,
+                    "bundle_duration": bundle.bundle_duration,
+                    "starting_datetime_plan": bundle.starting_datetime_plan,
+                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "is_active": bundle.is_active,
+                    "is_reserved": bundle.is_reserved,
+                    "is_expired": bundle.is_expired,
+                    } for bundle in not_successfully_paid_bundles],
+
+        }, status=200)
+
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=True
+    )
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         bundle = rec_data.get('bundle')
         duration = rec_data.get('duration')
         payload = request.payload
-
-        print(payload)
-
 
         if bundle not in AVAILABLE_BUNDLES:
             return JsonResponse({
@@ -47,6 +101,13 @@ class BundleView(View):
             days = 365
 
         current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+        active_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True).count()
+
+        if active_bundle_count > 0:
+            new_bundle_is_reserved = True
+        else:
+            new_bundle_is_reserved = False         
+
 
         current_transaction = Transaction.objects.create(
             cafe_owner = current_cafe_owner,
@@ -65,6 +126,7 @@ class BundleView(View):
             starting_datetime_plan = datetime.utcnow(),
             expiry_datetime_plan = datetime.utcnow() + timedelta(days=days, seconds=5),
             is_active = False,
+            is_reserved = new_bundle_is_reserved,
             cafe_owner = current_cafe_owner,
             transaction = current_transaction,
         )
@@ -79,7 +141,6 @@ class BundleView(View):
         }
         try:
             response = get_json(requests.post(settings.PAY_IR_API_URL_SEND, data=init_data))
-            print(response)
             if response['status'] != 1:
                 return JsonResponse({
                     'error_msg': "Could not init transaction (status error)"
@@ -124,13 +185,26 @@ class PayirCallbackView(View):
             current_transaction.save()
 
             current_bundle = Bundle.objects.get(transaction=current_transaction)
-            current_bundle.is_active = True
+
+            current_cafe_owner = current_bundle.cafe_owner
+
+            old_active_bundles_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True).count()
+
+            if old_active_bundles_count > 0:
+                current_bundle.is_reserved = True
+            else:
+                current_bundle.is_active = True
+
             current_bundle.save()
 
-
-            return JsonResponse({
-                'msg': "Bundle created and activated"
-            }, status=200)
+            if current_bundle.is_active:
+                return JsonResponse({
+                    'msg': "Bundle created and activated"
+                }, status=200)
+            elif current_bundle.is_reserved:
+                return JsonResponse({
+                    'msg': "Bundle created and reserved."
+                }, status=200)
 
 
         else:
