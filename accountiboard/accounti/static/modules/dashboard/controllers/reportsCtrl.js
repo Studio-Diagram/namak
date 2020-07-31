@@ -281,7 +281,6 @@ angular.module("dashboard")
                 $scope.report_data.settlement_types = $state.params.s_types
             }
             else {
-                console.log($state.params.s_types);
                 if ($state.params.s_types) {
                     $scope.report_data.settlement_types.push($state.params.s_types);
                 }
