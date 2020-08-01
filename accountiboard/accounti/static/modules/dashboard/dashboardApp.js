@@ -145,6 +145,10 @@ myApp.config(function ($stateProvider, $authProvider) {
                 dynamic: true,
                 value: null
             },
+            "branches": {
+                dynamic: true,
+                value: null
+            },
             "suppliers": {
                 dynamic: true,
                 value: null

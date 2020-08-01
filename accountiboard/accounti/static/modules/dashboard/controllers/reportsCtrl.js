@@ -6,6 +6,7 @@ angular.module("dashboard")
                 report_category: "",
                 start_date: "",
                 end_date: "",
+                branches: [],
                 suppliers: [],
                 settlement_types: []
             };
@@ -22,6 +23,10 @@ angular.module("dashboard")
                     {
                         name: "تاریخ ساخت",
                         key: "created_time"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
                     }
                 ],
                 INVOICE_EXPENSE: [
@@ -48,6 +53,10 @@ angular.module("dashboard")
                     {
                         name: "نوع پرداخت",
                         key: "settlement_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
                     }
                 ],
                 INVOICE_PAY: [
@@ -74,6 +83,10 @@ angular.module("dashboard")
                     {
                         name: "شماره ارجاع",
                         key: "backup_code"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
                     }
                 ],
                 INVOICE_PURCHASE: [
@@ -96,6 +109,10 @@ angular.module("dashboard")
                     {
                         name: "نوع فاکتور",
                         key: "settlement_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
                     }
                 ],
                 INVOICE_RETURN: [
@@ -130,6 +147,10 @@ angular.module("dashboard")
                     {
                         name: "نوع مرجوعی",
                         key: "return_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
                     }
                 ]
             };
@@ -249,19 +270,20 @@ angular.module("dashboard")
         };
 
         $scope.get_report = function () {
-            let starting_date = $("#start_date_picker").val() ? $("#start_date_picker").val() : $state.params.start;
-            let ending_date = $("#end_date_picker").val() ? $("#end_date_picker").val() : $state.params.end;
+            var starting_date = $("#start_date_picker").val() ? $("#start_date_picker").val() : $state.params.start;
+            var ending_date = $("#end_date_picker").val() ? $("#end_date_picker").val() : $state.params.end;
             dashboardHttpRequest.getReport('?type=' + $scope.report_data.report_category +
                 '&start=' + starting_date +
                 '&end=' + ending_date +
+                '&branches=' + $scope.report_data.branches +
                 '&suppliers=' + $scope.report_data.suppliers +
                 '&s_types=' + $scope.report_data.settlement_types)
                 .then(function (data) {
                     $scope.selected_table_report_category = $scope.report_data.report_category;
                     $scope.reports_result = data;
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal');
                 });
         };
 
@@ -269,6 +291,14 @@ angular.module("dashboard")
             $scope.report_data.report_category = $state.params.type;
             $scope.report_data.start_date = $state.params.start;
             $scope.report_data.end_date = $state.params.end;
+            if (Array.isArray($state.params.branches)) {
+                $scope.report_data.branches = $state.params.branches.map(Number)
+            }
+            else {
+                if ($state.params.branches) {
+                    $scope.report_data.branches.push(parseInt($state.params.branches))
+                }
+            }
             if (Array.isArray($state.params.suppliers)) {
                 $scope.report_data.suppliers = $state.params.suppliers.map(Number)
             }
@@ -295,6 +325,7 @@ angular.module("dashboard")
                 type: $scope.report_data.report_category,
                 start: $scope.report_data.start_date = $("#start_date_picker").val(),
                 end: $scope.report_data.end_date = $("#end_date_picker").val(),
+                branches: $scope.report_data.branches,
                 suppliers: $scope.report_data.suppliers,
                 s_types: $scope.report_data.settlement_types
             }, {

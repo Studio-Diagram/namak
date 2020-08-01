@@ -164,6 +164,17 @@
                             </button>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <ui-select multiple ng-model="report_data.branches">
+                                <ui-select-match placeholder="انتخاب شعبه‌ها">{{ $item.name }}</ui-select-match>
+                                <ui-select-choices
+                                        repeat="branch.id as branch in user_data.branches | filter: $select.search">
+                                    <div ng-bind="branch.name"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
                     <div ng-hide="['INVOICE_SALE'].indexOf(report_data.report_category) !== -1" class="row">
                         <div class="col">
                             <ui-select multiple ng-model="report_data.suppliers">
