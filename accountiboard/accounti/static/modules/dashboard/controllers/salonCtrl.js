@@ -1101,12 +1101,7 @@ angular.module("dashboard")
         };
 
         $scope.categorize_tables = function (tables_data) {
-            $scope.categorized_tables_data = [
-                {
-                    "table_category_name": "A",
-                    "tables": []
-                }
-            ];
+            $scope.categorized_tables_data = [];
             for (var i = 0; i < tables_data.length; i++) {
                 var category_find = $filter('filter')($scope.categorized_tables_data, {'table_category_name': tables_data[i].table_category_name});
                 if (category_find.length === 0) {
