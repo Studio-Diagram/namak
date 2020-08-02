@@ -72,7 +72,7 @@ class RegisterEmployeeView(View):
     # @permission_decorator_class_based(
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
+    #     {USER_PLANS_CHOICES['FREE']}, # After bundles are implemented. remove this argument if uncommenting permissions before that
     #     branch_disable=True
     # )
 
