@@ -12,12 +12,6 @@ from django.shortcuts import get_object_or_404
 
 
 class LoginView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
-    # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -178,7 +172,7 @@ class SearchEmployeeView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -204,14 +198,10 @@ class SearchEmployeeView(View):
 
 
 class GetEmployeesView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
-    # )
-
-    # @permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+    )
 
     def post(self, request, *args, **kwargs):
 
@@ -241,15 +231,12 @@ class GetEmployeeView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+
         employee_id = rec_data['employee_id']
         employee = Employee.objects.get(pk=employee_id)
         employee_to_branches = EmployeeToBranch.objects.filter(employee=employee)
@@ -274,25 +261,21 @@ class GetMenuCategoriesView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-        else:
-            all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
-            menu_categories = []
-            for category in all_menu_categories:
-                menu_categories.append({
-                    "id": category.pk,
-                    "name": category.name,
-                })
-            return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
+
+        all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
+        menu_categories = []
+        for category in all_menu_categories:
+            menu_categories.append({
+                "id": category.pk,
+                "name": category.name,
+            })
+        return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
 
 
 class GetMenuCategoryView(View):
@@ -300,7 +283,7 @@ class GetMenuCategoryView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -311,10 +294,6 @@ class GetMenuCategoryView(View):
 
         if not branch_id or not menu_category_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         menu_category = MenuCategory.objects.get(pk=menu_category_id)
         all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
@@ -350,7 +329,7 @@ class AddMenuCategoryView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -365,10 +344,6 @@ class AddMenuCategoryView(View):
         printers_id = rec_data['printers_id']
         branch_id = rec_data['branch_id']
 
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
         if not name or not kind or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -400,7 +375,7 @@ class SearchMenuCategoryView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -411,10 +386,7 @@ class SearchMenuCategoryView(View):
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+
         if not search_word or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         categories_searched = MenuCategory.objects.filter(name__contains=search_word, branch_id=branch_id)
@@ -431,16 +403,12 @@ class GetMenuItemsView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         all_menu_items = MenuItem.objects.filter(is_delete=0, menu_category__branch_id=branch_id).order_by(
             'menu_category__name')
@@ -461,26 +429,22 @@ class GetMenuItemView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-        else:
-            menu_item_id = rec_data['menu_item_id']
-            menu_item = MenuItem.objects.get(pk=menu_item_id)
-            menu_item_data = {
-                'id': menu_item.pk,
-                'name': menu_item.name,
-                'price': menu_item.price,
-                "category_name": menu_item.menu_category.name,
-                "menu_category_id": menu_item.menu_category.id
-            }
-            return JsonResponse({"response_code": 2, 'menu_item': menu_item_data})
+
+        menu_item_id = rec_data['menu_item_id']
+        menu_item = MenuItem.objects.get(pk=menu_item_id)
+        menu_item_data = {
+            'id': menu_item.pk,
+            'name': menu_item.name,
+            'price': menu_item.price,
+            "category_name": menu_item.menu_category.name,
+            "menu_category_id": menu_item.menu_category.id
+        }
+        return JsonResponse({"response_code": 2, 'menu_item': menu_item_data})
 
 
 class AddMenuItemView(View):
@@ -488,7 +452,7 @@ class AddMenuItemView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -501,10 +465,6 @@ class AddMenuItemView(View):
         menu_category_id = rec_data['menu_category_id']
         name = rec_data['name']
         price = rec_data['price']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         if menu_item_id == 0:
             new_menu_item = MenuItem(
@@ -528,16 +488,12 @@ class DeleteMenuItemView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         menu_item_id = rec_data['menu_item_id']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         if not menu_item_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -553,7 +509,7 @@ class SearchMenuItemView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -564,10 +520,6 @@ class SearchMenuItemView(View):
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0,
                                                  menu_category__branch_id=branch_id)
@@ -598,16 +550,12 @@ class GetMenuItemsWithCategoriesView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
         menu_items_with_categories_data = []
         menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
         for cat in menu_categories:
@@ -631,7 +579,7 @@ class GetPrintersView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -657,7 +605,7 @@ class GetPrinterView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def get(self, request, *args, **kwargs):
@@ -675,7 +623,7 @@ class AddPrinterView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
@@ -702,7 +650,7 @@ class GetTodayCashView(View):
     #     token_authenticate,
     #     {USER_ROLES['CAFE_OWNER']},
     #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=True
+    #     branch_disable=False
     # )
 
     def post(self, request, *args, **kwargs):
