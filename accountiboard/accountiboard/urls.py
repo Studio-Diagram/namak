@@ -147,6 +147,7 @@ urlpatterns = [
     path('api/report/', ReportView.ReportView.as_view()),
     path('api/bundles/', BundleView.BundleView.as_view()),
     path('api/payir/callback/', BundleView.PayirCallbackView.as_view()),
+    path('api/check-subscription-discount/', BundleView.CheckSubscriptionDiscountView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

@@ -68,6 +68,7 @@ ZERO_PRICE = 0
 UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است."
 BUNDLE_NOT_AVAILABLE = "بسته انتخاب شده وجود ندارد"
 BUNDLE_DURATION_NOT_AVAILABLE = "زمان بسته انتخاب شده وجود ندارد"
+SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE = "کد تخفیف اشتباه است"
 
 USER_TYPE = {
     "cafe_owner": 1,
@@ -111,18 +112,18 @@ USER_PLANS_CHOICES = {
 # prices in IR RIAL
 AVAILABLE_BUNDLES = {
     "STANDARD_NORMAL": {
-        "1MONTH" :  10000,
-        "3MONTH" :  30000,
-        "12MONTH" : 100000,
+        "1MONTH" :  100_000,
+        "3MONTH" :  300_000,
+        "12MONTH" : 1_000_000,
     },
     "STANDARD_BG": {
-        "1MONTH" :  10000,
-        "3MONTH" :  30000,
-        "12MONTH" : 100000,
+        "1MONTH" :  100_000,
+        "3MONTH" :  300_000,
+        "12MONTH" : 1_000_000,
     },
     "ENTERPRISE": {
-        "1MONTH" :  20000,
-        "3MONTH" :  50000,
-        "12MONTH" : 200000,
+        "1MONTH" :  200_000,
+        "3MONTH" :  500_000,
+        "12MONTH" : 2_000_000,
     }, 
 }

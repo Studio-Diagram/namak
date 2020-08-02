@@ -81,6 +81,7 @@ class BundleView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         bundle = rec_data.get('bundle')
         duration = rec_data.get('duration')
+        discount_code = rec_data.get('discount_code')
         payload = request.payload
 
         if bundle not in AVAILABLE_BUNDLES:
@@ -92,6 +93,14 @@ class BundleView(View):
             return JsonResponse({
                 'error_msg': BUNDLE_DURATION_NOT_AVAILABLE
             }, status=400)
+
+        if discount_code:
+            try:
+                current_discount_obj = SubscriptionDiscount.objects.get(code=discount_code)
+            except:
+                return JsonResponse({
+                    'error_msg': SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE
+                }, status=400)
 
         if duration == '1MONTH':
             days = 30
@@ -106,14 +115,24 @@ class BundleView(View):
         if active_bundle_count > 0:
             new_bundle_is_reserved = True
         else:
-            new_bundle_is_reserved = False         
+            new_bundle_is_reserved = False
+
+
+        if discount_code:
+            if current_discount_obj.type == 'amount':
+                amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity
+            elif current_discount_obj.type == 'percent':
+                amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity * AVAILABLE_BUNDLES[bundle][duration]
+        else:
+            amount = AVAILABLE_BUNDLES[bundle][duration]
+
 
 
         current_transaction = Transaction.objects.create(
             cafe_owner = current_cafe_owner,
             status = "Not paid yet",
             token = "No token yet",
-            amount = AVAILABLE_BUNDLES[bundle][duration],
+            amount = amount,
             mobile = payload['sub_phone'],
             redirect = settings.PAY_IR_REDIRECT_URL,
             cardNumber = "Not paid yet",
@@ -133,7 +152,7 @@ class BundleView(View):
 
         init_data = {
             "api": settings.PAY_IR_API_KEY,
-            "amount" : AVAILABLE_BUNDLES[bundle][duration],
+            "amount" : amount,
             "redirect": settings.PAY_IR_REDIRECT_URL,
             "factorNumber" : current_transaction.factorNumber,
             "mobile" : payload['sub_phone'],
@@ -211,3 +230,32 @@ class PayirCallbackView(View):
             return JsonResponse({
                 'error_msg': "Transaction status not 1"
             }, status=403)
+
+
+class CheckSubscriptionDiscountView(View):
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=True
+    )
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        code = rec_data.get('code')
+
+        try:
+            subscription_discount = SubscriptionDiscount.objects.get(code=code)
+            return JsonResponse({
+                'msg': "subscription discount code is valid.",
+                'type': subscription_discount.type,
+                'name': subscription_discount.name,
+                'quantity': subscription_discount.quantity,
+            }, status=200)
+
+        except:
+            return JsonResponse({
+                'msg': "subscription discount code is not valid."
+            }, status=200)
+
+
+
