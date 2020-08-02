@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, offlineAPIHttpRequest) {
+    .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $auth, dashboardHttpRequest, offlineAPIHttpRequest) {
         var initialize = function () {
             $scope.night_report_inputs = {
                 "income_report": 0,
@@ -199,26 +199,8 @@ angular.module("dashboard")
         };
 
         $scope.log_out = function () {
-            dashboardHttpRequest.logOut($rootScope.user_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $window.location.href = '/';
-                        $rootScope.user_data = {
-                            "username": '',
-                            "branch": ''
-                        };
-                    }
-                    else if (data['response_code'] === 3) {
-                        $window.location.href = '/';
-                        $rootScope.user_data = {
-                            "username": '',
-                            "branch": ''
-                        };
-                    }
-                }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
-                });
+            $auth.logout();
+            $window.location.href = '/';
         };
 
         $scope.print_night_report = function () {

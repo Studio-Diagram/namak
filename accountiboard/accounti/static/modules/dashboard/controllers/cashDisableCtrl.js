@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("cashDisableCtrl", function ($scope, $state, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $stateParams, offlineAPIHttpRequest) {
         var initialize = function () {
             $scope.cash_state = $stateParams.state;
+            $rootScope.is_page_loading = false;
         };
 
         $scope.open_cash = function () {
@@ -34,7 +35,7 @@ angular.module("dashboard")
                         $scope.open_cash();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_message'];
+                        $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
                     }
                 }, function (error) {
