@@ -1806,3 +1806,8 @@ input:checked + .slider .off {
     margin-right: 5px;
     border-radius: 8px;
 }
+
+.reservationCell.reservationHeaderCell {
+    position: sticky;
+    top: 0;
+}
