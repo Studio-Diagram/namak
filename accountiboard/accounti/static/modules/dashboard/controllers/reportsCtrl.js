@@ -270,11 +270,15 @@ angular.module("dashboard")
         };
 
         $scope.get_report = function () {
-            var starting_date = $("#start_date_picker").val() ? $("#start_date_picker").val() : $state.params.start;
-            var ending_date = $("#end_date_picker").val() ? $("#end_date_picker").val() : $state.params.end;
+            jQuery.noConflict();
+            (function ($) {
+                $scope.starting_date = $("#start_date_picker").val() ? $("#start_date_picker").val() : $state.params.start;
+                $scope.ending_date = $("#end_date_picker").val() ? $("#end_date_picker").val() : $state.params.end;
+            })(jQuery);
+
             dashboardHttpRequest.getReport('?type=' + $scope.report_data.report_category +
-                '&start=' + starting_date +
-                '&end=' + ending_date +
+                '&start=' + $scope.starting_date +
+                '&end=' + $scope.ending_date +
                 '&branches=' + $scope.report_data.branches +
                 '&suppliers=' + $scope.report_data.suppliers +
                 '&s_types=' + $scope.report_data.settlement_types)
@@ -321,19 +325,22 @@ angular.module("dashboard")
         };
 
         $scope.change_url_params = function () {
-            $state.go('account_manager.reports', {
-                type: $scope.report_data.report_category,
-                start: $scope.report_data.start_date = $("#start_date_picker").val(),
-                end: $scope.report_data.end_date = $("#end_date_picker").val(),
-                branches: $scope.report_data.branches,
-                suppliers: $scope.report_data.suppliers,
-                s_types: $scope.report_data.settlement_types
-            }, {
-                notify: false,
-                reload: false,
-                location: 'replace',
-                inherit: true
-            });
+            jQuery.noConflict();
+            (function ($) {
+                $state.go('account_manager.reports', {
+                    type: $scope.report_data.report_category,
+                    start: $scope.report_data.start_date = $("#start_date_picker").val(),
+                    end: $scope.report_data.end_date = $("#end_date_picker").val(),
+                    branches: $scope.report_data.branches,
+                    suppliers: $scope.report_data.suppliers,
+                    s_types: $scope.report_data.settlement_types
+                }, {
+                    notify: false,
+                    reload: false,
+                    location: 'replace',
+                    inherit: true
+                });
+            })(jQuery);
         };
 
         $scope.showInvoicePurchase = function (invoice_id) {

@@ -420,9 +420,12 @@ angular.module("dashboard")
         };
 
         $scope.can_settle_invoice = function () {
-            $('#settle_button').prop("disabled", false);
-            if ($scope.new_invoice_data.current_game.start_time || !$scope.new_invoice_data.invoice_sales_id)
-                $('#settle_button').prop("disabled", true);
+            jQuery.noConflict();
+            (function ($) {
+                $('#settle_button').prop("disabled", false);
+                if ($scope.new_invoice_data.current_game.start_time || !$scope.new_invoice_data.invoice_sales_id)
+                    $('#settle_button').prop("disabled", true);
+            })(jQuery);
         };
 
         $scope.closeErrorModal = function () {

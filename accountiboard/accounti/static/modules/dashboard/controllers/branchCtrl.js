@@ -109,8 +109,11 @@ angular.module("dashboard")
         };
 
         $scope.addBranch = function () {
-            $scope.new_branch_data.start_time = $('#start-time-clock').val();
-            $scope.new_branch_data.end_time = $('#end-time-clock').val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_branch_data.start_time = $('#start-time-clock').val();
+                $scope.new_branch_data.end_time = $('#end-time-clock').val();
+            })(jQuery);
             dashboardHttpRequest.addBranch($scope.new_branch_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

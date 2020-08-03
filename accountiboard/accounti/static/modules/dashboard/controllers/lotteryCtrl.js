@@ -76,8 +76,11 @@ angular.module("dashboard")
         };
 
         $scope.addLottery = function () {
-            $scope.new_lottery_data.start_date = $("#datepicker_start_lottery").val();
-            $scope.new_lottery_data.end_date = $("#datepicker_end_lottery").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_lottery_data.start_date = $("#datepicker_start_lottery").val();
+                $scope.new_lottery_data.end_date = $("#datepicker_end_lottery").val();
+            })(jQuery);
             dashboardHttpRequest.addLottery($scope.new_lottery_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

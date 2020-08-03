@@ -105,7 +105,10 @@ angular.module("dashboard")
         };
 
         $scope.addPay = function () {
-            $scope.new_pay_data.date = $("#datepicker").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_pay_data.date = $("#datepicker").val();
+            })(jQuery);
             dashboardHttpRequest.addPay($scope.new_pay_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
