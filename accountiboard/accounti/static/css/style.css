@@ -96,6 +96,12 @@ a:hover i {
     border-top: 5px solid var(--navBarLine);
 }
 
+.topHeaderSignin {
+    height: 110px;
+    border-top: 12px solid var(--navBarLine);
+    background: var(--myBlack);
+}
+
 .topHeader .userInfo {
     padding: 0;
 }
@@ -905,7 +911,7 @@ button.mainButton:disabled {
 }
 
 button.mainButton:hover {
-    
+
 }
 
 button.mainButton i {
@@ -1859,7 +1865,7 @@ input:checked + .slider .off {
 
 .item-group button:hover {
     cursor: unset;
-    
+
 }
 
 .user-actions-nav .item-group button {
@@ -1909,8 +1915,6 @@ input:checked + .slider .off {
 }
 
 .notch-holder img {
-    width: 54px;
-    height: 42px;
     margin-bottom: 1rem;
 }
 
@@ -1927,6 +1931,26 @@ input:checked + .slider .off {
     font-size: smaller;
 
 }
+
+.notch-holder.main-page-notch-holder {
+    width: 234px;
+    height: 172px;
+    background: url("/static/img/tagh-big@2x.png") no-repeat center 54px;
+    margin: -55px auto 3rem auto;
+}
+
+.notch-holder.main-page-notch-holder img {
+    margin-bottom: 3em;
+}
+
+.notch-holder.main-page-notch-holder span {
+    font-size: 1.3em;
+}
+
+.notch-holder.main-page-notch-holder .namakVersion {
+    font-size: 1em;
+}
+
 
 
 
