@@ -5,7 +5,7 @@ angular.module("dashboard")
             if ($location.path() === '/manager' || $location.path() === '/manager/') {
                 $state.go('manager.addEmployee');
             }
-            if (split_url.indexOf('cash_manager')) {
+            if (split_url.indexOf('cash_manager') !== -1) {
                 $scope.check_cash($rootScope.user_data);
             }
             if ($location.path() === '/account_manager') {
