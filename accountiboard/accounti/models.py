@@ -106,8 +106,8 @@ class Transaction(models.Model):
 class Bundle(models.Model):
     USER_PLANS_CHOICES = (
         ('FREE', 'FREE'),
-        ('STANDARD_NORMAL', 'STANDARD_NORMAL'),
-        ('STANDARD_BG', 'STANDARD_BG'),
+        ('STANDARDNORMAL', 'STANDARDNORMAL'),
+        ('STANDARDBG', 'STANDARDBG'),
         ('ENTERPRISE', 'ENTERPRISE')
     )
     bundle_plan = models.CharField(max_length=100, choices=USER_PLANS_CHOICES)
