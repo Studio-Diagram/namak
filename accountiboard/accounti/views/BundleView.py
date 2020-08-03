@@ -9,7 +9,9 @@ from django.db.models import Sum
 from django.conf import settings
 from datetime import datetime, timedelta
 import requests
+import re
 
+RE_DURATION = re.compile(r"[\d]+", flags=re.ASCII)
 
 class BundleView(View):
     @permission_decorator_class_based(
@@ -89,11 +91,6 @@ class BundleView(View):
                 'error_msg': BUNDLE_NOT_AVAILABLE
             }, status=400)
 
-        if duration not in AVAILABLE_BUNDLES[bundle]:
-            return JsonResponse({
-                'error_msg': BUNDLE_DURATION_NOT_AVAILABLE
-            }, status=400)
-
         if discount_code:
             try:
                 current_discount_obj = SubscriptionDiscount.objects.get(code=discount_code)
@@ -102,12 +99,7 @@ class BundleView(View):
                     'error_msg': SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE
                 }, status=400)
 
-        if duration == '1MONTH':
-            days = 30
-        elif duration == '3MONTH':
-            days = 90
-        elif duration == '12MONTH':
-            days = 365
+        days = RE_DURATION.findall(bundle)[0]
 
         current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
         active_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True).count()
@@ -117,14 +109,15 @@ class BundleView(View):
         else:
             new_bundle_is_reserved = False
 
+        amount = AVAILABLE_BUNDLES[bundle]
 
-        if discount_code:
-            if current_discount_obj.type == 'amount':
-                amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity
-            elif current_discount_obj.type == 'percent':
-                amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity * AVAILABLE_BUNDLES[bundle][duration]
-        else:
-            amount = AVAILABLE_BUNDLES[bundle][duration]
+        # if discount_code:
+        #     if current_discount_obj.type == 'amount':
+        #         amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity
+        #     elif current_discount_obj.type == 'percent':
+        #         amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity * AVAILABLE_BUNDLES[bundle][duration]
+        # else:
+        #     amount = AVAILABLE_BUNDLES[bundle][duration]
 
 
 
@@ -140,10 +133,10 @@ class BundleView(View):
         )
 
         current_bundle = Bundle.objects.create(
-            bundle_plan = bundle,
+            bundle_plan = bundle.replace(f"_{days}", ""),
             bundle_duration = days,
             starting_datetime_plan = datetime.utcnow(),
-            expiry_datetime_plan = datetime.utcnow() + timedelta(days=days, seconds=5),
+            expiry_datetime_plan = datetime.utcnow() + timedelta(days=int(days), seconds=5),
             is_active = False,
             is_reserved = new_bundle_is_reserved,
             cafe_owner = current_cafe_owner,

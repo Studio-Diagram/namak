@@ -75,11 +75,13 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
             "message": UNAUTHENTICATED
         }
 
+    # Adding 'FREE' plan to bundle definition on view decorators and also JWT token:
     bundles.add('FREE')
+    payload_bundles = {payload['sub_bundle'], 'FREE'}
 
     for role in payload['sub_roles']:
         if role in permitted_roles:
-            if payload['sub_bundle'] in bundles:
+            if bundles.issubset(payload_bundles):
                 if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
                     return {
                         "state": True,

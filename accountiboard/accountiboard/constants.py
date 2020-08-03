@@ -109,21 +109,17 @@ USER_PLANS_CHOICES = {
     "ENTERPRISE":"ENTERPRISE",
 }
 
-# prices in IR RIAL
+# prices in IR RIAL (should be at least 10,000)
 AVAILABLE_BUNDLES = {
-    "STANDARD_NORMAL": {
-        "1MONTH" :  100_000,
-        "3MONTH" :  300_000,
-        "12MONTH" : 1_000_000,
-    },
-    "STANDARD_BG": {
-        "1MONTH" :  100_000,
-        "3MONTH" :  300_000,
-        "12MONTH" : 1_000_000,
-    },
-    "ENTERPRISE": {
-        "1MONTH" :  200_000,
-        "3MONTH" :  500_000,
-        "12MONTH" : 2_000_000,
-    }, 
+    "STANDARD_NORMAL_30" :  100_000,
+    "STANDARD_NORMAL_90" :  300_000,
+    "STANDARD_NORMAL_365" : 1_000_000,
+
+    "STANDARD_BG_30" :  100_000,
+    "STANDARD_BG_90" :  300_000,
+    "STANDARD_BG_365" : 1_000_000,
+
+    "ENTERPRISE_30" :  200_000,
+    "ENTERPRISE_90" :  500_000,
+    "ENTERPRISE_365" : 2_000_000,
 }
