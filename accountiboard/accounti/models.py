@@ -9,7 +9,7 @@ from uuid import uuid4
 class User(models.Model):
     USER_TYPE_CHOICES = (
         (1, 'cafe_owner'),
-        (2, 'employee')
+        (2, 'employee'),
     )
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
@@ -656,3 +656,10 @@ class CreditToInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
     used_price = models.IntegerField(default=0)
+
+
+class LatestNews(models.Model):
+    title = models.CharField(max_length=300,  blank=False, null=False)
+    text  = models.CharField(max_length=4000, blank=False, null=False)
+    link  = models.CharField(max_length=300,  blank=True,  null=True)
+    datetime = models.DateTimeField()
