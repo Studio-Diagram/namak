@@ -23,8 +23,12 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
     if discount.cafe_owner and discount.cafe_owner != cafe_owner:
         return (amount, False, 'This discount code is defined for another cafe owner')
 
-    if discount.bundle and discount.bundle != bundle:
-        return (amount, False, 'This discount code is defined for another bundle type')
+    if discount.bundle:
+        discount_bundle_splitted = discount.bundle.split('_')
+        if len(discount_bundle_splitted) == 1 and discount.bundle != bundle.split('_')[0]:
+            return (amount, False, 'This discount code is defined for another bundle type')
+        elif len(discount_bundle_splitted) == 2 and discount.bundle != bundle:
+            return (amount, False, 'This discount code is defined for another bundle type')
 
     if discount.type == 'amount':
         amount = AVAILABLE_BUNDLES[bundle] - discount.quantity
