@@ -123,3 +123,11 @@ AVAILABLE_BUNDLES = {
     "ENTERPRISE_90" :  500_000,
     "ENTERPRISE_365" : 2_000_000,
 }
+
+# used for preventing downgrade:
+BUNDLE_WEIGHTS = {
+    "FREE": 0,
+    "STANDARDNORMAL": 1,
+    "STANDARDBG": 1,
+    "ENTERPRISE": 2,
+}

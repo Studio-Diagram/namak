@@ -138,7 +138,12 @@ class BundleView(View):
 
         if active_bundle_count > 0:
             new_bundle_is_reserved = True
-            bundle_start_time = Bundle.objects.get(cafe_owner=current_cafe_owner, is_active=True).expiry_datetime_plan
+            current_active_bundle = Bundle.objects.get(cafe_owner=current_cafe_owner, is_active=True)
+            if BUNDLE_WEIGHTS[bundle_type] < BUNDLE_WEIGHTS[current_active_bundle.bundle_plan]:
+                return JsonResponse({
+                    'error_msg': "Sorry, downgrading plans is not possible."
+                }, status=403)
+            bundle_start_time = current_active_bundle.expiry_datetime_plan
         else:
             new_bundle_is_reserved = False
             bundle_start_time = datetime.utcnow()
