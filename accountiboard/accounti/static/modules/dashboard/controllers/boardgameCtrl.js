@@ -181,7 +181,10 @@ angular.module("dashboard")
                             'description': data['boardgame']['description'],
                             'bgg_code': data['boardgame']['bgg_code'],
                         };
-                        $('#customFile').next('.custom-file-label').html($scope.new_boardgame_data.image_name);
+                        jQuery.noConflict();
+                        (function ($) {
+                            $('#customFile').next('.custom-file-label').html($scope.new_boardgame_data.image_name);
+                        })(jQuery);
                         $scope.openAddBoardgameModal();
                     }
                     else if (data['response_code'] === 3) {
@@ -229,7 +232,10 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-            $('#customFile').next('.custom-file-label').html("Choose File");
+            jQuery.noConflict();
+            (function ($) {
+                $('#customFile').next('.custom-file-label').html("Choose File");
+            })(jQuery);
 
         };
 
