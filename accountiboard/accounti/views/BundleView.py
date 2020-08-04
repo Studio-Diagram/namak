@@ -125,10 +125,16 @@ class BundleView(View):
 
         current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
         active_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True).count()
+        reserved_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_reserved=True).count()
 
         days = RE_DURATION.findall(bundle)[0]
         bundle_type = bundle.replace(f"_{days}", "")
         amount = AVAILABLE_BUNDLES[bundle]
+
+        if active_bundle_count > 0 and reserved_bundle_count > 0:
+            return JsonResponse({
+                'error_msg': "You already have one active and one reserved bundle. Buying more bundles is not possible."
+            }, status=403)
 
         if active_bundle_count > 0:
             new_bundle_is_reserved = True
