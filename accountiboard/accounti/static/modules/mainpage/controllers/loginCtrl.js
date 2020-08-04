@@ -23,6 +23,7 @@ angular.module("mainpage")
                         localStorage.branches = JSON.stringify(data['user_data']['branches']);
                         localStorage.user_roles = JSON.stringify(data['user_data']['user_roles']);
                         localStorage.full_name = JSON.stringify(data['user_data']['full_name']);
+                        localStorage.organization_name = JSON.stringify(data['user_data']['organization_name']);
                         $auth.setToken(data['token']);
                         $window.location.href = '/dashboard';
                     }

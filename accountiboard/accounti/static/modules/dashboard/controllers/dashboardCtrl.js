@@ -14,6 +14,7 @@ angular.module("dashboard")
                             "branches": JSON.parse(localStorage.branches)
                         };
                         $rootScope.user_full_name = JSON.parse(localStorage.full_name);
+                        $rootScope.organization_name = JSON.parse(localStorage.organization_name);
                         $rootScope.user_branches = JSON.parse(localStorage.branches);
                         for (var i = 0; i < $rootScope.user_branches.length; i++) {
                             if ($rootScope.user_branches[i].id === $rootScope.user_data.branch) {

@@ -49,6 +49,7 @@ def login(request):
         user_role = employee_object.employee_roles
         branches = EmployeeToBranch.objects.filter(employee=employee_object)
         branch_object = branches.first().branch.id
+        organization_object = branches.first().branch.organization
         user_branches = [{
             "id": employee_to_branch.branch.id,
             "name": employee_to_branch.branch.name,
@@ -62,7 +63,8 @@ def login(request):
         {"response_code": 2,
          "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),
                        'branches': user_branches,
-                       'user_roles': user_role},
+                       'user_roles': user_role,
+                       'organization_name': organization_object.name},
          "token": jwt_token.decode("utf-8")
          }
     )
