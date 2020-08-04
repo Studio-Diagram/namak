@@ -656,3 +656,11 @@ class CreditToInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
     used_price = models.IntegerField(default=0)
+
+class BugReport(models.Model):
+    title = models.CharField(max_length=300,  blank=False, null=False)
+    text  = models.CharField(max_length=4000, blank=False, null=False)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    image = models.ImageField(null=True)
+    image_name = models.CharField(max_length=500, null=True, default="default.jpg")
+    created_time = models.DateTimeField(auto_now_add=True)
