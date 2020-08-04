@@ -145,6 +145,7 @@ urlpatterns = [
     path('api/checkGiftCode/', CreditView.check_gift_code),
     path('api/profile/', UserView.ProfileView.as_view()),
     path('api/report/', ReportView.ReportView.as_view()),
+    path('api/kick_unkick_employee/', EmployeeView.KickUnkickEmployeeView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

@@ -46,6 +46,8 @@ class LoginView(View):
             request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
         elif user_obj.get_user_type_display() == "employee":
             employee_object = Employee.objects.get(user=user_obj)
+            if employee_object.is_active != True:
+                return JsonResponse({"response_code": 3, "error_msg": "You don't have access rights."}, status=403)
             request.session['user_role'] = employee_object.employee_roles
             user_role = employee_object.employee_roles
             branches = EmployeeToBranch.objects.filter(employee=employee_object)
@@ -662,3 +664,42 @@ class GetTodayCashView(View):
             return JsonResponse({"response_code": 2, 'cash_id': cash_obj.first().pk})
         else:
             return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
+
+
+class KickUnkickEmployeeView(View):
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        branch_disable=True
+    )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        employee_id = rec_data.get('employee_id')
+        is_active = rec_data.get('is_active')
+        payload = request.payload
+        authorized = False
+
+        if not employee_id or is_active is None:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        for branch in payload['sub_branch_list']:
+            branch_id = branch['id']
+            branch_obj = Branch.objects.get(pk=branch_id)
+            employees_to_branches = EmployeeToBranch.objects.filter(branch=branch_obj)
+
+            for employee_to_branch in employees_to_branches:
+                if employee_to_branch.employee.id == employee_id:
+                    authorized = True
+                    break
+
+        if authorized:
+            try:
+                employee_to_patch = Employee.objects.get(pk=employee_id)
+                employee_to_patch.is_active = is_active
+                employee_to_patch.save()
+                return JsonResponse({'msg': 'Employee is_active status successfully changed.'}, status=200)
+            except:
+                return JsonResponse({'error_msg': 'This employee was not found'}, status=403)
+        else:
+            return JsonResponse({'error_msg': 'This employee works in another branch'}, status=403)
