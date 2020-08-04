@@ -89,37 +89,6 @@ class CafeOwner(models.Model):
         return "Phone: %s - %s" % (self.user.phone, self.user.get_full_name())
 
 
-class Transaction(models.Model):
-    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
-    status = models.CharField(max_length=255, null=True, blank=True)
-    token = models.CharField(max_length=1020, null=False, blank=False)
-    amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
-    mobile = models.CharField(max_length=20, null=True, blank=True)
-    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
-    description = models.CharField(max_length=1275, null=True, blank=True)
-    redirect = models.CharField(max_length=1020, null=True, blank=True)
-    cardNumber = models.CharField(max_length=25, null=True, blank=True)
-    transId = models.CharField(max_length=100, null=True, blank=True)
-    message = models.CharField(max_length=255, null=True, blank=True)
-
-
-class Bundle(models.Model):
-    USER_PLANS_CHOICES = (
-        ('FREE', 'FREE'),
-        ('STANDARDNORMAL', 'STANDARDNORMAL'),
-        ('STANDARDBG', 'STANDARDBG'),
-        ('ENTERPRISE', 'ENTERPRISE')
-    )
-    bundle_plan = models.CharField(max_length=100, choices=USER_PLANS_CHOICES)
-    bundle_duration = models.IntegerField(null=False, blank=False)
-    starting_datetime_plan = models.DateTimeField(null=False, blank=False)
-    expiry_datetime_plan = models.DateTimeField(null=False, blank=False)
-    is_active = models.BooleanField(null=False, blank=False)
-    is_reserved = models.BooleanField(null=False, blank=False, default=False)
-    is_expired = models.BooleanField(null=False, blank=False, default=False)
-    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
-    transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)
-
 
 class EmployeeToBranch(models.Model):
     branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
@@ -664,6 +633,45 @@ class SubscriptionDiscount(models.Model):
     )
     type = models.CharField(max_length=10, choices=TYPE)
     name = models.CharField(max_length=150, blank=True, null=True)
-    code = models.CharField(max_length=150, blank=False, null=False)
+    code = models.CharField(max_length=150, blank=False, null=False, unique=True)
     quantity = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     created_time = models.DateTimeField(auto_now_add=True)
+    expire_time = models.DateTimeField()
+    num_of_use = models.IntegerField(default=1, null=True, blank=True)
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT, null=True, blank=True)
+    min_discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    max_discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    bundle = models.CharField(max_length=150, blank=True, null=True)
+
+
+class Transaction(models.Model):
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
+    subscription_discount = models.ForeignKey(SubscriptionDiscount, on_delete=models.PROTECT, null=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    token = models.CharField(max_length=1020, null=False, blank=False)
+    amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
+    mobile = models.CharField(max_length=20, null=True, blank=True)
+    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
+    description = models.CharField(max_length=1275, null=True, blank=True)
+    redirect = models.CharField(max_length=1020, null=True, blank=True)
+    cardNumber = models.CharField(max_length=25, null=True, blank=True)
+    transId = models.CharField(max_length=100, null=True, blank=True)
+    message = models.CharField(max_length=255, null=True, blank=True)
+
+
+class Bundle(models.Model):
+    USER_PLANS_CHOICES = (
+        ('FREE', 'FREE'),
+        ('STANDARDNORMAL', 'STANDARDNORMAL'),
+        ('STANDARDBG', 'STANDARDBG'),
+        ('ENTERPRISE', 'ENTERPRISE')
+    )
+    bundle_plan = models.CharField(max_length=100, choices=USER_PLANS_CHOICES)
+    bundle_duration = models.IntegerField(null=False, blank=False)
+    starting_datetime_plan = models.DateTimeField(null=False, blank=False)
+    expiry_datetime_plan = models.DateTimeField(null=False, blank=False)
+    is_active = models.BooleanField(null=False, blank=False)
+    is_reserved = models.BooleanField(null=False, blank=False, default=False)
+    is_expired = models.BooleanField(null=False, blank=False, default=False)
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
+    transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)

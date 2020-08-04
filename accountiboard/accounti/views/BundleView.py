@@ -13,6 +13,30 @@ import re
 
 RE_DURATION = re.compile(r"[\d]+", flags=re.ASCII)
 
+def calculate_discount(amount, discount, bundle, cafe_owner):
+    if datetime.now() > discount.expire_time:
+        return (amount, False, 'Discount time expired')
+
+    if discount.num_of_use != None and discount.num_of_use < 1:
+        return (amount, False, 'Discount has no more uses left')
+
+    if discount.cafe_owner != None and discount.cafe_owner != cafe_owner:
+        return (amount, False, 'This discount code is defined for another cafe owner')
+
+    if discount.bundle != None and discount.bundle != bundle:
+        return (amount, False, 'This discount code is defined for another bundle type')
+
+    if discount.type == 'amount':
+        amount = AVAILABLE_BUNDLES[bundle] - discount.quantity
+    elif discount.type == 'percent':
+        amount = AVAILABLE_BUNDLES[bundle] - discount.quantity * AVAILABLE_BUNDLES[bundle]
+        if discount.max_discount_amount != None and amount > discount.max_discount_amount:
+            amount = discount.max_discount_amount
+        elif discount.min_discount_amount != None and amount < discount.min_discount_amount:
+            amount = discount.min_discount_amount
+
+    return (amount, True, f'Discount code "{discount.name}" applied.')
+
 class BundleView(View):
     @permission_decorator_class_based(
         token_authenticate,
@@ -82,9 +106,9 @@ class BundleView(View):
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         bundle = rec_data.get('bundle')
-        duration = rec_data.get('duration')
         discount_code = rec_data.get('discount_code')
         payload = request.payload
+        current_discount_obj = None
 
         if bundle not in AVAILABLE_BUNDLES:
             return JsonResponse({
@@ -99,29 +123,38 @@ class BundleView(View):
                     'error_msg': SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE
                 }, status=400)
 
-        days = RE_DURATION.findall(bundle)[0]
-
         current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
         active_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True).count()
+
+        days = RE_DURATION.findall(bundle)[0]
+        bundle_type = bundle.replace(f"_{days}", "")
+        amount = AVAILABLE_BUNDLES[bundle]
 
         if active_bundle_count > 0:
             new_bundle_is_reserved = True
         else:
             new_bundle_is_reserved = False
 
-        amount = AVAILABLE_BUNDLES[bundle]
+        discount_applied = False
+        discount_msg = 'No discount code was applied.'
 
-        # if discount_code:
-        #     if current_discount_obj.type == 'amount':
-        #         amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity
-        #     elif current_discount_obj.type == 'percent':
-        #         amount = AVAILABLE_BUNDLES[bundle][duration] - current_discount_obj.quantity * AVAILABLE_BUNDLES[bundle][duration]
-        # else:
-        #     amount = AVAILABLE_BUNDLES[bundle][duration]
+        if discount_code:
+            discount_result = calculate_discount(amount, current_discount_obj, bundle, current_cafe_owner)
+            if discount_result[1]:
+                discount_applied = True
+            discount_msg = discount_result[2]
+            amount = discount_result[0]
 
-
+            if not discount_applied:
+                return JsonResponse({
+                            'msg': "Discount code not valid",
+                            'bundle': bundle,
+                            'discount_applied': discount_applied,
+                            'discount_msg': discount_msg,
+                }, status=403)
 
         current_transaction = Transaction.objects.create(
+            subscription_discount=current_discount_obj,
             cafe_owner = current_cafe_owner,
             status = "Not paid yet",
             token = "No token yet",
@@ -133,7 +166,7 @@ class BundleView(View):
         )
 
         current_bundle = Bundle.objects.create(
-            bundle_plan = bundle.replace(f"_{days}", ""),
+            bundle_plan = bundle_type,
             bundle_duration = days,
             starting_datetime_plan = datetime.utcnow(),
             expiry_datetime_plan = datetime.utcnow() + timedelta(days=int(days), seconds=5),
@@ -165,6 +198,10 @@ class BundleView(View):
 
         return JsonResponse({
                     'msg': "Please pay your transaction",
+                    'bundle': bundle,
+                    'discount_applied': discount_applied,
+                    'discount_msg': discount_msg,
+                    'final_price': amount,
                     'redirect' : settings.PAY_IR_API_URL_PAYMENT_GATEWAY.format(token=response["token"])
         }, status=200)
 
@@ -194,6 +231,11 @@ class PayirCallbackView(View):
             current_transaction.transId = response["transId"]
             current_transaction.cardNumber = response["cardNumber"]
             current_transaction.status = "paid"
+
+            if current_transaction.subscription_discount.num_of_use != None:
+                current_transaction.subscription_discount.num_of_use -= 1
+                current_transaction.subscription_discount.save()
+
             current_transaction.save()
 
             current_bundle = Bundle.objects.get(transaction=current_transaction)
@@ -235,20 +277,40 @@ class CheckSubscriptionDiscountView(View):
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         code = rec_data.get('code')
+        bundle = rec_data.get('bundle')
+        amount = AVAILABLE_BUNDLES[bundle]
+
+        payload = request.payload
+        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+
+        discount_applied = False
+        discount_msg = 'No discount code was applied.'
 
         try:
-            subscription_discount = SubscriptionDiscount.objects.get(code=code)
-            return JsonResponse({
-                'msg': "subscription discount code is valid.",
-                'type': subscription_discount.type,
-                'name': subscription_discount.name,
-                'quantity': subscription_discount.quantity,
-            }, status=200)
-
+            current_discount_obj = SubscriptionDiscount.objects.get(code=code)
         except:
             return JsonResponse({
-                'msg': "subscription discount code is not valid."
+                'msg': "subscription discount code does not exist."
+            }, status=403)
+
+
+        discount_result = calculate_discount(amount, current_discount_obj, bundle, current_cafe_owner)
+        if discount_result[1]:
+            discount_applied = True
+        discount_msg = discount_result[2]
+        amount = discount_result[0]
+
+        if not discount_applied:
+            return JsonResponse({
+                        'msg': "Discount code not valid",
+                        'bundle': bundle,
+                        'discount_applied': discount_applied,
+                        'discount_msg': discount_msg,
+            }, status=403)
+        else:
+            return JsonResponse({
+                        'msg': "Discount code is valid",
+                        'bundle': bundle,
+                        'discount_applied': discount_applied,
+                        'discount_msg': discount_msg,
             }, status=200)
-
-
-
