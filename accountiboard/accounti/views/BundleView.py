@@ -138,8 +138,10 @@ class BundleView(View):
 
         if active_bundle_count > 0:
             new_bundle_is_reserved = True
+            bundle_start_time = Bundle.objects.get(cafe_owner=current_cafe_owner, is_active=True).expiry_datetime_plan
         else:
             new_bundle_is_reserved = False
+            bundle_start_time = datetime.utcnow()
 
         discount_applied = False
         discount_msg = 'No discount code was applied.'
@@ -174,8 +176,8 @@ class BundleView(View):
         current_bundle = Bundle.objects.create(
             bundle_plan = bundle_type,
             bundle_duration = days,
-            starting_datetime_plan = datetime.utcnow(),
-            expiry_datetime_plan = datetime.utcnow() + timedelta(days=int(days), seconds=5),
+            starting_datetime_plan = bundle_start_time,
+            expiry_datetime_plan = bundle_start_time + timedelta(days=int(days), seconds=5),
             is_active = False,
             is_reserved = new_bundle_is_reserved,
             cafe_owner = current_cafe_owner,
@@ -238,7 +240,7 @@ class PayirCallbackView(View):
             current_transaction.cardNumber = response["cardNumber"]
             current_transaction.status = "paid"
 
-            if current_transaction.subscription_discount.num_of_use != None:
+            if current_transaction.subscription_discount and current_transaction.subscription_discount.num_of_use:
                 current_transaction.subscription_discount.num_of_use -= 1
                 current_transaction.subscription_discount.save()
 
