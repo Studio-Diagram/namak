@@ -155,7 +155,7 @@
                                     <div ng-repeat="credit_category in credit_categories" class="checkbox-unit col-md-4">
                                         <label class="checkbox-item">
                                             <input style="float: left;" ng-checked="credit_category.is_checked" type="checkbox" ng-model="credit_category.is_checked_m"
-                                                   ng-click="change_credit_category_checkBox(is_checked, credit_category[0])">{{ credit_category[1] }}
+                                                   ng-click="change_credit_category_checkBox(credit_category[0])">{{ credit_category[1] }}
                                         </label>
                                     </div>
                                 </div>

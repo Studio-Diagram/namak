@@ -120,13 +120,13 @@ angular.module("dashboard")
             $rootScope.open_modal("showMemberProfileModal");
         };
 
-        $scope.change_credit_category_checkBox = function (is_checked, category_name) {
+        $scope.change_credit_category_checkBox = function (category_name) {
             var index_of_category_id = $scope.new_credit_data.credit_categories.indexOf(category_name);
             if (index_of_category_id === -1) {
                 $scope.new_credit_data.credit_categories.push(category_name);
             }
             else {
-                $scope.new_credit_data.credit_categories.splice(category_name, 1);
+                $scope.new_credit_data.credit_categories.splice(index_of_category_id, 1);
             }
         };
 
