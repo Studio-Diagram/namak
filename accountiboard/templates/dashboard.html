@@ -110,7 +110,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade mainModal" id="userProfileModal" tabindex="-1" role="dialog"
+<div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -126,17 +126,20 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <h3>اطلاعات کاربری</h3>
                     <div class="row">
                         <div class="col">
                             <label>نام<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="user_profile_data.first_name" type="text"
                                    class="form-control" placeholder="نام">
-
+                        </div>
+                        <div class="col">
                             <label>نام خانوادگی<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="user_profile_data.last_name" type="text"
                                    class="form-control" placeholder="نام خانوادگی">
-
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <label>ایمیل<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="user_profile_data.email" type="email"
                                    class="form-control" placeholder="ایمیل">
@@ -150,10 +153,9 @@
                                    class="form-control" placeholder="موبایل">
                         </div>
                     </div>
-                    <h3>تغییر رمز عبور</h3>
                     <div class="row">
                         <div class="col">
-                            <label>رمز عبور قدیمی</i></label>
+                            <label> رمز عبور قدیمی <i class="fa fa-question-circle" title="در صورت عدم نیاز به تغییر رمز عبور فیلدهای زیر را خالی بگذارید." data-toggle="tooltip" tooltip></i></label>
                             <input ng-model="user_profile_data.old_password" type="password"
                                    class="form-control" placeholder="رمز عبور قدیمی">
 

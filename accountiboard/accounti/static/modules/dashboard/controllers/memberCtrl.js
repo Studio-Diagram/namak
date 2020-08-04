@@ -34,7 +34,7 @@ angular.module("dashboard")
                 'month_of_birth': '',
                 'day_of_birth': '',
                 'phone': '',
-                'intro': 'other',
+                'intro': null,
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
@@ -332,7 +332,7 @@ angular.module("dashboard")
                 'month_of_birth': '',
                 'day_of_birth': '',
                 'phone': '',
-                'intro': 'other',
+                'intro': null,
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };

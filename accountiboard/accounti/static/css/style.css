@@ -695,6 +695,11 @@ tbody {
     border: none;
 }
 
+.littleModal {
+    width: 600px;
+    right: 36%;
+}
+
 form {
 
 }
