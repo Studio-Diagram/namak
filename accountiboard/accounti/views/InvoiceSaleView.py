@@ -17,7 +17,7 @@ def getting_delta_time_to_seconds(start_time, end_time):
     timedelta_end = timedelta(hours=end_time.hour, minutes=end_time.minute,
                               seconds=end_time.second)
     t = timedelta_end - timedelta_start
-    return t.total_seconds()
+    return t.seconds
 
 
 def start_invoice_game(request):
