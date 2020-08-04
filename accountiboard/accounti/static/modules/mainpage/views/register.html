@@ -2,71 +2,53 @@
     <div class="row no-gutters">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <a class="bigLogo" href=""><img src="static/img/namak_logo.svg"></a>
             <form class="generalForm">
-                <h2>ثبت‌ نام در نمک</h2>
+                <h2>ثبت‌ نام در پنل کاربری</h2>
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
                     <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.company_name" type="text" class="form-control"
                            placeholder="نام کمپانی">
 
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.first_name" type="text" class="form-control"
                            placeholder="نام">
 
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.last_name" type="text" class="form-control"
                            placeholder="نام خانوادگی">
 
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.phone" type="text" class="form-control"
                            placeholder="شماره تماس">
 
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.email" type="email" class="form-control"
                            placeholder="ایمیل">
 
                 </div>
-                <div class="form-group  input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-unlock-alt"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.password" type="password" class="form-control" placeholder="رمز عبور">
                 </div>
-                <div class="form-group  input-group">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-unlock-alt"></i></span>
-                    </div>
+                <div class="form-group">
                     <input ng-model="new_user.re_password" type="password" class="form-control"
                            placeholder="تکرار رمز عبور">
                 </div>
-
-                <button ng-click="register_new_user()" type="button" class="submitButton btn btn-primary">
-                    <span ng-show="form_state.is_loading"><i ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
-                    <span ng-hide="form_state.is_loading">ثبت نام</span>
-                </button>
-                <a class="smallLink" ui-sref="login">ورود به نمک</a>
+                <div class="form-group submitButtonWrapper">
+                    <button ng-click="register_new_user()" type="button" class="submitButton btn btn-primary">
+                        <span ng-show="form_state.is_loading"><i
+                                ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
+                        <span ng-hide="form_state.is_loading">ثبت نام</span>
+                    </button>
+                </div>
+                <div class="referButtonWrapper">
+                    <a class="mainButton fullWidthButton transparentButton" ui-sref="login">ورود به پنل کاربری</a>
+                </div>
             </form>
         </div>
     </div>
