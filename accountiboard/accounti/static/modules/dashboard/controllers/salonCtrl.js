@@ -693,7 +693,10 @@ angular.module("dashboard")
             $scope.new_invoice_data.total_price = new_total_price;
         };
 
-        $scope.add_item_shop = function (id, name, price) {
+        $scope.add_item_shop = function (id, name, price, real_numbers) {
+            if (real_numbers <= 0) {
+                return false
+            }
             var int_price = parseInt(price);
             var int_id = parseInt(id);
             var is_fill = false;

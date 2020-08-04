@@ -2003,3 +2003,6 @@ input:checked + .slider .off {
     background-color: transparent;
 }
 
+th.disabled:hover {
+    cursor: no-drop;
+}

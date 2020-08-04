@@ -172,9 +172,9 @@
                                                 <tbody>
                                                 <tr style="border-top: none !important;" class="row"></tr>
                                                 <tr class="row">
-                                                    <th title="{{ shop.price | number | persianNumber }}" data-toggle="tooltip" class="col-sm-6"
+                                                    <th ng-class="shop.real_numbers === 0 ? 'disabled' : ''" title="{{ shop.price | number | persianNumber }}" data-toggle="tooltip" class="col-sm-6"
                                                         ng-repeat="shop in shop_products"
-                                                        ng-click="add_item_shop(shop.id, shop.name, shop.price)" tooltip>
+                                                        ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.real_numbers)" tooltip>
                                                         {{ shop.name }}<span
                                                             ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger mr-1' : 'badge badge-pill badge-dark mr-1'">{{ shop.real_numbers }}</span>
                                                     </th>
