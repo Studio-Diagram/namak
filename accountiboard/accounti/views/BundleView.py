@@ -17,23 +17,30 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
     if datetime.now() > discount.expire_time:
         return (amount, False, 'Discount time expired')
 
-    if discount.num_of_use != None and discount.num_of_use < 1:
+    if discount.num_of_use and discount.num_of_use < 1:
         return (amount, False, 'Discount has no more uses left')
 
-    if discount.cafe_owner != None and discount.cafe_owner != cafe_owner:
+    if discount.cafe_owner and discount.cafe_owner != cafe_owner:
         return (amount, False, 'This discount code is defined for another cafe owner')
 
-    if discount.bundle != None and discount.bundle != bundle:
+    if discount.bundle and discount.bundle != bundle:
         return (amount, False, 'This discount code is defined for another bundle type')
 
     if discount.type == 'amount':
         amount = AVAILABLE_BUNDLES[bundle] - discount.quantity
     elif discount.type == 'percent':
-        amount = AVAILABLE_BUNDLES[bundle] - discount.quantity * AVAILABLE_BUNDLES[bundle]
-        if discount.max_discount_amount != None and amount > discount.max_discount_amount:
-            amount = discount.max_discount_amount
-        elif discount.min_discount_amount != None and amount < discount.min_discount_amount:
-            amount = discount.min_discount_amount
+        discount_amount = (discount.quantity / 100) * AVAILABLE_BUNDLES[bundle]
+        if discount.max_discount_amount and not discount.min_discount_amount and discount_amount > discount.max_discount_amount:
+            discount_amount = discount.max_discount_amount
+        elif discount.min_discount_amount and not discount.max_discount_amount and discount_amount < discount.min_discount_amount:
+            discount_amount = discount.min_discount_amount
+        elif discount.max_discount_amount and discount.min_discount_amount:
+            if discount_amount < discount.min_discount_amount:
+                discount_amount = discount.min_discount_amount
+            elif discount_amount > discount.max_discount_amount:
+                discount_amount = discount.max_discount_amount
+
+        amount = AVAILABLE_BUNDLES[bundle] - discount_amount
 
     return (amount, True, f'Discount code "{discount.name}" applied.')
 
