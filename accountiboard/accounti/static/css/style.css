@@ -19,7 +19,9 @@
     --buttonNavBorder: #959699;
     --mainBody: #eaeff5;
     --white: #fff;
-    --okr: #c7af2a
+    --okr: #c7af2a;
+    --grayButtonBorder: #D8D8D8;
+    --navBarLineHover: #3DA7B1;
 }
 
 body {
@@ -161,7 +163,6 @@ aside.mainAside {
 }
 
 form.generalForm {
-    border: 5px solid #BFD5A8;
     width: 450px;
     text-align: center;
     margin: auto;
@@ -169,19 +170,61 @@ form.generalForm {
     padding: 25px;
 }
 
+form.generalForm h2 {
+    font-size: 1.4em;
+    margin-bottom: 1em;
+    font-weight: 100;
+}
+
+form.generalForm .form-group input {
+    border-color: var(--grayButtonBorder);
+    height: 3.2em;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
 form.generalForm .form-group {
     margin-bottom: 10px;
 }
 
 form.generalForm .submitButton {
-    width: 100%;
-    background: var(--myGreen);
+    background: var(--navBarLine);
     border: none;
-    margin-bottom: 15px;
+    margin-bottom: 1em;
+    font-size: 1em;
+    padding: 0.7em 4em;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
 
 form.generalForm .submitButton:hover {
-    background: var(--myGreen);
+    background: var(--navBarLineHover);
+}
+
+form.generalForm .referButtonWrapper a {
+    border-color: var(--grayButtonBorder);
+    color: var(--myBlack);
+    font-weight: 100;
+}
+
+form.generalForm .referButtonWrapper {
+    border-top: 1px solid var(--grayButtonBorder);
+    padding-top: 1em;
+}
+
+.forgetPasswordLink {
+    font-size: 0.9em;
+    font-weight: 100;
+    vertical-align: super;
+    margin-right: 1em;
+}
+
+form.generalForm .submitButtonWrapper {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
 }
 
 .mainAside nav {
@@ -1951,6 +1994,7 @@ input:checked + .slider .off {
     font-size: 1em;
 }
 
-
-
+.transparentButton {
+    background-color: transparent;
+}
 
