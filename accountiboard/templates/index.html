@@ -19,7 +19,8 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="نمک">
     <meta property="og:title" content="نرم‌افزار مدیریت کار ( نمک )">
-    <meta property="og:description" content="نرم‌افزار مدیریت کار برای مدیریت کسب و کار شما، نرم‌افزار همه‌جانبه و یکپارچه برای مدیریت کافه‌ها">
+    <meta property="og:description"
+          content="نرم‌افزار مدیریت کار برای مدیریت کسب و کار شما، نرم‌افزار همه‌جانبه و یکپارچه برای مدیریت کافه‌ها">
     <meta property="og:url" content="https://namak.works/">
     <meta property="og:locale" content="fa_IR">
     <meta property="og:image" content="https://namak.works/static/img/namak_logo.svg">
@@ -45,21 +46,18 @@
 </head>
 <body ng-app="mainpage">
 
-<div class="topHeader container-fluid">
-    <div class="row">
-        <div class="col-sm-2">
-            <a class="namak_logo" href="index.html">
-                <img src="{% static 'img/namak_logo.svg' %}">
-            </a>
-        </div>
-        <div class="col-sm-6 userInfo">
-
-        </div>
-        <div class="col-sm-4 time_container">
-        </div>
-    </div>
-</div>
-
+<nav class="topHeaderSignin navbar navbar-expand-lg">
+</nav>
+<a class="notch-holder main-page-notch-holder" href="index.html">
+    <img src="{% static 'img/namak-logo-big@2x.png' %}" width="100" height="77">
+    <span>
+                <bold>نمک؛</bold>
+                نرم افزار مدیریت کافه
+            </span>
+    <span class="namakVersion">
+                    v1.0.19
+                </span>
+</a>
 <ui-view></ui-view>
 
 </body>

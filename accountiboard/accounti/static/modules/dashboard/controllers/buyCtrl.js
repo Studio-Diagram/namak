@@ -126,7 +126,10 @@ angular.module("dashboard")
         };
 
         $scope.addInvoicePurchase = function () {
-            $scope.new_invoice_purchase_data.date = $("#datepicker").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_invoice_purchase_data.date = $("#datepicker").val();
+            })(jQuery);
             dashboardHttpRequest.addInvoicePurchase($scope.new_invoice_purchase_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

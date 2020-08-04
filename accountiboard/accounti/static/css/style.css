@@ -15,6 +15,11 @@
     --pageBorder: #d8d8d8;
     --pageBG: #f4f5f8;
     --pageBGHover: #e8e9ef;
+    --navBarLine: #4FCAD5;
+    --buttonNavBorder: #959699;
+    --mainBody: #eaeff5;
+    --white: #fff;
+    --okr: #c7af2a
 }
 
 body {
@@ -27,7 +32,7 @@ body {
     min-height: 0 !important;
     color: var(--myBlack);
     min-width: 360px;
-    background: var(--pageBG);
+    background: var(--mainBody);
 }
 
 @media screen and (min-width: 1900px) {
@@ -87,8 +92,14 @@ a:hover i {
 .topHeader {
     padding: 5px 30px;
     background: var(--myBlack);
-    height: 4.5em;
-    border-top: 5px solid var(--myRed);
+    height: 47px;
+    border-top: 5px solid var(--navBarLine);
+}
+
+.topHeaderSignin {
+    height: 85px;
+    border-top: 12px solid var(--navBarLine);
+    background: var(--myBlack);
 }
 
 .topHeader .userInfo {
@@ -102,12 +113,8 @@ a:hover i {
     font-weight: 100;
 }
 
-.topHeader time {
-    color: #ffffff;
-    border: 1px solid var(--myBlackBorder);
-    margin-left: 30px;
-    padding: 9px 16px 9px 16px;
-    border-radius: 4px;
+.topHeader .user-actions-nav {
+    margin-left: 20px;
 }
 
 main.pageWrapper {
@@ -187,6 +194,7 @@ form.generalForm .submitButton:hover {
 
 .mainAside nav ul li {
     list-style-type: none;
+    margin-bottom: 3px;
 }
 
 .mainAside nav ul li a {
@@ -198,18 +206,28 @@ form.generalForm .submitButton:hover {
 }
 
 .mainAside nav ul li a:hover {
-    background: var(--pageBGHover);
+    background: var(--white);
     font-weight: 400;
+    -webkit-border-radius: 30px 0 0 30px;
+    -moz-border-radius: 30px 0 0 30px;
+    border-radius: 30px 0 0 30px;
+}
+
+.mainAside nav ul li a:hover i {
+    color: var(--okr) !important;
 }
 
 .mainAside nav ul li a.active {
-    border-right: 5px solid var(--myRed);
-    background: var(--pageBGHover);
+    border-right: 5px solid var(--okr);
+    background: var(--white);
     font-weight: 400;
+    -webkit-border-radius: 30px 0 0 30px;
+    -moz-border-radius: 30px 0 0 30px;
+    border-radius: 30px 0 0 30px;
 }
 
 .mainAside nav ul li a.active i {
-    color: var(--myRed);
+    color: var(--okr);
 }
 
 .mainAside nav ul li a i {
@@ -898,6 +916,7 @@ button.mainButton:hover {
 
 button.mainButton i {
     color: white;
+    vertical-align: middle;
 }
 
 table.invoiceTable input.mainButton {
@@ -1813,3 +1832,125 @@ input:checked + .slider .off {
     z-index: 1020;
     background-color: var(--pageBG);
 }
+
+.item-group {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.item-group button {
+    border-radius: 0;
+    border-right: none;
+    border-left: none;
+    border-color: var(--buttonNavBorder);
+    background-color: var(--navBarLine);
+    padding: 0.3em 1.4em;
+}
+
+.item-group > button:first-child {
+    border-right: 1px solid var(--buttonNavBorder);
+    -webkit-border-radius: 0 30px 30px 0;
+    -moz-border-radius: 0 30px 30px 0;
+    border-radius: 0 30px 30px 0;
+}
+
+.item-group > button:last-child {
+    border-left: 1px solid var(--buttonNavBorder);
+    -webkit-border-radius: 30px 0 0 30px;
+    -moz-border-radius: 30px 0 0 30px;
+    border-radius: 30px 0 0 30px;
+}
+
+.item-group button:hover {
+    cursor: unset;
+
+}
+
+.user-actions-nav .item-group button {
+    background-color: transparent;
+}
+
+.user-actions-nav .item-group button:hover {
+    cursor: pointer;
+}
+
+.user-actions-nav .item-group button:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--buttonNavBorder);
+    border-left: 1px solid var(--buttonNavBorder);
+}
+
+.company-nav {
+    margin-left: 20px;
+}
+
+.company-nav .item-group .dropdown button {
+    font-size: 1em;
+    border-left: 1px solid var(--buttonNavBorder);
+    border-right: 1px solid var(--buttonNavBorder);
+    -webkit-border-radius: 30px 0 0 30px;
+    -moz-border-radius: 30px 0 0 30px;
+    border-radius: 30px 0 0 30px;
+}
+
+.company-nav .item-group button {
+    background-color: transparent;
+}
+
+.status-nav .item-group button {
+    border-color: transparent;
+}
+
+.notch-holder {
+    height: 105px;
+    position: relative;
+    background: url("/static/img/tagh.png") no-repeat center 30px;
+    display: flex;
+    width: 100%;
+    flex-flow: column;
+    align-items: center;
+    margin-top: -60px;
+    margin-bottom: 1em;
+}
+
+.notch-holder img {
+    margin-bottom: 1rem;
+}
+
+.notch-holder span {
+    font-weight: 100;
+}
+
+.notch-holder span bold {
+    font-weight: 600;
+}
+
+.notch-holder span.namakVersion {
+    font-family: Tahoma, Serif;
+    font-size: smaller;
+
+}
+
+.notch-holder.main-page-notch-holder {
+    width: 234px;
+    height: 172px;
+    background: url("/static/img/tagh-big@2x.png") no-repeat center 54px;
+    margin: -55px auto 3rem auto;
+}
+
+.notch-holder.main-page-notch-holder img {
+    margin-bottom: 3em;
+}
+
+.notch-holder.main-page-notch-holder span {
+    font-size: 1.3em;
+}
+
+.notch-holder.main-page-notch-holder .namakVersion {
+    font-size: 1em;
+}
+
+
+
+

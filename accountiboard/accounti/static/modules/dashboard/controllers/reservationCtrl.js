@@ -46,9 +46,13 @@ angular.module("dashboard")
                 $scope.get_working_time();
 
                 // Avoid Closing Drop down when clicking inside
-                $(document).on('click', '.dropdown-menu', function (e) {
-                    e.stopPropagation();
-                });
+                jQuery.noConflict();
+                (function ($) {
+                    $(document).on('click', '.dropdown-menu', function (e) {
+                        e.stopPropagation();
+                    });
+                })(jQuery);
+
 
                 $window.onkeyup = function (event) {
                     if (event.keyCode === 27) {
@@ -384,7 +388,10 @@ angular.module("dashboard")
             };
 
             $scope.change_date = function () {
-                $scope.fixed_date = $("#datepicker").val();
+                jQuery.noConflict();
+                (function ($) {
+                    $scope.fixed_date = $("#datepicker").val();
+                })(jQuery);
                 $scope.new_reserve_data.reserve_date = $scope.fixed_date;
                 jQuery.noConflict();
                 (function ($) {

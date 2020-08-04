@@ -31,7 +31,10 @@ angular.module("dashboard")
         };
 
         $scope.get_remainder = function () {
-            $scope.search_data_supplier_remainder.to_time = $("#datepicker_remainder").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.search_data_supplier_remainder.to_time = $("#datepicker_remainder").val();
+            })(jQuery);
             dashboardHttpRequest.getSupplierRemainder($scope.search_data_supplier_remainder)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -48,8 +51,11 @@ angular.module("dashboard")
         };
 
         $scope.filter_data = function () {
-            $rootScope.search_data_supplier.to_time = $("#datepicker").val();
-            $rootScope.search_data_supplier.from_time = $("#datepicker1").val();
+            jQuery.noConflict();
+            (function ($) {
+                $rootScope.search_data_supplier.to_time = $("#datepicker").val();
+                $rootScope.search_data_supplier.from_time = $("#datepicker1").val();
+            })(jQuery);
             $scope.get_sum_invoice_purchases();
             $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
