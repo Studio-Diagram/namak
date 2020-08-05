@@ -25,7 +25,7 @@
         <script src="{% static 'libs/angular-cookies/angular-cookies.min.js' %}"></script>
         <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
         <script src="{% static 'js/popper.min.js' %}"></script>
-        <script src="{% static 'js/bootstrap1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
         <script src="{% static 'js/bootstrap-datepicker.fa.min.js' %}"></script>
         <script src="{% static 'js/angular-sanitize.js' %}"></script>
@@ -67,7 +67,7 @@
         <link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}"/>
 
         <!-- Bootstrap core CSS -->
-        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
         <link href="{% static 'css/select.min.css' %}" rel="stylesheet">
@@ -180,6 +180,39 @@
             <div class="modal-footer">
 
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Position it -->
+<div style="position: absolute; top: 0; right: 0;">
+
+    <!-- Then put toasts within -->
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="..." class="rounded mr-2" alt="...">
+            <strong class="mr-auto">Bootstrap</strong>
+            <small class="text-muted">just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            See? Just like this.
+        </div>
+    </div>
+
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="..." class="rounded mr-2" alt="...">
+            <strong class="mr-auto">Bootstrap</strong>
+            <small class="text-muted">2 seconds ago</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Heads up, toasts will stack automatically
         </div>
     </div>
 </div>

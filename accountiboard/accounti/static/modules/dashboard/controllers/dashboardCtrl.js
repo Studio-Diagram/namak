@@ -70,6 +70,13 @@ angular.module("dashboard")
                 }
             };
 
+            $rootScope.show_toast = function () {
+                jQuery.noConflict();
+                (function ($) {
+                    $('.toast').toast('show');
+                })(jQuery);
+            };
+
             $scope.isActive = function (path) {
                 return ($location.path().substr(0, path.length) === path);
             };
