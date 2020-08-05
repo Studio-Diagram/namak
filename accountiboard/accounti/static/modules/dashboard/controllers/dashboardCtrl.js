@@ -70,10 +70,14 @@ angular.module("dashboard")
                 }
             };
 
-            $rootScope.show_toast = function () {
+            $rootScope.show_toast = function (message, type) {
+                $rootScope.toast_message = message;
+                $rootScope.toast_type = type;
                 jQuery.noConflict();
                 (function ($) {
-                    $('.toast').toast('show');
+                    var toast_object = $('.toast');
+                    toast_object.toast({delay: 3000});
+                    toast_object.toast('show');
                 })(jQuery);
             };
 
@@ -331,6 +335,7 @@ angular.module("dashboard")
                 dashboardHttpRequest.updateProfile($scope.user_profile_data)
                     .then(function (data) {
                         $rootScope.close_modal('userProfileModal');
+                        $rootScope.show_toast("با موفقیت انجام شد", 'success');
                     }, function (error) {
                         $scope.error_message = error.data.error_msg;
                         $rootScope.open_modal('mainErrorModal', 'userProfileModal');

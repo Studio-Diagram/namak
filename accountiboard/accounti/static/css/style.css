@@ -697,7 +697,9 @@ tbody {
 
 .littleModal {
     width: 600px;
-    right: 36%;
+    margin-right: auto;
+    margin-left: auto;
+    right: 0;
 }
 
 form {
@@ -2005,4 +2007,42 @@ input:checked + .slider .off {
 
 th.disabled:hover {
     cursor: no-drop;
+}
+
+.toast {
+    width: 318px;
+    -webkit-border-radius: 0 30px 30px 0;
+    -moz-border-radius: 0 30px 30px 0;
+    border-radius: 0 30px 30px 0;
+    height: 4em;
+}
+
+.toast .toast-body {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.toast.toast-success {
+    border-left: 6px solid #80AB51;
+}
+
+.mainButton.toast-button {
+    -webkit-border-radius: 30px;
+    height: 2em;
+    padding: 0 1em 0 1em;
+}
+
+.toast-success .toast-button {
+    background-color: #80AB51;
+    border-color: transparent;
+}
+
+.toast.toast-danger {
+    border-left: 6px solid #DB4E54;
+}
+
+.toast-danger .toast-button {
+    background-color: #DB4E54;
+    border-color: transparent;
 }
