@@ -17,10 +17,10 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
     if datetime.now() > discount.expire_time:
         return (amount, False, 'Discount time expired')
 
-    if discount.num_of_use and discount.num_of_use < 1:
+    if discount.num_of_use != None and discount.num_of_use < 1:
         return (amount, False, 'Discount has no more uses left')
 
-    if discount.cafe_owner and discount.cafe_owner != cafe_owner:
+    if discount.cafe_owner != None and discount.cafe_owner != cafe_owner:
         return (amount, False, 'This discount code is defined for another cafe owner')
 
     if discount.bundle:
