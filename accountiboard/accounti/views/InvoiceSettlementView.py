@@ -122,10 +122,11 @@ def search_pays(request):
                                                        year=invoice_date.year)
             pays.append({
                 'id': pay.pk,
+                'factor_number': pay.factor_number,
                 'supplier_name': pay.supplier.name,
                 'payment_amount': pay.payment_amount,
-                'settle_type': invoice.get_settle_type_display,
-                'backup_code': invoice.backup_code,
+                'settle_type': pay.get_settle_type_display(),
+                'backup_code': pay.backup_code,
                 'created_time': jalali_date.strftime("%Y/%m/%d")
             })
         return JsonResponse({"response_code": 2, 'pays': pays})
