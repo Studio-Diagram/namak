@@ -2047,3 +2047,7 @@ th.disabled:hover {
     background-color: #DB4E54;
     border-color: transparent;
 }
+
+.mainButton.fullWidthButton.transparentButton:hover {
+    background: #0000000f;
+}

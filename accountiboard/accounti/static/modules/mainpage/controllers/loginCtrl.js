@@ -10,6 +10,7 @@ angular.module("mainpage")
                 "error_msg": "",
                 "is_loading": false
             };
+
         };
 
         $scope.send_login_data = function () {
