@@ -186,7 +186,8 @@
 
 
 <div style="position: absolute; top: 5em; left: 0;z-index: 1050;">
-    <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
+         role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
             <button class="mainButton toast-button ml-1" data-dismiss="toast" aria-label="Close">
                 <i class="fa fa-check"></i>
@@ -277,7 +278,7 @@
                 <ul>
                     <li class="nav-item">
                         <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد{{ user_branches }}
+                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
                         </a>
                     </li>
                     <li class="nav-item">
@@ -326,5 +327,28 @@
         </main>
     </div>
 </div>
+<aside class="leftAside">
+    <nav class="nav flex-column myNav">
+        <ul>
+            <li class="nav-item">
+                <a href=""><i class="fas fa-bug"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href=""><i class="fas fa-magic"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <nav class="nav flex-column myNav">
+        <ul class="d-flex">
+            <li class="nav-item">
+                <button class="mainButton greenButton verticalButton">
+                    باز کردن منوی کناری
+                </button>
+            </li>
+        </ul>
+    </nav>
+</aside>
 </body>
 </html>

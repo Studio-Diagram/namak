@@ -2051,3 +2051,57 @@ th.disabled:hover {
 .mainButton.fullWidthButton.transparentButton:hover {
     background: #0000000f;
 }
+
+main.pageWrapper {
+    flex: 0 0 78%;
+}
+
+aside.leftAside {
+    display: flex;
+    padding: 0 0 2em 0;
+    height: 100%;
+    position: fixed;
+    max-width: 300px;
+    width: 80px;
+    left: 0;
+    top: 47px;
+    background-color: var(--navBarLine);
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.leftAside nav {
+
+}
+
+.leftAside nav ul {
+    padding: 0;
+}
+
+.leftAside nav ul li {
+    list-style-type: none;
+    margin-bottom: 3px;
+}
+
+.leftAside nav ul li a {
+    padding: 15px 30px 15px 0;
+    font-size: 2em;
+    display: block;
+    font-weight: 100;
+    color: var(--white);
+}
+
+.leftAside nav ul li a:hover {
+    color: #ffffffa6;
+}
+
+.leftAside nav ul li a:hover i {
+    color: #ffffffa6;
+}
+
+.verticalButton {
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
