@@ -60,6 +60,9 @@ class LoginView(View):
             return JsonResponse({"response_code": 3})
 
         request.session['is_logged_in'] = username
+
+        TokenBlacklist.objects.filter(user=user_obj).delete()
+
         jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
         return JsonResponse(
             {"response_code": 2,
@@ -698,6 +701,7 @@ class KickUnkickEmployeeView(View):
                 employee_to_patch = Employee.objects.get(pk=employee_id)
                 employee_to_patch.is_active = is_active
                 employee_to_patch.save()
+                TokenBlacklist.objects.create(user=employee_to_patch.user)
                 return JsonResponse({'msg': 'Employee is_active status successfully changed.'}, status=200)
             except:
                 return JsonResponse({'error_msg': 'This employee was not found'}, status=403)
