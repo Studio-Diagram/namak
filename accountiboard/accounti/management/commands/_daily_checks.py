@@ -1,6 +1,7 @@
 from django.utils.timezone import make_aware, now
 from datetime import datetime, timedelta
-from accounti.management.commands._emails import *
+from accountiboard.emails import *
+from accountiboard.sms import *
 from accounti.models import *
 
 
@@ -13,19 +14,19 @@ def check_bundles():
             if bundle.cafe_owner.user.email:
                 send_expiry_email(bundle.cafe_owner.user.email, 7)
 
-            # send 7 days remaining sms
+            send_expiry_sms(bundle.cafe_owner.user.phone, 7)
 
         elif now() + timedelta(days=3, seconds=5) > bundle.expiry_datetime_plan:
             if bundle.cafe_owner.user.email:
                 send_expiry_email(bundle.cafe_owner.user.email, 3)
 
-            # send 3 days remaining sms
+            send_expiry_sms(bundle.cafe_owner.user.phone, 3)
 
         elif now() + timedelta(days=1, seconds=5) > bundle.expiry_datetime_plan:
             if bundle.cafe_owner.user.email:
                 send_expiry_email(bundle.cafe_owner.user.email, 1)
 
-            # send 1 day remaining sms
+            send_expiry_sms(bundle.cafe_owner.user.phone, 1)
 
         elif now() > bundle.expiry_datetime_plan:
             # expire active plan
