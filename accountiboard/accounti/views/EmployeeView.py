@@ -435,6 +435,9 @@ def add_menu_item(request):
         # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
+    if not menu_category_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
     if menu_item_id == 0:
         new_menu_item = MenuItem(
             name=name,
