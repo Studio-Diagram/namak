@@ -276,6 +276,7 @@ class PayirCallbackView(View):
             current_bundle.save()
 
             if current_bundle.is_active:
+                TokenBlacklist.objects.create(user=current_cafe_owner.user)
                 return JsonResponse({
                     'msg': "Bundle created and activated"
                 }, status=200)
