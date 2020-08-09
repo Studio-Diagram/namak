@@ -2,7 +2,7 @@ import requests
 from django.conf import settings
 
 def send_expiry_sms(receiver_phone, num_of_days):
-    r1 = requests.post(settings.SMSIR_TOKEN_URL, data=settings.SMSIR_TOKEN_REQUEST)
+    r1 = requests.post(settings.SMSIR_TOKEN_URL, json=settings.SMSIR_TOKEN_REQUEST)
     token_json_response = r1.json()
 
     if token_json_response['IsSuccessful']:
