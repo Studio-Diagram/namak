@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
-from django.contrib.postgres.fields import JSONField
+# from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from uuid import uuid4
 
 
@@ -675,3 +676,8 @@ class Bundle(models.Model):
     is_expired = models.BooleanField(null=False, blank=False, default=False)
     cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
     transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)
+
+
+class TokenBlacklist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True)

@@ -5,6 +5,7 @@ from django.http import JsonResponse
 import json
 import jwt
 from accountiboard.settings import JWT_SECRET
+from accounti.models import TokenBlacklist
 
 
 def permission_decorator(permission_func, permitted_roles, bundles, branch_disable=False):
@@ -69,7 +70,7 @@ def session_authenticate(request, permitted_roles, branch_disable=False):
 def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     request_branch = get_branch(request)
-    if not payload:
+    if not payload or TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
         return {
             "state": False,
             "message": UNAUTHENTICATED

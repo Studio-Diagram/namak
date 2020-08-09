@@ -193,7 +193,7 @@ def search_employee(request):
     return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']}, {USER_PLANS_CHOICES['STANDARDNORMAL']})
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']}, {USER_PLANS_CHOICES['ENTERPRISE']})
 def get_employees(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
