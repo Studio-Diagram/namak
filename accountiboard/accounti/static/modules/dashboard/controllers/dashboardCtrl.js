@@ -342,6 +342,19 @@ angular.module("dashboard")
                     });
             };
 
+            $rootScope.collapseLeftSidebar = function () {
+                jQuery.noConflict();
+                (function ($) {
+                    if ($('#leftSidebarWrapper.collapseComplete').length && $('#rightSidebarPageContentWrapper.collapseComplete').length) {
+                        $('#leftSidebarWrapper').removeClass('collapseComplete');
+                        $('#rightSidebarPageContentWrapper').removeClass('collapseComplete');
+                    }
+                    else {
+                        $('#leftSidebarWrapper').addClass('collapseComplete');
+                        $('#rightSidebarPageContentWrapper').addClass('collapseComplete');
+                    }
+                })(jQuery);
+            };
 
             initialize();
 

@@ -278,16 +278,11 @@ form.generalForm .submitButtonWrapper {
 }
 
 main.pageContent {
-    padding: 0;
     padding-left: 25px;
     margin: 0;
-    position: absolute;
-    top: 41px;
-    right: 0;
-    left: 0;
-    bottom: 0;
     overflow: auto;
     width: 100%;
+    height: calc(100vh - 118px);
 }
 
 main.pageContent a:hover {
@@ -2052,51 +2047,36 @@ th.disabled:hover {
     background: #0000000f;
 }
 
-main.pageWrapper {
-    flex: 0 0 78%;
-}
-
 aside.leftAside {
-    display: flex;
-    padding: 0 0 2em 0;
-    height: 100%;
-    position: fixed;
-    max-width: 300px;
-    width: 80px;
+    background-color: #F4F7FA;
+    position: absolute;
+    top: -30px;
+    bottom: 0;
+    right: 0;
     left: 0;
-    top: 47px;
-    background-color: var(--navBarLine);
-    flex-direction: column;
+    display: flex;
+    flex-flow: column;
     justify-content: space-between;
 }
 
-.leftAside nav {
-
-}
-
-.leftAside nav ul {
-    padding: 0;
-}
-
-.leftAside nav ul li {
-    list-style-type: none;
-    margin-bottom: 3px;
-}
-
-.leftAside nav ul li a {
-    padding: 15px 30px 15px 0;
+.leftAside a {
+    padding: 1em 1em 0 0;
     font-size: 2em;
-    display: block;
+    display: flex;
     font-weight: 100;
-    color: var(--white);
+    color: var(--navBarLine);
 }
 
-.leftAside nav ul li a:hover {
-    color: #ffffffa6;
+.leftAside a span {
+    margin-right: 0.6em;
 }
 
-.leftAside nav ul li a:hover i {
-    color: #ffffffa6;
+.leftAside a:hover {
+
+}
+
+.leftAside a:hover i {
+
 }
 
 .verticalButton {
@@ -2104,4 +2084,120 @@ aside.leftAside {
     -ms-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
     -webkit-transform: rotate(-90deg);
+}
+
+#rightSidebarPageContentWrapper {
+    width: calc(100vw - 79px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#leftSidebarWrapper {
+    width: 79px;
+    display: flex;
+    position: relative;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#dashboardWrapper {
+    padding-left: 0;
+    display: flex;
+}
+
+#rightSidebarPageContentWrapper.collapseComplete {
+    width: calc(100vw - 300px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#leftSidebarWrapper.collapseComplete {
+    width: 300px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#leftSidebarWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#rightSidebarPageContentWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftSidebarWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftAsideBugReportForm {
+    display: none;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#leftSidebarWrapper.collapseComplete #leftAsideBugReportForm {
+    display: block;
+    margin: 1.7em;
+}
+
+.newsWrapper {
+    display: none;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#leftSidebarWrapper.collapseComplete .newsWrapper {
+    display: block;
+    margin: 1.7em;
+}
+
+.newsWrapper .news p {
+    text-align: justify;
+}
+
+.newsWrapper .news {
+    border-bottom: 1px solid var(--grayButtonBorder);
+}
+
+#leftSidebarWrapper.collapseComplete a {
+    color: var(--myGreen);
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-left {
+    display: block;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-right {
+    display: none;
 }

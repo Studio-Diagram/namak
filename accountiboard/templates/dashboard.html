@@ -261,94 +261,126 @@
     </div>
 </nav>
 
-<div class="container-fluid masterWrapper">
-    <div class="row">
-        <aside class="col-sm-2 mainAside">
-            <a class="notch-holder" href="index.html">
-                <img src="{% static 'img/namak-logo@2x.png' %}" width="54" height="42">
-                <span>
+<div class="container-fluid masterWrapper" id="dashboardWrapper">
+    <div id="rightSidebarPageContentWrapper">
+        <div class="row">
+            <aside class="col-sm-2 mainAside">
+                <a class="notch-holder" href="index.html">
+                    <img src="{% static 'img/namak-logo@2x.png' %}" width="54" height="42">
+                    <span>
                 <bold>نمک؛</bold>
                 نرم افزار مدیریت کافه
             </span>
-                <span class="namakVersion">
+                    <span class="namakVersion">
                     v1.0.19
                 </span>
-            </a>
-            <nav class=" nav flex-column myNav">
-                <ul>
-                    <li class="nav-item">
-                        <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager.salon"
-                           href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
+                </a>
+                <nav class=" nav flex-column myNav">
+                    <ul>
+                        <li class="nav-item">
+                            <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
+                               ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
+                               ui-sref="cash_manager.salon"
+                               href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
-                    </li>
-                    <li class="nav-item">
-                        <a ui-sref="reservation" ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
-                           class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
-                    </li>
-                    <li class="nav-item">
-                        <a ui-sref="member_manager.member" href=""
-                           ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-id-card"></i>عضویت</a>
-                    </li>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="reservation"
+                               ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
+                               class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="member_manager.member" href=""
+                               ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
+                                    class="fas fa-id-card"></i>عضویت</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a ui-sref="boardgame" href=""
-                           ng-class="isActive('/boardgame') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        <li class="nav-item">
+                            <a ui-sref="boardgame" href=""
+                               ng-class="isActive('/boardgame') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-chess"></i>قفسه بازی‌ها</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
-                    </li>
-                    <li class="nav-item">
-                        <a ui-sref="account_manager.buy" href=""
-                           ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="account_manager.buy" href=""
+                               ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-chess"></i>حسابداری</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
-                    </li>
-                    <li class="nav-item" class="nav-link">
-                        <a ui-sref="manager.addEmployee"
-                           ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-cogs"></i>مدیریت</a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="col-sm-10 pageWrapper">
-            <ui-view></ui-view>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
+                        </li>
+                        <li class="nav-item" class="nav-link">
+                            <a ui-sref="manager.addEmployee"
+                               ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
+                                    class="fas fa-cogs"></i>مدیریت</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="col-sm-10 pageWrapper">
+                <ui-view></ui-view>
 
-        </main>
+            </main>
+        </div>
     </div>
+
+    <div id="leftSidebarWrapper">
+        <aside class="leftAside">
+            <div>
+                <a class="leftSideTitle" href="">
+                    <i class="fas fa-bug"></i>
+                    <span>گزارش اشکال</span>
+                </a>
+                <form id="leftAsideBugReportForm">
+                    <div class="row">
+                        <div class="col">
+                            <input ng-model="user_profile_data.first_name" type="text"
+                                   class="form-control" placeholder="عنوان">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                        <textarea ng-model="new_bug_data.description" cols="4"
+                                  class="form-control" placeholder="توضیحات"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input ng-model="new_bug_data.image" type="file"
+                                   class="form-control" placeholder="پیوست تصویر ( اختیاری )">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="mainButton greenButton">ارسال</button>
+                        </div>
+                    </div>
+                </form>
+                <a class="leftSideTitle" href="">
+                    <i class="fas fa-magic"></i>
+                    <span>امکانات جدید</span>
+                </a>
+                <div class="newsWrapper">
+                    <div class="news">
+                        <h6>انبار اینجاست!</h6>
+                        <p>ازین به بعد می توانید در بخش مدیریت انبارهای مختلف بسازید و فاکتورهای خرید را به انارها نسبت
+                            دهید.</p>
+                    </div>
+                </div>
+            </div>
+            <a class="leftSideTitle" href="" ng-click="collapseLeftSidebar()">
+                <i class="fas fa-angle-double-right"></i>
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </aside>
+    </div>
+
 </div>
-<aside class="leftAside">
-    <nav class="nav flex-column myNav">
-        <ul>
-            <li class="nav-item">
-                <a href=""><i class="fas fa-bug"></i>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href=""><i class="fas fa-magic"></i>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <nav class="nav flex-column myNav">
-        <ul class="d-flex">
-            <li class="nav-item">
-                <button class="mainButton greenButton verticalButton">
-                    باز کردن منوی کناری
-                </button>
-            </li>
-        </ul>
-    </nav>
-</aside>
 </body>
 </html>
