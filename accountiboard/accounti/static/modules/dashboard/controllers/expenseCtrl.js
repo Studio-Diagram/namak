@@ -119,8 +119,11 @@ angular.module("dashboard")
         };
 
         $scope.addExpense = function () {
-            $scope.new_invoice_expense_data.expense_tags = $scope.tags;
-            $scope.new_invoice_expense_data.date = $("#datepicker").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_invoice_expense_data.expense_tags = $scope.tags;
+                $scope.new_invoice_expense_data.date = $("#datepicker").val();
+            })(jQuery);
             dashboardHttpRequest.addExpense($scope.new_invoice_expense_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

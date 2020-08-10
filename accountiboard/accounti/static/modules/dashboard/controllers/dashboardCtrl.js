@@ -15,6 +15,12 @@ angular.module("dashboard")
                         };
                         $rootScope.user_full_name = JSON.parse(localStorage.full_name);
                         $rootScope.user_branches = JSON.parse(localStorage.branches);
+                        for (var i = 0; i < $rootScope.user_branches.length; i++) {
+                            if ($rootScope.user_branches[i].id === $rootScope.user_data.branch) {
+                                $rootScope.selecetd_branch = $rootScope.user_branches[i];
+                                break;
+                            }
+                        }
                         $rootScope.user_roles = JSON.parse(localStorage.user_roles);
                         $rootScope.cash_data = {
                             'cash_id': 0
@@ -27,7 +33,7 @@ angular.module("dashboard")
                 }
 
                 $transitions.onBefore({}, function (transition) {
-                    if (transition._targetState._identifier !== $state.current.name){
+                    if (transition._targetState._identifier !== $state.current.name) {
                         $rootScope.is_page_loading = true;
                     }
                 });
@@ -283,7 +289,9 @@ angular.module("dashboard")
                 }
             };
 
-            $rootScope.changeBranch = function () {
+            $rootScope.changeBranch = function (selected_branch) {
+                $rootScope.user_data.branch = selected_branch.id;
+                $rootScope.selected_branch = selected_branch;
                 $state.go("cash_manager", {}, {reload: true});
             };
 

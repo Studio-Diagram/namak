@@ -67,8 +67,8 @@ angular.module("dashboard")
                         }).remove();
                     },
                     afterDone: function () {
-                        var seleceted_min = $('#expire_credit_time').val().split(":")[1];
-                        if (!choices.includes(seleceted_min)) {
+                        var selected_min = $('#expire_credit_time').val().split(":")[1];
+                        if (!choices.includes(selected_min)) {
                             $('#expire_credit_time').val("");
                         }
                         else {
@@ -149,10 +149,13 @@ angular.module("dashboard")
 
 
         $scope.create_credit = function () {
-            $scope.new_credit_data.expire_date = $("#expire_credit_date").val();
-            $scope.new_credit_data.expire_time = $("#expire_credit_time").val();
-            $scope.new_credit_data.start_date = $("#start_credit_date").val();
-            $scope.new_credit_data.start_time = $("#start_credit_time").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_credit_data.expire_date = $("#expire_credit_date").val();
+                $scope.new_credit_data.expire_time = $("#expire_credit_time").val();
+                $scope.new_credit_data.start_date = $("#start_credit_date").val();
+                $scope.new_credit_data.start_time = $("#start_credit_time").val();
+            })(jQuery);
             dashboardHttpRequest.createCredit($scope.new_credit_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

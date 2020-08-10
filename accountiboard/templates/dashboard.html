@@ -22,31 +22,14 @@
     <script src="{% static 'libs/satellizer/dist/satellizer.min.js' %}"></script>
     <script src="{% static 'libs/angular-cookies/angular-cookies.min.js' %}"></script>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
-    <link href="{% static 'css/select.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/select2.css' %}" rel="stylesheet">
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'fontawesome-free-5.11.2-web/css/all.css' %}">
-
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.fa.min.js' %}"></script>
+    <script src="{% static 'js/angular-sanitize.js' %}"></script>
+    <script src="{% static 'js/select.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
     <script src="{% static 'modules/dashboard/dashboardApp.js' %}"></script>
     <script src="{% static 'modules/dashboard/services/dashboardHttpRequest.js' %}"></script>
     <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
@@ -76,6 +59,31 @@
     <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/printerCtrl.js' %}"></script>
     <script src="{% static 'modules/dashboard/controllers/reportsCtrl.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}"/>
+    <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
+    <link href="{% static 'css/select.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/select2.css' %}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'fontawesome-free-5.11.2-web/css/all.css' %}">
+
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
@@ -166,52 +174,83 @@
         </div>
     </div>
 </div>
-<div class="topHeader container-fluid">
-    <div class="row">
-        <div class="col-sm-1 mainLogo">
-            <a class="" href="index.html">
-                <img src="{% static 'img/namak_logo.svg' %}" width="104" height="26"
-                     class="d-inline-block align-top namak_logo">
-            </a>
-        </div>
-        <div class="col-sm-1 time_container">
-            <label class="switch"><input type="checkbox" id="togBtn" checked disabled>
-                <div class="slider round"><!--ADDED HTML --><span class="on">آنلاین</span><span
-                        class="off">آفلاین</span><!--END--></div>
-            </label>
-        </div>
-        <div class="col-sm-2 time_container">
-            <span class="time_slot" ng-bind="clock | date:'HH:mm' | persianNumber"></span>
-            <span class="time_slot">/</span>
-            <span class="time_slot" ng-bind="get_today_var | persianNumber"></span>
-        </div>
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4 userInfo">
-            <div class="row">
-                <div class="col-md-6">
-                    <select ng-change="changeBranch()" ng-model="user_data.branch" class="form-control blackSelect">
-                        <option ng-repeat="user_branch in user_data.branches"
-                                ng-selected="user_data.branch === user_branch.id" ng-value="user_branch.id"
-                                ng-bind="user_branch.name"></option>
-                    </select>
+<nav class="topHeader navbar navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item company-nav">
+                <div class="item-group">
+                    <button class="mainButton">
+                        <i class="fas fa-cogs"></i>
+                        <span> کافه برد </span>
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span ng-bind="selecetd_branch.name"></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a ng-repeat="user_branch in user_data.branches" class="dropdown-item"
+                               ng-click="changeBranch(user_branch)" href="">
+                                <span ng-bind="user_branch.name"></span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <a ng-click="log_out()" class="mainButton blackButton" style="padding: 7px" href="">
-                        <i class="fas fa-sign-out-alt"></i>
+            </li>
+            <li class="nav-item user-actions-nav">
+                <div class="item-group" role="group">
+                    <button class="mainButton">
                         <span ng-bind="user_full_name"></span>
-                    </a>
-                    <a ng-click="open_user_profile()" class="mainButton blackButton" style="padding: 7px" href="">
-                        <i class="fas fa-user-cog"></i>
-                    </a>
+                    </button>
+                    <button ng-click="open_user_profile()" class="mainButton">
+                        <i class="fas fa-cogs"></i>
+                        <span> تنظیمات </span>
+                    </button>
+                    <button ng-click="log_out()" class="mainButton">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span> خروج </span>
+                    </button>
                 </div>
-            </div>
-        </div>
+            </li>
+            <li class="nav-item status-nav">
+                <div class="item-group" role="group">
+                    <button class="mainButton">
+                        <i class="fa fa-cloud"></i>
+                        <span> آنلاین </span>
+                    </button>
+                    <button class="mainButton">
+                        <i class="fa fa-calendar"></i>
+                        <span class="time_slot" ng-bind="get_today_var | persianNumber"></span>
+                    </button>
+                    <button class="mainButton">
+                        <i class="fa fa-clock"></i>
+                        <span class="time_slot" ng-bind="clock | date:'HH:mm' | persianNumber"></span>
+                    </button>
+                </div>
+            </li>
+        </ul>
+
     </div>
-</div>
+</nav>
+
 <div class="container-fluid masterWrapper">
     <div class="row">
         <aside class="col-sm-2 mainAside">
-
+            <a class="notch-holder" href="index.html">
+                <img src="{% static 'img/namak-logo@2x.png' %}" width="54" height="42">
+                <span>
+                <bold>نمک؛</bold>
+                نرم افزار مدیریت کافه
+            </span>
+                <span class="namakVersion">
+                    v1.0.19
+                </span>
+            </a>
             <nav class=" nav flex-column myNav">
                 <ul>
                     <li class="nav-item">
@@ -221,7 +260,7 @@
                     </li>
                     <li class="nav-item">
                         <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager"
+                           ui-sref="cash_manager.salon"
                            href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
                     </li>
@@ -265,16 +304,5 @@
         </main>
     </div>
 </div>
-<script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-<script src="{% static 'js/bootstrap1.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-datepicker.fa.min.js' %}"></script>
-<script src="{% static 'js/angular-sanitize.js' %}"></script>
-<script src="{% static 'js/select.min.js' %}"></script>
-<script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
-
-<link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}"/>
-<script src="{% static 'js/ng-tags-input.min.js' %}"></script>
 </body>
 </html>

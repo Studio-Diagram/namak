@@ -38,7 +38,13 @@ EMAIL_HOST_PASSWORD = 'cafeboard@cafeboard'
 
 ALLOWED_HOSTS = ['*']
 MAILER_LIST = ['imanshafiei540@gmail.com']
-# Application definition
+
+SMSIR_TOKEN_URL = 'https://RestfulSms.com/api/Token'
+SMSIR_ULTRAFAST_SEND_URL = 'https://RestfulSms.com/api/UltraFastSend'
+SMSIR_TOKEN_REQUEST = {
+    'UserApiKey' : 'fdde10467c6c52bfced9eddf',
+    'SecretKey'  : 'YkWWfq8jZkVRqsxp14lVjiNgElWxS9Gz',
+}
 
 INSTALLED_APPS = [
     'accounti.apps.AccountiConfig',

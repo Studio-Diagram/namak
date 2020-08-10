@@ -136,7 +136,10 @@ angular.module("dashboard")
         };
 
         $scope.addReturn = function () {
-            $scope.new_invoice_return_data.date = $("#datepicker").val();
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_invoice_return_data.date = $("#datepicker").val();
+            })(jQuery);
             dashboardHttpRequest.addReturn($scope.new_invoice_return_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {

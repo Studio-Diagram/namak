@@ -29,15 +29,18 @@ angular.module("dashboard")
             $scope.get_boardgames_data($rootScope.user_data);
         };
         $scope.FileChange = function () {
-            var fileName = $('#customFile').val();
-            $('#customFile').next('.custom-file-label').html(fileName);
-            var reader = new FileReader();
-            var $img = $("#customFile")[0];
-            reader.onload = function (e) {
-                $scope.new_boardgame_data.image_path = e.target.result;
-                $scope.new_boardgame_data.image_name = $img.files[0].name;
-            };
-            reader.readAsDataURL($img.files[0]);
+            jQuery.noConflict();
+            (function ($) {
+                var fileName = $('#customFile').val();
+                $('#customFile').next('.custom-file-label').html(fileName);
+                var reader = new FileReader();
+                var $img = $("#customFile")[0];
+                reader.onload = function (e) {
+                    $scope.new_boardgame_data.image_path = e.target.result;
+                    $scope.new_boardgame_data.image_name = $img.files[0].name;
+                };
+                reader.readAsDataURL($img.files[0]);
+            })(jQuery);
         };
 
         $scope.get_boardgames_data = function (data) {
