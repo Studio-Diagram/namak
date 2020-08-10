@@ -3,7 +3,8 @@ angular.module("mainpage")
         var initialize = function () {
             $scope.user_login_data = {
                 "username": '',
-                "password": ''
+                "password": '',
+                "recaptcha_token": ''
             };
             $scope.form_state = {
                 "is_error": false,
@@ -13,6 +14,15 @@ angular.module("mainpage")
         };
 
         $scope.send_login_data = function () {
+            jQuery.noConflict();
+            (function ($) {
+                grecaptcha.ready(function() {
+                  grecaptcha.execute('6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm', {action: 'submit'}).then(function(token) {
+                    console.log(token);
+                  });
+                });
+            })(jQuery);
+            
             $scope.form_state.is_loading = true;
             mainpageHttpRequest.loginUser($scope.user_login_data)
                 .then(function (data) {

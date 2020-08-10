@@ -686,3 +686,9 @@ class Bundle(models.Model):
 class TokenBlacklist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_time = models.DateTimeField(default=timezone.now)
+
+
+class SmsToken(models.Model):
+    phone = models.CharField(max_length=30, null=False, blank=False)
+    token = models.CharField(max_length=30, null=False, blank=False)
+    created_time = models.DateTimeField(default=timezone.now)

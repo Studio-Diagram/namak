@@ -46,6 +46,10 @@ SMSIR_TOKEN_REQUEST = {
     'SecretKey'  : 'YkWWfq8jZkVRqsxp14lVjiNgElWxS9Gz',
 }
 
+RECAPTCHA_SITE_KEY   = '6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm'
+RECAPTCHA_SECRET_KEY = '6LenhbwZAAAAAGl4zUfwmXUXqLddrkOM3IANGiaD'
+
+
 INSTALLED_APPS = [
     'accounti.apps.AccountiConfig',
     'django.contrib.admin',
