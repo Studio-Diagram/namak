@@ -27,7 +27,7 @@ class LatestNewsView(View):
                                     ).strftime('%Y/%m/%d %H:%M')
             } for x in all_news_queryset]
 
-        return JsonResponse({'all_news': all_news_list}, status=200)
+        return JsonResponse({'results': all_news_list}, status=200)
 
 
     @permission_decorator_class_based(token_authenticate,

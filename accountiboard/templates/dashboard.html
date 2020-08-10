@@ -367,10 +367,9 @@
                     <span>امکانات جدید</span>
                 </a>
                 <div class="newsWrapper">
-                    <div class="news">
-                        <h6>انبار اینجاست!</h6>
-                        <p>ازین به بعد می توانید در بخش مدیریت انبارهای مختلف بسازید و فاکتورهای خرید را به انارها نسبت
-                            دهید.</p>
+                    <div ng-repeat="news in all_news" class="news">
+                        <h6 ng-bind="news.title"></h6>
+                        <p ng-bind="news.text"></p>
                     </div>
                 </div>
             </div>

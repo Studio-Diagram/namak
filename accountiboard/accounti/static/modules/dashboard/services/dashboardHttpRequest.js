@@ -957,6 +957,12 @@ angular.module('dashboard')
                     'method': "GET",
                     'url': "/api/report/" + data
                 });
+            },
+            'get_news': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/latestnews/"
+                });
             }
 
 

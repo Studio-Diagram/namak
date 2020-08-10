@@ -27,6 +27,7 @@ angular.module("dashboard")
                             'cash_id': 0
                         };
                         $scope.get_today_cash();
+                        $scope.get_news();
                     }
                 }
                 else {
@@ -354,6 +355,16 @@ angular.module("dashboard")
                         $('#rightSidebarPageContentWrapper').addClass('collapseComplete');
                     }
                 })(jQuery);
+            };
+
+            $scope.get_news = function () {
+                dashboardHttpRequest.get_news()
+                    .then(function (data) {
+                        $rootScope.all_news = data['results'];
+                    }, function (error) {
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
+                    });
             };
 
             initialize();

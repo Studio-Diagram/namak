@@ -2151,31 +2151,27 @@ aside.leftAside {
 }
 
 #leftAsideBugReportForm {
+    visibility: hidden;
+    opacity: 0;
     display: none;
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all all 0.3s ease-in-out;
-    -ms-transition: all all 0.3s ease-in-out;
-    -o-transition: all all 0.3s ease-in-out;
-    transition: all all 0.3s ease-in-out;
 }
 
 #leftSidebarWrapper.collapseComplete #leftAsideBugReportForm {
-    display: block;
     margin: 1.7em;
+    visibility: visible;
+    animation: showElement 0s 0.3s forwards;
+    display: block;
 }
 
 .newsWrapper {
-    display: none;
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all all 0.3s ease-in-out;
-    -ms-transition: all all 0.3s ease-in-out;
-    -o-transition: all all 0.3s ease-in-out;
-    transition: all all 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
 }
 
 #leftSidebarWrapper.collapseComplete .newsWrapper {
-    display: block;
     margin: 1.7em;
+    visibility: visible;
+    animation: showElement 0s 0.3s forwards;
 }
 
 .newsWrapper .news p {
@@ -2184,6 +2180,7 @@ aside.leftAside {
 
 .newsWrapper .news {
     border-bottom: 1px solid var(--grayButtonBorder);
+    margin-top: 2em;
 }
 
 #leftSidebarWrapper.collapseComplete a {
@@ -2201,3 +2198,13 @@ aside.leftAside {
 #leftSidebarWrapper.collapseComplete i.fa-angle-double-right {
     display: none;
 }
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    margin-bottom: 0.6em;
+}
+
+#leftSidebarWrapper i.fa-angle-double-right {
+    margin-bottom: 0.6em;
+}
+
+@keyframes showElement  { to { opacity: 1; } }
