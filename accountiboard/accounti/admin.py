@@ -5,6 +5,9 @@ from accounti.models import *
 class CashAdmin(admin.ModelAdmin):
     readonly_fields = ('created_date_time',)
 
+class BugReportAdmin(admin.ModelAdmin):
+    readonly_fields = ('created_time',)
+
 
 admin.site.register(User)
 admin.site.register(CafeOwner)
@@ -57,3 +60,4 @@ admin.site.register(GiftCode)
 admin.site.register(Transaction)
 admin.site.register(Bundle)
 admin.site.register(LatestNews)
+admin.site.register(BugReport, BugReportAdmin)
