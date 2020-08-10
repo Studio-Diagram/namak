@@ -61,8 +61,6 @@ class LoginView(View):
 
         request.session['is_logged_in'] = username
 
-        TokenBlacklist.objects.filter(user=user_obj).delete()
-
         jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
         return JsonResponse(
             {"response_code": 2,
