@@ -76,6 +76,7 @@ class Employee(models.Model):
     shaba_number = models.CharField(max_length=255, null=True, blank=True)
     # User Base
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.phone
@@ -178,8 +179,8 @@ class Member(models.Model):
     )
     first_name = models.CharField(max_length=255, null=False)
     last_name = models.CharField(max_length=255, null=False)
-    card_number = models.CharField(max_length=20, null=False, unique=True)
-    phone = models.CharField(max_length=30, null=False, unique=True)
+    card_number = models.CharField(max_length=20, null=False)
+    phone = models.CharField(max_length=30, null=False)
     intro = models.CharField(max_length=255, choices=INTRO_CHOICES, default='other')
     year_of_birth = models.IntegerField(null=False)
     month_of_birth = models.IntegerField(null=False)
@@ -188,6 +189,9 @@ class Member(models.Model):
 
     def __str__(self):
         return self.first_name + " " + self.last_name
+
+    class Meta:
+        unique_together = (('phone', 'organization'), ('card_number', 'organization'))
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)

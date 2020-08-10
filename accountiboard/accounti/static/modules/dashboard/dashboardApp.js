@@ -145,6 +145,10 @@ myApp.config(function ($stateProvider, $authProvider) {
                 dynamic: true,
                 value: null
             },
+            "branches": {
+                dynamic: true,
+                value: null
+            },
             "suppliers": {
                 dynamic: true,
                 value: null
@@ -338,4 +342,18 @@ myApp.run(function ($window, $rootScope, $http) {
             $rootScope.online = true;
         });
     }, false);
+});
+
+myApp.directive('tableDirective', function () {
+    return {
+        restrict: 'EA',
+        scope: {
+            headers: '=',
+            rows: '=',
+            config: '=',
+            detailCallback: '&'
+        },
+        templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
+    }
+
 });

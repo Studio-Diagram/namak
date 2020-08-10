@@ -6,8 +6,153 @@ angular.module("dashboard")
                 report_category: "",
                 start_date: "",
                 end_date: "",
+                branches: [],
                 suppliers: [],
                 settlement_types: []
+            };
+            $scope.headers = {
+                INVOICE_SALE: [
+                    {
+                        name: "شماره فاکتور",
+                        key: "id"
+                    },
+                    {
+                        name: "قیمت کل",
+                        key: "price"
+                    },
+                    {
+                        name: "تاریخ ساخت",
+                        key: "created_time"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
+                    }
+                ],
+                INVOICE_EXPENSE: [
+                    {
+                        name: "شماره فاکتور",
+                        key: "id"
+                    },
+                    {
+                        name: "قیمت کل",
+                        key: "price"
+                    },
+                    {
+                        name: "تاریخ ساخت",
+                        key: "created_time"
+                    },
+                    {
+                        name: "تامین‌کننده",
+                        key: "supplier"
+                    },
+                    {
+                        name: "دسته‌بندی",
+                        key: "expense_category"
+                    },
+                    {
+                        name: "نوع پرداخت",
+                        key: "settlement_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
+                    }
+                ],
+                INVOICE_PAY: [
+                    {
+                        name: "شماره فاکتور",
+                        key: "id"
+                    },
+                    {
+                        name: "قیمت کل",
+                        key: "price"
+                    },
+                    {
+                        name: "تاریخ ساخت",
+                        key: "created_time"
+                    },
+                    {
+                        name: "تامین‌کننده",
+                        key: "supplier"
+                    },
+                    {
+                        name: "نوع پرداخت",
+                        key: "settle_type"
+                    },
+                    {
+                        name: "شماره ارجاع",
+                        key: "backup_code"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
+                    }
+                ],
+                INVOICE_PURCHASE: [
+                    {
+                        name: "شماره فاکتور",
+                        key: "id"
+                    },
+                    {
+                        name: "قیمت کل",
+                        key: "price"
+                    },
+                    {
+                        name: "تاریخ ساخت",
+                        key: "created_time"
+                    },
+                    {
+                        name: "تامین‌کننده",
+                        key: "supplier"
+                    },
+                    {
+                        name: "نوع فاکتور",
+                        key: "settlement_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
+                    }
+                ],
+                INVOICE_RETURN: [
+                    {
+                        name: "شماره فاکتور",
+                        key: "id"
+                    },
+                    {
+                        name: "قیمت کل",
+                        key: "price"
+                    },
+                    {
+                        name: "تاریخ ساخت",
+                        key: "created_time"
+                    },
+                    {
+                        name: "تامین‌کننده",
+                        key: "supplier"
+                    },
+                    {
+                        name: "نام محصول",
+                        key: "shop_name"
+                    },
+                    {
+                        name: "تعداد",
+                        key: "numbers"
+                    },
+                    {
+                        name: "توضیحات",
+                        key: "description"
+                    },
+                    {
+                        name: "نوع مرجوعی",
+                        key: "return_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
+                    }
+                ]
             };
             $scope.settlement_types = [
                 {
@@ -19,10 +164,33 @@ angular.module("dashboard")
                     name: "اعتباری"
                 },
                 {
-                    id: "AMANI",
+                    id: "AMANi",
                     name: "امانی"
                 }
             ];
+
+            $scope.invoice_type_configs = {
+                INVOICE_SALE: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                },
+                INVOICE_PURCHASE: {
+                    price_fields: ["price"],
+                    has_detail_button: true
+                },
+                INVOICE_PAY: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                },
+                INVOICE_EXPENSE: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                },
+                INVOICE_RETURN: {
+                    price_fields: ["price"],
+                    has_detail_button: false
+                }
+            };
 
             $scope.invoice_types = [
                 {
@@ -102,16 +270,20 @@ angular.module("dashboard")
         };
 
         $scope.get_report = function () {
+            var starting_date = $("#start_date_picker").val() ? $("#start_date_picker").val() : $state.params.start;
+            var ending_date = $("#end_date_picker").val() ? $("#end_date_picker").val() : $state.params.end;
             dashboardHttpRequest.getReport('?type=' + $scope.report_data.report_category +
-                '&start=' + $("#start_date_picker").val() +
-                '&end=' + $("#end_date_picker").val() +
+                '&start=' + starting_date +
+                '&end=' + ending_date +
+                '&branches=' + $scope.report_data.branches +
                 '&suppliers=' + $scope.report_data.suppliers +
                 '&s_types=' + $scope.report_data.settlement_types)
                 .then(function (data) {
+                    $scope.selected_table_report_category = $scope.report_data.report_category;
                     $scope.reports_result = data;
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal');
                 });
         };
 
@@ -119,9 +291,31 @@ angular.module("dashboard")
             $scope.report_data.report_category = $state.params.type;
             $scope.report_data.start_date = $state.params.start;
             $scope.report_data.end_date = $state.params.end;
-            $scope.report_data.suppliers = $state.params.suppliers;
-            $scope.report_data.settlement_types = $state.params.s_types;
-            if ($scope.report_data.report_category && $scope.report_data.start_date && $scope.report_data.end_date){
+            if (Array.isArray($state.params.branches)) {
+                $scope.report_data.branches = $state.params.branches.map(Number)
+            }
+            else {
+                if ($state.params.branches) {
+                    $scope.report_data.branches.push(parseInt($state.params.branches))
+                }
+            }
+            if (Array.isArray($state.params.suppliers)) {
+                $scope.report_data.suppliers = $state.params.suppliers.map(Number)
+            }
+            else {
+                if ($state.params.suppliers) {
+                    $scope.report_data.suppliers.push(parseInt($state.params.suppliers))
+                }
+            }
+            if (Array.isArray($state.params.s_types)) {
+                $scope.report_data.settlement_types = $state.params.s_types
+            }
+            else {
+                if ($state.params.s_types) {
+                    $scope.report_data.settlement_types.push($state.params.s_types);
+                }
+            }
+            if ($scope.report_data.report_category && $scope.report_data.start_date && $scope.report_data.end_date) {
                 $scope.get_report();
             }
         };
@@ -131,6 +325,7 @@ angular.module("dashboard")
                 type: $scope.report_data.report_category,
                 start: $scope.report_data.start_date = $("#start_date_picker").val(),
                 end: $scope.report_data.end_date = $("#end_date_picker").val(),
+                branches: $scope.report_data.branches,
                 suppliers: $scope.report_data.suppliers,
                 s_types: $scope.report_data.settlement_types
             }, {
@@ -139,6 +334,31 @@ angular.module("dashboard")
                 location: 'replace',
                 inherit: true
             });
+        };
+
+        $scope.showInvoicePurchase = function (invoice_id) {
+            var sending_data = {
+                'invoice_id': invoice_id,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.getInvoicePurchase(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.invoice_purchase_data = data['invoice'];
+                        $rootScope.open_modal('show_invoice_purchase');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.display_float_to_int = function (price) {
+            return Math.round(price);
         };
 
         initialize();
