@@ -70,11 +70,19 @@ def session_authenticate(request, permitted_roles, branch_disable=False):
 def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     request_branch = get_branch(request)
-    if not payload or TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
+    if not payload:
         return {
             "state": False,
             "message": UNAUTHENTICATED
         }
+
+    if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
+        for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
+            if payload['iat'] < blacklist_obj['created_time']:
+                return {
+                    "state": False,
+                    "message": UNAUTHENTICATED
+                }
 
     # Adding 'FREE' plan to bundle definition on view decorators and also JWT token:
     bundles.add('FREE')
