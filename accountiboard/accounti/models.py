@@ -4,6 +4,7 @@ from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
 # from django.contrib.postgres.fields import JSONField
 from django.db.models import JSONField
+from django.utils import timezone
 from uuid import uuid4
 
 
@@ -684,4 +685,4 @@ class Bundle(models.Model):
 
 class TokenBlacklist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_time = models.DateTimeField(default=timezone.now)

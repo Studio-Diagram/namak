@@ -31,7 +31,7 @@ class LoginView(View):
         if not check_password(password, user_obj.password):
             return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
 
-        user_obj.last_login = datetime.now()
+        user_obj.last_login = datetime.datetime.utcnow()
         user_obj.save()
         if user_obj.get_user_type_display() == "cafe_owner":
             cafe_owner_object = CafeOwner.objects.get(user=user_obj)
@@ -44,6 +44,10 @@ class LoginView(View):
             } for cafe_owner_to_branch in user_branch_objects]
             user_role = [USER_ROLES['CAFE_OWNER']]
             request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
+            try:
+                bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
+            except:
+                bundle = USER_PLANS_CHOICES['FREE']
         elif user_obj.get_user_type_display() == "employee":
             employee_object = Employee.objects.get(user=user_obj)
             if employee_object.is_active != True:
@@ -56,16 +60,18 @@ class LoginView(View):
                 "id": employee_to_branch.branch.id,
                 "name": employee_to_branch.branch.name,
             } for employee_to_branch in branches]
+            this_organization = branches.first().branch.organization
+            cafe_owner_object = CafeOwner.objects.get(organization=this_organization)
+            try:
+                bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
+            except:
+                bundle = USER_PLANS_CHOICES['FREE']
         else:
             return JsonResponse({"response_code": 3})
 
         request.session['is_logged_in'] = username
 
-        try:
-            bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
-        except:
-            bundle = USER_PLANS_CHOICES['FREE']
-
+        
         jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
         return JsonResponse(
             {"response_code": 2,
@@ -175,6 +181,8 @@ class RegisterEmployeeView(View):
                     )
                     new_employee_to_branch.save()
 
+            TokenBlacklist.objects.create(user=old_employee.user)
+
             return JsonResponse({"response_code": 2})
 
 
@@ -212,6 +220,7 @@ class GetEmployeesView(View):
     @permission_decorator_class_based(
         token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
     )
 
     def post(self, request, *args, **kwargs):
@@ -410,12 +419,12 @@ class SearchMenuCategoryView(View):
 
 
 class GetMenuItemsView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=False
+    )
 
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -438,7 +447,7 @@ class GetMenuItemsView(View):
 class GetMenuItemView(View):
     # @permission_decorator_class_based(
     #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER']},
     #     {USER_PLANS_CHOICES['FREE']},
     #     branch_disable=False
     # )
@@ -679,6 +688,7 @@ class KickUnkickEmployeeView(View):
     @permission_decorator_class_based(
         token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
         branch_disable=True
     )
 

@@ -275,8 +275,15 @@ class PayirCallbackView(View):
 
             current_bundle.save()
 
+            # adding cafe owner and all related employees to TokenBlacklist
             if current_bundle.is_active:
                 TokenBlacklist.objects.create(user=current_cafe_owner.user)
+                all_branches = Branch.objects.filter(organization=current_cafe_owner.organization)
+                for branch in all_branches:
+                    all_employees = EmployeeToBranch.objects.filter(branch=branch)
+                    for employee in all_employees:
+                        TokenBlacklist.objects.create(user=employee.employee.user)
+
                 return JsonResponse({
                     'msg': "Bundle created and activated"
                 }, status=200)
