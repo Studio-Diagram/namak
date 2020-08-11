@@ -134,7 +134,8 @@ class BundleView(View):
                     'error_msg': SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE
                 }, status=400)
 
-        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
         active_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True).count()
         reserved_bundle_count = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_reserved=True).count()
 

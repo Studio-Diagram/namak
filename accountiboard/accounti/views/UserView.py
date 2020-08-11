@@ -29,9 +29,6 @@ class PhoneVerifyView(View):
         recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_verify_data)
         recaptcha_request_json = recaptcha_request.json()
 
-        print(recaptcha_verify_data)
-        print(recaptcha_request_json)
-
         if recaptcha_request_json['success']:
             send_verify_phone_sms(phone)
 
