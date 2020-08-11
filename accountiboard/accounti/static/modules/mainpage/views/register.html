@@ -2,8 +2,8 @@
     <div class="row no-gutters">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <form class="generalForm">
-                <h2>ثبت‌ نام در پنل کاربری</h2>
+            <h2 class="text-center">ثبت‌ نام در پنل کاربری</h2>
+            <form id="companyRegistrationForm" class="generalForm showForm">
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
                     <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
                 </div>
@@ -11,6 +11,35 @@
                     <input ng-model="new_user.company_name" type="text" class="form-control"
                            placeholder="نام کمپانی">
 
+                </div>
+                <div class="form-group">
+                    <input ng-model="new_user.company_address" type="text" class="form-control"
+                           placeholder="آدرس کمپانی">
+
+                </div>
+                <div class="form-group">
+                    <input ng-model="new_user.company_start_time" type="text" class="form-control"
+                           placeholder="ساعت شروع">
+
+                </div>
+                <div class="form-group">
+                    <input ng-model="new_user.company_end_time" type="text" class="form-control"
+                           placeholder="ساعت پایان">
+
+                </div>
+                <div class="form-group submitButtonWrapper">
+                    <button ng-click="change_registration_state('company_registration', 'personal_registration')"
+                            type="button" class="submitButton btn btn-primary">
+                        <span ng-hide="form_state.is_loading">ادامه</span>
+                    </button>
+                </div>
+                <div class="referButtonWrapper">
+                    <a class="mainButton fullWidthButton transparentButton" ui-sref="login">ورود به پنل کاربری</a>
+                </div>
+            </form>
+            <form id="personalRegistrationForm" class="generalForm">
+                <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
+                    <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.first_name" type="text" class="form-control"
@@ -28,16 +57,31 @@
 
                 </div>
                 <div class="form-group">
-                    <input ng-model="new_user.email" type="email" class="form-control"
-                           placeholder="ایمیل">
-
-                </div>
-                <div class="form-group">
                     <input ng-model="new_user.password" type="password" class="form-control" placeholder="رمز عبور">
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.re_password" type="password" class="form-control"
                            placeholder="تکرار رمز عبور">
+                </div>
+                <div class="form-group submitButtonWrapper">
+                    <button ng-click="change_registration_state('personal_registration', 'phone_verify_final_step');send_verify_code_to_phone()" type="button" class="submitButton btn btn-primary">
+                        <span ng-show="form_state.is_loading"><i
+                                ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
+                        <span ng-hide="form_state.is_loading">تایید شماره تماس</span>
+                    </button>
+                </div>
+                <div class="referButtonWrapper">
+                    <a class="mainButton fullWidthButton transparentButton" ui-sref="login">ورود به پنل کاربری</a>
+                </div>
+            </form>
+            <form id="phoneVerifyRegistrationForm" class="generalForm">
+                <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
+                    <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
+                </div>
+                <div class="form-group">
+                    <input ng-model="new_user.first_name" type="text" class="form-control"
+                           placeholder="کد تایید ارسالی به شماره تماس">
+
                 </div>
                 <div class="form-group submitButtonWrapper">
                     <button ng-click="register_new_user()" type="button" class="submitButton btn btn-primary">

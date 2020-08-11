@@ -1998,3 +1998,26 @@ input:checked + .slider .off {
     background-color: transparent;
 }
 
+#companyRegistrationForm {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#personalRegistrationForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#phoneVerifyRegistrationForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+.showForm {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
