@@ -43,6 +43,7 @@ PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
 PASSWORD_WEAK = 'رمز عبور شما باید حداقل ۸ کاراکتر باشد.'
 ERROR_IN_CREATING = "عملیات با مشکلی مواجه شده است."
 PHONE_ALREADY_EXIST = 'شماره تلفن تکراری است.'
+PHONE_DOESNT_EXIST = 'این شماره تلفن وجود ندارد.'
 PHONE_ERROR = 'شماره تلفن خود را وارد کنید.'
 POSITION_REQUIRED = 'سمت را وارد کنید.'
 PRICE_PER_HOUR_IN_GAME = 100000

@@ -115,8 +115,52 @@ class RegisterCafeOwnerView(View):
         except Exception as e:
             print(e)
             return JsonResponse({"error_msg": ERROR_IN_CREATING}, status=403)
+
+        sms_tokens.delete()
         return JsonResponse({"msg": "CafeOwner user created successfully."})
 
+
+
+class ForgotPasswordView(View):
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+
+        validator = ForgotPasswordValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+
+        phone = rec_data['phone']
+        password = rec_data['password']
+        re_password = rec_data['re_password']
+        sms_verify_token = rec_data['sms_verify_token']
+
+        if User.objects.filter(phone=phone).count() < 1:
+            return JsonResponse({"error_msg": PHONE_DOESNT_EXIST}, status=403)
+
+        password_validator = PasswordValidator(min_digits=8)
+        password_validator.validate_with_re_password(password, re_password)
+        if password_validator.get_errors():
+            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=403)
+
+        sms_tokens_count = SmsToken.objects.filter(phone=phone).count()
+        sms_tokens = SmsToken.objects.filter(phone=phone)
+
+        if sms_tokens_count < 1:
+            return JsonResponse({
+                'error_msg': 'You have to validate your phone number first',
+            }, status=401)
+
+        for sms_token in sms_tokens:
+            if sms_token.token == sms_verify_token:
+                sms_verified = True
+                break
+
+        current_user = User.objects.get(phone=phone)
+        current_user.password = make_password(password)
+        current_user.save()
+
+        sms_tokens.delete()
+        return JsonResponse({"msg": "Password was changed successfully"})
 
 
 def register_user(request):

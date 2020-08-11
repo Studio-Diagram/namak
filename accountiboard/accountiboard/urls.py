@@ -154,6 +154,7 @@ urlpatterns = [
 
     path('api/phone-verify/', UserView.PhoneVerifyView.as_view()),
     path('api/register-cafeowner/', UserView.RegisterCafeOwnerView.as_view()),
+    path('api/forgotpassword/', UserView.ForgotPasswordView.as_view()),
 
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),

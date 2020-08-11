@@ -35,7 +35,7 @@ def send_verify_phone_sms(receiver_phone):
         phone = receiver_phone,
         token = token,
     )
-    print(token_json_response)
+
     if token_json_response['IsSuccessful']:
         data = {
             "ParameterArray": [

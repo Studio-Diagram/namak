@@ -36,6 +36,15 @@ class RegisterCafeOwnerValidator(forms.Form):
                                   error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
 
 
+class ForgotPasswordValidator(forms.Form):
+    phone = forms.CharField(max_length=30, error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    password = forms.CharField(max_length=255,
+                               error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    re_password = forms.CharField(max_length=255,
+                                  error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    sms_verify_token = forms.CharField(max_length=10,
+                                  error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+
 
 class ProfileValidator(forms.Form):
     first_name = forms.CharField(max_length=255,
