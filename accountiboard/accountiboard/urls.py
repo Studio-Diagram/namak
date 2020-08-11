@@ -8,6 +8,7 @@ from accounti.views import EmployeeView, boardgameView, MemberView, stockView, B
     OfflineAPIs, UserView, ReportView
 from accountiboard import settings
 from django.views.static import serve
+from accounti.views import BankingView
 
 urlpatterns = [
     path('api/login/', EmployeeView.login),
@@ -145,6 +146,8 @@ urlpatterns = [
     path('api/checkGiftCode/', CreditView.check_gift_code),
     path('api/profile/', UserView.ProfileView.as_view()),
     path('api/report/', ReportView.ReportView.as_view()),
+
+    path('api/banking/', BankingView.BankingView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

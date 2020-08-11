@@ -656,3 +656,22 @@ class CreditToInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
     used_price = models.IntegerField(default=0)
+
+# subclass from this model
+class BankingBaseClass(models.Model):
+    name = models.CharField(max_length=30, blank=False, null=False)
+    unit = models.CharField(max_length=30, blank=False, null=False)
+    branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+
+class CashRegister(BankingBaseClass):
+    pass
+
+class Tankhah(BankingBaseClass):
+    pass
+
+class Bank(BankingBaseClass):
+    bank_name = models.CharField(max_length=255, null=True, blank=True)
+    bank_account = models.CharField(max_length=255, null=True, blank=True)
+    bank_card_number = models.CharField(max_length=30, null=True, blank=True)
+    shaba_number = models.CharField(max_length=255, null=True, blank=True)
+
