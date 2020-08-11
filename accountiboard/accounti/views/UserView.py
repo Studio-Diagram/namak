@@ -61,6 +61,16 @@ class RegisterCafeOwnerView(View):
         sms_verify_token = rec_data['sms_verify_token']
         sms_verified = False
 
+        phone_validator = PhoneNumberValidator()
+        phone_validator.validate(phone)
+        if phone_validator.get_errors():
+            return JsonResponse({"error_msg": phone_validator.get_errors()[0]}, status=403)
+
+        password_validator = PasswordValidator(min_digits=8)
+        password_validator.validate_with_re_password(password, re_password)
+        if password_validator.get_errors():
+            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=403)
+
         sms_tokens_count = SmsToken.objects.filter(phone=phone).count()
         sms_tokens = SmsToken.objects.filter(phone=phone)
 
@@ -73,11 +83,6 @@ class RegisterCafeOwnerView(View):
             if sms_token.token == sms_verify_token:
                 sms_verified = True
                 break
-
-        password_validator = PasswordValidator(min_digits=8)
-        password_validator.validate_with_re_password(password, re_password)
-        if password_validator.get_errors():
-            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=403)
 
         start_working_time = datetime.datetime.strptime(start_working_time, "%H:%M")
         end_working_time   = datetime.datetime.strptime(end_working_time, "%H:%M")

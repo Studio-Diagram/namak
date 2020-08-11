@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from accountiboard.constants import PASSWORD_WEAK, NOT_SIMILAR_PASSWORD
-from accountiboard.constants import CHARACHTER_TOO_LONG, DATA_REQUIRE
+from accountiboard.constants import *
 
 
 class RegisterUserValidator(forms.Form):
@@ -79,3 +78,21 @@ class PasswordValidator:
 
     def get_errors(self):
         return [{"password": error} for error in self.errors]
+
+
+
+class PhoneNumberValidator:
+    def __init__(self):
+        self.errors = []
+
+    def validate(self, phone):
+        if len(phone) < 11:
+            self.errors.append(PHONE_TOO_FEW_CHARACTERS)
+        elif len(phone) > 13:
+            self.errors.append(PHONE_TOO_MANY_CHARACTERS)
+
+        if phone[:2] != '09':
+            self.errors.append(PHONE_DOESNT_START_WITH_09)
+
+    def get_errors(self):
+        return [error for error in self.errors]
