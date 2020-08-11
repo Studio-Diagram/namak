@@ -2207,4 +2207,13 @@ aside.leftAside {
     margin-bottom: 0.6em;
 }
 
-@keyframes showElement  { to { opacity: 1; } }
+@keyframes showElement {
+    to {
+        opacity: 1;
+    }
+}
+
+#leftAsideBugReportForm textarea {
+    font-size: 1em;
+    font-weight: 100;
+}

@@ -340,25 +340,30 @@
                 <form id="leftAsideBugReportForm">
                     <div class="row">
                         <div class="col">
-                            <input ng-model="user_profile_data.first_name" type="text"
+                            <input ng-model="new_bug_data.title" type="text"
                                    class="form-control" placeholder="عنوان">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                        <textarea ng-model="new_bug_data.description" cols="4"
+                        <textarea ng-model="new_bug_data.text" rows="5"
                                   class="form-control" placeholder="توضیحات"></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <input ng-model="new_bug_data.image" type="file"
-                                   class="form-control" placeholder="پیوست تصویر ( اختیاری )">
+                            <div class="custom-file">
+                                <input onchange="angular.element(this).scope().bugReportFileChange()"
+                                       ng-model="new_bug_data.image_name" type="file"
+                                       class="custom-file-input" id="bugFile">
+                                <label style="direction: ltr;text-align: left" class="custom-file-label"
+                                       for="customFile">پیوست تصویر ( اختیاری )</label>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <button class="mainButton greenButton">ارسال</button>
+                            <button ng-click="send_bug_report()" class="mainButton greenButton">ارسال</button>
                         </div>
                     </div>
                 </form>

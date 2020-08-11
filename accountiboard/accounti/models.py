@@ -659,14 +659,15 @@ class CreditToInvoiceSale(models.Model):
 
 
 class LatestNews(models.Model):
-    title = models.CharField(max_length=300,  blank=False, null=False)
-    text  = models.CharField(max_length=4000, blank=False, null=False)
-    link  = models.CharField(max_length=300,  blank=True,  null=True)
+    title = models.CharField(max_length=300, blank=False, null=False)
+    text = models.CharField(max_length=4000, blank=False, null=False)
+    link = models.CharField(max_length=300, blank=True, null=True)
     datetime = models.DateTimeField()
 
+
 class BugReport(models.Model):
-    title = models.CharField(max_length=300,  blank=False, null=False)
-    text  = models.CharField(max_length=4000, blank=False, null=False)
+    title = models.CharField(max_length=300, blank=False, null=False)
+    text = models.TextField(blank=False, null=False)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     image = models.ImageField(null=True)
     image_name = models.CharField(max_length=500, null=True, default="default.jpg")

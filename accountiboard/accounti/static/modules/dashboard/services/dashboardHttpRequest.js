@@ -963,9 +963,14 @@ angular.module('dashboard')
                     'method': "GET",
                     'url': "/api/latestnews/"
                 });
+            },
+            'bug_report': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/bugreport/",
+                    'data': data
+                });
             }
-
-
         };
         return service;
 

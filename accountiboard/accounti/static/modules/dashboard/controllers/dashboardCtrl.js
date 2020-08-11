@@ -26,6 +26,12 @@ angular.module("dashboard")
                         $rootScope.cash_data = {
                             'cash_id': 0
                         };
+                        $scope.new_bug_data = {
+                            title: "",
+                            text: "",
+                            image: "",
+                            image_name: ""
+                        };
                         $scope.get_today_cash();
                         $scope.get_news();
                     }
@@ -364,6 +370,41 @@ angular.module("dashboard")
                     }, function (error) {
                         $scope.error_message = error;
                         $scope.openErrorModal();
+                    });
+            };
+
+            $scope.bugReportFileChange = function () {
+                jQuery.noConflict();
+                (function ($) {
+                    var fileName = $('#bugFile').val();
+                    $('#bugFile').next('.custom-file-label').html(fileName);
+                    var reader = new FileReader();
+                    var $img = $("#bugFile")[0];
+                    reader.onload = function (e) {
+                        $scope.new_bug_data.image = e.target.result;
+                        $scope.new_bug_data.image_name = $img.files[0].name;
+                    };
+                    reader.readAsDataURL($img.files[0]);
+                })(jQuery);
+            };
+
+            $scope.send_bug_report = function () {
+                dashboardHttpRequest.bug_report($scope.new_bug_data)
+                    .then(function () {
+                        $scope.new_bug_data = {
+                            title: "",
+                            text: "",
+                            image: "",
+                            image_name: ""
+                        };
+                        $rootScope.show_toast("با موفقیت انجام شد", 'success');
+                    }, function (error) {
+                        if (error.status < 500) {
+                            $rootScope.show_toast(error.data.error_msg, 'danger');
+                        }
+                        else {
+                            $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
+                        }
                     });
             };
 
