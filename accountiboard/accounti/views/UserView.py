@@ -51,7 +51,7 @@ class RegisterCafeOwnerView(View):
 
         validator = RegisterCafeOwnerValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         phone = rec_data['phone']
         first_name = rec_data['first_name']
@@ -80,10 +80,13 @@ class RegisterCafeOwnerView(View):
         password_validator = PasswordValidator(min_digits=8)
         password_validator.validate_with_re_password(password, re_password)
         if password_validator.get_errors():
-            return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
+            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=403)
 
-        start_working_time = datetime.strptime(start_working_time, "%H:%M")
-        end_working_time   = datetime.strptime(end_working_time, "%H:%M")
+        start_working_time = datetime.datetime.strptime(start_working_time, "%H:%M")
+        end_working_time   = datetime.datetime.strptime(end_working_time, "%H:%M")
+
+        if User.objects.filter(phone=phone).count() > 0:
+            return JsonResponse({"error_msg": PHONE_ALREADY_EXIST}, status=403)
 
         try:
             new_user = User(
@@ -92,6 +95,7 @@ class RegisterCafeOwnerView(View):
                 last_name=last_name,
                 password=make_password(password),
                 user_type=USER_TYPE['cafe_owner'],
+                is_active=True,
             )
             new_user.save()
             new_organization = Organization(
@@ -113,8 +117,8 @@ class RegisterCafeOwnerView(View):
             ).save()
         except Exception as e:
             print(e)
-            return JsonResponse({"response_code": 3, "error_msg": ERROR_IN_CREATING})
-        return JsonResponse({"response_code": 2})
+            return JsonResponse({"error_msg": ERROR_IN_CREATING}, status=403)
+        return JsonResponse({"msg": "CafeOwner user created successfully."})
 
 
 

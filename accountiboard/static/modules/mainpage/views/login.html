@@ -1,0 +1,34 @@
+<main ng-controller="loginCtrl">
+    <div class="row no-gutters">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form class="generalForm">
+                <h2>ورود به پنل کاربری</h2>
+                <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
+                    <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
+                </div>
+                <div class="form-group">
+                    <input ng-model="user_login_data.username" type="text" class="form-control" id="userInput"
+                           aria-describedby=""
+                           placeholder="تلفن همراه">
+
+                </div>
+                <div class="form-group">
+                    <input ng-model="user_login_data.password" type="password" class="form-control" id="passInput"
+                           aria-describedby="" placeholder="رمز عبور">
+                </div>
+                <div class="form-group submitButtonWrapper">
+                    <button ng-click="send_login_data()" type="submit" class="submitButton btn btn-primary">
+                        <span ng-show="form_state.is_loading"><i
+                                ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
+                        <span ng-hide="form_state.is_loading">ورود</span>
+                    </button>
+                    <a class="forgetPasswordLink">رمز عبور را فراموش کرده‌ام</a>
+                </div>
+                <div class="referButtonWrapper">
+                    <a class="mainButton fullWidthButton transparentButton" ui-sref="register">ثبت کافه جدید</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

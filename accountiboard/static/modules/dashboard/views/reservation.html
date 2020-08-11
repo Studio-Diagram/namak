@@ -1,0 +1,423 @@
+<div class="preloader" ng-show="is_page_loading"></div>
+<div ng-hide="is_page_loading" ng-controller="reservationCtrl" id="mainReserve">
+    <div class="modal fade mainModal alertModal redAlertModal" id="permissionModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
+                    <a ng-click="delete_reserve(reserve_will_delete)" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ اطلاعات رزرو از بین
+                        می‌رود.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="completeReserveModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت رزرواسیون جدید</h2>
+                    <a class="mainButton redButton" ng-click="closeCompleteReserveModal()" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="add_reserve()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات رزرواسیون</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_reserve_data.reserve_state" class="form-control">
+                                    <option value="">دسته‌بندی</option>
+                                    <option value="waiting">
+                                        رزرو
+                                    </option>
+                                    <option value="walked">
+                                        حضوری
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label>نام رزروکننده</label>
+                                <input ng-disabled="new_reserve_data.reserve_state === 'walked'"
+                                       ng-model="new_reserve_data.customer_name" type="text"
+                                       class="form-control" placeholder="نام رزروکننده">
+                            </div>
+                            <div class="col">
+                                <label>شماره تماس</label>
+                                <input ng-disabled="new_reserve_data.reserve_state === 'walked'"
+                                       ng-model="new_reserve_data.phone" type="text"
+                                       class="form-control" placeholder="شماره تماس">
+                            </div>
+                            <div class="col">
+                                <label>تعداد نفرات</label>
+                                <input ng-model="new_reserve_data.numbers" type="number"
+                                       class="form-control" placeholder="تعداد نفرات">
+                            </div>
+                            <div class="col">
+                                <label>تاریخ رزرو</label>
+                                <input disabled ng-model="new_reserve_data.reserve_date" type="text"
+                                       class="form-control" placeholder="تاریخ رزرو">
+                            </div>
+                            <div class="col">
+                                <label>ساعت شروع</label>
+                                <input ng-model="new_reserve_data.start_time" type="text"
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-2">
+                            </div>
+                            <div class="col">
+                                <label>ساعت پایان</label>
+                                <input ng-model="new_reserve_data.end_time" type="text"
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-2">
+                            </div>
+                        </div>
+                        <label class="mb-3">انتخاب میز</label>
+
+                        <div class="row">
+                            <div ng-repeat="table_category in categorized_tables_data"
+                                 class="checkbox-unit col">
+                                <label ng-repeat="table in table_category.tables" class="checkbox-item">
+                                    <input style="float: left;" ng-checked="table.is_checked" ng-model="table.is_checked_m"
+                                           type="checkbox"
+                                           ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                </label>
+                                <label style="height: 3em" ng-repeat="n in [] | range:(max_category_size - table_category.tables.length)" class="checkbox-item">
+
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addWalkedModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت مشتری حضوری جدید</h2>
+                    <a class="mainButton redButton" ng-click="closeAddWalkedModal()" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="add_reserve()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن صفحه</a>
+                    <a ng-click="openPermissionModal(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
+                            class="fas fa-save"></i> پاک کردن</a>
+                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو
+                        رفت!</a>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات رزرواسیون</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>تعداد نفرات</label>
+                                <input ng-model="new_reserve_data.numbers" type="number"
+                                       class="form-control" placeholder="تعداد نفرات">
+                            </div>
+                            <div class="col">
+                                <label>تاریخ رزرو</label>
+                                <input disabled ng-model="new_reserve_data.reserve_date" type="text"
+                                       class="form-control" placeholder="تاریخ رزرو">
+                            </div>
+                            <div class="col">
+                                <label>ساعت شروع</label>
+                                <input ng-model="new_reserve_data.start_time" type="text"
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-3">
+                            </div>
+                            <div class="col">
+                                <label>ساعت پایان</label>
+                                <input ng-model="new_reserve_data.end_time" type="text"
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-3">
+                            </div>
+                        </div>
+
+                        <label class="mb-3">انتخاب میز</label>
+
+                        <div class="row">
+                            <div ng-repeat="table_category in categorized_tables_data"
+                                 class="checkbox-unit col">
+                                <label ng-repeat="table in table_category.tables" class="checkbox-item">
+                                    <input type="checkbox" style="float: left;" ng-model="table.is_checked_m" ng-checked="table.is_checked"
+                                           ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                </label>
+                                <label style="height: 3em" ng-repeat="n in [] | range:(max_category_size - table_category.tables.length)" class="checkbox-item">
+
+                                </label>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addReservationModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت رزرواسیون جدید</h2>
+                    <a class="mainButton redButton" ng-click="closeAddModal()" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="add_reserve()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن صفحه</a>
+                    <a ng-click="arrive_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton"><i
+                            class="fas fa-save"></i> ثبت حضور</a>
+                    <a ng-click="openPermissionModal(new_reserve_data.reserve_id)" href="" class="mainButton redButton"><i
+                            class="fas fa-save"></i> پاک کردن</a>
+                    <a ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton blueButton">رزرو
+                        رفت!</a>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات رزرواسیون</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>نام رزروکننده</label>
+                                <input ng-model="new_reserve_data.customer_name" type="text"
+                                       class="form-control" placeholder="نام رزروکننده">
+                            </div>
+                            <div class="col">
+                                <label>شماره تماس</label>
+                                <input ng-model="new_reserve_data.phone" type="text"
+                                       class="form-control" placeholder="شماره تماس">
+                            </div>
+                            <div class="col">
+                                <label>تعداد نفرات</label>
+                                <input ng-model="new_reserve_data.numbers" type="number"
+                                       class="form-control" placeholder="تعداد نفرات">
+                            </div>
+                            <div class="col">
+                                <label>تاریخ رزرو</label>
+                                <input disabled ng-model="new_reserve_data.reserve_date" type="text"
+                                       class="form-control" placeholder="تاریخ رزرو">
+                            </div>
+                            <div class="col">
+                                <label>ساعت شروع</label>
+                                <input ng-model="new_reserve_data.start_time" type="text"
+                                       class="form-control" placeholder="ساعت شروع" id="start-time-clock-1">
+                            </div>
+                            <div class="col">
+                                <label>ساعت پایان</label>
+                                <input ng-model="new_reserve_data.end_time" type="text"
+                                       class="form-control" placeholder="ساعت پایان" id="end-time-clock-1">
+                            </div>
+                        </div>
+                        <label class="mb-3">انتخاب میز</label>
+
+                        <div class="row">
+                            <div ng-repeat="table_category in categorized_tables_data"
+                                 class="checkbox-unit col">
+                                <label ng-repeat="table in table_category.tables" class="checkbox-item">
+                                    <input style="float: left;"
+                                           type="checkbox"
+                                           ng-checked="table.is_checked" ng-model="table.is_checked_m"
+                                           ng-click="changeTableCheckBox(is_checked, table.table_id)">میز {{ table.table_name }}
+                                </label>
+                                <label style="height: 3em" ng-repeat="n in [] | range:(max_category_size - table_category.tables.length)" class="checkbox-item">
+
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="waitingListModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت انتظار جدید</h2>
+                    <a class="mainButton redButton" ng-click="closeWaitingListModal()" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="add_waiting_list()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form>
+                                <h3>اطلاعات انتظار جدید</h3>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>نام مورد انتظار<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_reserve_data.customer_name" type="text"
+                                               class="form-control" placeholder="نام مورد انتظار">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>شماره تماس<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_reserve_data.phone" type="text"
+                                               class="form-control" placeholder="شماره تماس">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>تعداد نفرات<i class="fas fa-star-of-life"></i></label>
+                                        <input ng-model="new_reserve_data.numbers" type="number"
+                                               class="form-control" placeholder="تعداد نفرات">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>ساعت شروع</label>
+                                        <input ng-model="new_reserve_data.start_time" type="text"
+                                               class="form-control" placeholder="ساعت شروع"
+                                               id="start-time-clock-waiting-list">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="tableWrapper">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">شماره</th>
+                                        <th scope="col">نام مورد انتظار</th>
+                                        <th scope="col">شماره تماس</th>
+                                        <th scope="col">تعداد نفرات</th>
+                                        <th scope="col">ساعت شروع</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="waiting in waiting_list">
+                                        <td>{{ $index + 1 | persianNumber }}</td>
+                                        <td>{{ waiting.customer_name }}</td>
+                                        <td>{{ waiting.phone | persianNumber }}</td>
+                                        <td>{{ waiting.numbers | persianNumber }}</td>
+                                        <td>{{ waiting.start_time | persianNumber }}</td>
+                                        <td><a ng-click="openPermissionModal(waiting.id)" href=""
+                                               class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row reservationPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <a ng-click="openAddModal()" class="tableLefty mainButton greenButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> رزرو جدید</a>
+                    <a ng-click="openAddWalkedModal()" class="tableLefty mainButton blueButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> مشتری حضوری جدید</a>
+                    <a ng-click="openWaitingListModal()" class="tableLefty mainButton yellowButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> لیست انتظار</a>
+
+
+                    <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_today_for_reserve()"
+                       class="tableLefty mainButton blueButton" href=""
+                       data-toggle="modal"> امروز </a>
+                    <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_tomorrow_reserves()"
+                       class="tableLefty mainButton blueButton" href=""
+                       data-toggle="modal"> فردا </a>
+
+                    <input style="width: 20%;float: right;margin-left: 10px;margin-right: 10px" ng-model="fixed_date"
+                           type="text"
+                           class="form-control" placeholder="تاریخ" id="datepicker">
+                    <a style="float: right !important;margin: 0 !important;" ng-click="change_date()"
+                       class="tableLefty mainButton blueButton" href=""
+                       data-toggle="modal"> روز را تغییر بده !</a>
+                </div>
+                <div class="reservationTable reservationTableTimes">
+                    <div ng-repeat="time in working_times"
+                         ng-class="time.is_hour === 1 ? 'reservationCell hour' : 'reservationCell minute' ">
+                        {{ time.time | persianNumber }}
+                    </div>
+                </div>
+                <div class="table-category-separation" ng-repeat="table_category in categorized_tables_data">
+                    <div ng-repeat="table in table_category.tables" class="reservationTable tableName-a1"
+                         id="tablename-{{ table.table_id }}">
+                        <div class="reservationCell reservationHeaderCell">
+                            {{ table.table_name }}
+                        </div>
+                        <div ng-repeat="time in working_times"
+                             ng-click="clicking_reserve(time.hour, time.minute, time.is_hour, table, $event, $index)"
+                             ng-class="time.is_hour === 1 ? 'reservationCell hour H{{ time.hour }}M{{ time.minute }}' : 'reservationCell minute H{{ time.hour }}M{{ time.minute }}' "
+                             ng-mouseover="cross_hover(time.hour, time.minute, table, $event)">
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div style="position: fixed;border-radius: 0.5em;color: white;display: none;z-index: 1000;" class="tooltipM">
+            <button ng-click="openCompleteReserveModal('walked')" class="btn btn-info"
+                    style="float: right;border-radius: 0 0.5em 0.5em 0;">حضوری
+            </button>
+            <button ng-click="openCompleteReserveModal('waiting')" class="btn btn-success"
+                    style="float: left;border-radius: 0.5em 0 0 0.5em;">رزرو
+            </button>
+        </div>
+    </main>
+</div>

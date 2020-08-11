@@ -1,0 +1,308 @@
+<div ng-controller="statusCtrl">
+    <div class="modal fade mainModal" id="sale_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">جزییات فروش</h2>
+                    <a class="mainButton redButton" ng-click="close_modal('sale_details')" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="invoiceTable">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <small>فیلتر دسته‌بندی</small>
+                                        <select ng-change="get_bar_detail_sales()"
+                                                ng-model="bar_sale_detail_category_filter"
+                                                class="form-control">
+                                            <option value="">همه</option>
+                                            <option ng-repeat="bar_category in bar_categories"
+                                                    value="{{ bar_category.id }}">{{ bar_category.name }}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="tableWrapper">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">نام آیتم</th>
+                                        <th scope="col">دسته‌بندی</th>
+                                        <th scope="col">تعداد</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in sale_details">
+                                        <td>{{ $index + 1 | persianNumber }}</td>
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.category }}</td>
+                                        <td>{{ item.numbers | persianNumber }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 119px" class="modal fade mainModal alertModal redAlertModal"
+         id="closeInvoicePermissionModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید بستن صندوق</h2>
+                    <a ng-click="close_cash()" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به بستن صندوق دارید؟ شما به طور خودکار خارج خواهید
+                        شد.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal" id="submit_cash_today_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت اطلاعات صندوق روزانه</h2>
+                    <a class="mainButton redButton closeModal" ng-click="close_modal('submit_cash_today_modal')"
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="openPermissionModal()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت و چاپ گزارش</a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <table class="invoiceTable">
+                        <tbody>
+                        <tr>
+                            <td class="small-text">فروش</td>
+                            <td class="small-text">{{ status.all_sales_price - status.all_discount | number | persianNumber }} ریال </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">پوز بانکی</td>
+                            <td class="small-text">{{ status.all_pos | number | persianNumber }} ریال </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">گزارش پرداخت</td>
+                            <td class="small-text">
+                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.outcome_report">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">بلیط رویداد</td>
+                            <td class="small-text">
+                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.event_tickets">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">گزارش دریافت</td>
+                            <td class="small-text">
+                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.income_report">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">انعام</td>
+                            <td class="small-text">{{ status.all_tip | number | persianNumber }} ریال </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">پول نقد</td>
+                            <td class="small-text">
+                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.current_money_in_cash">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">صندوق</td>
+                            <td class="small-text">{{ ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }} ریال </td>
+                        </tr>
+                        <tr>
+                            <td class="small-text">اختلاف</td>
+                            <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }} ریال </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row saloonPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <a ng-click="open_modal('submit_cash_today_modal')" class="addUser mainButton greenButton" href=""
+                       data-toggle="modal"><i
+                            class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
+                    <a ng-click="print_night_report()" class="addUser mainButton blueButton ml-3" href=""
+                       data-toggle="modal"><i
+                            class="far fa-calendar-check"></i>پرینت گزارش روزانه</a>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>گزارش فروش</h3>
+                            <div class="tableWrapper">
+                                <table class="cashTable">
+                                    <tbody>
+                                    <tr>
+                                        <td class="mainValue">
+                                            <h4><i class="fas fa-cash-register"></i> کل فروش</h4>
+                                            <span class="">{{ status.all_sales_price - status.all_discount | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-money-bill"></i> نقد</h4>
+                                            <span class="">{{ status.all_cash | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="far fa-credit-card"></i> کارت‌خوان</h4>
+                                            <span class="">{{ status.all_pos | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-users"></i> تعداد مهمانان</h4>
+                                            <span class="">{{ status.all_guests | persianNumber }}</span>
+                                            <small>نفر</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice-dollar"></i> مالیات</h4>
+                                            <span class="">{{ status.all_tax | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-hand-holding-usd"></i> انعام</h4>
+                                            <span class="">{{ status.all_tip | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice"></i> تخفیف</h4>
+                                            <span class="">{{ status.all_discount | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <h3>گزارش تفکیکی</h3>
+                            <div class="tableWrapper">
+                                <table class="cashTable">
+                                    <tbody>
+                                    <tr>
+                                        <td class="">
+                                            <h4><i class="fas fa-coffee"></i> فروش بار</h4>
+                                            <span class="">{{ status.all_bar | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                            <button ng-click="get_bar_detail_sales()"
+                                                    class="mainButton smallButton grayButton mt-2">جزییات
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
+                                            <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                            <button ng-click="get_kitchen_detail_sales()"
+                                                    class="mainButton smallButton grayButton mt-2">جزییات
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice-dollar"></i>فروش سایر</h4>
+                                            <span class="">{{ status.all_other | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                            <button ng-click="get_other_detail_sales()"
+                                                    class="mainButton smallButton grayButton mt-2">جزییات
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-chess-rook"></i> هزینه بازی</h4>
+                                            <span class="">{{ status.all_games | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-chess-rook"></i> فروش فروشگاهی</h4>
+                                            <span class="">{{ status.all_sales | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tableWrapper">
+                                <table class="cashTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
+                                            <span class="">{{ status.all_purchase | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-hammer"></i> هزینه</h4>
+                                            <span class="">{{ status.all_expense | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                        <td>
+                                            <h4><i class="fas fa-file-invoice-dollar"></i> پرداختی</h4>
+                                            <span class="">{{ status.all_pays | number | persianNumber }}</span>
+                                            <small>ریال</small>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </main>
+</div>

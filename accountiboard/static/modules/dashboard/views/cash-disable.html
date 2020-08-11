@@ -1,0 +1,41 @@
+<div ng-controller="cashDisableCtrl">
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <img style="width: 50%;margin-top: 8em;margin-right: 25%" class="img img-responsive"
+                     src="static/img/lock.png">
+                <button ng-show="cash_state === 'NO_CASH'" ng-click="open_cash()" class="mainButton greenButton"
+                        id="open-cash-button">باز کردن صندوق
+                </button>
+                <button ng-show="cash_state === 'OLD_CASH'" ng-click="close_then_open_cash()"
+                        class="mainButton redButton"
+                        id="close-cash-button">بستن صندوق قدیمی و باز کردن صندوق جدید
+                </button>
+            </div>
+        </div>
+    </main>
+</div>

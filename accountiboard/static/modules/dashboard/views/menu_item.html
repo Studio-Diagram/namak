@@ -1,0 +1,126 @@
+<div ng-controller="menuItemCtrl">
+    <div class="modal fade mainModal alertModal redAlertModal" id="deleteConfirm" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید حذف</h2>
+                    <a ng-click="deleteMenuItem()" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="closeDeleteConfirmModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ اطلاعات حذفی قابل بازیابی نخواهند بود.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal" id="addMenuItemModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت آیتم جدید</h2>
+                    <a ng-click="closeAddMenuItemModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                        aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="addMenuItem()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن صفحه</a>
+                </div>
+                <div class="modal-body">
+                    <form name="addMenuItemForm">
+                        <h3>اطلاعات آیتم</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>نام آیتم<i class="fas fa-star-of-life"></i></label>
+                                <input name="name" ng-model="new_menu_item_data.name" type="text"
+                                       class="form-control" placeholder="نام آیتم">
+                            </div>
+                            <div class="col">
+                                <label>قیمت آیتم ( ریال )<i class="fas fa-star-of-life"></i></label>
+                                <input style="font-family: 'B Yekan'" name="price" ng-model="new_menu_item_data.price"
+                                       type="text"
+                                       class="form-control" placeholder="قیمت آیتم" format>
+                            </div>
+                            <div class="col">
+                                <label>دسته‌بندی آیتم<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_menu_item_data.menu_category_id" class="form-control" id="sel1"
+                                        ng-options="category.id as category.name for category in menu_categories">
+                                    <option value="" selected>دسته‌بندی آیتم</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <input ng-keyup="searchMenuItem()" ng-model="searach_data_menu_item.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+
+                    <a class="addUser mainButton greenButton" ng-click="openAddMenuItemModal()" data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> آیتم جدید</a>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام آیتم</th>
+                            <th scope="col">قیمت آیتم ( ریال )</th>
+                            <th scope="col">دسته‌بندی آیتم</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in menu_items">
+                            <th scope="row">{{ item.name }}</th>
+                            <th scope="row">{{ item.price | number | persianNumber }}</th>
+                            <th scope="row">{{ item.category_name }}</th>
+                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                            <td style="text-align: center"><a ng-click="openDeleteConfirmModal(item.id)" href=""><i
+                                    class="fas fa-trash"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </main>
+
+
+        </div>
+    </main>
+</div>
