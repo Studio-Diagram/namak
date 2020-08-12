@@ -660,7 +660,7 @@ class CreditToInvoiceSale(models.Model):
 # subclass from this model
 class BankingBaseClass(models.Model):
     name = models.CharField(max_length=30, blank=False, null=False)
-    unit = models.CharField(max_length=30, blank=False, null=False)
+    unit = models.CharField(max_length=30, blank=True, null=True)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
 
 class CashRegister(BankingBaseClass):
