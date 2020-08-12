@@ -1,6 +1,6 @@
 <div ng-controller="quickAccessCtrl">
     <div class="pageSubMenu">
-        <nav class=" nav nav-justified">
+        <nav class="nav">
             <a class="nav-link">وضعیت میزها</a>
             <a style="margin-right: 27em" class="nav-link">وضعیت رزروها</a>
             <a style="margin-right: 20em" class="nav-link">دسترسی سریع</a>
@@ -59,7 +59,7 @@
                                     <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
                                            ng-model="search_data_shop_products.search_word"
                                            class="form-control listFilter" type="text" placeholder="فیلتر کن">
-                                    <nav class=" nav nav-justified">
+                                    <nav class="nav nav-justified">
                                         <a ng-click="changeMenuNav('MAT')" href=""
                                            ng-class="current_menu_nav === 'MAT' ? 'nav-link iconButton active' : 'nav-link iconButton'"><i
                                                 class="fas fa-bars"></i></a>
@@ -299,7 +299,7 @@
                     <a ng-click="addMember()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن صفحه</a>
+                        پاک کردن </a>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -416,7 +416,7 @@
                        class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن صفحه</a>
+                        پاک کردن </a>
 
                 </div>
                 <div class="modal-body">
@@ -564,7 +564,7 @@
                        class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن صفحه</a>
+                        پاک کردن </a>
                 </div>
                 <div class="modal-body">
                     <form>

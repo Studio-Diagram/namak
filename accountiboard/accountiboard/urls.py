@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
-    OfflineAPIs, UserView, ReportView, BundleView
+    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView
 from accountiboard import settings
 from django.views.static import serve
 
@@ -156,6 +156,8 @@ urlpatterns = [
     path('api/register-cafeowner/', UserView.RegisterCafeOwnerView.as_view()),
     path('api/forgotpassword/', UserView.ForgotPasswordView.as_view()),
 
+    path('api/bugreport/', BugReportView.BugReportView.as_view()),
+    path('api/latestnews/', LatestNewsView.LatestNewsView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

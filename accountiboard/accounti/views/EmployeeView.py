@@ -495,6 +495,9 @@ class AddMenuItemView(View):
         name = rec_data['name']
         price = rec_data['price']
 
+        if not menu_category_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
         if menu_item_id == 0:
             new_menu_item = MenuItem(
                 name=name,

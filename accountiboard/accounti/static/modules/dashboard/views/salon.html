@@ -105,7 +105,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <aside class="col-sm-4">
-                                <nav class=" nav nav-justified">
+                                <nav class="nav nav-justified">
                                     <a ng-click="changeMenuNav('MENU')" href=""
                                        ng-class="current_menu_nav === 'MENU' ? 'nav-link iconButton active' : 'nav-link iconButton'">منو
                                         کافه</a>
@@ -172,9 +172,9 @@
                                                 <tbody>
                                                 <tr style="border-top: none !important;" class="row"></tr>
                                                 <tr class="row">
-                                                    <th title="{{ shop.price | number | persianNumber }}" data-toggle="tooltip" class="col-sm-6"
+                                                    <th ng-class="shop.real_numbers === 0 ? 'disabled' : ''" title="{{ shop.price | number | persianNumber }}" data-toggle="tooltip" class="col-sm-6"
                                                         ng-repeat="shop in shop_products"
-                                                        ng-click="add_item_shop(shop.id, shop.name, shop.price)" tooltip>
+                                                        ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.real_numbers)" tooltip>
                                                         {{ shop.name }}<span
                                                             ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger mr-1' : 'badge badge-pill badge-dark mr-1'">{{ shop.real_numbers }}</span>
                                                     </th>
@@ -442,7 +442,7 @@
                     class="fas fa-file-invoice-dollar"></i> فاکتور جدید</a>
         </div>
         <div class="row saloonPageContent">
-            <main class="col-sm-2 tableNavigation">
+            <main class="col-sm-3 tableNavigation">
                 <div class="row">
                     <div ng-repeat="table_category in categorized_tables_data" class="col-md-6 table_category">
                         <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)" ng-class="set_class_name(table.table_name)"><span
@@ -452,7 +452,7 @@
                 </div>
             </main>
 
-            <main class="col-sm-10 ">
+            <main class="col-sm-9 ">
                 <div ng-show="current_selected_table_name" class="tableWrapper">
                     <table class="table">
                         <h3 class="tableName">{{ current_selected_table_name }}</h3>

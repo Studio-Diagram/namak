@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -17,62 +18,66 @@
 
     <title>داشبورد همه‌کاره‌ی نمک</title>
 
-    <script src="{% static 'libs/angular-1.7.9/angular.js' %}"></script>
-    <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
-    <script src="{% static 'libs/satellizer/dist/satellizer.min.js' %}"></script>
-    <script src="{% static 'libs/angular-cookies/angular-cookies.min.js' %}"></script>
+    {% compress js %}
+        <script src="{% static 'libs/angular-1.7.9/angular.js' %}"></script>
+        <script src="{% static 'js/angular-ui-router.min.js' %}"></script>
+        <script src="{% static 'libs/satellizer/dist/satellizer.min.js' %}"></script>
+        <script src="{% static 'libs/angular-cookies/angular-cookies.min.js' %}"></script>
+        <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap-datepicker.fa.min.js' %}"></script>
+        <script src="{% static 'js/angular-sanitize.js' %}"></script>
+        <script src="{% static 'js/select.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
+        <script src="{% static 'modules/dashboard/dashboardApp.js' %}"></script>
+        <script src="{% static 'modules/dashboard/services/dashboardHttpRequest.js' %}"></script>
+        <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/menuCategoryCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/menuItemCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/boardgameCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/salonCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/accountManagerCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/buyCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/paysCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/expenseCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/supplierCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/supplierDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/returnCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/statusCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/expenseCategoryCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/reservationCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/cashDisableCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/lotteryCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/printerCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/reportsCtrl.js' %}"></script>
+        <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
+    {% endcompress %}
 
-    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap-datepicker.fa.min.js' %}"></script>
-    <script src="{% static 'js/angular-sanitize.js' %}"></script>
-    <script src="{% static 'js/select.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
-    <script src="{% static 'modules/dashboard/dashboardApp.js' %}"></script>
-    <script src="{% static 'modules/dashboard/services/dashboardHttpRequest.js' %}"></script>
-    <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/menuCategoryCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/menuItemCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/boardgameCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/salonCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/accountManagerCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/buyCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/paysCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/expenseCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/supplierCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/supplierDetailCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/returnCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/statusCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/expenseCategoryCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/reservationCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/cashDisableCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/lotteryCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/printerCtrl.js' %}"></script>
-    <script src="{% static 'modules/dashboard/controllers/reportsCtrl.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}"/>
-    <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'css/ng-tags-input.min.css' %}"/>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
-    <link href="{% static 'css/select.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/select2.css' %}" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
+        <link href="{% static 'css/select.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/select2.css' %}" rel="stylesheet">
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'fontawesome-free-5.11.2-web/css/all.css' %}">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'fontawesome-free-5.11.2-web/css/all.css' %}">
+    {% endcompress %}
 
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -110,7 +115,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade mainModal" id="userProfileModal" tabindex="-1" role="dialog"
+<div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -126,17 +131,20 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <h3>اطلاعات کاربری</h3>
                     <div class="row">
                         <div class="col">
                             <label>نام<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="user_profile_data.first_name" type="text"
                                    class="form-control" placeholder="نام">
-
+                        </div>
+                        <div class="col">
                             <label>نام خانوادگی<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="user_profile_data.last_name" type="text"
                                    class="form-control" placeholder="نام خانوادگی">
-
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <label>ایمیل<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="user_profile_data.email" type="email"
                                    class="form-control" placeholder="ایمیل">
@@ -150,10 +158,11 @@
                                    class="form-control" placeholder="موبایل">
                         </div>
                     </div>
-                    <h3>تغییر رمز عبور</h3>
                     <div class="row">
                         <div class="col">
-                            <label>رمز عبور قدیمی</i></label>
+                            <label> رمز عبور قدیمی <i class="fa fa-question-circle"
+                                                      title="در صورت عدم نیاز به تغییر رمز عبور فیلدهای زیر را خالی بگذارید."
+                                                      data-toggle="tooltip" tooltip></i></label>
                             <input ng-model="user_profile_data.old_password" type="password"
                                    class="form-control" placeholder="رمز عبور قدیمی">
 
@@ -174,6 +183,21 @@
         </div>
     </div>
 </div>
+
+
+<div style="position: absolute; top: 5em; left: 0;z-index: 1050;">
+    <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
+         role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body">
+            <button class="mainButton toast-button ml-1" data-dismiss="toast" aria-label="Close">
+                <i class="fa fa-check"></i>
+                <span>باشه</span>
+            </button>
+            <span ng-bind="toast_message"></span>
+        </div>
+    </div>
+</div>
+
 <nav class="topHeader navbar navbar-expand-lg">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,8 +209,7 @@
             <li class="nav-item company-nav">
                 <div class="item-group">
                     <button class="mainButton">
-                        <i class="fas fa-cogs"></i>
-                        <span> کافه برد </span>
+                        <span ng-bind="organization_name"></span>
                     </button>
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -238,71 +261,130 @@
     </div>
 </nav>
 
-<div class="container-fluid masterWrapper">
-    <div class="row">
-        <aside class="col-sm-2 mainAside">
-            <a class="notch-holder" href="index.html">
-                <img src="{% static 'img/namak-logo@2x.png' %}" width="54" height="42">
-                <span>
+<div class="container-fluid masterWrapper" id="dashboardWrapper">
+    <div id="rightSidebarPageContentWrapper">
+        <div class="row">
+            <aside class="col-sm-2 mainAside">
+                <a class="notch-holder" href="index.html">
+                    <img src="{% static 'img/namak-logo@2x.png' %}" width="54" height="42">
+                    <span>
                 <bold>نمک؛</bold>
                 نرم افزار مدیریت کافه
             </span>
-                <span class="namakVersion">
+                    <span class="namakVersion">
                     v1.0.19
                 </span>
-            </a>
-            <nav class=" nav flex-column myNav">
-                <ul>
-                    <li class="nav-item">
-                        <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد{{ user_branches }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager.salon"
-                           href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
+                </a>
+                <nav class=" nav flex-column myNav">
+                    <ul>
+                        <li class="nav-item">
+                            <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
+                               ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
+                               ui-sref="cash_manager.salon"
+                               href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
-                    </li>
-                    <li class="nav-item">
-                        <a ui-sref="reservation" ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
-                           class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
-                    </li>
-                    <li class="nav-item">
-                        <a ui-sref="member_manager.member" href=""
-                           ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-id-card"></i>عضویت</a>
-                    </li>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="reservation"
+                               ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
+                               class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="member_manager.member" href=""
+                               ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
+                                    class="fas fa-id-card"></i>عضویت</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a ui-sref="boardgame" href=""
-                           ng-class="isActive('/boardgame') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        <li class="nav-item">
+                            <a ui-sref="boardgame" href=""
+                               ng-class="isActive('/boardgame') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-chess"></i>قفسه بازی‌ها</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
-                    </li>
-                    <li class="nav-item">
-                        <a ui-sref="account_manager.buy" href=""
-                           ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="account_manager.buy" href=""
+                               ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-chess"></i>حسابداری</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
-                    </li>
-                    <li class="nav-item" class="nav-link">
-                        <a ui-sref="manager.addEmployee"
-                           ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-cogs"></i>مدیریت</a>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="col-sm-10 pageWrapper">
-            <ui-view></ui-view>
+                        </li>
+                        <li class="nav-item">
+                            <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
+                        </li>
+                        <li class="nav-item" class="nav-link">
+                            <a ui-sref="manager.addEmployee"
+                               ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
+                                    class="fas fa-cogs"></i>مدیریت</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="col-sm-10 pageWrapper">
+                <ui-view></ui-view>
 
-        </main>
+            </main>
+        </div>
     </div>
+
+    <div id="leftSidebarWrapper">
+        <aside class="leftAside">
+            <div>
+                <a class="leftSideTitle" href="">
+                    <i class="fas fa-bug"></i>
+                    <span>گزارش اشکال</span>
+                </a>
+                <form id="leftAsideBugReportForm">
+                    <div class="row">
+                        <div class="col">
+                            <input ng-model="new_bug_data.title" type="text"
+                                   class="form-control" placeholder="عنوان">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                        <textarea ng-model="new_bug_data.text" rows="5"
+                                  class="form-control" placeholder="توضیحات"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="custom-file">
+                                <input onchange="angular.element(this).scope().bugReportFileChange()"
+                                       ng-model="new_bug_data.image_name" type="file"
+                                       class="custom-file-input" id="bugFile">
+                                <label style="direction: ltr;text-align: left" class="custom-file-label"
+                                       for="customFile">پیوست تصویر ( اختیاری )</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button ng-click="send_bug_report()" class="mainButton greenButton">ارسال</button>
+                        </div>
+                    </div>
+                </form>
+                <a class="leftSideTitle" href="">
+                    <i class="fas fa-magic"></i>
+                    <span>امکانات جدید</span>
+                </a>
+                <div class="newsWrapper">
+                    <div ng-repeat="news in all_news" class="news">
+                        <h6 ng-bind="news.title"></h6>
+                        <p ng-bind="news.text"></p>
+                    </div>
+                </div>
+            </div>
+            <a class="leftSideTitle" href="" ng-click="collapseLeftSidebar()">
+                <i class="fas fa-angle-double-right"></i>
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </aside>
+    </div>
+
 </div>
 </body>
 </html>

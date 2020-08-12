@@ -44,7 +44,7 @@
         <div class="tableButtons clearfix">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">هزینه‌ها</li>
+                    <li class="breadcrumb-item active" aria-current="page">صندوق‌ها</li>
                 </ol>
             </nav>
             <a ng-click="openPermissionModal()" href="" class="mainButton redButton tableLefty">بستن صندوق</a>
@@ -68,12 +68,15 @@
                         <tbody>
                         <tr ng-repeat="cash in all_cashes">
                             <th scope="row">{{ cash.id | persianNumber }}</th>
-                            <th scope="row">{{ cash.start_date | persianNumber }}</th>
-                            <th scope="row">{{ cash.start_time | persianNumber }}</th>
-                            <td>{{ cash.end_time | persianNumber }}</td>
+                            <th>{{ cash.start_date | persianNumber }}</th>
+                            <th>{{ cash.start_time | persianNumber }}</th>
+                            <td>{{ cash.end_date | persianNumber }}</td>
                             <td>{{ cash.end_time | persianNumber }}</td>
                             <td>{{ cash.total_income | number | persianNumber }}</td>
-                            <td><i ng-class="cash.is_closed === 1 ? 'far fa-check-circle' : 'far fa-times-circle'"></i></td>
+                            <td>
+                                <span ng-show="cash.is_closed === 1">بسته‌شده</span>
+                                <span ng-hide="cash.is_closed === 1">باز</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

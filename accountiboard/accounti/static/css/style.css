@@ -277,16 +277,11 @@ form.generalForm .submitButtonWrapper {
 }
 
 main.pageContent {
-    padding: 0;
     padding-left: 25px;
     margin: 0;
-    position: absolute;
-    top: 41px;
-    right: 0;
-    left: 0;
-    bottom: 0;
     overflow: auto;
     width: 100%;
+    height: calc(100vh - 118px);
 }
 
 main.pageContent a:hover {
@@ -692,6 +687,13 @@ tbody {
 
 .mainModal .modal-dialog .modal-content .modal-footer {
     border: none;
+}
+
+.littleModal {
+    width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+    right: 0;
 }
 
 form {
@@ -1700,6 +1702,7 @@ tags-input .tags .tag-item {
 .table-category-separation {
     display: inline-block;
     margin-left: 1.5em;
+    flex: 0 0 auto;
 }
 
 .tooltip {
@@ -1997,12 +2000,228 @@ input:checked + .slider .off {
     background-color: transparent;
 }
 
+th.disabled:hover {
+    cursor: no-drop;
+}
 #companyRegistrationForm {
     display: none;
     visibility: hidden;
     opacity: 0;
 }
 
+.toast {
+    width: 318px;
+    -webkit-border-radius: 0 30px 30px 0;
+    -moz-border-radius: 0 30px 30px 0;
+    border-radius: 0 30px 30px 0;
+    height: 4em;
+    display: none;
+}
+
+.toast .toast-body {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.toast.toast-success {
+    border-left: 6px solid #80AB51;
+}
+
+.mainButton.toast-button {
+    -webkit-border-radius: 30px;
+    height: 2em;
+    padding: 0 1em 0 1em;
+}
+
+.toast-success .toast-button {
+    background-color: #80AB51;
+    border-color: transparent;
+}
+
+.toast.toast-danger {
+    border-left: 6px solid #DB4E54;
+}
+
+.toast-danger .toast-button {
+    background-color: #DB4E54;
+    border-color: transparent;
+}
+
+.mainButton.fullWidthButton.transparentButton:hover {
+    background: #0000000f;
+}
+
+aside.leftAside {
+    background-color: #F4F7FA;
+    position: absolute;
+    top: -30px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.leftAside a {
+    padding: 1em 1em 0 0;
+    font-size: 2em;
+    display: flex;
+    font-weight: 100;
+    color: var(--navBarLine);
+}
+
+.leftAside a span {
+    margin-right: 0.6em;
+}
+
+.leftAside a:hover {
+
+}
+
+.leftAside a:hover i {
+
+}
+
+.verticalButton {
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+#rightSidebarPageContentWrapper {
+    width: calc(100vw - 79px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#leftSidebarWrapper {
+    width: 79px;
+    display: flex;
+    position: relative;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#dashboardWrapper {
+    padding-left: 0;
+    display: flex;
+}
+
+#rightSidebarPageContentWrapper.collapseComplete {
+    width: calc(100vw - 300px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#leftSidebarWrapper.collapseComplete {
+    width: 300px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#leftSidebarWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#rightSidebarPageContentWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftSidebarWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftAsideBugReportForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete #leftAsideBugReportForm {
+    margin: 1.7em;
+    visibility: visible;
+    animation: showElement 0s 0.3s forwards;
+    display: block;
+}
+
+.newsWrapper {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#leftSidebarWrapper.collapseComplete .newsWrapper {
+    margin: 1.7em;
+    visibility: visible;
+    animation: showElement 0s 0.3s forwards;
+}
+
+.newsWrapper .news p {
+    text-align: justify;
+}
+
+.newsWrapper .news {
+    border-bottom: 1px solid var(--grayButtonBorder);
+    margin-top: 2em;
+}
+
+#leftSidebarWrapper.collapseComplete a {
+    color: var(--myGreen);
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-left {
+    display: block;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-right {
+    display: none;
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    margin-bottom: 0.6em;
+}
+
+#leftSidebarWrapper i.fa-angle-double-right {
+    margin-bottom: 0.6em;
+}
+
+@keyframes showElement {
+    to {
+        opacity: 1;
+    }
+}
+
+#leftAsideBugReportForm textarea {
+    font-size: 1em;
+    font-weight: 100;
+}
 #personalRegistrationForm {
     visibility: hidden;
     opacity: 0;

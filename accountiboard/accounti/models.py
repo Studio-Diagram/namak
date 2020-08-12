@@ -692,3 +692,19 @@ class SmsToken(models.Model):
     phone = models.CharField(max_length=30, null=False, blank=False)
     token = models.CharField(max_length=30, null=False, blank=False)
     created_time = models.DateTimeField(default=timezone.now)
+
+
+class LatestNews(models.Model):
+    title = models.CharField(max_length=300, blank=False, null=False)
+    text = models.CharField(max_length=4000, blank=False, null=False)
+    link = models.CharField(max_length=300, blank=True, null=True)
+    datetime = models.DateTimeField()
+
+
+class BugReport(models.Model):
+    title = models.CharField(max_length=300, blank=False, null=False)
+    text = models.TextField(blank=False, null=False)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    image = models.ImageField(null=True)
+    image_name = models.CharField(max_length=500, null=True, default="default.jpg")
+    created_time = models.DateTimeField(auto_now_add=True)
