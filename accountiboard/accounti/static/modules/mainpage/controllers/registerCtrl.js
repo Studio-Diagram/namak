@@ -2,36 +2,128 @@ angular.module("mainpage")
     .controller("registerCtrl", function ($scope, $interval, $rootScope, $filter, $http, $state, $auth, $timeout, $window, mainpageHttpRequest) {
         var initialize = function () {
             $scope.new_user = {
-                "company_name": '',
-                "email": '',
-                "phone": '',
-                "password": '',
-                "re_password": ''
+                email: "",
+                phone: "",
+                password: "",
+                re_password: "",
+                company_name: "",
+                company_address: "",
+                start_working_time: "",
+                end_working_time: "",
+                sms_verify_token: ""
             };
             $scope.form_state = {
                 "is_error": false,
                 "error_msg": "",
                 "is_loading": false
             };
+            $scope.config_clock();
         };
 
         $scope.register_new_user = function () {
             $scope.form_state.is_loading = true;
-            mainpageHttpRequest.registerUser($scope.new_user)
+            $scope.form_state.is_error = false;
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_user.end_working_time = $('#end-time-clock').val();
+                $scope.new_user.start_working_time = $('#start-time-clock').val();
+            })(jQuery);
+            mainpageHttpRequest.registerCafeOwner($scope.new_user)
                 .then(function (data) {
                     $scope.form_state.is_loading = false;
-                    if (data['response_code'] === 2) {
-                        $state.go("login");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.form_state.is_error = true;
-                        $scope.form_state.error_msg = data['error_msg'];
-                    }
+                    $state.go("login");
                 }, function (error) {
                     $scope.form_state.is_error = true;
                     $scope.form_state.is_loading = false;
-                    $scope.form_state.error_msg = error;
+                    $scope.form_state.error_msg = error.data.error_msg;
                 });
         };
+
+        $scope.send_verify_code_to_phone = function () {
+            jQuery.noConflict();
+            (function ($) {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm', {action: 'submit'}).then(function (token) {
+                        $scope.form_state.is_loading = true;
+                        $scope.form_state.is_error = false;
+                        mainpageHttpRequest.phoneVerify({
+                            phone: $scope.new_user.phone,
+                            recaptcha_response_token: token,
+                            verify_type: "REGISTER"
+                        })
+                            .then(function (data) {
+                                $scope.form_state.is_loading = false;
+                                $scope.change_registration_state('personal_registration', 'phone_verify_final_step');
+                            }, function (error) {
+                                $scope.form_state.is_error = true;
+                                $scope.form_state.is_loading = false;
+                                $scope.form_state.error_msg = error.data.error_msg;
+                            });
+                    });
+                });
+            })(jQuery);
+        };
+
+        $scope.change_registration_state = function (current_state, target_state) {
+            jQuery.noConflict();
+            (function ($) {
+                if (current_state === "company_registration" && target_state === "personal_registration") {
+                    $('#companyRegistrationForm').removeClass('showForm');
+                    $('#personalRegistrationForm').addClass('showForm');
+                }
+                else if (current_state === "personal_registration" && target_state === "phone_verify_final_step") {
+                    $('#personalRegistrationForm').removeClass('showForm');
+                    $('#phoneVerifyRegistrationForm').addClass('showForm');
+                }
+                else if (current_state === "personal_registration" && target_state === "company_registration") {
+                    $('#personalRegistrationForm').removeClass('showForm');
+                    $('#companyRegistrationForm').addClass('showForm');
+                }
+            })(jQuery);
+        };
+
+        $scope.config_clock = function () {
+            jQuery.noConflict();
+            (function ($) {
+                var choices = ["00", "15", "30", "45"];
+                $('#start-time-clock').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterDone: function () {
+                        var seleceted_min = $('#start-time-clock').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#start-time-clock').val("");
+                        }
+                        else {
+                            $scope.new_user.start_working_time = $('#start-time-clock').val();
+                        }
+                    }
+                });
+                $('#end-time-clock').clockpicker({
+                    donetext: 'تایید',
+                    autoclose: true,
+                    afterShow: function () {
+                        $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
+                            return !($.inArray($(element).text(), choices) != -1)
+                        }).remove();
+                    },
+                    afterHide: function () {
+                        var seleceted_min = $('#end-time-clock').val().split(":")[1];
+                        if (!choices.includes(seleceted_min)) {
+                            $('#end-time-clock').val("");
+                        }
+                        else {
+                            $scope.new_user.end_working_time = $('#end-time-clock').val();
+                        }
+                    }
+                });
+            })(jQuery);
+        };
+
         initialize();
     });

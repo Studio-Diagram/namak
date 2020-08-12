@@ -2,252 +2,302 @@ from django.db import IntegrityError
 from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
+from django.views import View
 from datetime import datetime
 from accountiboard.constants import *
 from accountiboard.utils import make_new_JWT_token
 from accounti.validators.EmployeeValidator import *
 from accountiboard.custom_permissions import *
 from django.shortcuts import get_object_or_404
+import requests
+from django.conf import settings
 
 
-def login(request):
-    if request.method != "POST":
-        return JsonResponse({"error_msg": METHOD_NOT_ALLOWED}, status=403)
-    rec_data = json.loads(request.read().decode('utf-8'))
+class LoginView(View):
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
 
-    validator = LoginValidator(rec_data)
-    if not validator.is_valid():
-        return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+        validator = LoginValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
-    username = rec_data['username']
-    password = rec_data['password']
+        username = rec_data.get('username')
+        password = rec_data.get('password')
+        recaptcha_response_token = rec_data.get('recaptcha_response_token')
 
-    try:
-        user_obj = User.objects.get(phone=username)
-    except ObjectDoesNotExist:
-        return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
+        recaptcha_verify_data = {
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response_token,
+        }
 
-    if not check_password(password, user_obj.password):
-        return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
+        recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_verify_data)
+        recaptcha_request_json = recaptcha_request.json()
 
-    user_obj.last_login = datetime.now()
-    user_obj.save()
-    if user_obj.get_user_type_display() == "cafe_owner":
-        cafe_owner_object = CafeOwner.objects.get(user=user_obj)
-        organization_object = cafe_owner_object.organization
-        branch_object = Branch.objects.filter(organization=organization_object).first().id
-        user_branch_objects = Branch.objects.filter(organization=organization_object)
-        user_branches = [{
-            "id": cafe_owner_to_branch.id,
-            "name": cafe_owner_to_branch.name
-        } for cafe_owner_to_branch in user_branch_objects]
-        user_role = [USER_ROLES['CAFE_OWNER']]
-        request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
-    elif user_obj.get_user_type_display() == "employee":
-        employee_object = Employee.objects.get(user=user_obj)
-        request.session['user_role'] = employee_object.employee_roles
-        user_role = employee_object.employee_roles
-        branches = EmployeeToBranch.objects.filter(employee=employee_object)
-        branch_object = branches.first().branch.id
-        organization_object = branches.first().branch.organization
-        user_branches = [{
-            "id": employee_to_branch.branch.id,
-            "name": employee_to_branch.branch.name,
-        } for employee_to_branch in branches]
-    else:
-        return JsonResponse({"response_code": 3})
+        if not recaptcha_request_json['success']:
+            return JsonResponse({"error_msg": CAPTCHA_INVALID}, status=401)
 
-    request.session['is_logged_in'] = username
-    jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, user_branches)
-    return JsonResponse(
-        {"response_code": 2,
-         "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),
-                       'branches': user_branches,
-                       'user_roles': user_role,
-                       'organization_name': organization_object.name},
-         "token": jwt_token.decode("utf-8")
-         }
-    )
-
-
-def register_employee(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-
-    rec_data = json.loads(request.read().decode('utf-8'))
-    validator = RegisterEmployeeValidator(rec_data)
-    if not validator.is_valid():
-        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
-
-    employee_id = rec_data['employee_id']
-    first_name = rec_data['first_name']
-    last_name = rec_data['last_name']
-    father_name = rec_data['father_name']
-    national_code = rec_data['national_code']
-    phone = rec_data['phone']
-    password = rec_data['password']
-    re_password = rec_data['re_password']
-    home_address = rec_data['home_address']
-    bank_name = rec_data['bank_name']
-    bank_card_number = rec_data['bank_card_number']
-    shaba = rec_data['shaba']
-    auth_levels = rec_data['auth_levels']
-    employee_branches = rec_data['employee_branches']
-
-    if employee_id == 0:
         try:
-            new_user = User(
-                first_name=first_name,
-                last_name=last_name,
-                phone=phone,
-                email=phone + "@gmail.com",
-                password=make_password(password),
-                home_address=home_address,
-                user_type=USER_TYPE['employee']
-            )
-            new_user.save()
-        except IntegrityError:
-            return JsonResponse({"response_code": 3, "error_msg": PHONE_ALREADY_EXIST})
+            user_obj = User.objects.get(phone=username)
+        except ObjectDoesNotExist:
+            return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
 
-        new_employee = Employee(
-            father_name=father_name,
-            national_code=national_code,
-            bank_name=bank_name,
-            bank_card_number=bank_card_number,
-            shaba_number=shaba,
-            user=new_user,
-            employee_roles=[auth_level.get('id') for auth_level in auth_levels if
-                            auth_level.get('is_checked') == 1]
+        if not check_password(password, user_obj.password):
+            return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
+
+        user_obj.last_login = datetime.datetime.utcnow()
+        user_obj.save()
+        if user_obj.get_user_type_display() == "cafe_owner":
+            cafe_owner_object = CafeOwner.objects.get(user=user_obj)
+            organization_object = cafe_owner_object.organization
+            branch_object = Branch.objects.filter(organization=organization_object).first().id
+            user_branch_objects = Branch.objects.filter(organization=organization_object)
+            user_branches = [{
+                "id": cafe_owner_to_branch.id,
+                "name": cafe_owner_to_branch.name
+            } for cafe_owner_to_branch in user_branch_objects]
+            user_role = [USER_ROLES['CAFE_OWNER']]
+            request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
+            try:
+                bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
+            except:
+                bundle = USER_PLANS_CHOICES['FREE']
+        elif user_obj.get_user_type_display() == "employee":
+            employee_object = Employee.objects.get(user=user_obj)
+            if employee_object.is_active != True:
+                return JsonResponse({"response_code": 3, "error_msg": "You don't have access rights."}, status=403)
+            request.session['user_role'] = employee_object.employee_roles
+            user_role = employee_object.employee_roles
+            branches = EmployeeToBranch.objects.filter(employee=employee_object)
+            branch_object = branches.first().branch.id
+            user_branches = [{
+                "id": employee_to_branch.branch.id,
+                "name": employee_to_branch.branch.name,
+            } for employee_to_branch in branches]
+            this_organization = branches.first().branch.organization
+            cafe_owner_object = CafeOwner.objects.get(organization=this_organization)
+            try:
+                bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
+            except:
+                bundle = USER_PLANS_CHOICES['FREE']
+        else:
+            return JsonResponse({"response_code": 3})
+
+        request.session['is_logged_in'] = username
+
+        jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
+        return JsonResponse(
+            {"response_code": 2,
+             "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),
+                           'branches': user_branches,
+                           'user_roles': user_role,
+                           'bundle': bundle,
+                           },
+             "token": jwt_token.decode("utf-8")
+             }
         )
-        new_employee.save()
-        for employee_branch in employee_branches:
-            new_employee_to_branch = EmployeeToBranch(
-                branch=Branch.objects.get(pk=employee_branch.get('id')),
-                employee=new_employee,
-                position=DEFAULT_POSITTION  # TODO: Remove posittion from models
+
+
+class RegisterEmployeeView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']}, # After bundles are implemented. remove this argument if uncommenting permissions before that
+    #     branch_disable=True
+    # )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        validator = RegisterEmployeeValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
+        employee_id = rec_data['employee_id']
+        first_name = rec_data['first_name']
+        last_name = rec_data['last_name']
+        father_name = rec_data['father_name']
+        national_code = rec_data['national_code']
+        phone = rec_data['phone']
+        password = rec_data['password']
+        re_password = rec_data['re_password']
+        home_address = rec_data['home_address']
+        bank_name = rec_data['bank_name']
+        bank_card_number = rec_data['bank_card_number']
+        shaba = rec_data['shaba']
+        auth_levels = rec_data['auth_levels']
+        employee_branches = rec_data['employee_branches']
+
+        if employee_id == 0:
+            try:
+                new_user = User(
+                    first_name=first_name,
+                    last_name=last_name,
+                    phone=phone,
+                    email=phone + "@gmail.com",
+                    password=make_password(password),
+                    home_address=home_address,
+                    user_type=USER_TYPE['employee']
+                )
+                new_user.save()
+            except IntegrityError:
+                return JsonResponse({"response_code": 3, "error_msg": PHONE_ALREADY_EXIST})
+
+            new_employee = Employee(
+                father_name=father_name,
+                national_code=national_code,
+                bank_name=bank_name,
+                bank_card_number=bank_card_number,
+                shaba_number=shaba,
+                user=new_user,
+                employee_roles=[auth_level.get('id') for auth_level in auth_levels if
+                                auth_level.get('is_checked') == 1]
             )
-            new_employee_to_branch.save()
-        return JsonResponse({"response_code": 2})
-    else:
-        old_employee = Employee.objects.get(pk=employee_id)
-        EmployeeToBranch.objects.filter(employee=old_employee).delete()
-        old_employee.user.first_name = first_name
-        old_employee.user.last_name = last_name
-        old_employee.user.phone = phone
-        old_employee.father_name = father_name
-        old_employee.national_code = national_code
-        old_employee.employee_roles = [auth_level.get('id') for auth_level in auth_levels if
-                                       auth_level.get('is_checked') == 1]
-        if password != '' and re_password != '':
-            if password == re_password:
-                old_employee.user.password = make_password(password)
-            else:
-                return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
-        old_employee.user.home_address = home_address
-        old_employee.bank_name = bank_name
-        old_employee.bank_card_number = bank_card_number
-        old_employee.shaba_number = shaba
-
-        old_employee.user.save()
-        old_employee.save()
-
-        #  TODO: Needs to improve this section
-        for employee_branch in employee_branches:
-            if employee_branch.get('is_checked'):
+            new_employee.save()
+            for employee_branch in employee_branches:
                 new_employee_to_branch = EmployeeToBranch(
                     branch=Branch.objects.get(pk=employee_branch.get('id')),
-                    employee=old_employee,
+                    employee=new_employee,
                     position=DEFAULT_POSITTION  # TODO: Remove posittion from models
                 )
                 new_employee_to_branch.save()
+            return JsonResponse({"response_code": 2})
+        else:
+            old_employee = Employee.objects.get(pk=employee_id)
+            EmployeeToBranch.objects.filter(employee=old_employee).delete()
+            old_employee.user.first_name = first_name
+            old_employee.user.last_name = last_name
+            old_employee.user.phone = phone
+            old_employee.father_name = father_name
+            old_employee.national_code = national_code
+            old_employee.employee_roles = [auth_level.get('id') for auth_level in auth_levels if
+                                           auth_level.get('is_checked') == 1]
+            if password != '' and re_password != '':
+                if password == re_password:
+                    old_employee.user.password = make_password(password)
+                else:
+                    return JsonResponse({"response_code": 3, "error_msg": NOT_SIMILAR_PASSWORD})
+            old_employee.user.home_address = home_address
+            old_employee.bank_name = bank_name
+            old_employee.bank_card_number = bank_card_number
+            old_employee.shaba_number = shaba
 
-        return JsonResponse({"response_code": 2})
+            old_employee.user.save()
+            old_employee.save()
+
+            #  TODO: Needs to improve this section
+            for employee_branch in employee_branches:
+                if employee_branch.get('is_checked'):
+                    new_employee_to_branch = EmployeeToBranch(
+                        branch=Branch.objects.get(pk=employee_branch.get('id')),
+                        employee=old_employee,
+                        position=DEFAULT_POSITTION  # TODO: Remove posittion from models
+                    )
+                    new_employee_to_branch.save()
+
+            TokenBlacklist.objects.create(user=old_employee.user)
+
+            return JsonResponse({"response_code": 2})
 
 
-def search_employee(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    validator = SearchEmployeeValidator(rec_data)
-    if not validator.is_valid():
-        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+class SearchEmployeeView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
-    search_word = rec_data['search_word']
-    branch_id = rec_data['branch_id']
+    def post(self, request, *args, **kwargs):
 
-    employees_from_branch = EmployeeToBranch.objects.filter(branch=Branch.objects.get(pk=branch_id))
-    employees = []
-    for employee in employees_from_branch:
-        if search_word in employee.employee.last_name:
+        rec_data = json.loads(request.read().decode('utf-8'))
+        validator = SearchEmployeeValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
+        search_word = rec_data['search_word']
+        branch_id = rec_data['branch_id']
+
+        employees_from_branch = EmployeeToBranch.objects.filter(branch=Branch.objects.get(pk=branch_id))
+        employees = []
+        for employee in employees_from_branch:
+            if search_word in employee.employee.last_name:
+                employees.append({
+                    "last_name": employee.employee.last_name,
+                    "auth_lvl": employee.auth_level,
+                })
+        return JsonResponse({"response_code": 2, 'employees': employees})
+
+
+class GetEmployeesView(View):
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
+    )
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data['branch']
+        organization_object = Branch.objects.get(id=branch_id).organization
+        all_organization_branches = Branch.objects.filter(organization=organization_object)
+        all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches).values(
+            'employee').distinct()
+        employees = []
+        for employee in all_employees:
+            employee_object = Employee.objects.get(id=employee.get('employee'))
+            employee_branches = EmployeeToBranch.objects.filter(employee=employee_object)
             employees.append({
-                "last_name": employee.employee.last_name,
-                "auth_lvl": employee.auth_level,
+                "id": employee_object.pk,
+                "full_name": employee_object.user.get_full_name(),
+                "auth_levels": employee_object.employee_roles,
+                "branches": [{
+                    "id": employee_branch.branch.id,
+                    "name": employee_branch.branch.name
+                } for employee_branch in employee_branches],
             })
-    return JsonResponse({"response_code": 2, 'employees': employees})
+        return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']})
-def get_employees(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    branch_id = rec_data['branch']
-    organization_object = Branch.objects.get(id=branch_id).organization
-    all_organization_branches = Branch.objects.filter(organization=organization_object)
-    all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches).values('employee').distinct()
-    employees = []
-    for employee in all_employees:
-        employee_object = Employee.objects.get(id=employee.get('employee'))
-        employee_branches = EmployeeToBranch.objects.filter(employee=employee_object)
-        employees.append({
-            "id": employee_object.pk,
-            "full_name": employee_object.user.get_full_name(),
-            "auth_levels": employee_object.employee_roles,
-            "branches": [{
-                "id": employee_branch.branch.id,
-                "name": employee_branch.branch.name
-            } for employee_branch in employee_branches],
-        })
-    return JsonResponse({"response_code": 2, 'employees': employees})
+class GetEmployeeView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+
+        employee_id = rec_data['employee_id']
+        employee = Employee.objects.get(pk=employee_id)
+        employee_to_branches = EmployeeToBranch.objects.filter(employee=employee)
+        employee_data = {
+            'first_name': employee.user.first_name,
+            'last_name': employee.user.last_name,
+            'father_name': employee.father_name,
+            'national_code': employee.national_code,
+            'phone': employee.user.phone,
+            'home_address': employee.user.home_address,
+            'bank_name': employee.bank_name,
+            'bank_card_number': employee.bank_card_number,
+            'shaba': employee.shaba_number,
+            'auth_levels': employee.employee_roles,
+            'branches': [employee_branch.branch.id for employee_branch in employee_to_branches]
+        }
+        return JsonResponse({"response_code": 2, 'employee': employee_data})
 
 
-def get_employee(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-    employee_id = rec_data['employee_id']
-    employee = Employee.objects.get(pk=employee_id)
-    employee_to_branches = EmployeeToBranch.objects.filter(employee=employee)
-    employee_data = {
-        'first_name': employee.user.first_name,
-        'last_name': employee.user.last_name,
-        'father_name': employee.father_name,
-        'national_code': employee.national_code,
-        'phone': employee.user.phone,
-        'home_address': employee.user.home_address,
-        'bank_name': employee.bank_name,
-        'bank_card_number': employee.bank_card_number,
-        'shaba': employee.shaba_number,
-        'auth_levels': employee.employee_roles,
-        'branches': [employee_branch.branch.id for employee_branch in employee_to_branches]
-    }
-    return JsonResponse({"response_code": 2, 'employee': employee_data})
+class GetMenuCategoriesView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data['branch']
 
-def get_menu_categories(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    branch_id = rec_data['branch']
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-    else:
         all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
         menu_categories = []
         for category in all_menu_categories:
@@ -258,97 +308,107 @@ def get_menu_categories(request):
         return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
 
 
-def get_menu_category(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+class GetMenuCategoryView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    branch_id = rec_data.get('branch')
-    menu_category_id = rec_data.get('menu_category_id')
+    def post(self, request, *args, **kwargs):
 
-    if not branch_id or not menu_category_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data.get('branch')
+        menu_category_id = rec_data.get('menu_category_id')
 
-    menu_category = MenuCategory.objects.get(pk=menu_category_id)
-    all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
+        if not branch_id or not menu_category_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    printers = Printer.objects.filter(branch_id=branch_id)
-    printers_data = []
-    for printer in printers:
-        printers_data.append({
-            'printer_id': printer.pk,
-            'printer_name': printer.name,
-            'is_checked': 0
-        })
+        menu_category = MenuCategory.objects.get(pk=menu_category_id)
+        all_cat_to_printer = PrinterToCategory.objects.filter(menu_category=menu_category)
 
-    printers_id = []
-    for printer in all_cat_to_printer:
-        printers_id.append(printer.printer.pk)
-        for element in printers_data:
-            if element['printer_id'] == printer.printer.pk:
-                element['is_checked'] = 1
-                break
-    menu_category_data = {
-        'id': menu_category.pk,
-        'name': menu_category.name,
-        'kind': menu_category.kind,
-        'printers_id': printers_id,
-        'printers': printers_data,
-    }
-    return JsonResponse({"response_code": 2, 'menu_category': menu_category_data})
+        printers = Printer.objects.filter(branch_id=branch_id)
+        printers_data = []
+        for printer in printers:
+            printers_data.append({
+                'printer_id': printer.pk,
+                'printer_name': printer.name,
+                'is_checked': 0
+            })
 
-
-def add_menu_category(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-
-    rec_data = json.loads(request.read().decode('utf-8'))
-    validator = AddMenuCategoryValidator(rec_data)
-    if not validator.is_valid():
-        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
-
-    menu_category_id = rec_data['menu_category_id']
-    name = rec_data['name']
-    kind = rec_data['kind']
-    printers_id = rec_data['printers_id']
-    branch_id = rec_data['branch_id']
-
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-    if not name or not kind or not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-    if menu_category_id == 0:
-        new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id)
-        new_menu_category.save()
-        for printer_id in printers_id:
-            printer_object = Printer.objects.get(pk=printer_id)
-            new_printer_to_menu_cat = PrinterToCategory(
-                printer=printer_object,
-                menu_category=new_menu_category
-            )
-            new_printer_to_menu_cat.save()
-        return JsonResponse({"response_code": 2})
-    else:
-        old_menu_category = MenuCategory.objects.get(pk=menu_category_id)
-        PrinterToCategory.objects.filter(menu_category=old_menu_category).delete()
-        old_menu_category.name = name
-        old_menu_category.kind = kind
-        for printer_id in printers_id:
-            printer_object = Printer.objects.get(pk=printer_id)
-            PrinterToCategory(printer=printer_object, menu_category=old_menu_category).save()
-        old_menu_category.save()
-        return JsonResponse({"response_code": 2})
+        printers_id = []
+        for printer in all_cat_to_printer:
+            printers_id.append(printer.printer.pk)
+            for element in printers_data:
+                if element['printer_id'] == printer.printer.pk:
+                    element['is_checked'] = 1
+                    break
+        menu_category_data = {
+            'id': menu_category.pk,
+            'name': menu_category.name,
+            'kind': menu_category.kind,
+            'printers_id': printers_id,
+            'printers': printers_data,
+        }
+        return JsonResponse({"response_code": 2, 'menu_category': menu_category_data})
 
 
-def search_menu_category(request):
-    if request.method == "POST":
+class AddMenuCategoryView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        validator = AddMenuCategoryValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
+        menu_category_id = rec_data['menu_category_id']
+        name = rec_data['name']
+        kind = rec_data['kind']
+        printers_id = rec_data['printers_id']
+        branch_id = rec_data['branch_id']
+
+        if not name or not kind or not branch_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        if menu_category_id == 0:
+            new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id)
+            new_menu_category.save()
+            for printer_id in printers_id:
+                printer_object = Printer.objects.get(pk=printer_id)
+                new_printer_to_menu_cat = PrinterToCategory(
+                    printer=printer_object,
+                    menu_category=new_menu_category
+                )
+                new_printer_to_menu_cat.save()
+            return JsonResponse({"response_code": 2})
+        else:
+            old_menu_category = MenuCategory.objects.get(pk=menu_category_id)
+            PrinterToCategory.objects.filter(menu_category=old_menu_category).delete()
+            old_menu_category.name = name
+            old_menu_category.kind = kind
+            for printer_id in printers_id:
+                printer_object = Printer.objects.get(pk=printer_id)
+                PrinterToCategory(printer=printer_object, menu_category=old_menu_category).save()
+            old_menu_category.save()
+            return JsonResponse({"response_code": 2})
+
+
+class SearchMenuCategoryView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
@@ -356,10 +416,7 @@ def search_menu_category(request):
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+
         if not search_word or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         categories_searched = MenuCategory.objects.filter(name__contains=search_word, branch_id=branch_id)
@@ -369,100 +426,106 @@ def search_menu_category(request):
                 "name": category.name,
             })
         return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
-def get_menu_items(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    branch_id = rec_data['branch']
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-
-    all_menu_items = MenuItem.objects.filter(is_delete=0, menu_category__branch_id=branch_id).order_by(
-        'menu_category__name')
-    menu_items = []
-    for item in all_menu_items:
-        menu_items.append({
-            "id": item.pk,
-            "name": item.name,
-            "price": item.price,
-            "category_name": item.menu_category.name,
-            "menu_category_id": item.menu_category.id
-        })
-    return JsonResponse({"response_code": 2, 'menu_items': menu_items})
-
-
-def get_menu_item(request):
-    if request.method == "POST":
+class GetMenuItemsView(View):
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=False
+    )
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
+        branch_id = rec_data['branch']
+
+        all_menu_items = MenuItem.objects.filter(is_delete=0, menu_category__branch_id=branch_id).order_by(
+            'menu_category__name')
+        menu_items = []
+        for item in all_menu_items:
+            menu_items.append({
+                "id": item.pk,
+                "name": item.name,
+                "price": item.price,
+                "category_name": item.menu_category.name,
+                "menu_category_id": item.menu_category.id
+            })
+        return JsonResponse({"response_code": 2, 'menu_items': menu_items})
+
+
+class GetMenuItemView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+
+        menu_item_id = rec_data['menu_item_id']
+        menu_item = MenuItem.objects.get(pk=menu_item_id)
+        menu_item_data = {
+            'id': menu_item.pk,
+            'name': menu_item.name,
+            'price': menu_item.price,
+            "category_name": menu_item.menu_category.name,
+            "menu_category_id": menu_item.menu_category.id
+        }
+        return JsonResponse({"response_code": 2, 'menu_item': menu_item_data})
+
+
+class AddMenuItemView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        validator = AddMenuItemValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+
+        menu_item_id = rec_data['menu_item_id']
+        menu_category_id = rec_data['menu_category_id']
+        name = rec_data['name']
+        price = rec_data['price']
+
+        if not menu_category_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        if menu_item_id == 0:
+            new_menu_item = MenuItem(
+                name=name,
+                price=price,
+                menu_category=MenuCategory.objects.get(pk=menu_category_id)
+            )
+            new_menu_item.save()
+            return JsonResponse({"response_code": 2})
         else:
-            menu_item_id = rec_data['menu_item_id']
-            menu_item = MenuItem.objects.get(pk=menu_item_id)
-            menu_item_data = {
-                'id': menu_item.pk,
-                'name': menu_item.name,
-                'price': menu_item.price,
-                "category_name": menu_item.menu_category.name,
-                "menu_category_id": menu_item.menu_category.id
-            }
-            return JsonResponse({"response_code": 2, 'menu_item': menu_item_data})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+            old_menu_item = MenuItem.objects.get(pk=menu_item_id)
+            old_menu_item.name = name
+            old_menu_item.price = price
+            old_menu_item.menu_category = MenuCategory.objects.get(pk=menu_category_id)
+            old_menu_item.save()
+            return JsonResponse({"response_code": 2})
 
 
-def add_menu_item(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+class DeleteMenuItemView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    validator = AddMenuItemValidator(rec_data)
-    if not validator.is_valid():
-        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
-
-    menu_item_id = rec_data['menu_item_id']
-    menu_category_id = rec_data['menu_category_id']
-    name = rec_data['name']
-    price = rec_data['price']
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    if not payload:
-        # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-        return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
-
-    if not menu_category_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-    if menu_item_id == 0:
-        new_menu_item = MenuItem(
-            name=name,
-            price=price,
-            menu_category=MenuCategory.objects.get(pk=menu_category_id)
-        )
-        new_menu_item.save()
-        return JsonResponse({"response_code": 2})
-    else:
-        old_menu_item = MenuItem.objects.get(pk=menu_item_id)
-        old_menu_item.name = name
-        old_menu_item.price = price
-        old_menu_item.menu_category = MenuCategory.objects.get(pk=menu_category_id)
-        old_menu_item.save()
-        return JsonResponse({"response_code": 2})
-
-
-def delete_menu_item(request):
-    if request.method == "POST":
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         menu_item_id = rec_data['menu_item_id']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         if not menu_item_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -471,11 +534,17 @@ def delete_menu_item(request):
         old_menu_item.is_delete = 1
         old_menu_item.save()
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
-def search_menu_item(request):
-    if request.method == "POST":
+class SearchMenuItemView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
@@ -483,10 +552,6 @@ def search_menu_item(request):
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
 
         items_searched = MenuItem.objects.filter(name__contains=search_word, is_delete=0,
                                                  menu_category__branch_id=branch_id)
@@ -510,17 +575,19 @@ def search_menu_item(request):
                 "menu_category_id": item.menu_category.id
             })
         return JsonResponse({"response_code": 2, 'menu_items': menu_items})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
-def get_menu_items_with_categories(request):
-    if request.method == "POST":
+class GetMenuItemsWithCategoriesView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
-        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-        if not payload:
-            # PERFORM OTHER CHECKS, PERMISSIONS, BRANCH, ORGANIZATION, ETC
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
         menu_items_with_categories_data = []
         menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
         for cat in menu_categories:
@@ -537,72 +604,133 @@ def get_menu_items_with_categories(request):
                 'items': menu_items_data,
             })
         return JsonResponse({"response_code": 2, 'menu_items_with_categories': menu_items_with_categories_data})
-    return JsonResponse({"response_code": 4, "error_msg": "This endpoint only supports POST method."})
 
 
-def get_printers(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    branch_id = rec_data.get('branch')
+class GetPrintersView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
-    if not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data.get('branch')
 
-    printers = Printer.objects.filter(branch_id=branch_id)
-    printers_data = []
-    for printer in printers:
-        printers_data.append({
-            'printer_id': printer.pk,
-            'printer_name': printer.name,
-            'is_checked': 0
-        })
-    return JsonResponse({"response_code": 2, 'printers': printers_data})
+        if not branch_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-
-def get_printer(request, printer_id):
-    if request.method != "GET":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-
-    printer_object = get_object_or_404(Printer, pk=printer_id)
-
-    return JsonResponse({"response_code": 2, 'printer': {
-        'printer_id': printer_object.id,
-        'name': printer_object.name,
-        'branch': printer_object.branch_id
-    }})
+        printers = Printer.objects.filter(branch_id=branch_id)
+        printers_data = []
+        for printer in printers:
+            printers_data.append({
+                'printer_id': printer.pk,
+                'printer_name': printer.name,
+                'is_checked': 0
+            })
+        return JsonResponse({"response_code": 2, 'printers': printers_data})
 
 
-def add_printer(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    printer_id = rec_data.get('printer_id')
-    branch_id = rec_data.get('branch')
-    printer_name = rec_data.get('name')
+class GetPrinterView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
-    if not printer_name or not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    def get(self, request, *args, **kwargs):
+        printer_object = get_object_or_404(Printer, pk=self.kwargs.get('printer_id', 0))
 
-    if printer_id:
-        printer_object = get_object_or_404(Printer, pk=printer_id)
-        printer_object.name = printer_name
-        printer_object.save()
-    else:
-        Printer(name=printer_name, branch_id=branch_id).save()
-
-    return JsonResponse({"response_code": 2})
+        return JsonResponse({"response_code": 2, 'printer': {
+            'printer_id': printer_object.id,
+            'name': printer_object.name,
+            'branch': printer_object.branch_id
+        }})
 
 
-def get_today_cash(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+class AddPrinterView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    branch_id = rec_data['branch']
-    branch_obj = Branch.objects.get(pk=branch_id)
-    cash_obj = Cash.objects.filter(branch=branch_obj, is_close=0)
-    if len(cash_obj) == 1:
-        return JsonResponse({"response_code": 2, 'cash_id': cash_obj.first().pk})
-    else:
-        return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        printer_id = rec_data.get('printer_id')
+        branch_id = rec_data.get('branch')
+        printer_name = rec_data.get('name')
+
+        if not printer_name or not branch_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        if printer_id:
+            printer_object = get_object_or_404(Printer, pk=printer_id)
+            printer_object.name = printer_name
+            printer_object.save()
+        else:
+            Printer(name=printer_name, branch_id=branch_id).save()
+
+        return JsonResponse({"response_code": 2})
+
+
+class GetTodayCashView(View):
+    # @permission_decorator_class_based(
+    #     token_authenticate,
+    #     {USER_ROLES['CAFE_OWNER']},
+    #     {USER_PLANS_CHOICES['FREE']},
+    #     branch_disable=False
+    # )
+
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data['branch']
+        branch_obj = Branch.objects.get(pk=branch_id)
+        cash_obj = Cash.objects.filter(branch=branch_obj, is_close=0)
+        if len(cash_obj) == 1:
+            return JsonResponse({"response_code": 2, 'cash_id': cash_obj.first().pk})
+        else:
+            return JsonResponse({"response_code": 3, 'error_message': CASH_ERROR})
+
+
+class KickUnkickEmployeeView(View):
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=True
+    )
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        employee_id = rec_data.get('employee_id')
+        is_active = rec_data.get('is_active')
+        payload = request.payload
+        authorized = False
+
+        if not employee_id or is_active is None:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
+        for branch in payload['sub_branch_list']:
+            branch_id = branch['id']
+            branch_obj = Branch.objects.get(pk=branch_id)
+            employees_to_branches = EmployeeToBranch.objects.filter(branch=branch_obj)
+
+            for employee_to_branch in employees_to_branches:
+                if employee_to_branch.employee.id == employee_id:
+                    authorized = True
+                    break
+
+        if authorized:
+            try:
+                employee_to_patch = Employee.objects.get(pk=employee_id)
+                employee_to_patch.is_active = is_active
+                employee_to_patch.save()
+                TokenBlacklist.objects.create(user=employee_to_patch.user)
+                return JsonResponse({'msg': 'Employee is_active status successfully changed.'}, status=200)
+            except:
+                return JsonResponse({'error_msg': 'This employee was not found'}, status=403)
+        else:
+            return JsonResponse({'error_msg': 'This employee works in another branch'}, status=403)
