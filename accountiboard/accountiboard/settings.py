@@ -38,7 +38,17 @@ EMAIL_HOST_PASSWORD = 'cafeboard@cafeboard'
 
 ALLOWED_HOSTS = ['*']
 MAILER_LIST = ['imanshafiei540@gmail.com']
-# Application definition
+
+SMSIR_TOKEN_URL = 'https://RestfulSms.com/api/Token'
+SMSIR_ULTRAFAST_SEND_URL = 'https://RestfulSms.com/api/UltraFastSend'
+SMSIR_TOKEN_REQUEST = {
+    'UserApiKey' : 'fdde10467c6c52bfced9eddf',
+    'SecretKey'  : 'YkWWfq8jZkVRqsxp14lVjiNgElWxS9Gz',
+}
+
+RECAPTCHA_SITE_KEY   = '6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm'
+RECAPTCHA_SECRET_KEY = '6LenhbwZAAAAAGl4zUfwmXUXqLddrkOM3IANGiaD'
+
 
 INSTALLED_APPS = [
     'accounti.apps.AccountiConfig',
@@ -234,3 +244,14 @@ USE_L10N = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+PAY_IR_API_KEY = "test"
+PAY_IR_REDIRECT_URL = "http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fpayir%2Fcallback%2F"
+
+# Endpoint for sending requests to get a transaction id.
+PAY_IR_API_URL_SEND = 'https://pay.ir/pg/send'
+# Bank payment page in which user enters his/her card information for payment.
+PAY_IR_API_URL_PAYMENT_GATEWAY = 'https://pay.ir/pg/{token}'
+# Verification and committing transactions endpoint.
+PAY_IR_API_URL_VERIFY = 'https://pay.ir/pg/verify'

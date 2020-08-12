@@ -43,7 +43,11 @@ PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
 PASSWORD_WEAK = 'رمز عبور شما باید حداقل ۸ کاراکتر باشد.'
 ERROR_IN_CREATING = "عملیات با مشکلی مواجه شده است."
 PHONE_ALREADY_EXIST = 'شماره تلفن تکراری است.'
+PHONE_DOESNT_EXIST = 'این شماره تلفن وجود ندارد.'
 PHONE_ERROR = 'شماره تلفن خود را وارد کنید.'
+PHONE_TOO_FEW_CHARACTERS = 'تعداد ارقام شماره تلفن کمتر از انتظار است'
+PHONE_TOO_MANY_CHARACTERS = 'تعداد ارقام شماره تلفن بیشتر از انتظار است'
+PHONE_DOESNT_START_WITH_09  = 'شماره تلفن باید با ۰۹ شروع شود'
 POSITION_REQUIRED = 'سمت را وارد کنید.'
 PRICE_PER_HOUR_IN_GAME = 100000
 PRICE_PER_POINT_IN_GAME = 5000
@@ -66,12 +70,18 @@ WRONG_TIME_REGEX = "زمان را با شکل مضارب ۱۵ دقیقه وار�
 WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه است."
 ZERO_PRICE = 0
 UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است."
+BUNDLE_NOT_AVAILABLE = "بسته انتخاب شده وجود ندارد"
+BUNDLE_DURATION_NOT_AVAILABLE = "زمان بسته انتخاب شده وجود ندارد"
+SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE = "کد تخفیف اشتباه است"
+PHONE_VALIDATOR_EXPIRED = "کد تایید شما منقضی شده است"
+CAPTCHA_INVALID = "به دلایل امنیتی از ورود شما جلوگیری شده است صفحه‌ را مجددا بارگذاری کنید"
 
 USER_TYPE = {
     "cafe_owner": 1,
     "employee": 2
 }
 USER_ROLES = {
+    "ADMIN": "ADMIN",
     "CAFE_OWNER": "CAFE_OWNER",
     "MANAGER": "MANAGER",
     "CASHIER": "CASHIER",
@@ -98,3 +108,33 @@ BRANCH_DEFAULT_DATA = {
 CHARACHTER_TOO_LONG = "تعداد کاراکترها بیشتر از حد مجاز است."
 DEFAULT_POSITTION = "سمت فعلی"
 BRANCH_NOT_IN_SESSION_ERROR = "system error: branch list not found in session."
+
+USER_PLANS_CHOICES = {
+    "FREE":"FREE",
+    "STANDARDNORMAL":"STANDARDNORMAL",
+    "STANDARDBG":"STANDARDBG",
+    "ENTERPRISE":"ENTERPRISE",
+}
+
+# prices in IR RIAL (should be at least 10,000)
+AVAILABLE_BUNDLES = {
+    "STANDARDNORMAL_30" :  100_000,
+    "STANDARDNORMAL_90" :  300_000,
+    "STANDARDNORMAL_365" : 1_000_000,
+
+    "STANDARDBG_30" :  100_000,
+    "STANDARDBG_90" :  300_000,
+    "STANDARDBG_365" : 1_000_000,
+
+    "ENTERPRISE_30" :  200_000,
+    "ENTERPRISE_90" :  500_000,
+    "ENTERPRISE_365" : 2_000_000,
+}
+
+# used for preventing downgrade:
+BUNDLE_WEIGHTS = {
+    "FREE": 0,
+    "STANDARDNORMAL": 1,
+    "STANDARDBG": 1,
+    "ENTERPRISE": 2,
+}
