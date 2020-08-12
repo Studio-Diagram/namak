@@ -49,6 +49,7 @@ class LoginView(View):
         if user_obj.get_user_type_display() == "cafe_owner":
             cafe_owner_object = CafeOwner.objects.get(user=user_obj)
             organization_object = cafe_owner_object.organization
+            organization_name = organization_object.name
             branch_object = Branch.objects.filter(organization=organization_object).first().id
             user_branch_objects = Branch.objects.filter(organization=organization_object)
             user_branches = [{
@@ -69,6 +70,7 @@ class LoginView(View):
             user_role = employee_object.employee_roles
             branches = EmployeeToBranch.objects.filter(employee=employee_object)
             branch_object = branches.first().branch.id
+            organization_name = branches.first().organization.name
             user_branches = [{
                 "id": employee_to_branch.branch.id,
                 "name": employee_to_branch.branch.name,
@@ -91,6 +93,7 @@ class LoginView(View):
                            'branches': user_branches,
                            'user_roles': user_role,
                            'bundle': bundle,
+                           'organization_name': organization_name
                            },
              "token": jwt_token.decode("utf-8")
              }
