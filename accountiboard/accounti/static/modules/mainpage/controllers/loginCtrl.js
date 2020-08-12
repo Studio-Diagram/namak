@@ -23,7 +23,6 @@ angular.module("mainpage")
                         $scope.user_login_data.recaptcha_response_token = token;
                         mainpageHttpRequest.loginUser($scope.user_login_data)
                             .then(function (data) {
-                                console.log("1man!");
                                 $scope.form_state.is_loading = false;
                                 $scope.form_state.is_error = false;
                                 localStorage.user = JSON.stringify(data['user_data']['username']);
