@@ -9,19 +9,32 @@ from accountiboard.utils import make_new_JWT_token
 from accounti.validators.EmployeeValidator import *
 from accountiboard.custom_permissions import *
 from django.shortcuts import get_object_or_404
+import requests
+from django.conf import settings
 
 
 class LoginView(View):
-
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
 
         validator = LoginValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        username = rec_data['username']
-        password = rec_data['password']
+        username = rec_data.get('username')
+        password = rec_data.get('password')
+        recaptcha_response_token = rec_data.get('recaptcha_response_token')
+
+        recaptcha_verify_data = {
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response_token,
+        }
+
+        recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_verify_data)
+        recaptcha_request_json = recaptcha_request.json()
+
+        if not recaptcha_request_json['success']:
+            return JsonResponse({"error_msg": CAPTCHA_INVALID}, status=401)
 
         try:
             user_obj = User.objects.get(phone=username)
@@ -71,7 +84,6 @@ class LoginView(View):
 
         request.session['is_logged_in'] = username
 
-        
         jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
         return JsonResponse(
             {"response_code": 2,
@@ -215,21 +227,19 @@ class SearchEmployeeView(View):
         return JsonResponse({"response_code": 2, 'employees': employees})
 
 
-
 class GetEmployeesView(View):
     @permission_decorator_class_based(
         token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
         {USER_PLANS_CHOICES['FREE']},
     )
-
     def post(self, request, *args, **kwargs):
-
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
         organization_object = Branch.objects.get(id=branch_id).organization
         all_organization_branches = Branch.objects.filter(organization=organization_object)
-        all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches).values('employee').distinct()
+        all_employees = EmployeeToBranch.objects.filter(branch__in=all_organization_branches).values(
+            'employee').distinct()
         employees = []
         for employee in all_employees:
             employee_object = Employee.objects.get(id=employee.get('employee'))
@@ -425,7 +435,6 @@ class GetMenuItemsView(View):
         {USER_PLANS_CHOICES['FREE']},
         branch_disable=False
     )
-
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -629,7 +638,7 @@ class GetPrinterView(View):
     # )
 
     def get(self, request, *args, **kwargs):
-        printer_object = get_object_or_404(Printer, pk=printer_id)
+        printer_object = get_object_or_404(Printer, pk=self.kwargs.get('printer_id', 0))
 
         return JsonResponse({"response_code": 2, 'printer': {
             'printer_id': printer_object.id,
@@ -691,7 +700,6 @@ class KickUnkickEmployeeView(View):
         {USER_PLANS_CHOICES['FREE']},
         branch_disable=True
     )
-
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         employee_id = rec_data.get('employee_id')

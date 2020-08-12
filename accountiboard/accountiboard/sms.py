@@ -18,34 +18,40 @@ def send_expiry_sms(receiver_phone, num_of_days):
                 }
             ],
             "Mobile": receiver_phone,
-            "TemplateId" : "31173",
+            "TemplateId": "31173",
         }
 
-        r2 = requests.post(settings.SMSIR_ULTRAFAST_SEND_URL, json=data, headers={'x-sms-ir-secure-token':token_json_response['TokenKey']})
+        r2 = requests.post(settings.SMSIR_ULTRAFAST_SEND_URL, json=data,
+                           headers={'x-sms-ir-secure-token': token_json_response['TokenKey']})
 
 
 def send_verify_phone_sms(receiver_phone):
-    r1 = requests.post(settings.SMSIR_TOKEN_URL, json=settings.SMSIR_TOKEN_REQUEST)
-    token_json_response = r1.json()
-
     alphabet = string.digits
-    token = ''.join(secrets.choice(alphabet) for i in range(4))
+    token = ''.join(secrets.choice(alphabet) for i in range(5))
 
     SmsToken.objects.create(
-        phone = receiver_phone,
-        token = token,
+        phone=receiver_phone,
+        token=token,
     )
 
-    if token_json_response['IsSuccessful']:
-        data = {
-            "ParameterArray": [
-                {
-                    "Parameter": "VerificationCode",
-                    "ParameterValue": token,
-                }
-            ],
-            "Mobile": receiver_phone,
-            "TemplateId" : "31173",
-        }
+    if not settings.DEBUG:
+        r1 = requests.post(settings.SMSIR_TOKEN_URL, json=settings.SMSIR_TOKEN_REQUEST)
+        token_json_response = r1.json()
 
-        r2 = requests.post(settings.SMSIR_ULTRAFAST_SEND_URL, json=data, headers={'x-sms-ir-secure-token':token_json_response['TokenKey']})
+        if token_json_response['IsSuccessful']:
+            data = {
+                "ParameterArray": [
+                    {
+                        "Parameter": "VerificationCode",
+                        "ParameterValue": token,
+                    }
+                ],
+                "Mobile": receiver_phone,
+                "TemplateId": "31173",
+            }
+
+            r2 = requests.post(settings.SMSIR_ULTRAFAST_SEND_URL, json=data,
+                               headers={'x-sms-ir-secure-token': token_json_response['TokenKey']})
+
+    elif settings.DEBUG:
+        print(token)
