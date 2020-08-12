@@ -1703,6 +1703,7 @@ tags-input .tags .tag-item {
 .table-category-separation {
     display: inline-block;
     margin-left: 1.5em;
+    flex: 0 0 auto;
 }
 
 .tooltip {
