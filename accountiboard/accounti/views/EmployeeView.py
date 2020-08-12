@@ -12,12 +12,12 @@ from django.shortcuts import get_object_or_404
 
 def login(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+        return JsonResponse({"error_msg": METHOD_NOT_ALLOWED}, status=403)
     rec_data = json.loads(request.read().decode('utf-8'))
 
     validator = LoginValidator(rec_data)
     if not validator.is_valid():
-        return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+        return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
     username = rec_data['username']
     password = rec_data['password']
@@ -25,10 +25,10 @@ def login(request):
     try:
         user_obj = User.objects.get(phone=username)
     except ObjectDoesNotExist:
-        return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
+        return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
 
     if not check_password(password, user_obj.password):
-        return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
+        return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
 
     user_obj.last_login = datetime.now()
     user_obj.save()
