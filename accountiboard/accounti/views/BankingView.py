@@ -82,3 +82,65 @@ class BankingView(View):
         return JsonResponse({
                 'msg': 'banking info added'
         }, status=200)
+
+
+
+class BankingDetailView(View):
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      branch_disable=True)
+    def get(self, request, id, *args, **kwargs):
+        payload = request.payload
+        branch_id_list = [x['id'] for x in payload['sub_branch_list']]
+        current_banking_bank = None
+        current_banking_cash = None
+        current_banking_tankhah = None
+
+        banking_to_branches = BankingToBranch.objects.filter(branch__in=branch_id_list)
+
+        for banking_to_branch in banking_to_branches:
+            if banking_to_branch.banking.id == id:
+                try:
+                    current_banking_bank = Bank.objects.get(pk=id)
+                    return JsonResponse({
+                        'id' : current_banking_bank.id,
+                        'type' : 'BANK',
+                        'name' : current_banking_bank.name,
+                        'unit' : current_banking_bank.unit,
+                        'bank_name' : current_banking_bank.bank_name,
+                        'bank_account' : current_banking_bank.bank_account,
+                        'bank_card_number' : current_banking_bank.bank_card_number,
+                        'shaba_number' : current_banking_bank.shaba_number,
+                    }, status=200)
+                except:
+                    pass
+
+                try:
+                    current_banking_cash = CashRegister.objects.get(pk=id)
+                    return JsonResponse({
+                        'id' : current_banking_cash.id,
+                        'type' : 'CASH_REGISTER',
+                        'name' : current_banking_cash.name,
+                        'unit' : current_banking_cash.unit,
+                    }, status=200)
+                except:
+                    pass
+
+                try:
+                    current_banking_tankhah = Tankhah.objects.get(pk=id)
+                    return JsonResponse({
+                        'id' : current_banking_tankhah.id,
+                        'type' : 'TANKHAH',
+                        'name' : current_banking_tankhah.name,
+                        'unit' : current_banking_tankhah.unit,
+                    }, status=200)
+                except:
+                    pass
+
+            
+        return JsonResponse({
+                'error_msg': BANKING_NOT_FOUND,
+        }, status=404)
+
+
+

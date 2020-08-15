@@ -66,7 +66,7 @@ def session_authenticate(request, permitted_roles, branch_disable=False):
     }
 
 
-def token_authenticate(request, permitted_roles, branch_disable=False):
+def token_authenticate(request, permitted_roles, branch_disable=False, *args, **kwargs):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     request_branch = get_branch(request)
     if not payload:

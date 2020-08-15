@@ -147,6 +147,7 @@ urlpatterns = [
     path('api/profile/', UserView.ProfileView.as_view()),
     path('api/report/', ReportView.ReportView.as_view()),
 
+    path('api/banking/<int:id>/', BankingView.BankingDetailView.as_view()),
     path('api/banking/', BankingView.BankingView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
