@@ -18,9 +18,9 @@ class BankingView(View):
 
         for banking_to_branch in banking_to_branches:
             
-            cash_register.extend([{'name':x.name, 'unit':x.unit} for x in CashRegister.objects.filter(pk=banking_to_branch.banking)])
-            tankhah.extend([{'name':x.name, 'unit':x.unit} for x in Tankhah.objects.filter(pk=banking_to_branch.banking)])
-            bank.extend([{'name':x.name, 'unit':x.unit, 'bank_name':x.bank_name,
+            cash_register.extend([{'id':x.id, 'name':x.name, 'unit':x.unit} for x in CashRegister.objects.filter(pk=banking_to_branch.banking)])
+            tankhah.extend([{'id':x.id, 'name':x.name, 'unit':x.unit} for x in Tankhah.objects.filter(pk=banking_to_branch.banking)])
+            bank.extend([{'id':x.id, 'name':x.name, 'unit':x.unit, 'bank_name':x.bank_name,
             'bank_account':x.bank_account, 'bank_card_number':x.bank_card_number,
             'shaba_number':x.shaba_number} for x in Bank.objects.filter(pk=banking_to_branch.banking)])
 

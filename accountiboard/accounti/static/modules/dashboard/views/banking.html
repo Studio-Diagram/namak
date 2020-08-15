@@ -1,0 +1,205 @@
+<div ng-controller="bankingCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addBankingModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت حساب جدید</h2>
+                    <a class="mainButton redButton" ng-click="close_modal('addBankingModal')" href="" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="addBanking()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن </a>
+                     
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات حساب</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>نوع حساب<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_banking_data.type" class="form-control" id="bankdropdown">
+                                    <!-- <option value="" selected>نوع حساب</option> -->
+                                    <option value="BANK" selected>حساب بانکی</option>
+                                    <option value="CASH_REGISTER">حساب نقدی</option>
+                                    <option value="TANKHAH">حساب تنخواه</option>
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <label>شعبه<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_banking_data.branch" class="form-control" id="branchdropdown"
+                                ng-options="branch.id as branch.name for branch in branches">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label>نام حساب<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_banking_data.name" type="text" aria-label="First name"
+                                       class="form-control" placeholder="نام حساب">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>واحد پول</label>
+                                <input ng-model="new_banking_data.unit" type="text" aria-label="First name"
+                                       class="form-control" placeholder="واحد پول">
+                            </div>
+                        </div>
+                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
+                            <div class="col">
+                                <label>نام بانک</label>
+                                <input ng-model="new_banking_data.bank_name" type="text" aria-label="First name"
+                                       class="form-control" placeholder="نام بانک">
+                            </div>
+                        </div>
+                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
+                            <div class="col">
+                                <label>شماره حساب</label>
+                                <input ng-model="new_banking_data.bank_account" type="text" aria-label="First name"
+                                       class="form-control" placeholder="شماره حساب">
+                            </div>
+                        </div>
+                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
+                            <div class="col">
+                                <label>شماره کارت</label>
+                                <input ng-model="new_banking_data.bank_card_number" type="text" aria-label="First name"
+                                       class="form-control" placeholder="شماره کارت">
+                            </div>
+                        </div>
+                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
+                            <div class="col">
+                                <label>شماره شبا</label>
+                                <input ng-model="new_banking_data.shaba_number" type="text" aria-label="First name"
+                                       class="form-control" placeholder="شماره شبا">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خطا</h2>
+                    <a ng-click="close_modal('errorModal', 'addBankingModal')" class="mainButton redButton" data-dismiss="modal" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <span class="alertText">{{ error_message }}</span>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+                <div class="tableButtons clearfix">
+                    <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                    <a class="addUser mainButton greenButton" ng-click="open_modal('addBankingModal')" data-toggle="modal"
+                       data-backdrop="static" data-keyboard="false"><i
+                            class="fas fa-user-plus"></i> حساب جدید</a>
+                </div>
+
+                <h3>حساب های بانکی</h3>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام حساب</th>
+                            <th scope="col">نام بانک</th>
+                            <th scope="col">شماره حساب</th>
+                            <th scope="col">شماره کارت</th>
+                            <th scope="col">شماره شبا</th>
+                            <th scope="col">واحد پول</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="bank in banks">
+                            <td style="vertical-align: middle" scope="row">{{ bank.name }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ bank.bank_name }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ bank.bank_account }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ bank.bank_card_number }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ bank.shaba_number }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ bank.unit }}</td>
+
+                            <td style="vertical-align: middle"><a ng-click="editPrinter(printer.printer_id)" href=""
+                                                                  class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>حساب های نقدی</h3>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام حساب</th>
+                            <th scope="col">واحد پول</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="cash_register in cash_registers">
+                            <td style="vertical-align: middle" scope="row">{{ cash_register.name }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ cash_register.unit }}</td>
+
+                            <td style="vertical-align: middle"><a ng-click="editPrinter(printer.printer_id)" href=""
+                                                                  class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>حساب های تنخواه</h3>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام حساب</th>
+                            <th scope="col">واحد پول</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="tankhah in tankhahs">
+                            <td style="vertical-align: middle" scope="row">{{ tankhah.name }}</td>
+                            <td style="vertical-align: middle" scope="row">{{ tankhah.unit }}</td>
+
+                            <td style="vertical-align: middle"><a ng-click="editPrinter(printer.printer_id)" href=""
+                                                                  class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </main>
+</div>

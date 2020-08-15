@@ -957,6 +957,19 @@ angular.module('dashboard')
                     'method': "GET",
                     'url': "/api/report/" + data
                 });
+            },
+            'getBanking': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/banking/"
+                });
+            },
+            'addBanking': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/banking/",
+                    'data': data
+                });
             }
 
 
