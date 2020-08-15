@@ -964,6 +964,12 @@ angular.module('dashboard')
                     'url': "/api/banking/"
                 });
             },
+            'getBankingDetail': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/banking/" + id + "/"
+                });
+            },
             'addBanking': function (data) {
                 return this.request({
                     'method': "POST",

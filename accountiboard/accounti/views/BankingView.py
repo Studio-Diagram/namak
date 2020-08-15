@@ -105,6 +105,7 @@ class BankingDetailView(View):
                     return JsonResponse({
                         'id' : current_banking_bank.id,
                         'type' : 'BANK',
+                        'branches' : [banking_to_branch.branch.id],
                         'name' : current_banking_bank.name,
                         'unit' : current_banking_bank.unit,
                         'bank_name' : current_banking_bank.bank_name,
@@ -120,6 +121,7 @@ class BankingDetailView(View):
                     return JsonResponse({
                         'id' : current_banking_cash.id,
                         'type' : 'CASH_REGISTER',
+                        'branches' : [banking_to_branch.branch.id],
                         'name' : current_banking_cash.name,
                         'unit' : current_banking_cash.unit,
                     }, status=200)
@@ -131,6 +133,7 @@ class BankingDetailView(View):
                     return JsonResponse({
                         'id' : current_banking_tankhah.id,
                         'type' : 'TANKHAH',
+                        'branches' : [banking_to_branch.branch.id],
                         'name' : current_banking_tankhah.name,
                         'unit' : current_banking_tankhah.unit,
                     }, status=200)

@@ -43,11 +43,18 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.editBanking = function (printer_id) {
-            dashboardHttpRequest.getBanking(printer_id)
+        $scope.editBanking = function (banking_id) {
+            dashboardHttpRequest.getBankingDetail(banking_id)
                 .then(function (data) {
-                    $scope.new_printer_data = data['printer'];
-                    
+                    $scope.new_banking_data.branch = data.branches[0];
+                    $scope.new_banking_data.type = data.type;
+                    $scope.new_banking_data.name = data.name;
+                    $scope.new_banking_data.unit = data.unit;
+                    $scope.new_banking_data.bank_name = data.bank_name;
+                    $scope.new_banking_data.bank_account = data.bank_account;
+                    $scope.new_banking_data.bank_card_number = data.bank_card_number;
+                    $scope.new_banking_data.shaba_number = data.shaba_number;
+
                     $rootScope.open_modal('addBankingModal');
                 }, function (error) {
                     $scope.error_message = error;
