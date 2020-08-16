@@ -17,12 +17,15 @@ class BankingView(View):
         banking_to_branches = BankingToBranch.objects.filter(branch__in=branch_id_list)
 
         for banking_to_branch in banking_to_branches:
+
+            all_branches_this_banking = BankingToBranch.objects.filter(banking=banking_to_branch.banking)
+            branch_list = [x.branch.id for x in all_branches_this_banking]
             
-            cash_register.extend([{'id':x.id, 'name':x.name, 'unit':x.unit} for x in CashRegister.objects.filter(pk=banking_to_branch.banking)])
-            tankhah.extend([{'id':x.id, 'name':x.name, 'unit':x.unit} for x in Tankhah.objects.filter(pk=banking_to_branch.banking)])
+            cash_register.extend([{'id':x.id, 'name':x.name, 'unit':x.unit, 'branches':branch_list} for x in CashRegister.objects.filter(pk=banking_to_branch.banking)])
+            tankhah.extend([{'id':x.id, 'name':x.name, 'unit':x.unit, 'branches':branch_list} for x in Tankhah.objects.filter(pk=banking_to_branch.banking)])
             bank.extend([{'id':x.id, 'name':x.name, 'unit':x.unit, 'bank_name':x.bank_name,
             'bank_account':x.bank_account, 'bank_card_number':x.bank_card_number,
-            'shaba_number':x.shaba_number} for x in Bank.objects.filter(pk=banking_to_branch.banking)])
+            'shaba_number':x.shaba_number, 'branches':branch_list} for x in Bank.objects.filter(pk=banking_to_branch.banking)])
 
         return JsonResponse({
                 'cash_register': cash_register,
@@ -32,19 +35,30 @@ class BankingView(View):
 
 
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         name   = rec_data.get('name')
         unit   = rec_data.get('unit')
-        branch = rec_data.get('branch')
+        branches = rec_data.get('branches')
         bank_name = rec_data.get('bank_name')
         bank_account = rec_data.get('bank_account')
         bank_card_number = rec_data.get('bank_card_number')
         shaba_number = rec_data.get('shaba_number')
         type = rec_data.get('type')
+        payload = request.payload
+        branch_id_list = [x['id'] for x in payload['sub_branch_list']]
+        branches_id_list = []
 
-        branch_obj = Branch.objects.get(pk=branch)
+        for branch in branches:
+            if branch['id'] not in branch_id_list:
+                return JsonResponse({
+                        'erro_msg': ACCESS_DENIED
+                }, status=401)
+            elif 'is_checked' in branch and branch['is_checked']:
+                branches_id_list.append(branch['id'])
+                
 
         if type == 'CASH_REGISTER':
             current_banking = CashRegister.objects.create(
@@ -73,10 +87,13 @@ class BankingView(View):
                     'msg': 'type not recognized'
             }, status=400)
 
-        BankingToBranch.objects.create(
-            branch = branch_obj,
-            banking = current_banking,
-        )
+        # branch_objects = Branch.objects.get(pk=branch)
+        branch_objects = Branch.objects.filter(pk__in=branches_id_list)
+        for branch_object in branch_objects:
+            BankingToBranch.objects.create(
+                branch = branch_object,
+                banking = current_banking,
+            )
 
 
         return JsonResponse({
@@ -100,12 +117,15 @@ class BankingDetailView(View):
 
         for banking_to_branch in banking_to_branches:
             if banking_to_branch.banking.id == id:
+
+                all_branches_this_banking = BankingToBranch.objects.filter(banking=banking_to_branch.banking)
+                branch_list = [x.branch.id for x in all_branches_this_banking]
                 try:
                     current_banking_bank = Bank.objects.get(pk=id)
                     return JsonResponse({
                         'id' : current_banking_bank.id,
                         'type' : 'BANK',
-                        'branches' : [banking_to_branch.branch.id],
+                        'branches' : branch_list,
                         'name' : current_banking_bank.name,
                         'unit' : current_banking_bank.unit,
                         'bank_name' : current_banking_bank.bank_name,

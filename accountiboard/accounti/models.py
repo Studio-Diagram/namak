@@ -660,7 +660,7 @@ class CreditToInvoiceSale(models.Model):
 # subclass from this model
 class BankingBaseClass(models.Model):
     name = models.CharField(max_length=30, blank=False, null=False)
-    unit = models.CharField(max_length=30, blank=True, null=True)
+    unit = models.CharField(max_length=30, blank=True, null=True, default="IR-RIAL")
 
 class BankingToBranch(models.Model):
     branch  = models.ForeignKey(to=Branch, on_delete=models.CASCADE)

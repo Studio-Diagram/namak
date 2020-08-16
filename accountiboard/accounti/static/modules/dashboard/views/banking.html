@@ -7,7 +7,7 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت حساب جدید</h2>
-                    <a class="mainButton redButton" ng-click="close_modal('addBankingModal')" href="" aria-label="Close">
+                    <a class="mainButton redButton" ng-click="close_modal('addBankingModal');resetFrom()" href="" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <a ng-click="addBanking()" href="" class="mainButton greenButton"><i
@@ -30,12 +30,12 @@
                                 </select>
                             </div>
 
-                            <div class="col">
+<!--                             <div class="col">
                                 <label>شعبه<i class="fas fa-star-of-life"></i></label>
                                 <select ng-model="new_banking_data.branch" class="form-control" id="branchdropdown"
                                 ng-options="branch.id as branch.name for branch in branches">
                                 </select>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="row">
@@ -46,12 +46,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
-                                <label>واحد پول</label>
-                                <input ng-model="new_banking_data.unit" type="text" aria-label="First name"
-                                       class="form-control" placeholder="واحد پول">
+                            <label>شعبه<i class="fas fa-star-of-life"></i></label><br>
+                            <div ng-repeat="branch in branches"
+                                 class="checkbox-unit col">
+                                <label class="checkbox-item">
+                                    <input style="float: left;" ng-checked="branch.is_checked" ng-model="branch.is_checked_m"
+                                           type="checkbox"
+                                           ng-click="changeBankingBranchCheckBox(branch.id)">{{ branch.name }}
+                                </label>
                             </div>
                         </div>
+
                         <div class="row" ng-show="new_banking_data.type == 'BANK'">
                             <div class="col">
                                 <label>نام بانک</label>
@@ -133,7 +138,7 @@
                             <th scope="col">شماره حساب</th>
                             <th scope="col">شماره کارت</th>
                             <th scope="col">شماره شبا</th>
-                            <th scope="col">واحد پول</th>
+                            <th scope="col">شعبه</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -144,7 +149,7 @@
                             <td style="vertical-align: middle" scope="row">{{ bank.bank_account }}</td>
                             <td style="vertical-align: middle" scope="row">{{ bank.bank_card_number }}</td>
                             <td style="vertical-align: middle" scope="row">{{ bank.shaba_number }}</td>
-                            <td style="vertical-align: middle" scope="row">{{ bank.unit }}</td>
+                            <td ng-bind="bank.branches_names.join(' ،')" style="vertical-align: middle" scope="row"></td>
 
                             <td style="vertical-align: middle"><a ng-click="editBanking(bank.id)" href=""
                                                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
@@ -160,14 +165,14 @@
                         <thead>
                         <tr>
                             <th scope="col">نام حساب</th>
-                            <th scope="col">واحد پول</th>
+                            <th scope="col">شعبه</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="cash_register in cash_registers">
                             <td style="vertical-align: middle" scope="row">{{ cash_register.name }}</td>
-                            <td style="vertical-align: middle" scope="row">{{ cash_register.unit }}</td>
+                            <td ng-bind="cash_register.branches_names.join(' ،')" style="vertical-align: middle" scope="row"></td>
 
                             <td style="vertical-align: middle"><a ng-click="editBanking(cash_register.id)" href=""
                                                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
@@ -183,14 +188,14 @@
                         <thead>
                         <tr>
                             <th scope="col">نام حساب</th>
-                            <th scope="col">واحد پول</th>
+                            <th scope="col">شعبه</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="tankhah in tankhahs">
                             <td style="vertical-align: middle" scope="row">{{ tankhah.name }}</td>
-                            <td style="vertical-align: middle" scope="row">{{ tankhah.unit }}</td>
+                            <td ng-bind="tankhah.branches_names.join(' ،')" style="vertical-align: middle" scope="row"></td>
 
                             <td style="vertical-align: middle"><a ng-click="editBanking(tankhah.id)" href=""
                                                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
