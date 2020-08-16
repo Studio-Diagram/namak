@@ -19,6 +19,7 @@ def create_new_invoice_settlement(request):
             branch_id = rec_data['branch_id']
             invoice_date = rec_data['date']
             factor_number = rec_data['factor_number']
+            banking_id = rec_data.get('banking_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -41,6 +42,11 @@ def create_new_invoice_settlement(request):
             supplier_obj = Supplier.objects.get(pk=supplier_id)
             now_time = datetime.now()
 
+            try:
+                banking_obj = BankingBaseClass.objects.get(pk=banking_id)
+            except:
+                banking_obj = None
+
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
@@ -61,7 +67,8 @@ def create_new_invoice_settlement(request):
                 backup_code=backup_code,
                 supplier=supplier_obj,
                 created_time=invoice_date_g,
-                factor_number=new_factor_number
+                factor_number=new_factor_number,
+                banking=banking_obj,
             )
             new_invoice.save()
 

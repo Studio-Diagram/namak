@@ -26,7 +26,7 @@ angular.module("dashboard")
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking':''
+                'banking_id':''
             };
             $scope.search_data_material = {
                 'search_word': '',
@@ -62,8 +62,6 @@ angular.module("dashboard")
                     data['cash_register'].forEach(function (cash_register) {
                         $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
                     });
-
-                    console.log($scope.allbanking_names);
 
                 }, function (error) {
                     $rootScope.is_page_loading = false;
@@ -617,7 +615,8 @@ angular.module("dashboard")
                 'discount': 0,
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'banking_id': ''
             };
             if ($scope.search_data_material.search_word) {
                 $scope.search_data_material = {

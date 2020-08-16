@@ -92,6 +92,12 @@
                                 <input style="font-family: 'B Yekan'" ng-model="new_pay_data.backup_code" type="text"
                                        class="form-control" placeholder="شماره ارجاع">
                             </div>
+                            <div class="col">
+                                <label>حساب بانکی</label>
+                                <select ng-model="new_pay_data.banking_id"
+                                        class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                </select>
+                            </div>
                         </div>
                     </form>
                 </div>

@@ -11,7 +11,8 @@ angular.module("dashboard")
                 'backup_code': '',
                 'settle_type': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'banking_id':''
             };
             $scope.search_data_pay = {
                 'search_word': '',
@@ -19,6 +20,7 @@ angular.module("dashboard")
             };
             $scope.get_pays();
             $scope.get_suppliers();
+            $scope.get_banking_data();
 
         };
 
@@ -201,6 +203,30 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_banking_data = function () {
+            dashboardHttpRequest.getBanking()
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    $scope.allbanking_names = [];
+                    data['bank'].forEach(function (bank) {
+                        $scope.allbanking_names.push({'id':bank.id, 'name':bank.name});
+                    });
+
+                    data['tankhah'].forEach(function (tankhah) {
+                        $scope.allbanking_names.push({'id':tankhah.id, 'name':tankhah.name});
+                    });
+
+                    data['cash_register'].forEach(function (cash_register) {
+                        $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
+                    });
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
