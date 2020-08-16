@@ -114,6 +114,13 @@
                                                                max-results-to-show="32"></auto-complete>
                                             </tags-input>
                                         </td>
+
+                                        <td>
+                                            <small>حساب بانکی</small>
+                                            <select ng-model="new_invoice_expense_data.banking_id"
+                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            </select>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
