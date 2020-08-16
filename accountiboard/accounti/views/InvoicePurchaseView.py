@@ -19,6 +19,8 @@ def get_invoice(request):
         invoice_date = invoice_object.created_time.date()
         jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                    year=invoice_date.year)
+        banking_obj = BankingBaseClass.objects.get(pk=invoice_object.banking.id)
+
         invoice_data = {
             'id': invoice_object.pk,
             'factor_number': invoice_object.factor_number,
@@ -31,7 +33,8 @@ def get_invoice(request):
             'tax': invoice_object.tax,
             'discount': invoice_object.discount,
             'created_date': jalali_date.strftime("%Y/%m/%d"),
-            'settlement_type_name': invoice_object.get_settlement_type_display()
+            'settlement_type_name': invoice_object.get_settlement_type_display(),
+            'banking': {'id': banking_obj.id, 'name': banking_obj.name}
         }
 
         invoice_materials = PurchaseToMaterial.objects.filter(invoice_purchase=invoice_object)
@@ -77,6 +80,7 @@ def create_new_invoice_purchase(request):
             factor_number = rec_data['factor_number']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
+            banking_id = rec_data.get('banking_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -94,9 +98,12 @@ def create_new_invoice_purchase(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not factor_number or tax == '' or discount == '':
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not banking_id:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
+            banking_obj = BankingBaseClass.objects.get(pk=banking_id)
 
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
@@ -119,7 +126,8 @@ def create_new_invoice_purchase(request):
                 tax=tax,
                 discount=discount,
                 total_price=0,
-                factor_number=new_factor_number
+                factor_number=new_factor_number,
+                banking=banking_obj,
             )
             new_invoice.save()
 

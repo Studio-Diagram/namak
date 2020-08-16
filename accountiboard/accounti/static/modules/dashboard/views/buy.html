@@ -150,6 +150,12 @@
                                                    type="text">
                                         </td>
                                         <td>
+                                            <small>حساب بانکی</small>
+                                            <select ng-model="new_invoice_purchase_data.banking_id"
+                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            </select>
+                                        </td>
+                                        <td>
                                             <small>نوع پرداخت</small>
                                             <select ng-model="new_invoice_purchase_data.settlement_type"
                                                     class="form-control">
