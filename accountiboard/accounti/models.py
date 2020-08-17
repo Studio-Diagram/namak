@@ -397,7 +397,7 @@ class InvoiceSettlement(models.Model):
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     tax = models.FloatField(null=False, default=0)
     discount = models.FloatField(null=False, default=0)
-    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, blank=True, null=True)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE)
 
 
 class Material(models.Model):
@@ -434,7 +434,7 @@ class InvoicePurchase(models.Model):
     total_price = models.FloatField(default=0)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
-    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=False, blank=False)
 
     def __str__(self):
         return "FactorNumber: " + str(self.factor_number) + " Time: " + str(self.created_time) + str(

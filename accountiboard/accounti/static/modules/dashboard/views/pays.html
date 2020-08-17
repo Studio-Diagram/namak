@@ -150,6 +150,7 @@
                             <th scope="col">میزان پرداختی</th>
                             <th scope="col">نوع پرداخت</th>
                             <th scope="col">شماره ارجاع</th>
+                            <th scope="col">بانکداری</th>
                             <th scope="col">تاریخ</th>
                             <th scope="col"></th>
                         </tr>
@@ -161,6 +162,7 @@
                             <td class="redText">{{ pay.payment_amount | number | persianNumber }} ریال</td>
                             <td>{{ pay.settle_type }}</td>
                             <td>{{ pay.backup_code | persianNumber }}</td>
+                            <td>{{ pay.banking }}</td>
                             <td>{{ pay.created_time | persianNumber }}</td>
                             <td><a ng-click="openDeletePermissionModal(pay.id)" href=""
                                    class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>

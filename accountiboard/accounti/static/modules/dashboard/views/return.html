@@ -63,6 +63,12 @@
                                             </select>
                                         </td>
                                         <td>
+                                            <small>حساب بانکی</small>
+                                            <select ng-model="new_invoice_return_data.banking_id"
+                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            </select>
+                                        </td>
+                                        <td>
                                             <small>تامین کننده</small>
                                             <ui-select ng-model="new_invoice_return_data.supplier_id">
                                                 <ui-select-match placeholder="انتخاب تامین‌کننده">

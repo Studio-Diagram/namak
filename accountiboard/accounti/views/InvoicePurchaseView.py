@@ -98,9 +98,7 @@ def create_new_invoice_purchase(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not factor_number or tax == '' or discount == '':
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not banking_id:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
+            
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
             banking_obj = BankingBaseClass.objects.get(pk=banking_id)
