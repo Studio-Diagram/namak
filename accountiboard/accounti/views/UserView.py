@@ -79,10 +79,6 @@ class ProfileView(View):
         if not validator.is_valid():
             return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
-        old_password = rec_data.get('old_password')
-        new_password = rec_data.get('new_password')
-        re_new_password = rec_data.get('re_new_password')
-
         user_object = get_object_or_404(User, pk=request.jwt_payload.get('sub_id'))
         user_object.first_name = rec_data.get('first_name')
         user_object.last_name = rec_data.get('last_name')
@@ -90,14 +86,31 @@ class ProfileView(View):
         user_object.email = rec_data.get('email')
         user_object.home_address = rec_data.get('home_address')
 
-        if old_password and new_password and re_new_password:
-            password_validator = PasswordValidator(min_digits=8)
-            password_validator.validate_with_re_password(new_password, re_new_password)
-
-            if password_validator.get_errors() or not check_password(old_password, user_object.password):
-                return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD_OR_WRONG_PASSWORD}, status=400)
-
-            user_object.password = make_password(new_password)
-
         user_object.save()
         return JsonResponse({})
+
+
+class ChangePasswordView(View):
+    @jwt_decoder_decorator_class_based()
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        validator = ChangePasswordValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+
+        old_password = rec_data.get('old_password')
+        new_password = rec_data.get('new_password')
+        re_new_password = rec_data.get('re_new_password')
+
+        password_validator = PasswordValidator(min_digits=8)
+        password_validator.validate_with_re_password(new_password, re_new_password)
+
+        user_object = get_object_or_404(User, pk=request.jwt_payload.get('sub_id'))
+
+        if password_validator.get_errors() or not check_password(old_password, user_object.password):
+            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD_OR_WRONG_PASSWORD}, status=400)
+
+        user_object.password = make_password(new_password)
+
+        user_object.save()
+        return JsonResponse({'msg': PASSWORD_CHANGED})

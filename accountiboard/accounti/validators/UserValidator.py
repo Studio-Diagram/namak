@@ -49,3 +49,13 @@ class PasswordValidator:
 
     def get_errors(self):
         return [{"password": error} for error in self.errors]
+
+
+class ChangePasswordValidator(forms.Form):
+    old_password = forms.CharField(max_length=255,
+                                 error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    new_password = forms.CharField(max_length=255,
+                                error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+    re_new_password = forms.CharField(max_length=255,
+                                error_messages={'invalid': CHARACHTER_TOO_LONG, 'required': DATA_REQUIRE})
+

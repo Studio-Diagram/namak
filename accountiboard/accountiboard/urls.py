@@ -145,6 +145,7 @@ urlpatterns = [
     path('api/createManualGiftCode/', CreditView.create_gift_code_manual),
     path('api/checkGiftCode/', CreditView.check_gift_code),
     path('api/profile/', UserView.ProfileView.as_view()),
+    path('api/changePassword/', UserView.ChangePasswordView.as_view()),
     path('api/report/', ReportView.ReportView.as_view()),
 
     path('api/banking/<int:id>/', BankingView.BankingDetailView.as_view()),

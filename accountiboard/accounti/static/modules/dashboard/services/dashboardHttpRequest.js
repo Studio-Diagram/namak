@@ -952,6 +952,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'changePassword': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/changePassword/",
+                    'data': data
+                });
+            },
             'getReport': function (data) {
                 return this.request({
                     'method': "GET",

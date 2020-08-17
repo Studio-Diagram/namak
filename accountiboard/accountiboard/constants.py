@@ -67,6 +67,7 @@ WRONG_USERNAME_OR_PASS = "نام کاربری یا رمز عبور اشتباه 
 ZERO_PRICE = 0
 UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است."
 BANKING_NOT_FOUND = "حساب بانکی یافت نشد."
+PASSWORD_CHANGED = "رمز ورود با موفقیت تغییر یافت"
 
 USER_TYPE = {
     "cafe_owner": 1,
