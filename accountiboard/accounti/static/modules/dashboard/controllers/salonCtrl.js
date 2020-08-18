@@ -192,7 +192,7 @@ angular.module("dashboard")
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.open_modal('errorModal');
                     }
                 }, function (error) {
                     $scope.error_message = error;
