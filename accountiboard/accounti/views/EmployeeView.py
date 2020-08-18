@@ -3,7 +3,6 @@ from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
-from datetime import datetime
 from accountiboard.constants import *
 from accountiboard.utils import make_new_JWT_token
 from accounti.validators.EmployeeValidator import *
@@ -11,7 +10,7 @@ from accountiboard.custom_permissions import *
 from django.shortcuts import get_object_or_404
 import requests
 from django.conf import settings
-
+from datetime import datetime
 
 class LoginView(View):
     def post(self, request, *args, **kwargs):

@@ -80,7 +80,6 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
 
     if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
         for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
-            print(datetime.datetime.utcfromtimestamp(payload['iat']), blacklist_obj.created_time)
             if datetime.datetime.utcfromtimestamp(payload['iat']) < blacklist_obj.created_time:
                 return {
                     "state": False,
