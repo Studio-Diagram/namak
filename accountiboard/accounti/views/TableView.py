@@ -1,13 +1,8 @@
 from django.http import JsonResponse
-import json, base64, random
+import json
 from accounti.models import *
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
 from accountiboard.constants import *
+from django.db import IntegrityError
 
 
 def add_table(request):
@@ -97,7 +92,10 @@ def add_table_category(request):
             name=name,
             branch_id=branch_id
         )
-        new_table_category.save()
+        try:
+            new_table_category.save()
+        except IntegrityError:
+            return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
 
         return JsonResponse({"response_code": 2})
     else:

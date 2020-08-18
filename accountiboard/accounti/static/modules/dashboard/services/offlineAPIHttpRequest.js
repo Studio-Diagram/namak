@@ -28,7 +28,6 @@ angular.module('dashboard')
                 }).then(angular.bind(this, function (data, status, headers, config) {
                         deferred.resolve(data['data'], status);
                     }), angular.bind(this, function (data, status, headers, config) {
-                        console.log("error syncing with: " + url);
                         deferred.reject(data, status, headers, config);
                     }));
                 return deferred.promise;

@@ -111,7 +111,7 @@ class RegisterEmployeeView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = RegisterEmployeeValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         employee_id = rec_data['employee_id']
         first_name = rec_data['first_name']
@@ -213,7 +213,7 @@ class SearchEmployeeView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
@@ -368,7 +368,7 @@ class AddMenuCategoryView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = AddMenuCategoryValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         menu_category_id = rec_data['menu_category_id']
         name = rec_data['name']
@@ -414,7 +414,7 @@ class SearchMenuCategoryView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']
@@ -490,7 +490,7 @@ class AddMenuItemView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = AddMenuItemValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         menu_item_id = rec_data['menu_item_id']
         menu_category_id = rec_data['menu_category_id']
@@ -550,7 +550,7 @@ class SearchMenuItemView(View):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
-            return JsonResponse({"response_code": 3, "error_msg": validator.errors})
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         search_word = rec_data['search_word']
         branch_id = rec_data['branch_id']

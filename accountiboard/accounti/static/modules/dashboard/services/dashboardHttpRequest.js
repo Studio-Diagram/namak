@@ -28,7 +28,6 @@ angular.module('dashboard')
                 }).then(angular.bind(this, function (data, status, headers, config) {
                         deferred.resolve(data['data'], status);
                     }), angular.bind(this, function (data, status, headers, config) {
-                        console.log("error syncing with: " + url);
                         // There is a timeout or connection error in server
                         if (data.status === -1){
                             $window.location.href = "http://127.0.0.1:8001/dashboard#!/?user=" + $rootScope.user_data.username ;

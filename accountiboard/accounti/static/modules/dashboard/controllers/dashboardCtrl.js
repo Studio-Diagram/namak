@@ -32,6 +32,7 @@ angular.module("dashboard")
                             image: "",
                             image_name: ""
                         };
+                        $scope.branch_name = $rootScope.selecetd_branch.name;
                         $scope.get_today_cash();
                         $scope.get_news();
                     }
@@ -309,8 +310,11 @@ angular.module("dashboard")
             };
 
             $rootScope.changeBranch = function (selected_branch) {
+                localStorage.branch = JSON.stringify(selected_branch.id);
                 $rootScope.user_data.branch = selected_branch.id;
                 $rootScope.selected_branch = selected_branch;
+                $scope.$root.selected_branch = selected_branch;
+                $scope.branch_name = selected_branch.name;
                 $state.go("cash_manager", {}, {reload: true});
             };
 
