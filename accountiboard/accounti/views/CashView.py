@@ -52,7 +52,8 @@ def get_all_cash(request):
             'start_time': cash_start_time,
             'end_time': cash_end_time,
             'is_closed': cash.is_close,
-            'total_income': all_invoice_sales_cash_total_income['total_price__sum'] if all_invoice_sales_cash_total_income['total_price__sum'] else 0
+            'total_income': all_invoice_sales_cash_total_income['total_price__sum'] if
+            all_invoice_sales_cash_total_income['total_price__sum'] else 0
         })
 
     return JsonResponse({"response_code": 2, 'all_cashes': all_cashes_json_data})
@@ -85,10 +86,10 @@ def close_cash(request):
                 or night_report_inputs['event_tickets'] == "" or night_report_inputs['current_money_in_cash'] == "":
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-        if night_report_inputs['income_report'] == None \
-            or night_report_inputs['outcome_report'] == None \
-            or night_report_inputs['event_tickets'] == None \
-            or night_report_inputs['current_money_in_cash'] == None:
+        if not night_report_inputs['income_report'] \
+                or not night_report_inputs['outcome_report'] \
+                or not night_report_inputs['event_tickets'] \
+                or not night_report_inputs['current_money_in_cash']:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         branch_obj = Branch.objects.get(pk=branch_id)
