@@ -29,8 +29,6 @@ angular.module('mainpage')
                     .then(angular.bind(this, function (data, status, headers, config) {
                         deferred.resolve(data['data'], status);
                     }), angular.bind(this, function (data, status, headers, config) {
-                        console.log("error syncing with: " + url);
-
                         // Set request status
                         if (data) {
                             data.status = status;

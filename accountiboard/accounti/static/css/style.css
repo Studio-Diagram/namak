@@ -31,7 +31,7 @@ body {
     padding: 0 !important;
     text-align: right;
     font-size: 13px;
-    font-family: 'IRANSans', tahoma, serif;
+    font-family: IRANSans, Tahoma, serif;
     font-weight: normal;
     direction: rtl;
     min-height: 0 !important;
@@ -64,7 +64,7 @@ input::placeholder {
     font-weight: 100;
     color: var(--myGrayBorder);
     font-size: .8em;
-    font-family: FontAwesome, 'IRANSans';
+    font-family: FontAwesome, IRANSans, Tahoma, Serif;
 }
 
 .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group > .input-group-append:last-child > .input-group-text:not(:last-child), .input-group > .input-group-append:not(:last-child) > .btn, .input-group > .input-group-append:not(:last-child) > .input-group-text, .input-group > .input-group-prepend > .btn, .input-group > .input-group-prepend > .input-group-text {
@@ -193,7 +193,7 @@ form.generalForm .form-group {
 form.generalForm .submitButton {
     background: var(--navBarLine);
     border: none;
-    margin-bottom: 1em;
+    margin-bottom: 0;
     font-size: 1em;
     padding: 0.7em 4em;
     -webkit-border-radius: 5px;
@@ -206,8 +206,19 @@ form.generalForm .submitButton:hover {
 }
 
 form.generalForm .referButtonWrapper {
-    border-top: 1px solid var(--grayButtonBorder);
-    padding-top: 1em;
+    margin: 4.5em 0;
+    border-bottom: 1px solid #C6CACF;
+    width: 100%;
+}
+
+form.generalForm .referButtonWrapper span {
+    display: block;
+    background: #eaeff5;
+    font-size: 1em;
+    font-weight: 400;
+    width: 4rem;
+    margin: 0 auto -.9rem;
+    color: #707070;
 }
 
 .forgetPasswordLink {
@@ -221,6 +232,7 @@ form.generalForm .submitButtonWrapper {
     display: inline-block;
     width: 100%;
     text-align: right;
+    margin-bottom: 0;
 }
 
 .mainAside nav {
@@ -2026,6 +2038,7 @@ input:checked + .slider .off {
 th.disabled:hover {
     cursor: no-drop;
 }
+
 #companyRegistrationForm {
     display: none;
     visibility: hidden;
@@ -2245,6 +2258,7 @@ aside.leftAside {
     font-size: 1em;
     font-weight: 100;
 }
+
 #personalRegistrationForm {
     visibility: hidden;
     opacity: 0;
@@ -2261,4 +2275,31 @@ aside.leftAside {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+}
+
+.returnButton {
+    width: 35%;
+    margin-left: 1em;
+    color: #707070 !important;
+    border-color: #C6CACF !important;
+}
+
+.returnButton:hover {
+    background-color: #f1f3f4;
+}
+
+.registerDataTable tbody tr td {
+    border-left: none !important;
+    text-align: right;
+    width: 33.333333333%;
+}
+
+.registerDataTable tbody tr td .title {
+    color: #A3AAB2;
+}
+
+.registerDataTableWrapper {
+    border: 1px solid #C6CACF;
+    border-radius: 10px;
+    margin: 2em 0;
 }

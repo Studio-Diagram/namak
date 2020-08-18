@@ -206,6 +206,11 @@ class TableCategory(models.Model):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'branch'], name="table_category_unique")
+        ]
+
 
 class Table(models.Model):
     name = models.CharField(max_length=255, null=False)

@@ -4,7 +4,7 @@ from accountiboard.custom_permissions import *
 from datetime import datetime, timedelta
 
 
-@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']}, {USER_PLANS_CHOICES['STANDARDNORMAL']})
+@permission_decorator(token_authenticate, {USER_ROLES['CAFE_OWNER']}, {USER_PLANS_CHOICES['FREE']})
 def add_branch(request):
     if request.method != "POST":
         return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})

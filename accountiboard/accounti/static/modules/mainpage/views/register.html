@@ -2,7 +2,7 @@
     <div class="row no-gutters">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <h2 class="text-center">ثبت‌ نام در پنل کاربری</h2>
+            <h2 class="text-center">ثبت‌ کافه جدید</h2>
             <form id="companyRegistrationForm" class="generalForm showForm">
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
                     <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
@@ -41,6 +41,9 @@
                     </button>
                 </div>
                 <div class="referButtonWrapper">
+                    <span>یا</span>
+                </div>
+                <div>
                     <a class="btn fullWidthButton newYellowButton" ui-sref="login">ورود به پنل کاربری</a>
                 </div>
             </form>
@@ -48,15 +51,21 @@
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
                     <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
                 </div>
-                <div class="form-group">
-                    <input ng-model="new_user.first_name" type="text" class="form-control"
-                           placeholder="نام">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <input ng-model="new_user.first_name" type="text" class="form-control"
+                                   placeholder="نام">
 
-                </div>
-                <div class="form-group">
-                    <input ng-model="new_user.last_name" type="text" class="form-control"
-                           placeholder="نام خانوادگی">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input ng-model="new_user.last_name" type="text" class="form-control"
+                                   placeholder="نام خانوادگی">
 
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.phone" type="text" class="form-control"
@@ -72,19 +81,17 @@
                            placeholder="تکرار رمز عبور">
                 </div>
                 <div class="form-group submitButtonWrapper d-flex justify-content-between">
-                    <button ng-click="send_verify_code_to_phone()" type="button" class="submitButton btn btn-primary"
+                    <button ng-click="change_registration_state('personal_registration', 'company_registration')"
+                            type="button" class="mainButton transparentButton returnButton">
+                        <span>بازگشت</span>
+                    </button>
+                    <button ng-click="send_verify_code_to_phone()" type="button"
+                            class="submitButton fullWidthButton btn oilBlueButton"
                             ng-disabled="!new_user.first_name || !new_user.last_name || !new_user.phone || !new_user.password || !new_user.re_password || (new_user.password !== new_user.re_password) || (new_user.password.length < 8)">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
-                        <span ng-hide="form_state.is_loading">تایید شماره تماس</span>
+                        <span ng-hide="form_state.is_loading">ثبت و ادامه</span>
                     </button>
-                    <button ng-click="change_registration_state('personal_registration', 'company_registration')"
-                            type="button" class="submitButton btn btn-primary">
-                        <span>مرحله قبل</span>
-                    </button>
-                </div>
-                <div class="referButtonWrapper">
-                    <a class="mainButton fullWidthButton transparentButton" ui-sref="login">ورود به پنل کاربری</a>
                 </div>
             </form>
             <form id="phoneVerifyRegistrationForm" class="generalForm">
@@ -93,19 +100,66 @@
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.sms_verify_token" type="text" class="form-control"
-                           placeholder="کد تایید ارسالی به شماره تماس">
+                           placeholder="کد فعالسازی">
 
                 </div>
+                <div class="registerDataTableWrapper">
+                    <table class="table registerDataTable">
+                        <tr>
+                            <td>
+                                <span class="title">نام کافه</span>
+                                <br>
+                                <span ng-bind="new_user.company_name"></span>
+                            </td>
+                            <td>
+                                <span class="title">آغاز کار</span>
+                                <br>
+                                <span ng-bind="new_user.start_working_time | persianNumber"></span>
+                            </td>
+                            <td>
+                                <span class="title">پایان کار</span>
+                                <br>
+                                <span ng-bind="new_user.end_working_time | persianNumber"></span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table registerDataTable">
+                        <tr>
+                            <td>
+                                <span class="title">آدرس کافه</span>
+                                <br>
+                                <span ng-bind="new_user.company_address"></span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table registerDataTable">
+                        <tr>
+                            <td>
+                                <span class="title">نام</span>
+                                <br>
+                                <span ng-bind="new_user.first_name"></span>
+                            </td>
+                            <td>
+                                <span class="title">نام خانوادگی</span>
+                                <br>
+                                <span ng-bind="new_user.last_name"></span>
+                            </td>
+                            <td>
+                                <span class="title">شماره تماس</span>
+                                <br>
+                                <span ng-bind="new_user.phone | persianNumber"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
                 <div class="form-group submitButtonWrapper">
-                    <button ng-click="register_new_user()" type="button" class="submitButton btn btn-primary"
+                    <button ng-click="register_new_user()" type="button"
+                            class="submitButton btn oilBlueButton fullWidthButton"
                             ng-disabled="!new_user.sms_verify_token">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
-                        <span ng-hide="form_state.is_loading">ثبت نام</span>
+                        <span ng-hide="form_state.is_loading">تایید اطلاعات و ثبت کافه</span>
                     </button>
-                </div>
-                <div class="referButtonWrapper">
-                    <a class="mainButton fullWidthButton transparentButton" ui-sref="login">ورود به پنل کاربری</a>
                 </div>
             </form>
         </div>

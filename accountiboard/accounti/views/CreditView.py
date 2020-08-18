@@ -254,7 +254,6 @@ def create_gift_code_manual(request):
     data = []
 
     for i in range(4):
-        print(i)
         if i == 0:
             category = ["KITCHEN"]
             expensive_price = 500000
