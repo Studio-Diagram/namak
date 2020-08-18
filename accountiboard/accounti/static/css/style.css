@@ -22,6 +22,9 @@
     --okr: #c7af2a;
     --grayButtonBorder: #D8D8D8;
     --navBarLineHover: #3DA7B1;
+    --oilBlueBorder: #4AA5AD;
+    --newYellow: #E8CE6B;
+    --newYellowBorder: #CCB24D;
 }
 
 body {
@@ -193,19 +196,13 @@ form.generalForm .submitButton {
     margin-bottom: 1em;
     font-size: 1em;
     padding: 0.7em 4em;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 form.generalForm .submitButton:hover {
     background: var(--navBarLineHover);
-}
-
-form.generalForm .referButtonWrapper a {
-    border-color: var(--grayButtonBorder);
-    color: var(--myBlack);
-    font-weight: 100;
 }
 
 form.generalForm .referButtonWrapper {
@@ -389,6 +386,20 @@ button.yellowButton:hover {
     cursor: pointer;
 }
 
+a.newYellowButton {
+    background: var(--newYellow);
+    border-color: var(--newYellowBorder);
+    color: var(--white);
+    font-size: 1em;
+    padding: 0.7em 4em;
+}
+
+a.newYellowButton:hover {
+    background: var(--newYellowBorder);
+    color: white;
+    cursor: pointer;
+}
+
 a.blueButton {
     background: var(--myBlue);
     border-color: var(--myBlueBorder);
@@ -405,6 +416,18 @@ button.blueButton {
 }
 
 button.blueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+button.oilBlueButton {
+    background-color: var(--navBarLine);
+    border-color: var(--oilBlueBorder);
+    color: white;
+}
+
+button.oilBlueButton:hover {
     background: var(--myBlueBorder);
     color: white;
     cursor: pointer;

@@ -10,7 +10,7 @@ from accountiboard.custom_permissions import *
 from django.shortcuts import get_object_or_404
 import requests
 from django.conf import settings
-from datetime import datetime
+
 
 class LoginView(View):
     def post(self, request, *args, **kwargs):

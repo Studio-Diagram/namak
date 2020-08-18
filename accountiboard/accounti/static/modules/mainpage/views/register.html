@@ -17,24 +17,31 @@
                            placeholder="آدرس کمپانی">
 
                 </div>
-                <div class="form-group">
-                    <input ng-model="new_user.start_working_time" type="text" class="form-control"
-                           placeholder="ساعت شروع کاری ( ۰۸:۰۰ )" id="start-time-clock">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <input ng-model="new_user.start_working_time" type="text" class="form-control"
+                                   placeholder="آغاز ساعت کاری ( ۰۸:۰۰ )" id="start-time-clock">
 
-                </div>
-                <div class="form-group">
-                    <input ng-model="new_user.end_working_time" type="text" class="form-control"
-                           placeholder="ساعت پایان کاری ( ۲۳:۰۰ )" id="end-time-clock">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input ng-model="new_user.end_working_time" type="text" class="form-control"
+                                   placeholder="پایان ساعت کاری ( ۲۳:۰۰ )" id="end-time-clock">
 
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group submitButtonWrapper">
                     <button ng-click="change_registration_state('company_registration', 'personal_registration')"
-                            type="button" class="submitButton btn btn-primary" ng-disabled="!new_user.company_name || !new_user.company_address">
-                        <span>ادامه</span>
+                            type="button" class="btn submitButton fullWidthButton oilBlueButton"
+                            ng-disabled="!new_user.company_name || !new_user.company_address">
+                        <span>ثبت و ادامه</span>
                     </button>
                 </div>
                 <div class="referButtonWrapper">
-                    <a class="mainButton fullWidthButton transparentButton" ui-sref="login">ورود به پنل کاربری</a>
+                    <a class="btn fullWidthButton newYellowButton" ui-sref="login">ورود به پنل کاربری</a>
                 </div>
             </form>
             <form id="personalRegistrationForm" class="generalForm">
@@ -57,7 +64,8 @@
 
                 </div>
                 <div class="form-group">
-                    <input ng-model="new_user.password" type="password" class="form-control" placeholder="رمز عبور" autocomplete="new-password">
+                    <input ng-model="new_user.password" type="password" class="form-control" placeholder="رمز عبور"
+                           autocomplete="new-password">
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.re_password" type="password" class="form-control"
@@ -65,7 +73,7 @@
                 </div>
                 <div class="form-group submitButtonWrapper d-flex justify-content-between">
                     <button ng-click="send_verify_code_to_phone()" type="button" class="submitButton btn btn-primary"
-                    ng-disabled="!new_user.first_name || !new_user.last_name || !new_user.phone || !new_user.password || !new_user.re_password || (new_user.password !== new_user.re_password) || (new_user.password.length < 8)">
+                            ng-disabled="!new_user.first_name || !new_user.last_name || !new_user.phone || !new_user.password || !new_user.re_password || (new_user.password !== new_user.re_password) || (new_user.password.length < 8)">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
                         <span ng-hide="form_state.is_loading">تایید شماره تماس</span>
@@ -89,7 +97,8 @@
 
                 </div>
                 <div class="form-group submitButtonWrapper">
-                    <button ng-click="register_new_user()" type="button" class="submitButton btn btn-primary" ng-disabled="!new_user.sms_verify_token">
+                    <button ng-click="register_new_user()" type="button" class="submitButton btn btn-primary"
+                            ng-disabled="!new_user.sms_verify_token">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
                         <span ng-hide="form_state.is_loading">ثبت نام</span>
