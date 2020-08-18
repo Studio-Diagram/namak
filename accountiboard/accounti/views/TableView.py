@@ -38,7 +38,11 @@ def add_table(request):
             old_table = Table.objects.get(pk=table_id)
             old_table.name = name
             old_table.category = table_cat_obj
-            old_table.save()
+            try:
+                old_table.save()
+            except IntegrityError:
+                return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
+
             return JsonResponse({"response_code": 2})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -108,7 +112,10 @@ def add_table_category(request):
     else:
         old_table_cat = TableCategory.objects.get(pk=table_cat_id)
         old_table_cat.name = name
-        old_table_cat.save()
+        try:
+            old_table_cat.save()
+        except IntegrityError:
+            return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
         return JsonResponse({"response_code": 2})
 
 
