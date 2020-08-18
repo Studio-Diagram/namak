@@ -336,7 +336,7 @@ a.greenButton:hover {
 
 button.greenButton {
     background: var(--myGreen);
-    border-color: var(--myGreenBorder);
+    border-color: var(--myGreenBorder) !important;
 }
 
 button.greenButton:hover {
@@ -2302,4 +2302,26 @@ aside.leftAside {
     border: 1px solid #C6CACF;
     border-radius: 10px;
     margin: 2em 0;
+}
+
+.cashStateAlert {
+    border-radius: 5px;
+    padding: 1.5em;
+    margin: 1em;
+}
+
+.cashStateAlert.noCashState {
+    background-color: #D6E2CD;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+}
+
+.cashStateAlert p:nth-child(2){
+    font-weight: 100;
+}
+
+.cashStateAlert.oldCashState {
+    background-color: #F2E4E7;
+    border: 1px solid #DB4E54;
+    color: #DB4E54;
 }

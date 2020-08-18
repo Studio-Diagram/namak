@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest) {
+    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
             $scope.current_menu_nav = "MENU";
@@ -10,6 +10,12 @@ angular.module("dashboard")
             $scope.price_per_hour_person = 100000;
             $scope.selected_category = {
                 "items": []
+            };
+            $scope.night_report_inputs = {
+                "income_report": 0,
+                "outcome_report": 0,
+                "event_tickets": 0,
+                "current_money_in_cash": 0
             };
             $scope.editable_invoice = {
                 "invoice_id": 0,
@@ -73,7 +79,7 @@ angular.module("dashboard")
                 'search_word': '',
                 'username': $rootScope.user_data.username
             };
-            $scope.get_today_cash();
+            $scope.check_cash();
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
             $scope.get_tables_data($rootScope.user_data);
             $scope.get_shop_products();
@@ -117,6 +123,162 @@ angular.module("dashboard")
                     $state.go('manager.addEmployee');
                 }
             }
+        };
+
+        $scope.get_status_data = function () {
+            var sending_data = {
+                'username': $rootScope.user_data.username,
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $rootScope.cash_data.cash_id
+            };
+            dashboardHttpRequest.getTodayStatus(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.status = data['all_today_status'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.check_cash = function () {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.checkCashExist(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $rootScope.cash_state = "";
+                        $scope.get_today_cash();
+                    }
+                    else if (data['response_code'] === 3) {
+                        if (data['error_mode'] === "NO_CASH") {
+                            $rootScope.cash_state = "NO_CASH";
+                        }
+                        if (data['error_mode'] === "OLD_CASH") {
+                            $rootScope.cash_state = "OLD_CASH";
+                            $scope.get_status_data();
+                            $scope.get_today_cash();
+                        }
+                    }
+                    $rootScope.is_page_loading = false;
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.close_cash = function () {
+            var sending_data = {
+                'night_report_inputs': $scope.night_report_inputs,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            dashboardHttpRequest.closeCash(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.close_cash_offline();
+                        $scope.print_night_report();
+                        $scope.log_out();
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.close_cash_offline = function () {
+            var sending_data = {
+                'night_report_inputs': $scope.night_report_inputs,
+                'branch_id': $rootScope.user_data.branch,
+                'username': $rootScope.user_data.username
+            };
+            offlineAPIHttpRequest.close_cash(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    // $scope.error_message = error;
+                    // $scope.openErrorModal();
+                });
+        };
+
+        $scope.log_out = function () {
+            $auth.logout();
+            $window.location.href = '/';
+        };
+
+        $scope.print_night_report = function () {
+            var sending_data = {
+                'cash_id': $rootScope.cash_data.cash_id,
+                'location_url': "https://namak.works/"
+            };
+            $http({
+                method: 'POST',
+                url: 'http://127.0.0.1:8000/printNightReport',
+                data: sending_data,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).then(function successCallback(response) {
+
+            }, function errorCallback(response) {
+                $scope.error_message = "Printer Server not connected.";
+                $scope.openErrorModal();
+            });
+        };
+
+        $scope.open_cash = function () {
+            dashboardHttpRequest.openCash($rootScope.user_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.open_cash_offline(data['new_cash_id']);
+                        $scope.get_today_cash();
+                        $state.go("cash_manager.salon", {}, {reload: true});
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_message'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.open_cash_offline = function (new_cash_id) {
+            var sending_data = {
+                "username": $rootScope.user_data.username,
+                "branch": $rootScope.user_data.branch,
+                "cash_server_id": new_cash_id
+            };
+            offlineAPIHttpRequest.open_cash(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+
+                    }
+                    else if (data['response_code'] === 3) {
+
+                    }
+                }, function (error) {
+                    // $scope.error_message = error;
+                    // $scope.openErrorModal();
+                });
         };
 
         $scope.perform_credit = function () {

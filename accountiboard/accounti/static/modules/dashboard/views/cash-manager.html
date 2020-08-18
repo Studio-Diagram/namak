@@ -2,10 +2,11 @@
     <nav class="nav">
         <a ui-sref="cash_manager.salon"
            ng-class="isActive('/cash_manager/salon') ? 'nav-link active' : 'nav-link'">سالن</a>
-        <a ui-sref="cash_manager.cash" ng-class="isActive('/cash_manager/cash') ? 'nav-link active' : 'nav-link'">صندوق
+        <a ui-sref="cash_manager.cash" class="nav-link"
+           ng-class="{active: isActive('/cash_manager/cash'), disabled: cash_state === 'NO_CASH'}">صندوق
             روزانه</a>
-        <a ui-sref="cash_manager.invoices"
-           ng-class="isActive('/cash_manager/invoices') ? 'nav-link active' : 'nav-link'">فاکتور‌های امروز</a>
+        <a ui-sref="cash_manager.invoices" class="nav-link"
+           ng-class="{active: isActive('/cash_manager/invoices'), disabled: cash_state === 'NO_CASH'}">فاکتور‌های امروز</a>
     </nav>
 </div>
 

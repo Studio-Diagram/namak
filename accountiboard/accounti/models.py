@@ -92,7 +92,6 @@ class CafeOwner(models.Model):
         return "Phone: %s - %s" % (self.user.phone, self.user.get_full_name())
 
 
-
 class EmployeeToBranch(models.Model):
     branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.CASCADE)
@@ -252,6 +251,9 @@ class Cash(models.Model):
     employee = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_close = models.SmallIntegerField(default=0, null=False)
+
+    def __str__(self):
+        return f"Organization: {self.branch.organization.name} | Branch: {self.branch.name} | Employee: {self.employee.get_full_name() if self.employee else 'Cash is open.'}"
 
 
 class InvoiceSales(models.Model):
