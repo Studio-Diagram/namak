@@ -218,6 +218,11 @@ class Table(models.Model):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'category'], name="table_unique")
+        ]
+
 
 class Game(models.Model):
     member = models.ForeignKey(to=Member, on_delete=models.CASCADE, null=True, blank=True)
@@ -253,7 +258,7 @@ class Cash(models.Model):
     is_close = models.SmallIntegerField(default=0, null=False)
 
     def __str__(self):
-        return f"Organization: {self.branch.organization.name} | Branch: {self.branch.name} | Employee: {self.employee.get_full_name() if self.employee else 'Cash is open.'}"
+        return f"Organization: {self.branch.organization.name} | Branch: {self.branch.name} | Employee: {self.employee.get_full_name() if self.employee else 'Cash i'}"
 
 
 class InvoiceSales(models.Model):

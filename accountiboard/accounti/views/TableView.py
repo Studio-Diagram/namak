@@ -18,13 +18,20 @@ def add_table(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         table_cat_obj = TableCategory.objects.filter(id=table_cat_id).first()
+        all_tables_in_branch = Table.objects.filter(category__branch=table_cat_obj.branch, name=name)
+
+        if all_tables_in_branch.count():
+            return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
 
         if table_id == 0:
             new_table = Table(
                 name=name,
                 category=table_cat_obj
             )
-            new_table.save()
+            try:
+                new_table.save()
+            except IntegrityError:
+                return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
 
             return JsonResponse({"response_code": 2})
         else:
