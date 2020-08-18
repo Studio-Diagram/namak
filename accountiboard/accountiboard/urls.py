@@ -9,6 +9,9 @@ from accounti.views import EmployeeView, boardgameView, MemberView, stockView, B
 from accountiboard import settings
 from django.views.static import serve
 
+from admin_panel.views import AdminGeneralView
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('api/login/', EmployeeView.LoginView.as_view()),
     path('api/getEmployees/', EmployeeView.GetEmployeesView.as_view()),
@@ -176,6 +179,10 @@ urlpatterns = [
     path('api/offline/syncReservesFromOffline/', OfflineAPIs.sync_reserves_from_offline),
     path('api/offline/syncInvoiceSalesFromOffline/', OfflineAPIs.sync_invoice_sales_from_offline),
     # End of offline APIs URLs
+
+    # Admin panel
+    path('admin-panel/', AdminGeneralView.AdminView.as_view()),
+
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
     path('template/night-report', InvoiceSaleView.night_report_template),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
@@ -185,4 +192,7 @@ urlpatterns = [
     url(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
+
+
+
 ]
