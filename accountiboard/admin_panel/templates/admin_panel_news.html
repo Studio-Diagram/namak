@@ -24,9 +24,9 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Home</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Cafes</a></li>
                 <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Bug Reports</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/bugreports/" class="pure-menu-link">Bug Reports</a></li>
             </ul>
         </div>
     </div>
@@ -46,18 +46,18 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>title</th>
-                        <th>text</th>
-                        <th>link</th>
-                        <th>datetime</th>
+                        <th>Title</th>
+                        <th>Text</th>
+                        <th>Link</th>
+                        <th>Datetime</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for news in all_news %}
                         {% if news.highlight %}
-                        <tr>
+                            <tr>
                         {% else %}
-                        <tr class="pure-table-odd">
+                            <tr class="pure-table-odd">
                         {% endif %}
                         <td>{{news.number}}</td>
                         <td>{{news.news_title}}</td>
@@ -75,7 +75,7 @@
     </div>
 </div>
 
-<script src="{% static '/js/ui.js' %}"></script>
+<!-- <script src="{% static '/js/ui.js' %}"></script> -->
 
 </body>
 </html>
