@@ -195,12 +195,6 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
-    var cash_disable = {
-        name: 'cash_disable',
-        url: '/cash_disable/:state',
-        templateUrl: 'static/modules/dashboard/views/cash-disable.html'
-    };
-
     var quick_access = {
         name: 'quickAccess',
         url: '/quickAccess',
@@ -232,7 +226,6 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(reservation);
     $stateProvider.state(open_close_cash);
     $stateProvider.state(tables);
-    $stateProvider.state(cash_disable);
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);
     $stateProvider.state(quick_access);
