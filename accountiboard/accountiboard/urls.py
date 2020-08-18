@@ -9,7 +9,7 @@ from accounti.views import EmployeeView, boardgameView, MemberView, stockView, B
 from accountiboard import settings
 from django.views.static import serve
 
-from admin_panel.views import AdminGeneralView
+from admin_panel.views import AdminGeneralView, AdminNewsView
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -182,6 +182,8 @@ urlpatterns = [
 
     # Admin panel
     path('admin-panel/', AdminGeneralView.AdminView.as_view()),
+    path('admin-panel/news/', AdminNewsView.AdminNewsView.as_view()),
+
 
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
     path('template/night-report', InvoiceSaleView.night_report_template),

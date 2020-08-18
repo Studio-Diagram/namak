@@ -24,8 +24,8 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/" class="pure-menu-link">Home</a></li>
-                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Home</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
                 <li class="pure-menu-item"><a href="#" class="pure-menu-link">Bug Reports</a></li>
             </ul>
         </div>
@@ -40,28 +40,30 @@
         <div class="content">
             
 
-            <h2 class="content-subhead">لیست کافه ها</h2>
+            <h2 class="content-subhead">لیست News</h2>
 
             <table class="pure-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>نام شعبه</th>
-                        <th>کمپانی</th>
-                        <th>نام صاحب کافه</th>
+                        <th>title</th>
+                        <th>text</th>
+                        <th>link</th>
+                        <th>datetime</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for branch in all_branches %}
-                        {% if branch.highlight %}
+                    {% for news in all_news %}
+                        {% if news.highlight %}
                         <tr>
                         {% else %}
                         <tr class="pure-table-odd">
                         {% endif %}
-                        <td>{{branch.number}}</td>
-                        <td>{{branch.branch_name}}</td>
-                        <td>{{branch.branch_organization}}</td>
-                        <td>{{branch.branch_cafeowner}}</td>
+                        <td>{{news.number}}</td>
+                        <td>{{news.news_title}}</td>
+                        <td>{{news.news_text}}</td>
+                        <td>{{news.news_link}}</td>
+                        <td>{{news.news_datetime}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
