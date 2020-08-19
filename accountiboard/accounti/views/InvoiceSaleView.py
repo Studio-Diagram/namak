@@ -881,7 +881,7 @@ def delete_items(request):
                 invoice_object.save()
                 menu_item_obj.delete()
             for game_id in games:
-                game_obj = InvoicesSalesToGame.objects.get(pk=game_id)
+                game_obj = InvoicesSalesToGame.objects.get(game_id=game_id)
                 new_deleted = DeletedItemsInvoiceSales(
                     created_time=datetime.now(),
                     item_type="GAME",
