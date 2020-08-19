@@ -37,6 +37,7 @@ NOT_ORDERED = "سفارش نداده"
 NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 NOT_SIMILAR_PASSWORD_OR_WRONG_PASSWORD = 'رمز عبور وارد شده متفاوت است و یا رمز عبور قبلی به اشتباه وارد شده است.'
 OLD_CASH = 'انقضای صندوق گذشته است.'
+OLD_CASH_WITH_UNSETTLED_INVOICES = "انقضای صندوق گذشته است و فاکتور تسویه نشده وجود دارد."
 ORDERED = "سفارش داده"
 OTHER_SUPPLIER_REQUIRE = "در صورت خالی بودن تامین کننده باید تامین‌کننده‌ای با نام سایر در تامین کنندگان وارد نمایید."
 PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'

@@ -94,11 +94,6 @@ myApp.config(function ($stateProvider, $authProvider) {
         },
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
-    var invoices = {
-        name: 'cash_manager.invoices',
-        url: '/invoices',
-        templateUrl: 'static/modules/dashboard/views/invoices.html'
-    };
     var cash = {
         name: 'cash_manager.cash',
         url: '/cash',
@@ -211,7 +206,6 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(branch);
     $stateProvider.state(cash_manager);
     $stateProvider.state(salon);
-    $stateProvider.state(invoices);
     $stateProvider.state(cash);
     $stateProvider.state(account_manager);
     $stateProvider.state(buy);
