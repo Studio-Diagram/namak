@@ -672,7 +672,10 @@
                                     {{ invoice.member_name }}
                                 </td>
                                 <td>
-                                    <button ng-disabled="invoice.player_numbers === 0 || invoice.card_number === ''" href="" ng-click="start_invoice_game(invoice.invoice_id, $index)" class="mainButton fullWidthButton smallButton grayButton">شروع</button>
+                                    <button ng-disabled="invoice.player_numbers === 0 || invoice.card_number === ''"
+                                            href="" ng-click="start_invoice_game(invoice.invoice_id, $index)"
+                                            class="mainButton fullWidthButton smallButton grayButton">شروع
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -806,34 +809,25 @@
                 </div>
             </div>
             <div class="col-md-3 dashboard-col">
-                <div class="row">
-                    <div class="col">
-                        <a ng-click="open_modal('addModal')"
-                           class="addUser mainButton greenButton page_button mb-3">
-                            خرید جدید
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a ng-click="open_modal('addExpenseModal');getNextFactorNumber('EXPENSE')"
-                           class="addUser mainButton greenButton page_button mb-3">
-                            هزینه جدید
-                        </a>
-                    </div>
+                <div class="quick-buttons">
+                    <a ng-click="open_modal('addModal')"
+                       class="addUser mainButton greenButton page_button mb-3">
+                        خرید جدید
+                    </a>
+                    <a ng-click="open_modal('addExpenseModal');getNextFactorNumber('EXPENSE')"
+                       class="addUser mainButton greenButton page_button mb-3">
+                        هزینه جدید
+                    </a>
+                    <a ng-click="open_modal('addPayModal');getNextFactorNumber('PAY')"
+                       class="addUser mainButton greenButton page_button mb-3">
+                        پرداخت جدید
+                    </a>
+                    <a ng-click="open_modal('addMemberModal')"
+                       class="addUser mainButton greenButton page_button mb-3">
+                        عضو جدید
+                    </a>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <a ng-click="open_modal('addPayModal');getNextFactorNumber('PAY')"
-                           class="addUser mainButton greenButton page_button mb-3">
-                            پرداخت جدید
-                        </a>
-                    </div>
-                    <div class="col">
-                        <a ng-click="open_modal('addMemberModal')"
-                           class="addUser mainButton greenButton page_button mb-3">
-                            عضو جدید
-                        </a>
-                    </div>
-                </div>
+
                 <div class="mb-3">
                     <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
                            class="form-control listFilter mb-3" type="search" placeholder="فیلتر کن">

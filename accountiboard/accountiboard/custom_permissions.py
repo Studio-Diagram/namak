@@ -5,13 +5,16 @@ from django.http import JsonResponse
 import json
 import jwt
 from accountiboard.settings import JWT_SECRET
+# from accountiboard.utils import *
+import datetime
+from accounti.models import TokenBlacklist
 
 
-def permission_decorator(permission_func, permitted_roles, branch_disable=False):
+def permission_decorator(permission_func, permitted_roles, bundles, branch_disable=False):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
-            permission_result = permission_func(request, permitted_roles, branch_disable, *args, **kwargs)
+            permission_result = permission_func(request, permitted_roles, bundles, branch_disable, *args, **kwargs)
             if permission_result.get('state'):
                 if permission_result.get('payload'):
                     request.payload = permission_result.get('payload')
@@ -23,11 +26,11 @@ def permission_decorator(permission_func, permitted_roles, branch_disable=False)
     return decorator
 
 
-def permission_decorator_class_based(permission_func, permitted_roles, branch_disable=False):
+def permission_decorator_class_based(permission_func, permitted_roles, bundles, branch_disable=False):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(self, request, *args, **kwargs):
-            permission_result = permission_func(request, permitted_roles, branch_disable, *args, **kwargs)
+            permission_result = permission_func(request, permitted_roles, bundles, branch_disable, *args, **kwargs)
             if permission_result.get('state'):
                 if permission_result.get('payload'):
                     request.payload = permission_result.get('payload')
@@ -66,7 +69,7 @@ def session_authenticate(request, permitted_roles, branch_disable=False):
     }
 
 
-def token_authenticate(request, permitted_roles, branch_disable=False):
+def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     request_branch = get_branch(request)
     if not payload:
@@ -75,14 +78,27 @@ def token_authenticate(request, permitted_roles, branch_disable=False):
             "message": UNAUTHENTICATED
         }
 
+    if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
+        for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
+            if datetime.datetime.utcfromtimestamp(payload['iat']) < blacklist_obj.created_time:
+                return {
+                    "state": False,
+                    "message": UNAUTHENTICATED
+                }
+
+    # Adding 'FREE' plan to bundle definition on view decorators and also JWT token:
+    bundles.add('FREE')
+    payload_bundles = {payload['sub_bundle'], 'FREE'}
+
     for role in payload['sub_roles']:
         if role in permitted_roles:
-            if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
-                return {
-                    "state": True,
-                    "message": NO_MESSAGE,
-                    "payload": payload
-                }
+            if bundles.issubset(payload_bundles):
+                if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
+                    return {
+                        "state": True,
+                        "message": NO_MESSAGE,
+                        "payload": payload
+                    }
     return {
         "state": False,
         "message": ACCESS_DENIED
@@ -103,6 +119,8 @@ def get_branch(request):
         return None
 
 
+# This function is not needed:
+# permission_decorator & permission_decorator_class_based already set request.payload
 def jwt_decoder_decorator_class_based():
     def decorator(view_func):
         @wraps(view_func)

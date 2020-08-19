@@ -615,12 +615,7 @@ angular.module("dashboard")
                         $scope.get_today_cash();
                     }
                     else if (data['response_code'] === 3) {
-                        if (data['error_mode'] === "NO_CASH") {
-                            $state.go("cash_disable", {state: "NO_CASH"});
-                        }
-                        if (data['error_mode'] === "OLD_CASH") {
-                            $state.go("cash_disable", {state: "OLD_CASH"});
-                        }
+                        $state.go('cash_manager.salon');
                     }
                 }, function (error) {
                     $scope.error_message = 500;

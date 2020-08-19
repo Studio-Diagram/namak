@@ -1,13 +1,8 @@
 from django.http import JsonResponse
-import json, base64, random
+import json
 from accounti.models import *
-import accountiboard.settings as settings
-from PIL import Image
-from io import BytesIO
-from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime
 from accountiboard.constants import *
+from django.db import IntegrityError
 
 
 def add_table(request):
@@ -23,20 +18,31 @@ def add_table(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         table_cat_obj = TableCategory.objects.filter(id=table_cat_id).first()
+        all_tables_in_branch = Table.objects.filter(category__branch=table_cat_obj.branch, name=name)
+
+        if all_tables_in_branch.count():
+            return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
 
         if table_id == 0:
             new_table = Table(
                 name=name,
                 category=table_cat_obj
             )
-            new_table.save()
+            try:
+                new_table.save()
+            except IntegrityError:
+                return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
 
             return JsonResponse({"response_code": 2})
         else:
             old_table = Table.objects.get(pk=table_id)
             old_table.name = name
             old_table.category = table_cat_obj
-            old_table.save()
+            try:
+                old_table.save()
+            except IntegrityError:
+                return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
+
             return JsonResponse({"response_code": 2})
 
     return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
@@ -97,13 +103,19 @@ def add_table_category(request):
             name=name,
             branch_id=branch_id
         )
-        new_table_category.save()
+        try:
+            new_table_category.save()
+        except IntegrityError:
+            return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
 
         return JsonResponse({"response_code": 2})
     else:
         old_table_cat = TableCategory.objects.get(pk=table_cat_id)
         old_table_cat.name = name
-        old_table_cat.save()
+        try:
+            old_table_cat.save()
+        except IntegrityError:
+            return JsonResponse({"response_code": 3, "error_msg": UNIQUE_VIOLATION_ERROR})
         return JsonResponse({"response_code": 2})
 
 

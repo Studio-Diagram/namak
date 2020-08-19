@@ -40,12 +40,16 @@
         <script src="{% static 'modules/mainpage/controllers/loginCtrl.js' %}"></script>
         <script src="{% static 'modules/mainpage/controllers/registerCtrl.js' %}"></script>
         <script src="{% static 'modules/mainpage/controllers/mainpageCtrl.js' %}"></script>
+        <script src="{% static 'js/bootstrap-clockpicker.min.js' %}"></script>
     {% endcompress %}
     {% compress css %}
         <link rel="stylesheet" href="{% static 'fontawesome-free-5.11.2-web/css/all.css' %}">
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/style.css' %}" rel="stylesheet" id="bootstrap-css">
+        <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
     {% endcompress %}
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm&hl=fa"></script>
 
 </head>
 <body ng-app="mainpage">

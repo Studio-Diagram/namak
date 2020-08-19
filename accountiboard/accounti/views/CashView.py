@@ -85,6 +85,12 @@ def close_cash(request):
                 or night_report_inputs['event_tickets'] == "" or night_report_inputs['current_money_in_cash'] == "":
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
+        if night_report_inputs['income_report'] == None \
+            or night_report_inputs['outcome_report'] == None \
+            or night_report_inputs['event_tickets'] == None \
+            or night_report_inputs['current_money_in_cash'] == None:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+
         branch_obj = Branch.objects.get(pk=branch_id)
         user_object = User.objects.filter(phone=username).first()
         current_cash = Cash.objects.filter(branch=branch_obj, is_close=0)

@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
-from django.contrib.postgres.fields import JSONField
+# from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
+from django.utils import timezone
 from uuid import uuid4
 
 
@@ -75,6 +77,7 @@ class Employee(models.Model):
     shaba_number = models.CharField(max_length=255, null=True, blank=True)
     # User Base
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.phone
@@ -87,36 +90,6 @@ class CafeOwner(models.Model):
 
     def __str__(self):
         return "Phone: %s - %s" % (self.user.phone, self.user.get_full_name())
-
-
-class Transaction(models.Model):
-    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
-    status = models.CharField(max_length=255, null=True, blank=True)
-    token = models.CharField(max_length=1020, null=False, blank=False)
-    amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
-    mobile = models.CharField(max_length=20, null=True, blank=True)
-    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
-    description = models.CharField(max_length=1275, null=True, blank=True)
-    redirect = models.CharField(max_length=1020, null=True, blank=True)
-    cardNumber = models.CharField(max_length=25, null=True, blank=True)
-    transId = models.CharField(max_length=100, null=True, blank=True)
-    message = models.CharField(max_length=255, null=True, blank=True)
-
-
-class Bundle(models.Model):
-    USER_PLANS_CHOICES = (
-        ('FREE', 'FREE'),
-        ('STANDARD_NORMAL', 'STANDARD_NORMAL'),
-        ('STANDARD_BG', 'STANDARD_BG'),
-        ('ENTERPRISE', 'ENTERPRISE')
-    )
-    bundle_plan = models.PositiveSmallIntegerField(choices=USER_PLANS_CHOICES)
-    bundle_duration = models.IntegerField(null=False, blank=False)
-    starting_datetime_plan = models.DateTimeField(null=False, blank=False)
-    expiry_datetime_plan = models.DateTimeField(null=False, blank=False)
-    is_active = models.BooleanField(null=False, blank=False)
-    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
-    transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)
 
 
 class EmployeeToBranch(models.Model):
@@ -232,6 +205,11 @@ class TableCategory(models.Model):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'branch'], name="table_category_unique")
+        ]
+
 
 class Table(models.Model):
     name = models.CharField(max_length=255, null=False)
@@ -239,6 +217,11 @@ class Table(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'category'], name="table_unique")
+        ]
 
 
 class Game(models.Model):
@@ -273,6 +256,9 @@ class Cash(models.Model):
     employee = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     is_close = models.SmallIntegerField(default=0, null=False)
+
+    def __str__(self):
+        return f"Organization: {self.branch.organization.name} | Branch: {self.branch.name} | Employee: {self.employee.get_full_name() if self.employee else 'Cash i'}"
 
 
 class InvoiceSales(models.Model):
@@ -656,3 +642,81 @@ class CreditToInvoiceSale(models.Model):
     invoice_sale = models.ForeignKey(to=InvoiceSales, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
     used_price = models.IntegerField(default=0)
+
+
+class SubscriptionDiscount(models.Model):
+    TYPE = (
+        ('amount', 'amount'),
+        ('percent', 'percent'),
+    )
+    type = models.CharField(max_length=10, choices=TYPE)
+    name = models.CharField(max_length=150, blank=True, null=True)
+    code = models.CharField(max_length=150, blank=False, null=False, unique=True)
+    quantity = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    created_time = models.DateTimeField(auto_now_add=True)
+    expire_time = models.DateTimeField()
+    num_of_use = models.IntegerField(default=1, null=True, blank=True)
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT, null=True, blank=True)
+    min_discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    max_discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    bundle = models.CharField(max_length=150, blank=True, null=True)
+
+
+class Transaction(models.Model):
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
+    subscription_discount = models.ForeignKey(SubscriptionDiscount, on_delete=models.PROTECT, null=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    token = models.CharField(max_length=1020, null=False, blank=False)
+    amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
+    mobile = models.CharField(max_length=20, null=True, blank=True)
+    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
+    description = models.CharField(max_length=1275, null=True, blank=True)
+    redirect = models.CharField(max_length=1020, null=True, blank=True)
+    cardNumber = models.CharField(max_length=25, null=True, blank=True)
+    transId = models.CharField(max_length=100, null=True, blank=True)
+    message = models.CharField(max_length=255, null=True, blank=True)
+
+
+class Bundle(models.Model):
+    USER_PLANS_CHOICES = (
+        ('FREE', 'FREE'),
+        ('STANDARDNORMAL', 'STANDARDNORMAL'),
+        ('STANDARDBG', 'STANDARDBG'),
+        ('ENTERPRISE', 'ENTERPRISE')
+    )
+    bundle_plan = models.CharField(max_length=100, choices=USER_PLANS_CHOICES)
+    bundle_duration = models.IntegerField(null=False, blank=False)
+    starting_datetime_plan = models.DateTimeField(null=False, blank=False)
+    expiry_datetime_plan = models.DateTimeField(null=False, blank=False)
+    is_active = models.BooleanField(null=False, blank=False)
+    is_reserved = models.BooleanField(null=False, blank=False, default=False)
+    is_expired = models.BooleanField(null=False, blank=False, default=False)
+    cafe_owner = models.ForeignKey(CafeOwner, on_delete=models.PROTECT)
+    transaction = models.ForeignKey(Transaction, on_delete=models.PROTECT, null=True, blank=True)
+
+
+class TokenBlacklist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_time = models.DateTimeField(default=timezone.now)
+
+
+class SmsToken(models.Model):
+    phone = models.CharField(max_length=30, null=False, blank=False)
+    token = models.CharField(max_length=30, null=False, blank=False)
+    created_time = models.DateTimeField(default=timezone.now)
+
+
+class LatestNews(models.Model):
+    title = models.CharField(max_length=300, blank=False, null=False)
+    text = models.CharField(max_length=4000, blank=False, null=False)
+    link = models.CharField(max_length=300, blank=True, null=True)
+    datetime = models.DateTimeField()
+
+
+class BugReport(models.Model):
+    title = models.CharField(max_length=300, blank=False, null=False)
+    text = models.TextField(blank=False, null=False)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    image = models.ImageField(null=True)
+    image_name = models.CharField(max_length=500, null=True, default="default.jpg")
+    created_time = models.DateTimeField(auto_now_add=True)

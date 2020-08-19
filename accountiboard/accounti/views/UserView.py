@@ -1,12 +1,185 @@
 import json
+import requests
 from datetime import datetime
 from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
 from accountiboard.constants import *
 from accounti.validators.UserValidator import *
 from accountiboard.custom_permissions import *
+from accountiboard.sms import *
 from django.views import View
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+
+
+class PhoneVerifyView(View):
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        phone = rec_data.get('phone')
+        verify_type = rec_data.get('verify_type')
+        recaptcha_response_token = rec_data.get('recaptcha_response_token')
+
+        if not phone or not recaptcha_response_token or not verify_type:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+
+        phone_validator = PhoneNumberValidator()
+        phone_validator.validate(phone)
+        if phone_validator.get_errors():
+            return JsonResponse({"error_msg": phone_validator.get_errors()[0]}, status=400)
+
+        if verify_type == "REGISTER":
+            if User.objects.filter(phone=phone).count() > 0:
+                return JsonResponse({"error_msg": PHONE_ALREADY_EXIST}, status=403)
+
+        recaptcha_verify_data = {
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response_token,
+        }
+
+        recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', data=recaptcha_verify_data)
+        recaptcha_request_json = recaptcha_request.json()
+
+        if recaptcha_request_json['success']:
+            send_verify_phone_sms(phone)
+
+        else:
+            return JsonResponse({
+                'error_msg': 'recaptcha token invalid',
+            }, status=401)
+
+        return JsonResponse({
+            'msg': f'sms sent to {phone}',
+        }, status=200)
+
+
+class RegisterCafeOwnerView(View):
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+
+        validator = RegisterCafeOwnerValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+
+        phone = rec_data.get('phone')
+        first_name = rec_data.get('first_name')
+        last_name = rec_data.get('last_name')
+        password = rec_data.get('password')
+        re_password = rec_data.get('re_password')
+        company_name = rec_data.get('company_name')
+        company_address = rec_data.get('company_address')
+        start_working_time = rec_data.get('start_working_time')
+        end_working_time = rec_data.get('end_working_time')
+        sms_verify_token = rec_data.get('sms_verify_token')
+        sms_verified = False
+
+        phone_validator = PhoneNumberValidator()
+        phone_validator.validate(phone)
+        if phone_validator.get_errors():
+            return JsonResponse({"error_msg": phone_validator.get_errors()[0]}, status=400)
+
+        password_validator = PasswordValidator(min_digits=8)
+        password_validator.validate_with_re_password(password, re_password)
+        if password_validator.get_errors():
+            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=400)
+
+        sms_tokens_count = SmsToken.objects.filter(phone=phone).count()
+        sms_tokens = SmsToken.objects.filter(phone=phone)
+
+        if sms_tokens_count < 1:
+            return JsonResponse({
+                'error_msg': PHONE_VALIDATOR_EXPIRED,
+            }, status=401)
+
+        for sms_token in sms_tokens:
+            if sms_token.token == sms_verify_token:
+                sms_verified = True
+                break
+
+        try:
+            start_working_time = datetime.datetime.strptime(start_working_time, "%H:%M")
+            end_working_time = datetime.datetime.strptime(end_working_time, "%H:%M")
+        except:
+            start_working_time = datetime.datetime.strptime("08:00", "%H:%M")
+            end_working_time = datetime.datetime.strptime("23:00", "%H:%M")
+
+        if User.objects.filter(phone=phone).count() > 0:
+            return JsonResponse({"error_msg": PHONE_ALREADY_EXIST}, status=403)
+
+        try:
+            new_user = User(
+                phone=phone,
+                first_name=first_name,
+                last_name=last_name,
+                password=make_password(password),
+                user_type=USER_TYPE['cafe_owner'],
+                is_active=True,
+            )
+            new_user.save()
+            new_organization = Organization(
+                name=company_name,
+                shortcut_login_url=company_name,
+            )
+            new_organization.save()
+            CafeOwner(
+                user=new_user,
+                organization=new_organization
+            ).save()
+            Branch(
+                name=BRANCH_DEFAULT_DATA['NAME'],
+                start_working_time=start_working_time,
+                end_working_time=end_working_time,
+                min_paid_price=BRANCH_DEFAULT_DATA['MIN_PAID_PRICE'],
+                game_data=[json.dumps(game_json) for game_json in BRANCH_DEFAULT_DATA.get('GAME_DATA')],
+                address=company_address,
+                organization=new_organization
+            ).save()
+        except Exception as e:
+            return JsonResponse({"error_msg": ERROR_IN_CREATING}, status=403)
+
+        sms_tokens.delete()
+        return JsonResponse({"msg": "CafeOwner user created successfully."})
+
+
+class ForgotPasswordView(View):
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+
+        validator = ForgotPasswordValidator(rec_data)
+        if not validator.is_valid():
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+
+        phone = rec_data['phone']
+        password = rec_data['password']
+        re_password = rec_data['re_password']
+        sms_verify_token = rec_data['sms_verify_token']
+
+        if User.objects.filter(phone=phone).count() < 1:
+            return JsonResponse({"error_msg": PHONE_DOESNT_EXIST}, status=403)
+
+        password_validator = PasswordValidator(min_digits=8)
+        password_validator.validate_with_re_password(password, re_password)
+        if password_validator.get_errors():
+            return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=403)
+
+        sms_tokens_count = SmsToken.objects.filter(phone=phone).count()
+        sms_tokens = SmsToken.objects.filter(phone=phone)
+
+        if sms_tokens_count < 1:
+            return JsonResponse({
+                'error_msg': 'You have to validate your phone number first',
+            }, status=401)
+
+        for sms_token in sms_tokens:
+            if sms_token.token == sms_verify_token:
+                sms_verified = True
+                break
+
+        current_user = User.objects.get(phone=phone)
+        current_user.password = make_password(password)
+        current_user.save()
+
+        sms_tokens.delete()
+        return JsonResponse({"msg": "Password was changed successfully"})
 
 
 def register_user(request):

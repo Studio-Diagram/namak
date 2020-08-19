@@ -103,24 +103,18 @@
         </div>
     </div>
     <main class="pageContent container-fluid">
-        <div class="tableButtons clearfix">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
-                    <li class="breadcrumb-item"><a
-                            ui-sref="account_manager.supplier({ supplier: supplier_id })">{{ supplier_name }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ state_word }}</li>
-                </ol>
-            </nav>
-            <div class="dateFilter tableLefty">
-                <span>تا تاریخ:</span>
-                <input ng-model="search_data_supplier.to_time" disabled class="form-control listFilter tableLefty"
-                       type="text" placeholder="تا الان">
-            </div>
-            <div class="dateFilter tableLefty">
-                <span>نمایش از تاریخ:</span>
-                <input ng-model="search_data_supplier.from_time" disabled class="form-control listFilter tableLefty"
-                       type="text" placeholder="از یک‌ماه پیش">
+        <div class="tableButtons">
+            <div class="buttonGroup"></div>
+            <div class="buttonGroup">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
+                        <li class="breadcrumb-item"><a
+                                ui-sref="account_manager.supplier({ supplier: supplier_id })">{{ supplier_name }}</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ state_word }}</li>
+                    </ol>
+                </nav>
             </div>
         </div>
         <div class="row userPageContent">

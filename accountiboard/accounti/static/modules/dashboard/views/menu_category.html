@@ -44,9 +44,10 @@
                             <div ng-repeat="printer in printers"
                                  class="checkbox-unit col">
                                 <label class="checkbox-item">
-                                    <input style="float: left;" ng-checked="printer.is_checked" ng-model="printer.is_checked_m"
+                                    <input style="float: left;" ng-checked="printer.is_checked"
+                                           ng-model="printer.is_checked_m"
                                            type="checkbox"
-                                           ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">پرینتر  {{ printer.printer_name }}
+                                           ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">پرینتر {{ printer.printer_name }}
                                 </label>
                             </div>
                         </div>
@@ -84,12 +85,19 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    <a class="addUser mainButton greenButton" ng-click="openAddMenuCategoryModal()" data-toggle="modal"
-                       data-backdrop="static" data-keyboard="false"><i
-                            class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton" ng-click="openAddMenuCategoryModal()"
+                           data-toggle="modal"
+                           data-backdrop="static" data-keyboard="false">
+                            <i class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <form>
+                            <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
+                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                        </form>
+                    </div>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">

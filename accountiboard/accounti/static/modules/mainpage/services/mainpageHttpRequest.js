@@ -29,8 +29,6 @@ angular.module('mainpage')
                     .then(angular.bind(this, function (data, status, headers, config) {
                         deferred.resolve(data['data'], status);
                     }), angular.bind(this, function (data, status, headers, config) {
-                        console.log("error syncing with: " + url);
-
                         // Set request status
                         if (data) {
                             data.status = status;
@@ -55,13 +53,6 @@ angular.module('mainpage')
                     }));
                 return deferred.promise;
             },
-            'registerUser': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/test",
-                    'data': data
-                });
-            },
             'loginUser': function (data) {
                 return this.request({
                     'method': "POST",
@@ -69,10 +60,17 @@ angular.module('mainpage')
                     'data': data
                 });
             },
-            'registerUser': function (data) {
+            'registerCafeOwner': function (data) {
                 return this.request({
                     'method': "POST",
-                    'url': "/api/user/",
+                    'url': "/api/register-cafeowner/",
+                    'data': data
+                });
+            },
+            'phoneVerify': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/phone-verify/",
                     'data': data
                 });
             }

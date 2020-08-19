@@ -2,8 +2,8 @@
     <div class="row no-gutters">
         <div class="col-md-4"></div>
         <div class="col-md-4">
+            <h2 class="text-center">ورود به پنل کاربری</h2>
             <form class="generalForm">
-                <h2>ورود به پنل کاربری</h2>
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
                     <strong style="text-align: right!important;">{{ form_state.error_msg }}</strong>
                 </div>
@@ -26,7 +26,10 @@
                     <a class="forgetPasswordLink" ng-show="false">رمز عبور را فراموش کرده‌ام</a>
                 </div>
                 <div class="referButtonWrapper">
-                    <a class="mainButton fullWidthButton transparentButton" ui-sref="register">ثبت کافه جدید</a>
+                    <span>یا</span>
+                </div>
+                <div>
+                    <a class="mainButton fullWidthButton newYellowButton" ui-sref="register">ثبت کافه جدید</a>
                 </div>
             </form>
         </div>

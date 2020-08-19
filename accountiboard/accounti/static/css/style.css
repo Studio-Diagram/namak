@@ -22,13 +22,16 @@
     --okr: #c7af2a;
     --grayButtonBorder: #D8D8D8;
     --navBarLineHover: #3DA7B1;
+    --oilBlueBorder: #4AA5AD;
+    --newYellow: #E8CE6B;
+    --newYellowBorder: #CCB24D;
 }
 
 body {
     padding: 0 !important;
     text-align: right;
     font-size: 13px;
-    font-family: 'IRANSans', tahoma, serif;
+    font-family: IRANSans, Tahoma, serif;
     font-weight: normal;
     direction: rtl;
     min-height: 0 !important;
@@ -61,7 +64,7 @@ input::placeholder {
     font-weight: 100;
     color: var(--myGrayBorder);
     font-size: .8em;
-    font-family: FontAwesome, 'IRANSans';
+    font-family: FontAwesome, IRANSans, Tahoma, Serif;
 }
 
 .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group > .input-group-append:last-child > .input-group-text:not(:last-child), .input-group > .input-group-append:not(:last-child) > .btn, .input-group > .input-group-append:not(:last-child) > .input-group-text, .input-group > .input-group-prepend > .btn, .input-group > .input-group-prepend > .input-group-text {
@@ -166,7 +169,6 @@ form.generalForm {
     width: 450px;
     text-align: center;
     margin: auto;
-    background: transparent;
     padding: 25px;
 }
 
@@ -191,27 +193,32 @@ form.generalForm .form-group {
 form.generalForm .submitButton {
     background: var(--navBarLine);
     border: none;
-    margin-bottom: 1em;
+    margin-bottom: 0;
     font-size: 1em;
     padding: 0.7em 4em;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 form.generalForm .submitButton:hover {
     background: var(--navBarLineHover);
 }
 
-form.generalForm .referButtonWrapper a {
-    border-color: var(--grayButtonBorder);
-    color: var(--myBlack);
-    font-weight: 100;
+form.generalForm .referButtonWrapper {
+    margin: 4.5em 0;
+    border-bottom: 1px solid #C6CACF;
+    width: 100%;
 }
 
-form.generalForm .referButtonWrapper {
-    border-top: 1px solid var(--grayButtonBorder);
-    padding-top: 1em;
+form.generalForm .referButtonWrapper span {
+    display: block;
+    background: #eaeff5;
+    font-size: 1em;
+    font-weight: 400;
+    width: 4rem;
+    margin: 0 auto -.9rem;
+    color: #707070;
 }
 
 .forgetPasswordLink {
@@ -225,6 +232,7 @@ form.generalForm .submitButtonWrapper {
     display: inline-block;
     width: 100%;
     text-align: right;
+    margin-bottom: 0;
 }
 
 .mainAside nav {
@@ -278,16 +286,12 @@ form.generalForm .submitButtonWrapper {
 }
 
 main.pageContent {
-    padding: 0;
-    padding-left: 25px;
+    padding: 15px 0 0 15px;
     margin: 0;
-    position: absolute;
-    top: 41px;
-    right: 0;
-    left: 0;
-    bottom: 0;
+    margin-left: 15px;
     overflow: auto;
     width: 100%;
+    height: calc(100vh - 118px);
 }
 
 main.pageContent a:hover {
@@ -333,7 +337,7 @@ a.greenButton:hover {
 
 button.greenButton {
     background: var(--myGreen);
-    border-color: var(--myGreenBorder);
+    border-color: var(--myGreenBorder) !important;
 }
 
 button.greenButton:hover {
@@ -395,6 +399,20 @@ button.yellowButton:hover {
     cursor: pointer;
 }
 
+a.newYellowButton {
+    background: var(--newYellow);
+    border-color: var(--newYellowBorder);
+    color: var(--white);
+    font-size: 1em;
+    padding: 0.7em 4em;
+}
+
+a.newYellowButton:hover {
+    background: var(--newYellowBorder);
+    color: white;
+    cursor: pointer;
+}
+
 a.blueButton {
     background: var(--myBlue);
     border-color: var(--myBlueBorder);
@@ -411,6 +429,18 @@ button.blueButton {
 }
 
 button.blueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+button.oilBlueButton {
+    background-color: var(--navBarLine);
+    border-color: var(--oilBlueBorder);
+    color: white;
+}
+
+button.oilBlueButton:hover {
     background: var(--myBlueBorder);
     color: white;
     cursor: pointer;
@@ -485,25 +515,13 @@ a.iconButton.active i {
     color: var(--myGreen);
 }
 
-main.pageContent a.addUser {
-    margin: 15px 0;
-    float: left;
-}
-
 .redText {
     color: var(--myRed);
 }
 
-main.pageContent a.addUser:hover {
-}
-
-main.pageContent a.addUser:hover i {
-    color: white;
-}
-
 main.pageContent .listFilter {
     width: 200px;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
     float: right;
 }
 
@@ -1080,7 +1098,7 @@ table.cashTable tbody tr td.mainValue span {
 }
 
 .saloonPageContent main {
-
+    padding: 0;
 }
 
 .saloonPageContent .tableNavigation a {
@@ -1088,14 +1106,27 @@ table.cashTable tbody tr td.mainValue span {
 }
 
 .tableLefty {
-    margin: 15px 0 !important;
+    margin: 0 0 15px 0 !important;
     float: left !important;
     margin-right: 10px !important;
 }
 
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+}
+
+.tableButtons {
+    width: 100%;
+    display: flex;
+    flex-flow: row-reverse;
+    justify-content: space-between;
+    height: 40px;
+    margin-bottom: 25px;
+}
+
 main.pageContent .tableButtons nav {
     display: inline-block;
-    margin-top: 15px;
 }
 
 .pageContent nav ol.breadcrumb {
@@ -1155,6 +1186,7 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent {
     margin-bottom: 50px;
+    margin-left: 5px !important;
 }
 
 .pageContent .reservationPageContent .reservationTable {
@@ -1165,7 +1197,7 @@ tr.tableTotal .redText {
 }
 
 .pageContent .reservationPageContent .reservationTable.reservationTableTimes {
-    padding-top: 18px;
+    padding-top: 29px;
     width: auto;
 }
 
@@ -1173,6 +1205,7 @@ tr.tableTotal .redText {
     border-left: 1px solid var(--pageBorder);
     height: 1.312em;
     border-top: 1px dotted var(--pageBorder);
+    background-color: var(--white);
 }
 
 .pageContent .reservationPageContent .reservationTable .hour {
@@ -1188,13 +1221,16 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent .reservationTable.reservationTableTimes .reservationCell {
     margin-top: -10px;
-    padding-left: 10px;
+    padding: 0 !important;
+    padding-left: 10px !important;
     border-top: none !important;
     font-weight: 100;
     border-color: var(--pageBorder) !important;
     line-height: 2.5em;
     font-size: .85em;
     min-height: 2.34em;
+    background: none !important;
+    color: var(--myBlack) !important;
 }
 
 .pageContent .reservationPageContent .reservationTableTimes .hour {
@@ -1214,7 +1250,10 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent .reservationTable .reservationCell:first-child {
     border-top: none;
-    padding: 0 5px;
+    padding: 5px 10px;
+    height: auto;
+    background: var(--myBlack);
+    color: white;
 }
 
 .pageContent .reservationPageContent .reservationTable .reservationItem {
@@ -1708,6 +1747,12 @@ tags-input .tags .tag-item {
 .table-category-separation {
     display: inline-block;
     margin-left: 1.5em;
+    flex: 0 0 auto;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--pageBorder);
 }
 
 .tooltip {
@@ -1735,11 +1780,14 @@ tags-input .tags .tag-item {
 .table_category {
     border-bottom: 1px dotted var(--pageBorder);
     margin-bottom: 1em;
+    padding: 0 0 0 15px;
 }
 
 .table_category:nth-last-child(-n+2) {
     border-bottom: none;
     margin-bottom: 1em;
+    padding: 0;
+    padding-left: 15px;
 }
 
 .red-cell {
@@ -2009,6 +2057,12 @@ th.disabled:hover {
     cursor: no-drop;
 }
 
+#companyRegistrationForm {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
 .toast {
     width: 318px;
     -webkit-border-radius: 0 30px 30px 0;
@@ -2050,4 +2104,284 @@ th.disabled:hover {
 
 .mainButton.fullWidthButton.transparentButton:hover {
     background: #0000000f;
+}
+
+aside.leftAside {
+    background-color: #F4F7FA;
+    position: absolute;
+    top: -30px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--pageBorder);
+}
+
+.leftAside a {
+    padding: 1em 1em 0 0;
+    font-size: 1.5em;
+    display: flex;
+    font-weight: 100;
+    color: var(--myGreen);
+}
+
+.leftAside a span {
+    margin-right: 0.6em;
+}
+
+.leftAside a:hover {
+
+}
+
+.leftAside a:hover i {
+
+}
+
+.verticalButton {
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+#rightSidebarPageContentWrapper {
+    width: calc(100vw - 60px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#leftSidebarWrapper {
+    width: 60px;
+    display: flex;
+    position: relative;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#dashboardWrapper {
+    padding: 0;
+    display: flex;
+    height: calc(100vh - 77px);
+}
+
+#rightSidebarPageContentWrapper.collapseComplete {
+    width: calc(100vw - 300px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#leftSidebarWrapper.collapseComplete {
+    width: 300px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#leftSidebarWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#rightSidebarPageContentWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftSidebarWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftAsideBugReportForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete #leftAsideBugReportForm {
+    margin: 1.7em;
+    visibility: visible;
+    animation: showElement 0s 0.3s forwards;
+    display: block;
+}
+
+.newsWrapper {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete .newsWrapper {
+    margin: 1.7em;
+    visibility: visible;
+    display: block;
+    animation: showElement 0s 0.3s forwards;
+}
+
+.newsWrapper .news p {
+    text-align: justify;
+}
+
+.newsWrapper .news {
+    border-bottom: 1px solid var(--grayButtonBorder);
+    margin-top: 2em;
+}
+
+#leftSidebarWrapper.collapseComplete a {
+    color: var(--myGreen);
+    font-size: 1.5em;
+}
+
+#leftSidebarWrapper i {
+    margin-top: 3px;
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-left {
+    display: block;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0 -10px 10px 10px;
+    background: var(--myBlack);
+    color: white;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-right {
+    display: none;
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    margin-bottom: 0.6em;
+}
+
+#leftSidebarWrapper i.fa-angle-double-right {
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-right: -10px;
+    background: var(--myBlack);
+    color: white;
+}
+
+@keyframes showElement {
+    to {
+        opacity: 1;
+    }
+}
+
+#leftAsideBugReportForm textarea {
+    font-size: 1em;
+    font-weight: 100;
+}
+
+#personalRegistrationForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#phoneVerifyRegistrationForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+.showForm {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.returnButton {
+    width: 35%;
+    margin-left: 1em;
+    color: #707070 !important;
+    border-color: #C6CACF !important;
+}
+
+.returnButton:hover {
+    background-color: #f1f3f4;
+}
+
+.registerDataTable tbody tr td {
+    border-left: none !important;
+    text-align: right;
+    width: 33.333333333%;
+}
+
+.registerDataTable tbody tr td .title {
+    color: #A3AAB2;
+}
+
+.registerDataTableWrapper {
+    border: 1px solid #C6CACF;
+    border-radius: 10px;
+    margin: 2em 0;
+}
+
+.cashStateAlert {
+    border-radius: 5px;
+    padding: 1.5em;
+    margin: 1em;
+}
+
+.cashStateAlert.noCashState {
+    background-color: #D6E2CD;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+}
+
+.cashStateAlert p:nth-child(2) {
+    font-weight: 100;
+}
+
+.cashStateAlert.oldCashState {
+    background-color: #F2E4E7;
+    border: 1px solid #DB4E54;
+    color: #DB4E54;
+}
+
+.row.saloonPageContent main {
+    padding: 0;
+}
+
+.quick-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.quick-buttons .mainButton {
+    flex: 0 0 calc(50% - 5px);
+}
+
+.leftAside > div {
+    overflow-y: scroll;
+    height: calc(100vh - 100px);
 }

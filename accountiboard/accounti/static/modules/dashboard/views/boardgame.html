@@ -6,12 +6,13 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت بوردگیم جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()"  aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <button ng-disabled="adding_boardgame" ng-click="addBoardgame()" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</button>
-                    <a ng-click="resetFrom()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                            class="fas fa-save"></i> ثبت
+                    </button>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن </a>
                 </div>
                 <div class="modal-body">
@@ -88,7 +89,8 @@
                         </div>
                         <div style="margin-top: 40px" class="row">
                             <div class="col">
-                                <label for="formControlRange">رتبه‌بندی ( {{ new_boardgame_data.rate | persianNumber }} )<i class="fas fa-star-of-life"></i></label>
+                                <label for="formControlRange">رتبه‌بندی ( {{ new_boardgame_data.rate | persianNumber }}
+                                    )<i class="fas fa-star-of-life"></i></label>
                                 <input ng-model="new_boardgame_data.rate" min="1" max="5" value="1" type="range"
                                        class="form-control-range"
                                        id="formControlRange">
@@ -144,11 +146,16 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchBoardgame()" ng-model="search_data_boardgame.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    <a class="addUser mainButton greenButton" ng-click="openAddBoardgameModal()" data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> بوردگیم جدید</a>
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton" ng-click="openAddBoardgameModal()"
+                           data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> بوردگیم جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <form><input ng-keyup="searchBoardgame()" ng-model="search_data_boardgame.search_word"
+                                     class="form-control listFilter" type="search" placeholder="فیلتر کن"></form>
+                    </div>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">
@@ -163,7 +170,8 @@
                         <tr ng-repeat="bg in boardgames">
                             <th scope="row">{{ bg.name }}</th>
                             <th scope="row">{{ bg.category }}</th>
-                            <td><a ng-click="editBoardgame(bg.id)" href="" class="mainButton fullWidthButton smallButton grayButton">ویرایش</a></td>
+                            <td><a ng-click="editBoardgame(bg.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">ویرایش</a></td>
                         </tr>
                         </tbody>
                     </table>

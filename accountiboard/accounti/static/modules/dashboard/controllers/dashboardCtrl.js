@@ -26,7 +26,15 @@ angular.module("dashboard")
                         $rootScope.cash_data = {
                             'cash_id': 0
                         };
+                        $scope.new_bug_data = {
+                            title: "",
+                            text: "",
+                            image: "",
+                            image_name: ""
+                        };
+                        $scope.branch_name = $rootScope.selecetd_branch.name;
                         $scope.get_today_cash();
+                        $scope.get_news();
                     }
                 }
                 else {
@@ -302,9 +310,12 @@ angular.module("dashboard")
             };
 
             $rootScope.changeBranch = function (selected_branch) {
+                localStorage.branch = JSON.stringify(selected_branch.id);
                 $rootScope.user_data.branch = selected_branch.id;
                 $rootScope.selected_branch = selected_branch;
-                $state.go("cash_manager", {}, {reload: true});
+                $scope.$root.selected_branch = selected_branch;
+                $scope.branch_name = selected_branch.name;
+                $state.go("cash_manager.salon", {}, {reload: true});
             };
 
             $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {
@@ -342,6 +353,64 @@ angular.module("dashboard")
                     });
             };
 
+            $rootScope.collapseLeftSidebar = function () {
+                jQuery.noConflict();
+                (function ($) {
+                    if ($('#leftSidebarWrapper.collapseComplete').length && $('#rightSidebarPageContentWrapper.collapseComplete').length) {
+                        $('#leftSidebarWrapper').removeClass('collapseComplete');
+                        $('#rightSidebarPageContentWrapper').removeClass('collapseComplete');
+                    }
+                    else {
+                        $('#leftSidebarWrapper').addClass('collapseComplete');
+                        $('#rightSidebarPageContentWrapper').addClass('collapseComplete');
+                    }
+                })(jQuery);
+            };
+
+            $scope.get_news = function () {
+                dashboardHttpRequest.get_news()
+                    .then(function (data) {
+                        $rootScope.all_news = data['results'];
+                    }, function (error) {
+                        $scope.error_message = error;
+                        $scope.openErrorModal();
+                    });
+            };
+
+            $scope.bugReportFileChange = function () {
+                jQuery.noConflict();
+                (function ($) {
+                    var fileName = $('#bugFile').val();
+                    $('#bugFile').next('.custom-file-label').html(fileName);
+                    var reader = new FileReader();
+                    var $img = $("#bugFile")[0];
+                    reader.onload = function (e) {
+                        $scope.new_bug_data.image = e.target.result;
+                        $scope.new_bug_data.image_name = $img.files[0].name;
+                    };
+                    reader.readAsDataURL($img.files[0]);
+                })(jQuery);
+            };
+
+            $scope.send_bug_report = function () {
+                dashboardHttpRequest.bug_report($scope.new_bug_data)
+                    .then(function () {
+                        $scope.new_bug_data = {
+                            title: "",
+                            text: "",
+                            image: "",
+                            image_name: ""
+                        };
+                        $rootScope.show_toast("با موفقیت انجام شد", 'success');
+                    }, function (error) {
+                        if (error.status < 500) {
+                            $rootScope.show_toast(error.data.error_msg, 'danger');
+                        }
+                        else {
+                            $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
+                        }
+                    });
+            };
 
             initialize();
 

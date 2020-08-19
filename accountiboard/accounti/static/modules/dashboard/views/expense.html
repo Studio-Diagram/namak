@@ -202,16 +202,15 @@
     </div>
 
     <main class="pageContent container-fluid">
-        <div class="tableButtons clearfix">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">هزینه‌ها</li>
-                </ol>
-            </nav>
-            <a ng-click="openAddModal();getNextFactorNumber('EXPENSE')" href=""
-               class="mainButton greenButton tableLefty">هزینه جدید</a>
-            <input ng-keyup="searchExpense()" ng-model="search_data_expense.search_word"
-                   class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
+        <div class="tableButtons ">
+            <div class="buttonGroup">
+                <a ng-click="openAddModal();getNextFactorNumber('EXPENSE')" href=""
+               class="mainButton greenButton">هزینه جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <form><input ng-keyup="searchExpense()" ng-model="search_data_expense.search_word"
+                   class="form-control listFilter" type="search" placeholder="فیلتر کن"></form>
+            </div>
         </div>
         <div class="row userPageContent">
             <main class="col-sm-12 ">

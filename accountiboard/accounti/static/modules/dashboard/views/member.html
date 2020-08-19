@@ -237,11 +237,15 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
                     <a class="addUser mainButton greenButton" ng-click="openAddMemberModal()" data-toggle="modal"><i
                             class="fas fa-user-plus"></i> مشتری جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
+                               class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                    </div>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">

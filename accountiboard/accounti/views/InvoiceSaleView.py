@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, date
 from django.db.models import Sum
 import logging
 from accountiboard.constants import *
+from django.core.exceptions import ObjectDoesNotExist
 
 logger = logging.getLogger("accounti_info")
 logger_specific_bug = logging.getLogger("specific_bug")
@@ -83,7 +84,7 @@ def change_game_state(request):
 
 def do_not_want_order(request):
     if not request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
@@ -102,7 +103,7 @@ def do_not_want_order(request):
 
 def get_dashboard_quick_access_invoices(request):
     if not request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
@@ -523,7 +524,10 @@ def create_new_invoice_sales(request):
             if get_detail_product_number(shop_obj.id) < int(shop_p['nums']):
                 return JsonResponse({"response_code": 3, "error_msg": NO_SHOP_PRODUCTS_IN_STOCK})
 
-        cash_obj = Cash.objects.get(pk=cash_id)
+        try:
+            cash_obj = Cash.objects.get(pk=cash_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({"response_code": 3, "error_msg": NO_CASH})
 
         branch_obj = Branch.objects.get(pk=branch_id)
         table_obj = Table.objects.get(pk=table_id)
@@ -943,7 +947,7 @@ def get_today_status(request):
         "all_sales": 0,
     }
 
-    all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False)
+    all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False, branch_id=branch_id)
     for invoice in all_invoices:
         status['all_sales_price'] += invoice.total_price
         status['all_cash'] += invoice.cash

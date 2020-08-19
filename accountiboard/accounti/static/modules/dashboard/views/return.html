@@ -150,16 +150,17 @@
     </div>
 
     <main class="pageContent container-fluid">
-        <div class="tableButtons clearfix">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">مرجوعی‌ها</li>
-                </ol>
-            </nav>
-            <a ng-click="openAddModal();getNextFactorNumber('RETURN')" href=""
-               class="mainButton greenButton tableLefty">مرجوعی جدید</a>
-            <input ng-keyup="searchReturn()" ng-model="search_data_return.search_word"
-                   class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a ng-click="openAddModal();getNextFactorNumber('RETURN')" href=""
+                   class="mainButton greenButton">مرجوعی جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <form>
+                    <input ng-keyup="searchReturn()" ng-model="search_data_return.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                </form>
+            </div>
         </div>
         <div class="row userPageContent">
             <main class="col-sm-12 ">
