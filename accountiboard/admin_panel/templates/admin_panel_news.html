@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<!-- <html> -->
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +25,9 @@
         .button-error {
                     background: rgb(202, 60, 60);
                     /* this is a maroon */
+        }
+        #create-news-button {
+            margin-top: 1em;
         }
     </style>
 
@@ -59,7 +61,7 @@
         </div>
 
         <div class="content">
-            <a href="/admin-panel/news/create/"><button class="button-success pure-button">Create News</button></a>
+            <a href="/admin-panel/news/create/"><button class="button-success pure-button" id="create-news-button">Create News</button></a>
             
 
             <h2 class="content-subhead">لیست News</h2>

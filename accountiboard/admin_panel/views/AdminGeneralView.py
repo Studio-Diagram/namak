@@ -16,9 +16,10 @@ class AdminView(View):
                 {
                     'number': i + 1,
                     'highlight': True if i % 2 == 0 else False,
+                    'branch_id': branch.id,
                     'branch_name': branch.name,
                     'branch_organization': branch.organization.name,
-                    'branch_cafeowner': f'{cafe_owner.last_name} {cafe_owner.first_name}',
+                    'branch_cafeowner': f'{cafe_owner.first_name} {cafe_owner.last_name}',
                 }
             )
             

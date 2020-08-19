@@ -21,7 +21,7 @@ class AdminBugReportsView(View):
                     'bugreport_id': bugreport.id,
                     'bugreport_title': bugreport.title,
                     'bugreport_text': bugreport.text,
-                    'bugreport_user': f'{bugreport.user.last_name} {bugreport.user.first_name}',
+                    'bugreport_user': f'{bugreport.user.first_name} {bugreport.user.last_name}',
                     'bugreport_image': bugreport.image,
                     'bugreport_datetime': bugreport.created_time.strftime("%m/%d/%Y, %H:%M:%S"),
                 }
@@ -45,7 +45,7 @@ class AdminBugReportsDetailView(View):
         context['bugreport'] = {
             'bugreport_title': current_bugreport.title,
             'bugreport_text': current_bugreport.text,
-            'bugreport_user': f'{current_bugreport.user.last_name} {current_bugreport.user.first_name}',
+            'bugreport_user': f'{current_bugreport.user.first_name} {current_bugreport.user.last_name}',
             'bugreport_image': current_bugreport.image,
             'bugreport_datetime': current_bugreport.created_time.strftime("%m/%d/%Y, %H:%M:%S"),
         }  
