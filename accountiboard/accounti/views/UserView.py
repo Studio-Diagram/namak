@@ -82,18 +82,20 @@ class RegisterCafeOwnerView(View):
         if password_validator.get_errors():
             return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=400)
 
-        sms_tokens_count = SmsToken.objects.filter(phone=phone).count()
         sms_tokens = SmsToken.objects.filter(phone=phone)
 
-        if sms_tokens_count < 1:
+        if sms_tokens.count() < 1:
             return JsonResponse({
-                'error_msg': PHONE_VALIDATOR_EXPIRED,
+                'error_msg': PHONE_VALIDATOR_ERROR,
             }, status=401)
 
         for sms_token in sms_tokens:
             if sms_token.token == sms_verify_token:
                 sms_verified = True
                 break
+
+        if not sms_verified:
+            return JsonResponse({'error_msg': PHONE_VALIDATOR_ERROR}, status=401)
 
         try:
             start_working_time = datetime.datetime.strptime(start_working_time, "%H:%M")

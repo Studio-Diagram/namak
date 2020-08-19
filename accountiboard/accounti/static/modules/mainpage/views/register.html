@@ -103,6 +103,17 @@
                            placeholder="کد فعالسازی">
 
                 </div>
+                <div class="form-group submitButtonWrapper">
+                    <button ng-click="send_verify_code_to_phone()" type="button"
+                            class="submitButton btn oilBlueButton fullWidthButton"
+                            ng-disabled="!resend_verification_enable">
+                        <span ng-show="form_state.is_loading"><i
+                                ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
+                        <span ng-hide="form_state.is_loading">ارسال مجدد کد فعالسازی
+                            <span ng-hide="resend_verification_enable">( {{ minutes_counter | counter | date:'mm:ss' | persianNumber }} )</span>
+                        </span>
+                    </button>
+                </div>
                 <div class="registerDataTableWrapper">
                     <table class="table registerDataTable">
                         <tr>

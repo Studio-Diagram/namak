@@ -73,7 +73,7 @@ UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است.
 BUNDLE_NOT_AVAILABLE = "بسته انتخاب شده وجود ندارد"
 BUNDLE_DURATION_NOT_AVAILABLE = "زمان بسته انتخاب شده وجود ندارد"
 SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE = "کد تخفیف اشتباه است"
-PHONE_VALIDATOR_EXPIRED = "کد تایید شما منقضی شده است"
+PHONE_VALIDATOR_ERROR = "کد تایید شما معتبر نیست"
 CAPTCHA_INVALID = "به دلایل امنیتی از ورود شما جلوگیری شده است صفحه‌ را مجددا بارگذاری کنید"
 UNIQUE_VIOLATION_ERROR = "با این نام یک فیلد دیگر وجود دارد."
 

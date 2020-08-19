@@ -2,7 +2,6 @@ angular.module("mainpage")
     .controller("registerCtrl", function ($scope, $interval, $rootScope, $filter, $http, $state, $auth, $timeout, $window, mainpageHttpRequest) {
         var initialize = function () {
             $scope.new_user = {
-                email: "",
                 phone: "",
                 password: "",
                 re_password: "",
@@ -18,6 +17,20 @@ angular.module("mainpage")
                 "is_loading": false
             };
             $scope.config_clock();
+            $scope.minutes_counter = 120;
+            $scope.resend_verification_enable = false;
+        };
+
+        $scope.start_timer = function () {
+            var interval = $interval(function () {
+                if ($scope.minutes_counter !== 0) {
+                    $scope.minutes_counter--;
+                }
+                else {
+                    $scope.resend_verification_enable = true;
+                    $interval.cancel(interval);
+                }
+            }, 1000, 0);
         };
 
         $scope.register_new_user = function () {
@@ -40,10 +53,13 @@ angular.module("mainpage")
         };
 
         $scope.send_verify_code_to_phone = function () {
+            $scope.form_state.is_loading = true;
             jQuery.noConflict();
             (function ($) {
                 grecaptcha.ready(function () {
                     grecaptcha.execute('6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm', {action: 'submit'}).then(function (token) {
+                        $scope.minutes_counter = 120;
+                        $scope.resend_verification_enable = false;
                         $scope.form_state.is_loading = true;
                         $scope.form_state.is_error = false;
                         mainpageHttpRequest.phoneVerify({
@@ -54,6 +70,7 @@ angular.module("mainpage")
                             .then(function (data) {
                                 $scope.form_state.is_loading = false;
                                 $scope.change_registration_state('personal_registration', 'phone_verify_final_step');
+                                $scope.start_timer();
                             }, function (error) {
                                 $scope.form_state.is_error = true;
                                 $scope.form_state.is_loading = false;
@@ -70,6 +87,8 @@ angular.module("mainpage")
                 if (current_state === "company_registration" && target_state === "personal_registration") {
                     $('#companyRegistrationForm').removeClass('showForm');
                     $('#personalRegistrationForm').addClass('showForm');
+                    $scope.new_user.end_working_time = $('#end-time-clock').val();
+                    $scope.new_user.start_working_time = $('#start-time-clock').val();
                 }
                 else if (current_state === "personal_registration" && target_state === "phone_verify_final_step") {
                     $('#personalRegistrationForm').removeClass('showForm');

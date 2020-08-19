@@ -2385,3 +2385,7 @@ aside.leftAside {
     overflow-y: scroll;
     height: calc(100vh - 100px);
 }
+
+.submitButton.btn.oilBlueButton.fullWidthButton:disabled {
+    cursor: not-allowed;
+}
