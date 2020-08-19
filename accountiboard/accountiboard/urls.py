@@ -184,6 +184,7 @@ urlpatterns = [
     path('admin-panel/', AdminGeneralView.AdminView.as_view()),
     path('admin-panel/news/', AdminNewsView.AdminNewsView.as_view()),
     path('admin-panel/bugreports/', AdminBugReportView.AdminBugReportsView.as_view()),
+    path('admin-panel/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
 
 
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
