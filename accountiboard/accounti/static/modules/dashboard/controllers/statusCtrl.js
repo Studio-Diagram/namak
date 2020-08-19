@@ -216,7 +216,7 @@ angular.module("dashboard")
             }).then(function successCallback(response) {
 
             }, function errorCallback(response) {
-                $scope.error_message = "Printer Server not connected.";
+                $scope.error_message = "اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید";
                 $scope.openErrorModal();
             });
         };

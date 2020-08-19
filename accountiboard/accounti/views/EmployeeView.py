@@ -223,7 +223,7 @@ class SearchEmployeeView(View):
         for employee in employees_from_branch:
             if search_word in employee.employee.last_name:
                 employees.append({
-                    "last_name": employee.employee.last_name,
+                    "last_name": employee.employee.user.get_full_name(),
                     "auth_lvl": employee.auth_level,
                 })
         return JsonResponse({"response_code": 2, 'employees': employees})

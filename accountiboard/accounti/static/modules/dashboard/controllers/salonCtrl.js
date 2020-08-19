@@ -238,7 +238,7 @@ angular.module("dashboard")
             }).then(function successCallback(response) {
 
             }, function errorCallback(response) {
-                $scope.error_message = "Printer Server not connected.";
+                $scope.error_message = "اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید";
                 $scope.openErrorModal();
             });
         };
@@ -415,7 +415,7 @@ angular.module("dashboard")
                     $scope.disable_print_after_save_all_buttons = false;
                 }, function errorCallback(response) {
                     $scope.disable_print_after_save_all_buttons = false;
-                    $scope.error_message = "Printer Server not connected.";
+                    $scope.error_message = "اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید";
                     $scope.openErrorModal();
                 });
             }
@@ -455,7 +455,7 @@ angular.module("dashboard")
                         });
                 }, function errorCallback(response) {
                     $scope.disable_print_after_save_all_buttons = false;
-                    $scope.error_message = "Printer Server not connected.";
+                    $scope.error_message = "اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید";
                     $scope.openErrorModal();
                 });
             }

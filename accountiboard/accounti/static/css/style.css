@@ -2194,6 +2194,7 @@ aside.leftAside {
     -o-transition: all all 0.3s ease-in-out;
     transition: all all 0.3s ease-in-out;
 }
+
 #rightSidebarPageContentWrapper.collapseComplete .leftSideTitle span {
     display: block;
 }
@@ -2226,11 +2227,13 @@ aside.leftAside {
 .newsWrapper {
     visibility: hidden;
     opacity: 0;
+    display: none;
 }
 
 #leftSidebarWrapper.collapseComplete .newsWrapper {
     margin: 1.7em;
     visibility: visible;
+    display: block;
     animation: showElement 0s 0.3s forwards;
 }
 
@@ -2376,4 +2379,9 @@ aside.leftAside {
 
 .quick-buttons .mainButton {
     flex: 0 0 calc(50% - 5px);
+}
+
+.leftAside > div {
+    overflow-y: scroll;
+    height: calc(100vh - 100px);
 }
