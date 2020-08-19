@@ -183,6 +183,8 @@ urlpatterns = [
     # Admin panel
     path('admin-panel/', AdminGeneralView.AdminView.as_view()),
     path('admin-panel/news/', AdminNewsView.AdminNewsView.as_view()),
+    path('admin-panel/news/create/', AdminNewsView.AdminNewsCreateView.as_view()),
+    path('admin-panel/news/delete/<int:latestnews_id>/', AdminNewsView.AdminNewsDeleteView.as_view()),
     path('admin-panel/bugreports/', AdminBugReportView.AdminBugReportsView.as_view()),
     path('admin-panel/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
 

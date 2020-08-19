@@ -698,7 +698,7 @@ class LatestNews(models.Model):
     title = models.CharField(max_length=300, blank=False, null=False)
     text = models.CharField(max_length=4000, blank=False, null=False)
     link = models.CharField(max_length=300, blank=True, null=True)
-    datetime = models.DateTimeField()
+    datetime = models.DateTimeField(default=timezone.now)
 
 
 class BugReport(models.Model):

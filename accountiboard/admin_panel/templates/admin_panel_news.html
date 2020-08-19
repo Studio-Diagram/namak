@@ -8,7 +8,28 @@
     <meta name="description" content="Namak Admin Panel">
     <title>Namak Admin</title>
     <link rel="stylesheet" href="{% static '/css/pure/pure-min.css' %}" >
-    <link rel="stylesheet" href="{% static '/css/styles.css' %}">  
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+
+    <style scoped="">
+        .button-error,
+        .button-success,
+        .button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65);
+            /* this is a green */
+        }
+        .button-error {
+                    background: rgb(202, 60, 60);
+                    /* this is a maroon */
+        }
+    </style>
+
+
 </head>
 <body>
 
@@ -38,6 +59,7 @@
         </div>
 
         <div class="content">
+            <a href="/admin-panel/news/create/"><button class="button-success pure-button">Create News</button></a>
             
 
             <h2 class="content-subhead">لیست News</h2>
@@ -50,6 +72,7 @@
                         <th>Text</th>
                         <th>Link</th>
                         <th>Datetime</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,6 +87,11 @@
                         <td>{{news.news_text}}</td>
                         <td>{{news.news_link}}</td>
                         <td>{{news.news_datetime}}</td>
+                        <td>
+                            <form action="/admin-panel/news/delete/{{news.news_id}}/" method="post">
+                                <input class="button-error pure-button" type="submit" value="Delete">
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
