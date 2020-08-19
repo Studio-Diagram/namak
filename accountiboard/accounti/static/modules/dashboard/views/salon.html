@@ -554,7 +554,7 @@
                     class="fas fa-file-invoice-dollar"></i> فاکتور جدید</a>
         </div>
         <div class="row saloonPageContent">
-            <main class="col-sm-3 tableNavigation">
+            <main class="col-4 tableNavigation">
                 <div class="row">
                     <div ng-repeat="table_category in categorized_tables_data" class="col-md-6 table_category">
                         <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)" ng-class="set_class_name(table.table_name)"><span
@@ -564,7 +564,7 @@
                 </div>
             </main>
 
-            <main class="col-sm-9 ">
+            <main class="col-8 ">
                 <div ng-show="current_selected_table_name" class="tableWrapper">
                     <table class="table">
                         <h3 class="tableName">{{ current_selected_table_name }}</h3>

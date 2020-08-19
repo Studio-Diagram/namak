@@ -9,7 +9,8 @@
                     <a ng-click="closeDeleteConfirmModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ اطلاعات حذفی قابل بازیابی نخواهند بود.</p>
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ اطلاعات حذفی قابل بازیابی نخواهند
+                        بود.</p>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت آیتم جدید</h2>
                     <a ng-click="closeAddMenuItemModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                        aria-label="Close">
+                       aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <a ng-click="addMenuItem()" href="" class="mainButton greenButton"><i
@@ -87,12 +88,17 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchMenuItem()" ng-model="searach_data_menu_item.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-
-                    <a class="addUser mainButton greenButton" ng-click="openAddMenuItemModal()" data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> آیتم جدید</a>
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton" ng-click="openAddMenuItemModal()" data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> آیتم جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <form>
+                            <input ng-keyup="searchMenuItem()" ng-model="searach_data_menu_item.search_word"
+                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                        </form>
+                    </div>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">
@@ -110,7 +116,9 @@
                             <th scope="row">{{ item.name }}</th>
                             <th scope="row">{{ item.price | number | persianNumber }}</th>
                             <th scope="row">{{ item.category_name }}</th>
-                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
+                                                              class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
                             <td style="text-align: center"><a ng-click="openDeleteConfirmModal(item.id)" href=""><i
                                     class="fas fa-trash"></i></a></td>
                         </tr>

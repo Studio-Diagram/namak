@@ -286,8 +286,9 @@ form.generalForm .submitButtonWrapper {
 }
 
 main.pageContent {
-    padding-left: 25px;
+    padding: 15px 0 0 15px;
     margin: 0;
+    margin-left: 15px;
     overflow: auto;
     width: 100%;
     height: calc(100vh - 118px);
@@ -514,25 +515,13 @@ a.iconButton.active i {
     color: var(--myGreen);
 }
 
-main.pageContent a.addUser {
-    margin: 15px 0;
-    float: left;
-}
-
 .redText {
     color: var(--myRed);
 }
 
-main.pageContent a.addUser:hover {
-}
-
-main.pageContent a.addUser:hover i {
-    color: white;
-}
-
 main.pageContent .listFilter {
     width: 200px;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
     float: right;
 }
 
@@ -1109,7 +1098,7 @@ table.cashTable tbody tr td.mainValue span {
 }
 
 .saloonPageContent main {
-
+    padding: 0;
 }
 
 .saloonPageContent .tableNavigation a {
@@ -1117,14 +1106,27 @@ table.cashTable tbody tr td.mainValue span {
 }
 
 .tableLefty {
-    margin: 15px 0 !important;
+    margin: 0 0 15px 0 !important;
     float: left !important;
     margin-right: 10px !important;
 }
 
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+}
+
+.tableButtons {
+    width: 100%;
+    display: flex;
+    flex-flow: row-reverse;
+    justify-content: space-between;
+    height: 40px;
+    margin-bottom: 25px;
+}
+
 main.pageContent .tableButtons nav {
     display: inline-block;
-    margin-top: 15px;
 }
 
 .pageContent nav ol.breadcrumb {
@@ -1184,6 +1186,7 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent {
     margin-bottom: 50px;
+    margin-left: 5px !important;
 }
 
 .pageContent .reservationPageContent .reservationTable {
@@ -1194,7 +1197,7 @@ tr.tableTotal .redText {
 }
 
 .pageContent .reservationPageContent .reservationTable.reservationTableTimes {
-    padding-top: 18px;
+    padding-top: 29px;
     width: auto;
 }
 
@@ -1202,6 +1205,7 @@ tr.tableTotal .redText {
     border-left: 1px solid var(--pageBorder);
     height: 1.312em;
     border-top: 1px dotted var(--pageBorder);
+    background-color: var(--white);
 }
 
 .pageContent .reservationPageContent .reservationTable .hour {
@@ -1217,13 +1221,16 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent .reservationTable.reservationTableTimes .reservationCell {
     margin-top: -10px;
-    padding-left: 10px;
+    padding: 0 !important;
+    padding-left: 10px !important;
     border-top: none !important;
     font-weight: 100;
     border-color: var(--pageBorder) !important;
     line-height: 2.5em;
     font-size: .85em;
     min-height: 2.34em;
+    background: none !important;
+    color: var(--myBlack) !important;
 }
 
 .pageContent .reservationPageContent .reservationTableTimes .hour {
@@ -1243,7 +1250,10 @@ tr.tableTotal .redText {
 
 .pageContent .reservationPageContent .reservationTable .reservationCell:first-child {
     border-top: none;
-    padding: 0 5px;
+    padding: 5px 10px;
+    height: auto;
+    background: var(--myBlack);
+    color: white;
 }
 
 .pageContent .reservationPageContent .reservationTable .reservationItem {
@@ -1738,6 +1748,11 @@ tags-input .tags .tag-item {
     display: inline-block;
     margin-left: 1.5em;
     flex: 0 0 auto;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--pageBorder);
 }
 
 .tooltip {
@@ -1765,11 +1780,14 @@ tags-input .tags .tag-item {
 .table_category {
     border-bottom: 1px dotted var(--pageBorder);
     margin-bottom: 1em;
+    padding: 0 0 0 15px;
 }
 
 .table_category:nth-last-child(-n+2) {
     border-bottom: none;
     margin-bottom: 1em;
+    padding: 0;
+    padding-left: 15px;
 }
 
 .red-cell {
@@ -2098,14 +2116,15 @@ aside.leftAside {
     display: flex;
     flex-flow: column;
     justify-content: space-between;
+    border-right: 1px solid var(--pageBorder);
 }
 
 .leftAside a {
     padding: 1em 1em 0 0;
-    font-size: 2em;
+    font-size: 1.5em;
     display: flex;
     font-weight: 100;
-    color: var(--navBarLine);
+    color: var(--myGreen);
 }
 
 .leftAside a span {
@@ -2128,7 +2147,7 @@ aside.leftAside {
 }
 
 #rightSidebarPageContentWrapper {
-    width: calc(100vw - 79px);
+    width: calc(100vw - 60px);
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all all 0.3s ease-in-out;
     -ms-transition: all all 0.3s ease-in-out;
@@ -2142,7 +2161,7 @@ aside.leftAside {
 }
 
 #leftSidebarWrapper {
-    width: 79px;
+    width: 60px;
     display: flex;
     position: relative;
     -webkit-transition: all 0.3s ease-in-out;
@@ -2153,8 +2172,9 @@ aside.leftAside {
 }
 
 #dashboardWrapper {
-    padding-left: 0;
+    padding: 0;
     display: flex;
+    height: calc(100vh - 77px);
 }
 
 #rightSidebarPageContentWrapper.collapseComplete {
@@ -2174,7 +2194,6 @@ aside.leftAside {
     -o-transition: all all 0.3s ease-in-out;
     transition: all all 0.3s ease-in-out;
 }
-
 #rightSidebarPageContentWrapper.collapseComplete .leftSideTitle span {
     display: block;
 }
@@ -2226,6 +2245,11 @@ aside.leftAside {
 
 #leftSidebarWrapper.collapseComplete a {
     color: var(--myGreen);
+    font-size: 1.5em;
+}
+
+#leftSidebarWrapper i {
+    margin-top: 3px;
 }
 
 #leftSidebarWrapper i.fa-angle-double-left {
@@ -2234,6 +2258,13 @@ aside.leftAside {
 
 #leftSidebarWrapper.collapseComplete i.fa-angle-double-left {
     display: block;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0 -10px 10px 10px;
+    background: var(--myBlack);
+    color: white;
 }
 
 #leftSidebarWrapper.collapseComplete i.fa-angle-double-right {
@@ -2245,7 +2276,14 @@ aside.leftAside {
 }
 
 #leftSidebarWrapper i.fa-angle-double-right {
-    margin-bottom: 0.6em;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-right: -10px;
+    background: var(--myBlack);
+    color: white;
 }
 
 @keyframes showElement {
@@ -2316,7 +2354,7 @@ aside.leftAside {
     color: #658B3B;
 }
 
-.cashStateAlert p:nth-child(2){
+.cashStateAlert p:nth-child(2) {
     font-weight: 100;
 }
 
@@ -2324,4 +2362,18 @@ aside.leftAside {
     background-color: #F2E4E7;
     border: 1px solid #DB4E54;
     color: #DB4E54;
+}
+
+.row.saloonPageContent main {
+    padding: 0;
+}
+
+.quick-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+}
+
+.quick-buttons .mainButton {
+    flex: 0 0 calc(50% - 5px);
 }

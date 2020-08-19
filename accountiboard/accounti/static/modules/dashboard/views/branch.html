@@ -29,12 +29,12 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت شعبه جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()"  aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="addBranch()" href=""  class="mainButton greenButton"><i
+                    <a ng-click="addBranch()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن </a>
                 </div>
                 <div class="modal-body">
@@ -48,19 +48,22 @@
                             </div>
                             <div class="col">
                                 <label>ساعت شروع کاری<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_branch_data.start_time" class="form-control" id="start-time-clock" placeholder="ساعت شروع کاری">
+                                <input ng-model="new_branch_data.start_time" class="form-control" id="start-time-clock"
+                                       placeholder="ساعت شروع کاری">
                             </div>
                             <div class="col">
                                 <label>ساعت پایان کاری<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_branch_data.end_time" class="form-control" id="end-time-clock" placeholder="ساعت پایان کاری">
+                                <input ng-model="new_branch_data.end_time" class="form-control" id="end-time-clock"
+                                       placeholder="ساعت پایان کاری">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="form-check-inline mt-3 mb-3 mr-0">
                                     <label class="form-check-label">
-                                    <input ng-model="new_branch_data.guest_pricing" class="form-check-input" type="checkbox">
-                                    اگر عضو نباشد تخفیف اعمال نمی‌گردد و قیمت‌ها به بالا رند می‌شوند.</label>
+                                        <input ng-model="new_branch_data.guest_pricing" class="form-check-input"
+                                               type="checkbox">
+                                        اگر عضو نباشد تخفیف اعمال نمی‌گردد و قیمت‌ها به بالا رند می‌شوند.</label>
                                 </div>
 
                             </div>
@@ -68,11 +71,14 @@
                         <div class="row">
                             <div class="col">
                                 <label>کمترین واحد پولی دریافتی برای بازی<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_branch_data.min_paid_price" class="form-control" placeholder="قیمت ( ریال )">
+                                <input ng-model="new_branch_data.min_paid_price" class="form-control"
+                                       placeholder="قیمت ( ریال )">
                             </div>
                             <div ng-repeat="game_data_object in new_branch_data.game_data" class="col">
-                                <label>هزینه ساعت {{ game_data_object.which_hour | persianNumber }} بازی<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="game_data_object.price_per_hour" class="form-control" placeholder="قیمت به ازای یک ساعت ( ریال )" format>
+                                <label>هزینه ساعت {{ game_data_object.which_hour | persianNumber }} بازی<i
+                                        class="fas fa-star-of-life"></i></label>
+                                <input ng-model="game_data_object.price_per_hour" class="form-control"
+                                       placeholder="قیمت به ازای یک ساعت ( ریال )" format>
                             </div>
                         </div>
                         <div class="row">
@@ -94,11 +100,17 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchBranch()" ng-model="search_data_branch.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    <a class="addUser mainButton greenButton" ng-click="openAddBranchModal()" data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> شعبه جدید</a>
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton" ng-click="openAddBranchModal()" data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> شعبه جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <form>
+                            <input ng-keyup="searchBranch()" ng-model="search_data_branch.search_word"
+                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                        </form>
+                    </div>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">
@@ -115,7 +127,8 @@
                             <th scope="row">{{ branch.name }}</th>
                             <th scope="row">{{ branch.start_time | persianNumber }}</th>
                             <th scope="row">{{ branch.end_time | persianNumber }}</th>
-                            <td><a ng-click="editBranch(branch.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                            <td><a ng-click="editBranch(branch.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>
                     </table>

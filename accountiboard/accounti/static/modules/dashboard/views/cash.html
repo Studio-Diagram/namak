@@ -117,53 +117,63 @@
                         <div class="col-md-3"></div>
                         <div class="col-md-6">
                             <table class="invoiceTable">
-                        <tbody>
-                        <tr>
-                            <td class="small-text">فروش</td>
-                            <td class="small-text">{{ status.all_sales_price - status.all_discount | number | persianNumber }} ریال </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">پوز بانکی</td>
-                            <td class="small-text">{{ status.all_pos | number | persianNumber }} ریال </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">گزارش پرداخت</td>
-                            <td class="small-text">
-                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.outcome_report">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">بلیط رویداد</td>
-                            <td class="small-text">
-                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.event_tickets">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">گزارش دریافت</td>
-                            <td class="small-text">
-                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.income_report">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">انعام</td>
-                            <td class="small-text">{{ status.all_tip | number | persianNumber }} ریال </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">پول نقد</td>
-                            <td class="small-text">
-                                <input class="form-control" type="number" min="0" ng-model="night_report_inputs.current_money_in_cash">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">صندوق</td>
-                            <td class="small-text">{{ ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }} ریال </td>
-                        </tr>
-                        <tr>
-                            <td class="small-text">اختلاف</td>
-                            <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }} ریال </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                <tbody>
+                                <tr>
+                                    <td class="small-text">فروش</td>
+                                    <td class="small-text">{{ status.all_sales_price - status.all_discount | number | persianNumber }}
+                                        ریال
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">پوز بانکی</td>
+                                    <td class="small-text">{{ status.all_pos | number | persianNumber }} ریال</td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">گزارش پرداخت</td>
+                                    <td class="small-text">
+                                        <input class="form-control" type="number" min="0"
+                                               ng-model="night_report_inputs.outcome_report">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">بلیط رویداد</td>
+                                    <td class="small-text">
+                                        <input class="form-control" type="number" min="0"
+                                               ng-model="night_report_inputs.event_tickets">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">گزارش دریافت</td>
+                                    <td class="small-text">
+                                        <input class="form-control" type="number" min="0"
+                                               ng-model="night_report_inputs.income_report">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">انعام</td>
+                                    <td class="small-text">{{ status.all_tip | number | persianNumber }} ریال</td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">پول نقد</td>
+                                    <td class="small-text">
+                                        <input class="form-control" type="number" min="0"
+                                               ng-model="night_report_inputs.current_money_in_cash">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">صندوق</td>
+                                    <td class="small-text">{{ ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
+                                        ریال
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">اختلاف</td>
+                                    <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
+                                        ریال
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -176,13 +186,16 @@
     <main class="pageContent container-fluid">
         <div class="row saloonPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <a ng-click="open_modal('submit_cash_today_modal')" class="addUser mainButton greenButton" href=""
-                       data-toggle="modal"><i
-                            class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
-                    <a ng-click="print_night_report()" class="addUser mainButton blueButton ml-3" href=""
-                       data-toggle="modal"><i
-                            class="far fa-calendar-check"></i>پرینت گزارش روزانه</a>
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a ng-click="open_modal('submit_cash_today_modal')" class="addUser mainButton greenButton"
+                           href=""
+                           data-toggle="modal"><i
+                                class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
+                        <a ng-click="print_night_report()" class="addUser mainButton blueButton ml-3" href=""
+                           data-toggle="modal"><i
+                                class="far fa-calendar-check"></i>پرینت گزارش روزانه</a>
+                    </div>
                 </div>
                 <div class="container-fluid">
                     <div class="row">

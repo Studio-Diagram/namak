@@ -5,7 +5,8 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">تایید حذف فاکتور</h2>
-                    <a ng-click="delete_invoice_pay(deleteing_invoice_id)" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="delete_invoice_pay(deleteing_invoice_id)" href="" class="mainButton greenButton">
+                        بله</a>
                     <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
@@ -44,7 +45,8 @@
                     </a>
                     <a ng-click="addPay()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();" class="mainButton greenButton"><i
+                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
+                       class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن </a>
@@ -127,10 +129,17 @@
     </div>
 
     <main class="pageContent container-fluid">
-        <div class="tableButtons clearfix">
-            <a ng-click="openAddModal();getNextFactorNumber('PAY')" href="" class="mainButton greenButton tableLefty">پرداختی جدید</a>
-            <input ng-keyup="searchPay()" ng-model="search_data_pay.search_word"
-                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a ng-click="openAddModal();getNextFactorNumber('PAY')" href="" class="mainButton greenButton">پرداختی
+                    جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <form>
+                    <input ng-keyup="searchPay()" ng-model="search_data_pay.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                </form>
+            </div>
         </div>
         <div class="row userPageContent">
             <main class="col-sm-12 ">

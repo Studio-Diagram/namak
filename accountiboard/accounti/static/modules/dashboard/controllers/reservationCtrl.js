@@ -58,7 +58,7 @@ angular.module("dashboard")
                     if (event.keyCode === 27) {
                         jQuery.noConflict();
                         (function ($) {
-                            $($scope.starting_selected_time.class_name).css("background", "none");
+                            $($scope.starting_selected_time.class_name).css("background", "var(--white)");
                             $('.tooltipM').fadeOut()
                         })(jQuery);
                         $scope.starting_selected_time = {
@@ -141,21 +141,21 @@ angular.module("dashboard")
                 if ($scope.last_table_hover) {
                     jQuery.noConflict();
                     (function ($) {
-                        $('#tablename-' + $scope.last_table_hover.table_id).css("background", "none");
+                        $('#tablename-' + $scope.last_table_hover.table_id + ' .reservationCell').not('.reservationHeaderCell').css("background", "var(--white)");
                     })(jQuery);
                 }
                 if ($scope.last_row_hover) {
                     jQuery.noConflict();
                     (function ($) {
-                        $('.reservationCell.' + $scope.last_row_hover).css("background", "none");
+                        $('.reservationCell.' + $scope.last_row_hover).css("background", "var(--white)");
                     })(jQuery);
                 }
                 $scope.last_row_hover = 'H' + hour + 'M' + min;
                 $scope.last_table_hover = table;
                 jQuery.noConflict();
                 (function ($) {
-                    $('#tablename-' + table.table_id).css("background", "#fff");
-                    $('.' + 'H' + hour + 'M' + min).css("background", "#fff");
+                    $('#tablename-' + table.table_id + ' .reservationCell').not('.reservationHeaderCell').css("background", "#eaeff5");
+                    $('.' + 'H' + hour + 'M' + min).css("background", "#eaeff5");
                 })(jQuery);
                 if ($scope.starting_selected_time.class_name) {
                     jQuery.noConflict();
@@ -380,7 +380,7 @@ angular.module("dashboard")
                     for (var i = 0; i < $scope.working_times.length; i++) {
                         jQuery.noConflict();
                         (function ($) {
-                            $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("background", "none");
+                            $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("background", "var(--white)");
                             $('.reservationCell.' + "H" + $scope.working_times[i].hour + "M" + $scope.working_times[i].minute).css("border-color", "var(--pageBorder)");
                         })(jQuery);
                     }
@@ -921,7 +921,7 @@ angular.module("dashboard")
                 };
                 jQuery.noConflict();
                 (function ($) {
-                    $($scope.starting_selected_time.class_name).css("background", "none");
+                    $($scope.starting_selected_time.class_name).css("background", "var(--white)");
                 })(jQuery);
                 $scope.starting_selected_time = {
                     "is_hour": 0,

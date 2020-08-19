@@ -28,12 +28,13 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت کارمند جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeAddEmployeeModal()"  aria-label="Close">
+                    <a class="mainButton redButton closeModal" ng-click="closeAddEmployeeModal()" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="registerEmployee()" href=""  class="mainButton greenButton"><i
+                    <a ng-click="registerEmployee()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="InitializeAndResetForm()" href=""  class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-click="InitializeAndResetForm()" href="" class="mainButton grayButton"><i
+                            class="fas fa-eraser"></i>
                         پاک کردن </a>
                 </div>
                 <div class="modal-body">
@@ -110,7 +111,8 @@
                             <div ng-repeat="auth_level in new_employee_data.auth_levels"
                                  class="checkbox-unit col">
                                 <label class="checkbox-item">
-                                    <input style="float: left;" ng-checked="auth_level.is_checked" ng-model="auth_level.is_checked_m"
+                                    <input style="float: left;" ng-checked="auth_level.is_checked"
+                                           ng-model="auth_level.is_checked_m"
                                            type="checkbox"
                                            ng-click="changeAuthCheckBox(auth_level.id)">{{ auth_level.name }}
                                 </label>
@@ -121,7 +123,8 @@
                             <div ng-repeat="branch in new_employee_data.employee_branches"
                                  class="checkbox-unit col">
                                 <label class="checkbox-item">
-                                    <input style="float: left;" ng-checked="branch.is_checked" ng-model="branch.is_checked_m"
+                                    <input style="float: left;" ng-checked="branch.is_checked"
+                                           ng-model="branch.is_checked_m"
                                            type="checkbox"
                                            ng-click="changeEmployeeBranchCheckBox(branch.id)">{{ branch.name }}
                                 </label>
@@ -138,11 +141,17 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchEmployee()" ng-model="serach_data_employee.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    <a class="addUser mainButton greenButton" ng-click="openAddEmployeeModal()" data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> کارمند جدید</a>
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton" ng-click="openAddEmployeeModal()" data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> کارمند جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <form>
+                            <input ng-keyup="searchEmployee()" ng-model="serach_data_employee.search_word"
+                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                        </form>
+                    </div>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">
@@ -157,9 +166,12 @@
                         <tbody>
                         <tr ng-repeat="employee in employees">
                             <th scope="row">{{ employee.full_name }}</th>
-                            <td><span ng-repeat="auth_level in employee.auth_levels">{{ showAuthName(auth_level) }}, </span></td>
+                            <td><span
+                                    ng-repeat="auth_level in employee.auth_levels">{{ showAuthName(auth_level) }}, </span>
+                            </td>
                             <td><span ng-repeat="branch in employee.branches">{{ branch.name }}، </span></td>
-                            <td><a ng-click="editEmployee(employee.id)" href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                            <td><a ng-click="editEmployee(employee.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>
                     </table>

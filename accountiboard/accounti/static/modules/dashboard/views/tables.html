@@ -102,18 +102,13 @@
             <main class="col-sm-12 ">
                 <div class="row">
                     <div class="col">
-                        <div class="tableButtons clearfix">
-                            <a class="addUser mainButton greenButton" ng-click="openAddTableModal()"
-                               data-toggle="modal"><i
-                                    class="fas fa-user-plus"></i> میز جدید</a>
-                            <a style="margin-left: 10px" class="addUser mainButton greenButton"
-                               ng-click="openAddTableCategoryModal()" data-toggle="modal"><i
-                                    class="fas fa-user-plus"></i>گروه میز جدید</a>
+                        <div class="tableButtons">
+                            <div class="buttonGroup">
+                                <a class="addUser mainButton greenButton" ng-click="openAddTableModal()"
+                                   data-toggle="modal"><i
+                                        class="fas fa-user-plus"></i> میز جدید</a>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
                         <div class="tableWrapper">
                             <table class="table">
                                 <thead>
@@ -136,6 +131,13 @@
                         </div>
                     </div>
                     <div class="col">
+                        <div class="tableButtons">
+                            <div class="buttonGroup">
+                                <a style="margin-left: 10px" class="addUser mainButton greenButton"
+                                   ng-click="openAddTableCategoryModal()" data-toggle="modal"><i
+                                        class="fas fa-user-plus"></i>گروه میز جدید</a>
+                            </div>
+                        </div>
                         <div class="tableWrapper">
                             <table class="table">
                                 <thead>

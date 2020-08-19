@@ -371,31 +371,33 @@
     </div>
     <main class="pageContent container-fluid">
         <div class="row reservationPageContent">
-            <div class="tableButtons clearfix">
-                <a ng-click="openAddModal()" class="tableLefty mainButton greenButton" href=""
-                   data-toggle="modal"><i
-                        class="fas fa-user-plus"></i> رزرو جدید</a>
-                <a ng-click="openAddWalkedModal()" class="tableLefty mainButton blueButton" href=""
-                   data-toggle="modal"><i
-                        class="fas fa-user-plus"></i> مشتری حضوری جدید</a>
-                <a ng-click="openWaitingListModal()" class="tableLefty mainButton yellowButton" href=""
-                   data-toggle="modal"><i
-                        class="fas fa-user-plus"></i> لیست انتظار</a>
+            <div class="tableButtons">
+                <div class="buttonGroup">
+                    <a ng-click="openAddModal()" class=" mainButton greenButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> رزرو جدید</a>
+                    <a ng-click="openAddWalkedModal()" class=" mainButton blueButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> مشتری حضوری جدید</a>
+                    <a ng-click="openWaitingListModal()" class=" mainButton yellowButton" href=""
+                       data-toggle="modal"><i
+                            class="fas fa-user-plus"></i> لیست انتظار</a>
+                </div>
+                <div class="buttonGroup">
+                    <a ng-click="get_today_for_reserve()"
+                       class=" mainButton blueButton" href=""
+                       data-toggle="modal"> امروز </a>
+                    <a ng-click="get_tomorrow_reserves()"
+                       class=" mainButton blueButton" href=""
+                       data-toggle="modal"> فردا </a>
 
-
-                <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_today_for_reserve()"
-                   class="tableLefty mainButton blueButton" href=""
-                   data-toggle="modal"> امروز </a>
-                <a style="float: right !important;margin: 0 5px 0 0 !important;" ng-click="get_tomorrow_reserves()"
-                   class="tableLefty mainButton blueButton" href=""
-                   data-toggle="modal"> فردا </a>
-
-                <input style="width: 20%;float: right;margin-left: 10px;margin-right: 10px" ng-model="fixed_date"
-                       type="text"
-                       class="form-control" placeholder="تاریخ" id="datepicker">
-                <a style="float: right !important;margin: 0 !important;" ng-click="change_date()"
-                   class="tableLefty mainButton blueButton" href=""
-                   data-toggle="modal"> روز را تغییر بده !</a>
+                    <form><input ng-model="fixed_date"
+                           type="text"
+                           class="form-control" placeholder="تاریخ" id="datepicker"></form>
+                    <a ng-click="change_date()"
+                       class=" mainButton blueButton" href=""
+                       data-toggle="modal"> روز را تغییر بده !</a>
+                </div>
             </div>
             <main class="col-sm-12 overflow-auto d-flex">
                 <div class="reservationTable reservationTableTimes">

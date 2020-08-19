@@ -90,15 +90,16 @@
     </div>
 
     <main class="pageContent container-fluid">
-        <div class="tableButtons clearfix">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">تامین کنندگان</li>
-                </ol>
-            </nav>
-            <a ng-click="openAddModal()" href="" class="mainButton greenButton tableLefty">تامین‌کننده جدید</a>
-            <input ng-keyup="searchSupplier()" ng-model="search_data_supplier.search_word"
-                   class="form-control listFilter tableLefty" type="search" placeholder="فیلتر کن">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a ng-click="openAddModal()" href="" class="mainButton greenButton">تامین‌کننده جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <form>
+                    <input ng-keyup="searchSupplier()" ng-model="search_data_supplier.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                </form>
+            </div>
         </div>
         <div class="row userPageContent">
             <main class="col-sm-12 ">
@@ -124,7 +125,9 @@
                             <td>{{ supplier.salesman_name }}</td>
                             <td>{{ supplier.salesman_phone }}</td>
                             <td>{{ supplier.last_pay | persianNumber }}</td>
-                            <td><span ng-class="supplier.remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ supplier.remainder | number | persianNumber }} ریال</span></td>
+                            <td><span
+                                    ng-class="supplier.remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ supplier.remainder | number | persianNumber }} ریال</span>
+                            </td>
                             <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
