@@ -145,6 +145,7 @@ class RegisterCafeOwnerView(View):
 class ForgotPasswordView(View):
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
+        sms_verified = False
 
         validator = ForgotPasswordValidator(rec_data)
         if not validator.is_valid():
@@ -175,6 +176,9 @@ class ForgotPasswordView(View):
             if sms_token.token == sms_verify_token:
                 sms_verified = True
                 break
+
+        if not sms_verified:
+            return JsonResponse({'error_msg': PHONE_VALIDATOR_ERROR}, status=401)
 
         current_user = User.objects.get(phone=phone)
         current_user.password = make_password(password)
