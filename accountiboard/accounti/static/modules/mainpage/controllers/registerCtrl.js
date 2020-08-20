@@ -53,13 +53,11 @@ angular.module("mainpage")
         };
 
         $scope.send_verify_code_to_phone = function () {
-            $scope.form_state.is_loading = true;
             jQuery.noConflict();
             (function ($) {
                 grecaptcha.ready(function () {
                     grecaptcha.execute('6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm', {action: 'submit'}).then(function (token) {
-                        $scope.minutes_counter = 120;
-                        $scope.resend_verification_enable = false;
+
                         $scope.form_state.is_loading = true;
                         $scope.form_state.is_error = false;
                         mainpageHttpRequest.phoneVerify({

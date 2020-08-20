@@ -73,6 +73,13 @@ angular.module('mainpage')
                     'url': "/api/phone-verify/",
                     'data': data
                 });
+            },
+            'forgetPassword': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/forgotpassword/",
+                    'data': data
+                });
             }
         };
         return service;

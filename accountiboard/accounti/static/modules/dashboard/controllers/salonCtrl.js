@@ -1629,7 +1629,7 @@ angular.module("dashboard")
                 return 'mainButton greenButton fullWidthButton';
             }
             else if ($scope.current_selected_table_name === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
-                return 'mainButton blackButton fullWidthButton';
+                return 'mainButton oilBlueButton fullWidthButton';
             }
             else if ($scope.current_selected_table_name !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
                 return 'mainButton whiteButton fullWidthButton';

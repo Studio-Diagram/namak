@@ -224,12 +224,13 @@ form.generalForm .referButtonWrapper span {
 .forgetPasswordLink {
     font-size: 0.9em;
     font-weight: 100;
-    vertical-align: super;
     margin-right: 1em;
+    display: flex;
+    align-self: center;
 }
 
 form.generalForm .submitButtonWrapper {
-    display: inline-block;
+    display: flex;
     width: 100%;
     text-align: right;
     margin-bottom: 0;
@@ -441,6 +442,18 @@ button.oilBlueButton {
 }
 
 button.oilBlueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+a.oilBlueButton {
+    background-color: var(--navBarLine);
+    border-color: var(--oilBlueBorder);
+    color: white;
+}
+
+a.oilBlueButton:hover {
     background: var(--myBlueBorder);
     color: white;
     cursor: pointer;
@@ -2388,4 +2401,16 @@ aside.leftAside {
 
 .submitButton.btn.oilBlueButton.fullWidthButton:disabled {
     cursor: not-allowed;
+}
+
+#sendVerifyCodeForgetPassword {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#changePasswordForgetPassword {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
 }

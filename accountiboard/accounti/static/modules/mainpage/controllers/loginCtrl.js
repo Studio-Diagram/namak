@@ -16,6 +16,7 @@ angular.module("mainpage")
 
         $scope.send_login_data = function () {
             $scope.form_state.is_loading = true;
+            $scope.form_state.is_error = false;
             jQuery.noConflict();
             (function ($) {
                 grecaptcha.ready(function () {
