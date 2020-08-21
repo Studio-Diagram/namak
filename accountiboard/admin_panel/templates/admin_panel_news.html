@@ -47,9 +47,9 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Cafes</a></li>
-                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
-                <li class="pure-menu-item"><a href="/admin-panel/bugreports/" class="pure-menu-link">Bug Reports</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">کافه ها</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/news/" class="pure-menu-link">اخبار</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
             </ul>
         </div>
     </div>
@@ -57,24 +57,24 @@
     <div id="main">
         <div class="header">
             <h1>Namak Admin</h1>
-            <h2>Latest News</h2>
+            <h2>لیست اخبار</h2>
         </div>
 
         <div class="content">
-            <a href="/admin-panel/news/create/"><button class="button-success pure-button" id="create-news-button">Create News</button></a>
+            <a href="/admin-panel/news/create/"><button class="button-success pure-button" id="create-news-button">ساخت اخبار جدید</button></a>
             
 
-            <h2 class="content-subhead">لیست News</h2>
+            <h2 class="content-subhead">لیست اخبار</h2>
 
             <table class="pure-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Title</th>
-                        <th>Text</th>
-                        <th>Link</th>
-                        <th>Datetime</th>
-                        <th>Delete</th>
+                        <th>عنوان</th>
+                        <th>متن</th>
+                        <th>لینک</th>
+                        <th>زمان</th>
+                        <th>حذف</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,7 +91,7 @@
                         <td>{{news.news_datetime}}</td>
                         <td>
                             <form action="/admin-panel/news/delete/{{news.news_id}}/" method="post">
-                                <input class="button-error pure-button" type="submit" value="Delete">
+                                <input class="button-error pure-button" type="submit" value="حذف">
                             </form>
                         </td>
                     </tr>

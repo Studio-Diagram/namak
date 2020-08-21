@@ -23,9 +23,9 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Cafes</a></li>
-                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
-                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/bugreports/" class="pure-menu-link">Bug Reports</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">کافه ها</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">اخبار</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
             </ul>
         </div>
     </div>
@@ -33,24 +33,24 @@
     <div id="main">
         <div class="header">
             <h1>Namak Admin</h1>
-            <h2>Bug reports</h2>
+            <h2>لیست گزارش های باگ</h2>
         </div>
 
         <div class="content">
             
 
-            <h2 class="content-subhead">لیست Bug Reports</h2>
+            <h2 class="content-subhead">لیست گزارش های باگ</h2>
 
             <table class="pure-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Title</th>
-                        <th>Text</th>
-                        <th>User</th>
-                        <th>Image</th>
-                        <th>Datetime</th>
-                        <th>Detail</th>
+                        <th>عنوان</th>
+                        <th>متن</th>
+                        <th>کاربر</th>
+                        <th>عکس</th>
+                        <th>زمان</th>
+                        <th>جزییات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,13 +66,13 @@
                         <td>{{bugreport.bugreport_user}}</td>
 
                         {% if bugreport.bugreport_image %}
-                            <td><a href="/media/{{bugreport.bugreport_image}}">show</a></td>
+                            <td><a href="/media/{{bugreport.bugreport_image}}">باز کن</a></td>
                         {% else %}
                             <td>No image</td>
                         {% endif %}
 
                         <td>{{bugreport.bugreport_datetime}}</td>
-                        <td><a href="/admin-panel/bugreports/{{bugreport.bugreport_id}}/">detail</a></td>
+                        <td><a href="/admin-panel/bugreports/{{bugreport.bugreport_id}}/">جزییات</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

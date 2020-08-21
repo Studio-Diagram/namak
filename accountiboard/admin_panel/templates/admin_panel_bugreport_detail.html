@@ -23,9 +23,9 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Cafes</a></li>
-                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
-                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/bugreports/" class="pure-menu-link">Bug Reports</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">کافه ها</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">اخبار</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
             </ul>
         </div>
     </div>
@@ -33,29 +33,29 @@
     <div id="main">
         <div class="header">
             <h1>Namak Admin</h1>
-            <h2>Bug report Detail</h2>
+            <h2>جزییات گزارش باگ</h2>
         </div>
 
         <div class="content">
             
 
-            <h2 class="content-subhead">جزییات Bug Reports</h2>
+            <h2 class="content-subhead">جزییات گزارش باگ</h2>
 
-            <h3>Title</h3>
+            <h3>عنوان</h3>
             <p>{{bugreport.bugreport_title}}</p>
 
-            <h3>Text</h3>
+            <h3>متن</h3>
             <p>{{bugreport.bugreport_text}}</p>
 
 
-            <h3>User</h3>
+            <h3>کاربر</h3>
             <p>{{bugreport.bugreport_user}}</p>
 
-            <h3>Datetime</h3>
+            <h3>زمان</h3>
             <p>{{bugreport.bugreport_datetime}}</p>
 
 
-            <h3>Image</h3>
+            <h3>عکس</h3>
             <img src="/media/{{bugreport.bugreport_image}}">
 
 

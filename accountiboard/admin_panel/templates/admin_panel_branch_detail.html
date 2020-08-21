@@ -23,9 +23,9 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">Cafes</a></li>
-                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">News</a></li>
-                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/bugreports/" class="pure-menu-link">Bug Reports</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">کافه ها</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/news/" class="pure-menu-link">اخبار</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
             </ul>
         </div>
     </div>
@@ -33,22 +33,22 @@
     <div id="main">
         <div class="header">
             <h1>Namak Admin</h1>
-            <h2>Branch Detail</h2>
+            <h2>جزییات شعبه</h2>
         </div>
 
         <div class="content">
             
 
-            <h2 class="content-subhead">جزییات Branch</h2>
+            <h2 class="content-subhead">جزییات شعبه</h2>
 
-            <h3>Name</h3>
+            <h3>نام شعبه</h3>
             <p>{{branch.branch_name}}</p>
 
-            <h3>Organization</h3>
+            <h3>کمپانی</h3>
             <p>{{branch.branch_organization}}</p>
 
 
-            <h3>Cafe owner</h3>
+            <h3>صاحب کافه</h3>
             <p>{{branch.branch_cafeowner}}</p>
 
 
@@ -64,48 +64,48 @@
                 </thead>
                 <tbody>
                             <tr>
-                                <td>Employees</td>
+                                <td>کارمندان</td>
                                 <td>{{branch.branch_employee_count}}</td>
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Members</td>
+                                <td>عضوها</td>
                                 <td>{{branch.branch_member_count}}</td>
                             </tr>
 
                             <tr>
-                                <td>Printers</td>
+                                <td>پرینتر</td>
                                 <td>{{branch.branch_printer_count}}</td>
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Menu Categories</td>
+                                <td>کاتگوری های منو</td>
                                 <td>{{branch.branch_menu_category_count}}</td>
                             </tr>
 
                             <tr>
-                                <td>Boardgames</td>
+                                <td>برد گیم ها</td>
                                 <td>{{branch.branch_boardgame_count}}</td>
                             </tr>
 
 
                             <tr class="pure-table-odd">
-                                <td>Table Categories</td>
+                                <td>کاتگوری های میز</td>
                                 <td>{{branch.branch_table_category_count}}</td>
                             </tr>
 
                             <tr>
-                                <td>Tables</td>
+                                <td>میز ها</td>
                                 <td>{{branch.branch_table_count}}</td>
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Games</td>
+                                <td>بازی ها</td>
                                 <td>{{branch.branch_game_count}}</td>
                             </tr>
 
                             <tr>
-                                <td>Shop Products</td>
+                                <td>محصولات فروشگاهی</td>
                                 <td>{{branch.branch_shop_product_count}}</td>
                             </tr>
 
@@ -120,36 +120,36 @@
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Invoice Settlements</td>
+                                <td>فاکتور های پرداخت</td>
                                 <td>{{branch.branch_invoice_settlement_count}}</td>
                             </tr>
 
                             <tr>
-                                <td>Invoice Purchases</td>
+                                <td>فاکتور های خرید</td>
                                 <td>{{branch.branch_invoice_purchase_count}}</td>
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Invoice Expenses</td>
+                                <td>فاکتور های هزینه</td>
                                 <td>{{branch.branch_invoice_expense_count}}</td>
                             </tr>
 
                             <tr>
-                                <td>Invoice Returns</td>
+                                <td>فاکتور های مرجوعی</td>
                                 <td>{{branch.branch_invoice_return_count}}</td>
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Suppliers</td>
+                                <td>تامین کنندگان</td>
                                 <td>{{branch.branch_supplier_count}}</td>
                             </tr>
                             <tr>
-                                <td>Reservations</td>
+                                <td>رزرو ها</td>
                                 <td>{{branch.branch_reservation_count}}</td>
                             </tr>
 
                             <tr class="pure-table-odd">
-                                <td>Lotteries</td>
+                                <td>قرعه کشی ها</td>
                                 <td>{{branch.branch_lottery_count}}</td>
                             </tr>
                 </tbody>
