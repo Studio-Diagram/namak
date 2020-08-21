@@ -68,6 +68,7 @@ ZERO_PRICE = 0
 UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است."
 BANKING_NOT_FOUND = "حساب بانکی یافت نشد."
 PASSWORD_CHANGED = "رمز ورود با موفقیت تغییر یافت"
+DATA_REQUIRE_BRANCH = 'حداقل یکی از شعبه ها را باید انتخاب کنید'
 
 USER_TYPE = {
     "cafe_owner": 1,

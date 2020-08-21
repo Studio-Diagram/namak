@@ -12,13 +12,15 @@ angular.module("dashboard")
             };
             $scope.get_banking_data();
             $scope.get_branches_data();
+            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
         };
 
         $scope.get_banking_data = function () {
             dashboardHttpRequest.getBanking()
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    $scope.branches = $rootScope.user_data.branches;
+                    // $scope.branches = $rootScope.user_data.branches;
+                    angular.copy($rootScope.user_data.branches, $scope.branches)
                     $scope.banks = data['bank'];
                     $scope.tankhahs = data['tankhah'];
                     $scope.cash_registers = data['cash_register'];
@@ -64,7 +66,6 @@ angular.module("dashboard")
         };
 
         $scope.addBanking = function () {
-            console.log($scope.new_banking_data);
             dashboardHttpRequest.addBanking($scope.new_banking_data)
                 .then(function (data) {
                     $scope.get_banking_data();
@@ -72,7 +73,7 @@ angular.module("dashboard")
                     $rootScope.close_modal('addBankingModal');
                     
                 }, function (error) {
-                    $scope.error_message = error;
+                    $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal', 'addBankingModal');
                 });
         };
@@ -84,6 +85,7 @@ angular.module("dashboard")
                     // $scope.new_banking_data.branches = $scope.branches;
                     $scope.new_banking_data = {
                         'branches':$scope.branches,
+                        // 'branches':[],
                         'type':'',
                         'name': '',
                         'bank_name': '',
@@ -91,6 +93,7 @@ angular.module("dashboard")
                         'bank_card_number': '',
                         'shaba_number': '',
                     };
+                    angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
 
 
                     var branches = data['branches'];
@@ -179,6 +182,7 @@ angular.module("dashboard")
                 'shaba_number': '',
             };
             $scope.clearBankingBranchesCheckboxes();
+            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
         };
 
         initialize();
