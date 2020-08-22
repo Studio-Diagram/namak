@@ -741,7 +741,6 @@ form h3 {
 }
 
 form .row {
-    padding: 0 15px;
     margin-bottom: 5px;
 }
 
@@ -2413,4 +2412,9 @@ aside.leftAside {
     visibility: hidden;
     opacity: 0;
     display: none;
+}
+
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
