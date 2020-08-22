@@ -16,11 +16,14 @@ This set of fonts are used in this project under the license: (.....)
 --------------------------------------------------------------------------------------
 *	
 **/
+body {
+	direction: ltr !important;
+}
 @font-face {
 	font-family: IRANSans;
 	font-style: normal;
 	font-weight: 900;
-	src: url('/static/fonts/eot/IRANSansWeb_Black.eot');
+	src: url(/static/fonts/eot/IRANSansWeb_Black.eot);
 	src: url('/static/fonts/eot/IRANSansWeb_Black.eot?#iefix') format('embedded-opentype'),  /* IE6-8 */
 		 url('/static/fonts/woff2/IRANSansWeb_Black.woff2') format('woff2'),  /* FF39+,Chrome36+, Opera24+*/
 		 url('/static/fonts/woff/IRANSansWeb_Black.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
