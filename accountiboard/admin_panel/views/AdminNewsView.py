@@ -46,7 +46,7 @@ class AdminNewsCreateView(View):
             )
 
             # redirect to a new URL:
-            return HttpResponseRedirect('/admin-panel/news/')
+            return HttpResponseRedirect('/onward/news/')
 
 
     def get(self, request, *args, **kwargs):
@@ -65,5 +65,5 @@ class AdminNewsDeleteView(View):
 
         current_news.delete()
 
-        return HttpResponseRedirect('/admin-panel/news/')
+        return HttpResponseRedirect('/onward/news/')
 

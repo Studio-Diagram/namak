@@ -47,9 +47,9 @@
             <a class="pure-menu-heading" href="#">ادمین نمک</a>
 
             <ul class="pure-menu-list">
-                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">کافه ها</a></li>
-                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/news/" class="pure-menu-link">اخبار</a></li>
-                <li class="pure-menu-item"><a href="/admin-panel/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
+                <li class="pure-menu-item"><a href="/onward/" class="pure-menu-link">کافه ها</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/onward/news/" class="pure-menu-link">اخبار</a></li>
+                <li class="pure-menu-item"><a href="/onward/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
             </ul>
         </div>
     </div>
@@ -61,7 +61,7 @@
         </div>
 
         <div class="content">
-            <a href="/admin-panel/news/create/"><button class="button-success pure-button" id="create-news-button">ساخت اخبار جدید</button></a>
+            <a href="/onward/news/create/"><button class="button-success pure-button" id="create-news-button">ساخت اخبار جدید</button></a>
             
 
             <h2 class="content-subhead">لیست اخبار</h2>
@@ -90,7 +90,7 @@
                         <td>{{news.news_link}}</td>
                         <td>{{news.news_datetime}}</td>
                         <td>
-                            <form action="/admin-panel/news/delete/{{news.news_id}}/" method="post">
+                            <form action="/onward/news/delete/{{news.news_id}}/" method="post">
                                 <input class="button-error pure-button" type="submit" value="حذف">
                             </form>
                         </td>

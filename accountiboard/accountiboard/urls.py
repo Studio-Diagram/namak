@@ -181,13 +181,13 @@ urlpatterns = [
     # End of offline APIs URLs
 
     # Admin panel
-    path('admin-panel/', AdminGeneralView.AdminView.as_view()),
-    path('admin-panel/news/', AdminNewsView.AdminNewsView.as_view()),
-    path('admin-panel/news/create/', AdminNewsView.AdminNewsCreateView.as_view()),
-    path('admin-panel/news/delete/<int:latestnews_id>/', AdminNewsView.AdminNewsDeleteView.as_view()),
-    path('admin-panel/bugreports/', AdminBugReportView.AdminBugReportsView.as_view()),
-    path('admin-panel/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
-    path('admin-panel/branches/<int:branch_id>/', AdminBranchView.AdminBranchDetailView.as_view()),
+    path('onward/', AdminGeneralView.AdminView.as_view()),
+    path('onward/news/', AdminNewsView.AdminNewsView.as_view()),
+    path('onward/news/create/', AdminNewsView.AdminNewsCreateView.as_view()),
+    path('onward/news/delete/<int:latestnews_id>/', AdminNewsView.AdminNewsDeleteView.as_view()),
+    path('onward/bugreports/', AdminBugReportView.AdminBugReportsView.as_view()),
+    path('onward/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
+    path('onward/branches/<int:branch_id>/', AdminBranchView.AdminBranchDetailView.as_view()),
 
 
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
