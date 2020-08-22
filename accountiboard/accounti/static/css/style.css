@@ -2160,7 +2160,8 @@ aside.leftAside {
 }
 
 #rightSidebarPageContentWrapper {
-    width: calc(100vw - 60px);
+    width: 250px;
+    min-width: 250px;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all all 0.3s ease-in-out;
     -ms-transition: all all 0.3s ease-in-out;
@@ -2171,6 +2172,15 @@ aside.leftAside {
 #rightSidebarPageContentWrapper .row {
     margin-left: 0;
     margin-right: 0;
+}
+
+#mainPageContentWrapper {
+    width: calc(100vw - 310px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
 }
 
 #leftSidebarWrapper {
@@ -2190,17 +2200,8 @@ aside.leftAside {
     height: calc(100vh - 77px);
 }
 
-#rightSidebarPageContentWrapper.collapseComplete {
-    width: calc(100vw - 300px);
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all all 0.3s ease-in-out;
-    -ms-transition: all all 0.3s ease-in-out;
-    -o-transition: all all 0.3s ease-in-out;
-    transition: all all 0.3s ease-in-out;
-}
-
 #leftSidebarWrapper.collapseComplete {
-    width: 300px;
+    width: 400px;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all all 0.3s ease-in-out;
     -ms-transition: all all 0.3s ease-in-out;
