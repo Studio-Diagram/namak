@@ -897,6 +897,9 @@
                 <div ng-hide="current_selected_table_name" class="tableWrapper">
                     <table class="table">
                         <thead>
+                        </thead>
+                        <h3 class="tableName">فاکتورهای امروز</h3>
+                        <tbody>
                         <tr>
                             <th scope="col">نام مهمان</th>
                             <th scope="col">میز</th>
@@ -907,8 +910,6 @@
                             <th scope="col">ساعت تسویه</th>
                             <th scope="col"></th>
                         </tr>
-                        </thead>
-                        <tbody>
                         <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
                             <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.table_name }}</td>

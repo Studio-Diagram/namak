@@ -28,8 +28,13 @@ class PhoneVerifyView(View):
             return JsonResponse({"error_msg": phone_validator.get_errors()[0]}, status=400)
 
         if verify_type == "REGISTER":
+            sms_template = settings.SMS_TEMPLATES.get('REGISTRATION')
             if User.objects.filter(phone=phone).count() > 0:
                 return JsonResponse({"error_msg": PHONE_ALREADY_EXIST}, status=403)
+        elif verify_type == "FORGET":
+            sms_template = settings.SMS_TEMPLATES.get('FORGET_PASSWORD')
+        else:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         recaptcha_verify_data = {
             'secret': settings.RECAPTCHA_SECRET_KEY,
@@ -40,11 +45,11 @@ class PhoneVerifyView(View):
         recaptcha_request_json = recaptcha_request.json()
 
         if recaptcha_request_json['success']:
-            send_verify_phone_sms(phone)
+            send_verify_phone_sms(phone, sms_template)
 
         else:
             return JsonResponse({
-                'error_msg': 'recaptcha token invalid',
+                'error_msg': CAPTCHA_INVALID,
             }, status=401)
 
         return JsonResponse({
