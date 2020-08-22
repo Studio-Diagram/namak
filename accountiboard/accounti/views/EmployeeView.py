@@ -69,7 +69,7 @@ class LoginView(View):
             user_role = employee_object.employee_roles
             branches = EmployeeToBranch.objects.filter(employee=employee_object)
             branch_object = branches.first().branch.id
-            organization_name = branches.first().organization.name
+            organization_name = branches.first().branch.organization.name
             user_branches = [{
                 "id": employee_to_branch.branch.id,
                 "name": employee_to_branch.branch.name,
