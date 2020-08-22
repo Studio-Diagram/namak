@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Namak Admin Panel">
+    <title>Namak Admin</title>
+    <link rel="stylesheet" href="{% static '/css/pure/pure-min.css' %}" >
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+
+    <style scoped="">
+        .button-error,
+        .button-success,
+        .button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65);
+            /* this is a green */
+        }
+        .button-error {
+                    background: rgb(202, 60, 60);
+                    /* this is a maroon */
+        }
+        #create-news-button {
+            margin-top: 1em;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="#">ادمین نمک</a>
+
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a href="/admin-panel/" class="pure-menu-link">کافه ها</a></li>
+                <li class="pure-menu-item pure-menu-selected"><a href="/admin-panel/news/" class="pure-menu-link">اخبار</a></li>
+                <li class="pure-menu-item"><a href="/admin-panel/bugreports/" class="pure-menu-link">گزارش های باگ</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="main">
+        <div class="header">
+            <h1>Namak Admin</h1>
+            <h2>لیست اخبار</h2>
+        </div>
+
+        <div class="content">
+            <a href="/admin-panel/news/create/"><button class="button-success pure-button" id="create-news-button">ساخت اخبار جدید</button></a>
+            
+
+            <h2 class="content-subhead">لیست اخبار</h2>
+
+            <table class="pure-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>عنوان</th>
+                        <th>متن</th>
+                        <th>لینک</th>
+                        <th>زمان</th>
+                        <th>حذف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for news in all_news %}
+                        {% if news.highlight %}
+                            <tr>
+                        {% else %}
+                            <tr class="pure-table-odd">
+                        {% endif %}
+                        <td>{{news.number}}</td>
+                        <td>{{news.news_title}}</td>
+                        <td>{{news.news_text}}</td>
+                        <td>{{news.news_link}}</td>
+                        <td>{{news.news_datetime}}</td>
+                        <td>
+                            <form action="/admin-panel/news/delete/{{news.news_id}}/" method="post">
+                                <input class="button-error pure-button" type="submit" value="حذف">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- <script src="{% static '/js/ui.js' %}"></script> -->
+
+</body>
+</html>

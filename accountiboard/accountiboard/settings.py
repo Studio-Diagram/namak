@@ -23,7 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '07m4jfcu&ejvlu_umu-dm&(qbbhj$o0r8yi60akowb3+abf89a'
 JWT_SECRET = 'qZRfj90L5^3bz{pB8[p_H?&nC!W3@V#fLj]O;Nu*/7}P.%Tofp'
 
-ADMINS = [('Iman Shafiei', 'imanshafiei540@gmail.com')]
+ADMINS = [
+    ('Iman Shafiei', 'imanshafiei540@gmail.com'),
+    ('Sohrab Alimardani', 'serpent_code@protonmail.com'),
+]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.DEBUG
 
@@ -51,6 +54,7 @@ RECAPTCHA_SECRET_KEY = '6LenhbwZAAAAAGl4zUfwmXUXqLddrkOM3IANGiaD'
 
 INSTALLED_APPS = [
     'accounti.apps.AccountiConfig',
+    'admin_panel.apps.AdminPanelConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,7 +85,7 @@ ROOT_URLCONF = 'accountiboard.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'admin_panel', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
