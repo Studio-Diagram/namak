@@ -266,7 +266,7 @@ angular.module("dashboard")
         };
 
         $scope.get_banking_data = function () {
-            dashboardHttpRequest.getBanking()
+            dashboardHttpRequest.getBankingByBranch($rootScope.user_data.branch)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     $scope.allbanking_names = [];

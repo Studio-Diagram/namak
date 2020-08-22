@@ -150,6 +150,7 @@ urlpatterns = [
 
     path('api/banking/<int:id>/', BankingView.BankingDetailView.as_view()),
     path('api/banking/', BankingView.BankingView.as_view()),
+    path('api/bankingByBranch/<str:branch_id>/', BankingView.BankingByBranchView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

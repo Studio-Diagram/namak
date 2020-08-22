@@ -185,3 +185,47 @@ class BankingDetailView(View):
 
 
 
+class BankingByBranchView(View):
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      branch_disable=True)
+    def get(self, request, branch_id, *args, **kwargs):
+        payload = request.payload
+        branch_id_list_jwt = {x['id'] for x in payload['sub_branch_list']}
+        cash_register = []
+        tankhah = []
+        bank = []
+
+        if not branch_id:
+            return JsonResponse({
+                'error_msg': DATA_REQUIRE
+            }, status=400)
+
+        current_branch = int(branch_id)
+
+        if current_branch not in branch_id_list_jwt:
+            return JsonResponse({
+                'error_msg': ACCESS_DENIED
+            }, status=403)
+
+        banking_to_branch = BankingToBranch.objects.filter(branch=current_branch)
+        bankings_list = [x.banking for x in banking_to_branch]
+
+        cash_registers_query = CashRegister.objects.filter(pk__in=bankings_list)
+        tankhahs_query = Tankhah.objects.filter(pk__in=bankings_list)
+        banks_query = Bank.objects.filter(pk__in=bankings_list)
+
+        for x in cash_registers_query:
+            cash_register.append({'id':x.id, 'name':x.name, 'type':'CASH_REGISTER', })
+
+        for x in tankhahs_query:
+            tankhah.append({'id':x.id, 'name':x.name, 'type':'TANKHAH'})
+
+        for x in banks_query:
+            bank.append({'id':x.id, 'name':x.name, 'type':'BANK'})
+
+        return JsonResponse({
+                'cash_register': cash_register,
+                'tankhah': tankhah,
+                'bank': bank,
+        }, status=200)

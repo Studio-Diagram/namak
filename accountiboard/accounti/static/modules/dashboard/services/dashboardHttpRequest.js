@@ -977,6 +977,12 @@ angular.module('dashboard')
                     'url': "/api/banking/" + id + "/"
                 });
             },
+            'getBankingByBranch': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/bankingByBranch/" + id + "/"
+                });
+            },
             'addBanking': function (data) {
                 return this.request({
                     'method': "POST",
