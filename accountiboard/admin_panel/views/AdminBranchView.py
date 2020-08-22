@@ -1,6 +1,7 @@
 from django.views import View
 from django.shortcuts import render
 from accounti.models import *
+from django.http import HttpResponse
 
 class AdminBranchDetailView(View):
 

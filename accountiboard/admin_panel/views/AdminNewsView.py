@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from admin_panel.forms.CreateNewsForm import *
 from accounti.models import *
 
