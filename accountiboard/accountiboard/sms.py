@@ -25,7 +25,7 @@ def send_expiry_sms(receiver_phone, num_of_days):
                            headers={'x-sms-ir-secure-token': token_json_response['TokenKey']})
 
 
-def send_verify_phone_sms(receiver_phone):
+def send_verify_phone_sms(receiver_phone, sms_template):
     alphabet = string.digits
     token = ''.join(secrets.choice(alphabet) for i in range(5))
 
@@ -47,7 +47,7 @@ def send_verify_phone_sms(receiver_phone):
                     }
                 ],
                 "Mobile": receiver_phone,
-                "TemplateId": "31173",
+                "TemplateId": sms_template,
             }
 
             r2 = requests.post(settings.SMSIR_ULTRAFAST_SEND_URL, json=data,

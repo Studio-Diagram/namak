@@ -122,7 +122,7 @@ class MenuCategory(models.Model):
         ('BAR', 'بار'),
         ('OTHER', 'سایر'),
     )
-    name = models.CharField(max_length=30, null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
     kind = models.CharField(max_length=50, choices=KIND, blank=False, null=False)
     list_order = models.IntegerField(default=0, blank=False, null=False)
     branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
@@ -137,7 +137,7 @@ class PrinterToCategory(models.Model):
 
 
 class MenuItem(models.Model):
-    name = models.CharField(max_length=30, null=True, blank=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
     price = models.CharField(max_length=30, null=True, blank=True)
     is_delete = models.SmallIntegerField(default=0, null=False)
     menu_category = models.ForeignKey(MenuCategory, null=True, blank=False, on_delete=models.CASCADE)
@@ -710,7 +710,7 @@ class LatestNews(models.Model):
     title = models.CharField(max_length=300, blank=False, null=False)
     text = models.CharField(max_length=4000, blank=False, null=False)
     link = models.CharField(max_length=300, blank=True, null=True)
-    datetime = models.DateTimeField()
+    datetime = models.DateTimeField(default=timezone.now)
 
 
 class BugReport(models.Model):

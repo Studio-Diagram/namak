@@ -125,6 +125,16 @@ angular.module("dashboard")
             }
         };
 
+        $scope.show_today_invoices = function () {
+            $scope.current_selected_table_name = "";
+            $state.go('cash_manager.salon', {table_name: ""}, {
+                notify: false,
+                reload: false,
+                location: 'replace',
+                inherit: true
+            });
+        };
+
         $scope.get_status_data = function () {
             var sending_data = {
                 'username': $rootScope.user_data.username,
@@ -163,9 +173,13 @@ angular.module("dashboard")
                         if (data['error_mode'] === "NO_CASH") {
                             $rootScope.cash_state = "NO_CASH";
                         }
-                        if (data['error_mode'] === "OLD_CASH") {
+                        else if (data['error_mode'] === "OLD_CASH") {
                             $rootScope.cash_state = "OLD_CASH";
                             $scope.get_status_data();
+                            $scope.get_today_cash();
+                        }
+                        else if (data['error_mode'] === "OLD_CASH_WITH_UNSETTLED_INVOICES") {
+                            $rootScope.cash_state = "OLD_CASH_WITH_UNSETTLED_INVOICES";
                             $scope.get_today_cash();
                         }
                     }
@@ -364,6 +378,9 @@ angular.module("dashboard")
                         $scope.closePayModal();
                         $scope.getAllTodayInvoices();
                         $scope.closeAddInvoiceModal();
+                        if ($rootScope.cash_state === "OLD_CASH_WITH_UNSETTLED_INVOICES") {
+                            $scope.check_cash();
+                        }
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -1612,7 +1629,7 @@ angular.module("dashboard")
                 return 'mainButton greenButton fullWidthButton';
             }
             else if ($scope.current_selected_table_name === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
-                return 'mainButton blackButton fullWidthButton';
+                return 'mainButton oilBlueButton fullWidthButton';
             }
             else if ($scope.current_selected_table_name !== table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
                 return 'mainButton whiteButton fullWidthButton';

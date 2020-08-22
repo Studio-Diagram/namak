@@ -41,7 +41,7 @@ class LoginView(View):
             return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
 
         if not check_password(password, user_obj.password):
-            return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS})
+            return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS}, status=400)
 
         user_obj.last_login = datetime.datetime.utcnow()
         user_obj.save()
@@ -81,7 +81,7 @@ class LoginView(View):
             except:
                 bundle = USER_PLANS_CHOICES['FREE']
         else:
-            return JsonResponse({"response_code": 3})
+            return JsonResponse({"response_code": 3}, status=403)
 
         request.session['is_logged_in'] = username
 

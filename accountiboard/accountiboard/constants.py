@@ -37,6 +37,7 @@ NOT_ORDERED = "سفارش نداده"
 NOT_SIMILAR_PASSWORD = 'رمز عبور وارد شده متفاوت است.'
 NOT_SIMILAR_PASSWORD_OR_WRONG_PASSWORD = 'رمز عبور وارد شده متفاوت است و یا رمز عبور قبلی به اشتباه وارد شده است.'
 OLD_CASH = 'انقضای صندوق گذشته است.'
+OLD_CASH_WITH_UNSETTLED_INVOICES = "انقضای صندوق گذشته است و فاکتور تسویه نشده وجود دارد."
 ORDERED = "سفارش داده"
 OTHER_SUPPLIER_REQUIRE = "در صورت خالی بودن تامین کننده باید تامین‌کننده‌ای با نام سایر در تامین کنندگان وارد نمایید."
 PASSWORD_ERROR = 'رمز عبور خود را وارد کنید.'
@@ -73,7 +74,7 @@ UNKNOWN_CASHIER = "صندوق باز و صندوق‌دار نامشخص است.
 BUNDLE_NOT_AVAILABLE = "بسته انتخاب شده وجود ندارد"
 BUNDLE_DURATION_NOT_AVAILABLE = "زمان بسته انتخاب شده وجود ندارد"
 SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE = "کد تخفیف اشتباه است"
-PHONE_VALIDATOR_EXPIRED = "کد تایید شما منقضی شده است"
+PHONE_VALIDATOR_ERROR = "کد تایید شما معتبر نیست"
 CAPTCHA_INVALID = "به دلایل امنیتی از ورود شما جلوگیری شده است صفحه‌ را مجددا بارگذاری کنید"
 UNIQUE_VIOLATION_ERROR = "با این نام یک فیلد دیگر وجود دارد."
 

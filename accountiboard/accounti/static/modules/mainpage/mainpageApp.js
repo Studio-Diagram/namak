@@ -17,10 +17,16 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/register',
         templateUrl: 'static/modules/mainpage/views/register.html'
     };
+    var forget_password = {
+        name: 'forget_password',
+        url: '/forget_password',
+        templateUrl: 'static/modules/mainpage/views/forget.html'
+    };
 
     $stateProvider.state(main);
     $stateProvider.state(login);
     $stateProvider.state(register);
+    $stateProvider.state(forget_password);
 });
 
 angular.module("mainpage")
@@ -36,3 +42,9 @@ angular.module("mainpage")
         return persianNumber;
     };
 });
+
+myApp.filter('counter', [function() {
+    return function(seconds) {
+        return new Date(1970, 0, 1).setSeconds(seconds);
+    };
+}]);

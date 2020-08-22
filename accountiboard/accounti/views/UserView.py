@@ -28,8 +28,13 @@ class PhoneVerifyView(View):
             return JsonResponse({"error_msg": phone_validator.get_errors()[0]}, status=400)
 
         if verify_type == "REGISTER":
+            sms_template = settings.SMS_TEMPLATES.get('REGISTRATION')
             if User.objects.filter(phone=phone).count() > 0:
                 return JsonResponse({"error_msg": PHONE_ALREADY_EXIST}, status=403)
+        elif verify_type == "FORGET":
+            sms_template = settings.SMS_TEMPLATES.get('FORGET_PASSWORD')
+        else:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         recaptcha_verify_data = {
             'secret': settings.RECAPTCHA_SECRET_KEY,
@@ -40,11 +45,11 @@ class PhoneVerifyView(View):
         recaptcha_request_json = recaptcha_request.json()
 
         if recaptcha_request_json['success']:
-            send_verify_phone_sms(phone)
+            send_verify_phone_sms(phone, sms_template)
 
         else:
             return JsonResponse({
-                'error_msg': 'recaptcha token invalid',
+                'error_msg': CAPTCHA_INVALID,
             }, status=401)
 
         return JsonResponse({
@@ -82,18 +87,20 @@ class RegisterCafeOwnerView(View):
         if password_validator.get_errors():
             return JsonResponse({"error_msg": NOT_SIMILAR_PASSWORD}, status=400)
 
-        sms_tokens_count = SmsToken.objects.filter(phone=phone).count()
         sms_tokens = SmsToken.objects.filter(phone=phone)
 
-        if sms_tokens_count < 1:
+        if sms_tokens.count() < 1:
             return JsonResponse({
-                'error_msg': PHONE_VALIDATOR_EXPIRED,
+                'error_msg': PHONE_VALIDATOR_ERROR,
             }, status=401)
 
         for sms_token in sms_tokens:
             if sms_token.token == sms_verify_token:
                 sms_verified = True
                 break
+
+        if not sms_verified:
+            return JsonResponse({'error_msg': PHONE_VALIDATOR_ERROR}, status=401)
 
         try:
             start_working_time = datetime.datetime.strptime(start_working_time, "%H:%M")
@@ -143,6 +150,7 @@ class RegisterCafeOwnerView(View):
 class ForgotPasswordView(View):
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
+        sms_verified = False
 
         validator = ForgotPasswordValidator(rec_data)
         if not validator.is_valid():
@@ -173,6 +181,9 @@ class ForgotPasswordView(View):
             if sms_token.token == sms_verify_token:
                 sms_verified = True
                 break
+
+        if not sms_verified:
+            return JsonResponse({'error_msg': PHONE_VALIDATOR_ERROR}, status=401)
 
         current_user = User.objects.get(phone=phone)
         current_user.password = make_password(password)

@@ -224,12 +224,13 @@ form.generalForm .referButtonWrapper span {
 .forgetPasswordLink {
     font-size: 0.9em;
     font-weight: 100;
-    vertical-align: super;
     margin-right: 1em;
+    display: flex;
+    align-self: center;
 }
 
 form.generalForm .submitButtonWrapper {
-    display: inline-block;
+    display: flex;
     width: 100%;
     text-align: right;
     margin-bottom: 0;
@@ -441,6 +442,18 @@ button.oilBlueButton {
 }
 
 button.oilBlueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+a.oilBlueButton {
+    background-color: var(--navBarLine);
+    border-color: var(--oilBlueBorder);
+    color: white;
+}
+
+a.oilBlueButton:hover {
     background: var(--myBlueBorder);
     color: white;
     cursor: pointer;
@@ -2147,7 +2160,8 @@ aside.leftAside {
 }
 
 #rightSidebarPageContentWrapper {
-    width: calc(100vw - 60px);
+    width: 250px;
+    min-width: 250px;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all all 0.3s ease-in-out;
     -ms-transition: all all 0.3s ease-in-out;
@@ -2158,6 +2172,15 @@ aside.leftAside {
 #rightSidebarPageContentWrapper .row {
     margin-left: 0;
     margin-right: 0;
+}
+
+#mainPageContentWrapper {
+    width: calc(100vw - 310px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
 }
 
 #leftSidebarWrapper {
@@ -2177,17 +2200,8 @@ aside.leftAside {
     height: calc(100vh - 77px);
 }
 
-#rightSidebarPageContentWrapper.collapseComplete {
-    width: calc(100vw - 300px);
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all all 0.3s ease-in-out;
-    -ms-transition: all all 0.3s ease-in-out;
-    -o-transition: all all 0.3s ease-in-out;
-    transition: all all 0.3s ease-in-out;
-}
-
 #leftSidebarWrapper.collapseComplete {
-    width: 300px;
+    width: 400px;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all all 0.3s ease-in-out;
     -ms-transition: all all 0.3s ease-in-out;
@@ -2384,4 +2398,20 @@ aside.leftAside {
 .leftAside > div {
     overflow-y: scroll;
     height: calc(100vh - 100px);
+}
+
+.submitButton.btn.oilBlueButton.fullWidthButton:disabled {
+    cursor: not-allowed;
+}
+
+#sendVerifyCodeForgetPassword {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#changePasswordForgetPassword {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
 }

@@ -52,7 +52,8 @@ def get_all_cash(request):
             'start_time': cash_start_time,
             'end_time': cash_end_time,
             'is_closed': cash.is_close,
-            'total_income': all_invoice_sales_cash_total_income['total_price__sum'] if all_invoice_sales_cash_total_income['total_price__sum'] else 0
+            'total_income': all_invoice_sales_cash_total_income['total_price__sum'] if
+            all_invoice_sales_cash_total_income['total_price__sum'] else 0
         })
 
     return JsonResponse({"response_code": 2, 'all_cashes': all_cashes_json_data})
@@ -86,9 +87,9 @@ def close_cash(request):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         if night_report_inputs['income_report'] == None \
-            or night_report_inputs['outcome_report'] == None \
-            or night_report_inputs['event_tickets'] == None \
-            or night_report_inputs['current_money_in_cash'] == None:
+                or night_report_inputs['outcome_report'] == None \
+                or night_report_inputs['event_tickets'] == None \
+                or night_report_inputs['current_money_in_cash'] == None:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         branch_obj = Branch.objects.get(pk=branch_id)
@@ -158,7 +159,12 @@ def check_cash_exist(request):
         if current_cash.count() == 0:
             return JsonResponse({"response_code": 3, 'error_msg': NO_CASH, 'error_mode': 'NO_CASH'})
         elif (datetime.today().date() - current_cash_obj.created_date_time.date()).days:
-            return JsonResponse({"response_code": 3, 'error_msg': OLD_CASH, 'error_mode': 'OLD_CASH'})
+            unsettled_invoices = InvoiceSales.objects.filter(is_settled=0, cash_desk=current_cash_obj).count()
+            if unsettled_invoices:
+                return JsonResponse(
+                    {"response_code": 3, 'error_msg': OLD_CASH_WITH_UNSETTLED_INVOICES, 'error_mode': 'OLD_CASH_WITH_UNSETTLED_INVOICES'})
+            else:
+                return JsonResponse({"response_code": 3, 'error_msg': OLD_CASH, 'error_mode': 'OLD_CASH'})
         if current_cash.count() == 1:
             return JsonResponse({"response_code": 2})
 

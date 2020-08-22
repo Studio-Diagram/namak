@@ -112,7 +112,6 @@
                             <th scope="col">عنوان</th>
                             <th scope="col">مسول فروش</th>
                             <th scope="col">شماره تماس</th>
-                            <th scope="col">تاریخ آخرین پرداختی</th>
                             <th scope="col">مانده حساب</th>
                             <th scope="col"></th>
                         </tr>
@@ -124,7 +123,6 @@
                             <th scope="row">{{ supplier.name }}</th>
                             <td>{{ supplier.salesman_name }}</td>
                             <td>{{ supplier.salesman_phone }}</td>
-                            <td>{{ supplier.last_pay | persianNumber }}</td>
                             <td><span
                                     ng-class="supplier.remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ supplier.remainder | number | persianNumber }} ریال</span>
                             </td>

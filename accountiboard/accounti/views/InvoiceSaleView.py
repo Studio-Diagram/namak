@@ -367,7 +367,7 @@ def get_invoice(request):
 
 def get_all_today_invoices(request):
     if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data.get('username')
@@ -383,11 +383,6 @@ def get_all_today_invoices(request):
         "is_settled")
     all_invoices_list = []
     for invoice in all_invoices:
-        if invoice.settle_time:
-            st_time = invoice.settle_time.time()
-        else:
-            st_time = 0
-
         invoice_to_menu_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice).exclude(
             menu_item__menu_category__kind='OTHER')
 
@@ -414,7 +409,7 @@ def get_all_today_invoices(request):
             "total_price": invoice.total_price,
             "discount": invoice.discount,
             "tip": invoice.tip,
-            "settle_time": st_time,
+            "settle_time": invoice.settle_time.time().strftime("%H:%M") if invoice.settle_time else 0,
             "is_settled": invoice.is_settled,
             "game_status": {"status": invoice.game_state, "text": invoice.get_game_state_display()},
             "invoice_status": invoice_status,
@@ -881,7 +876,7 @@ def delete_items(request):
                 invoice_object.save()
                 menu_item_obj.delete()
             for game_id in games:
-                game_obj = InvoicesSalesToGame.objects.get(pk=game_id)
+                game_obj = InvoicesSalesToGame.objects.get(game_id=game_id)
                 new_deleted = DeletedItemsInvoiceSales(
                     created_time=datetime.now(),
                     item_type="GAME",

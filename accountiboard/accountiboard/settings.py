@@ -23,7 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '07m4jfcu&ejvlu_umu-dm&(qbbhj$o0r8yi60akowb3+abf89a'
 JWT_SECRET = 'qZRfj90L5^3bz{pB8[p_H?&nC!W3@V#fLj]O;Nu*/7}P.%Tofp'
 
-ADMINS = [('Iman Shafiei', 'imanshafiei540@gmail.com')]
+ADMINS = [
+    ('Iman Shafiei', 'imanshafiei540@gmail.com'),
+    ('Sohrab Alimardani', 'serpent_code@protonmail.com'),
+]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.DEBUG
 
@@ -42,16 +45,16 @@ MAILER_LIST = ['imanshafiei540@gmail.com']
 SMSIR_TOKEN_URL = 'https://RestfulSms.com/api/Token'
 SMSIR_ULTRAFAST_SEND_URL = 'https://RestfulSms.com/api/UltraFastSend'
 SMSIR_TOKEN_REQUEST = {
-    'UserApiKey' : 'fdde10467c6c52bfced9eddf',
-    'SecretKey'  : 'YkWWfq8jZkVRqsxp14lVjiNgElWxS9Gz',
+    'UserApiKey': 'fdde10467c6c52bfced9eddf',
+    'SecretKey': 'YkWWfq8jZkVRqsxp14lVjiNgElWxS9Gz',
 }
 
-RECAPTCHA_SITE_KEY   = '6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm'
+RECAPTCHA_SITE_KEY = '6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm'
 RECAPTCHA_SECRET_KEY = '6LenhbwZAAAAAGl4zUfwmXUXqLddrkOM3IANGiaD'
-
 
 INSTALLED_APPS = [
     'accounti.apps.AccountiConfig',
+    'admin_panel.apps.AdminPanelConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,7 +85,7 @@ ROOT_URLCONF = 'accountiboard.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'admin_panel', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -227,6 +230,11 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+SMS_TEMPLATES = {
+    'REGISTRATION': '31173',
+    'FORGET_PASSWORD': '31174'
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -244,7 +252,6 @@ USE_L10N = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 PAY_IR_API_KEY = "test"
 PAY_IR_REDIRECT_URL = "http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fpayir%2Fcallback%2F"
