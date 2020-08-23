@@ -1,4 +1,4 @@
-var myApp = angular.module('mainpage', ['ui.router', 'ngCookies', 'satellizer']);
+var myApp = angular.module('mainpage', ['ui.router', 'ngCookies', 'satellizer', "ng.deviceDetector"]);
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Token';
