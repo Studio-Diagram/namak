@@ -30,12 +30,17 @@ def return_remainder_of_supplier(supplier_id, to_time):
         debtor += sum_all_invoice_expense_credit['price__sum']
 
     # Credit Invoice Purchase
-    sum_all_invoice_purchase_credit = InvoicePurchase.objects.filter(supplier=supplier_obj,
-                                                                     settlement_type="CREDIT",
-                                                                     created_time__lte=remainder_to_date).aggregate(
-        Sum('total_price'))
-    if sum_all_invoice_purchase_credit['total_price__sum']:
-        debtor += sum_all_invoice_purchase_credit['total_price__sum']
+    sum_all_invoice_purchase_credit = 0
+    all_invoice_purchase_credit = InvoicePurchase.objects.filter(supplier=supplier_obj,
+                                                                 settlement_type="CREDIT",
+                                                                 created_time__lte=remainder_to_date)
+    for invoice_purchase in all_invoice_purchase_credit:
+        sum_all_invoice_purchase_credit += invoice_purchase.total_price
+        shop_products_to_invoice_purchase = PurchaseToShopProduct.objects.filter(invoice_purchase=invoice_purchase)
+        for shop_product_to_invoice_purchase in shop_products_to_invoice_purchase:
+            sum_all_invoice_purchase_credit -= shop_product_to_invoice_purchase.return_numbers * shop_product_to_invoice_purchase.base_unit_price
+
+    debtor += sum_all_invoice_purchase_credit
 
     # Amani Sales
     amani_sale_sum = 0

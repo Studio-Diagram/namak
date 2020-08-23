@@ -104,9 +104,12 @@
                                     <tbody>
                                     <tr>
                                         <td>
-                                            <small>تگ‌های هزینه</small>
+                                            <small> تگ‌های هزینه <i class="fa fa-question-circle"
+                                                      title="با زدن اینتر تگ‌های جدید خود را بسازید."
+                                                      data-toggle="tooltip" tooltip></i></small>
                                             <tags-input ng-model="tags" display-property="name"
-                                                        placeholder="تگ خود را اضافه کنید." replace-spaces-with-dashes="false">
+                                                        placeholder="تگ خود را اضافه کنید." replace-spaces-with-dashes="false"
+                                                        add-on-comma="false">
                                                 <auto-complete source="loadTags($query)"
                                                                min-length="0"
                                                                load-on-focus="true"

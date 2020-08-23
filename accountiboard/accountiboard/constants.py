@@ -77,6 +77,12 @@ SUBSCRIPTION_DISCOUNT_NOT_AVAILABLE = "کد تخفیف اشتباه است"
 PHONE_VALIDATOR_ERROR = "کد تایید شما معتبر نیست"
 CAPTCHA_INVALID = "به دلایل امنیتی از ورود شما جلوگیری شده است صفحه‌ را مجددا بارگذاری کنید"
 UNIQUE_VIOLATION_ERROR = "با این نام یک فیلد دیگر وجود دارد."
+NOT_ENOUGH_IN_STOCK = "به تعداد کافی از این محصول موجود نیست"
+CRITICAL_ERROR = "خطای نامشخص"
+THE_INVOICE_PURCHASE_FOR_INVOICE_RETURN_NOT_FOUND = "فاکتور خرید مربوطه برای ایجاد فاکتور مرجوعی یافت نشد"
+AMANI_SALE_FOR_RETURN_NOT_ENOUGH = "فاکتورهای فروش این محصول با تعداد مرجوعی مغایرت دارد"
+CAN_NOT_DELETE_PURCHASE_BECAUSE_SHOP_PRODUCT = "این فاکتور به دلیل وجود محصول فروشگاهی در آن قابل حذف نیست ( از فاکتور مرجوعی استفاده کنید )"
+CAN_NOT_ADD_PURCHASE_MATERIAL_AND_SHOP_TOGETHER = "فاکتور خرید نمی تواند شامل محصولات فروشگاهی و مواد اولیه همراه با هم باشد ( دو فاکتور متفاوت ایجاد کنید )"
 
 USER_TYPE = {
     "cafe_owner": 1,
