@@ -1710,6 +1710,10 @@ tags-input .tags .tag-item {
     background: var(--pageBorder);
 }
 
+.preloader {
+    height: calc(100vh - 85px);
+}
+
 .preloader:before {
     position: absolute;
     content: '';

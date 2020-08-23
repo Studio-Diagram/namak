@@ -95,6 +95,9 @@ def create_new_invoice_purchase(request):
             if not factor_number or tax == '' or discount == '':
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
+            if len(shop_product_items) and len(material_items):
+                return JsonResponse({"response_code": 3, "error_msg": CAN_NOT_ADD_PURCHASE_MATERIAL_AND_SHOP_TOGETHER})
+
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
 
@@ -462,6 +465,8 @@ def delete_invoice_purchase(request):
         pass
 
     elif invoice_type == "CREDIT":
+        if PurchaseToShopProduct.objects.filter(invoice_purchase=invoice_obj).count():
+            return JsonResponse({"response_code": 3, "error_msg": CAN_NOT_DELETE_PURCHASE_BECAUSE_SHOP_PRODUCT})
         invoice_obj.delete()
 
     return JsonResponse({"response_code": 2})

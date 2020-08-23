@@ -757,6 +757,9 @@ angular.module("dashboard")
                         $scope.closeDeleteInvoiceModal();
                         $scope.closeAddInvoiceModal();
                         $scope.getAllTodayInvoices();
+                        if ($rootScope.cash_state === "OLD_CASH_WITH_UNSETTLED_INVOICES") {
+                            $scope.check_cash();
+                        }
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
