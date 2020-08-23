@@ -62,6 +62,24 @@
                                                 <option value="CAFE_TO_SUPPLIER">کافه به تامین‌کننده</option>
                                             </select>
                                         </td>
+                                        
+                                        <td>
+                                            <small>تامین کننده</small>
+                                            <ui-select ng-model="new_invoice_return_data.supplier_id">
+                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
+                                                    {{$select.selected.name}}</ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                    <div ng-bind="supplier.name"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="invoiceTable">
+                                <tbody>
+                                    <tr>
                                         <td>
                                             <small>حساب بانکی</small>
                                             <select ng-model="new_invoice_return_data.banking_id"
@@ -73,17 +91,6 @@
                                             <select ng-model="new_invoice_return_data.stock_id"
                                                     class="form-control" ng-options="stock.id as stock.name for stock in stocks">
                                             </select>
-                                        </td>
-                                        <td>
-                                            <small>تامین کننده</small>
-                                            <ui-select ng-model="new_invoice_return_data.supplier_id">
-                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
-                                                    {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices
-                                                        repeat="supplier.id as supplier in suppliers | filter: $select.search">
-                                                    <div ng-bind="supplier.name"></div>
-                                                </ui-select-choices>
-                                            </ui-select>
                                         </td>
                                     </tr>
                                     </tbody>
