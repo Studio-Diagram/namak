@@ -12,7 +12,7 @@ angular.module("dashboard")
             };
             $scope.get_banking_data();
             $scope.get_branches_data();
-            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
+            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches);
         };
 
         $scope.get_banking_data = function () {
@@ -20,7 +20,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     // $scope.branches = $rootScope.user_data.branches;
-                    angular.copy($rootScope.user_data.branches, $scope.branches)
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
                     $scope.banks = data['bank'];
                     $scope.tankhahs = data['tankhah'];
                     $scope.cash_registers = data['cash_register'];
@@ -182,7 +182,7 @@ angular.module("dashboard")
                 'shaba_number': '',
             };
             $scope.clearBankingBranchesCheckboxes();
-            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
+            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches);
         };
 
         initialize();

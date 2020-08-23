@@ -1001,7 +1001,33 @@ angular.module('dashboard')
                     'url': "/api/banking/",
                     'data': data
                 });
-            }
+            },
+            'getStocks': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocks/"
+                });
+            },
+            'getStockDetail': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocks/" + id + "/"
+                });
+            },
+            'getStockByBranch': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocksByBranch/" + id + "/"
+                });
+            },
+            'addStock': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/stocks/",
+                    'data': data
+                });
+            },
+
         };
         return service;
 

@@ -1,16 +1,16 @@
-<div ng-controller="bankingCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addBankingModal"
+<div ng-controller="stocksCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addStockModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت حساب جدید</h2>
-                    <a class="mainButton redButton" ng-click="close_modal('addBankingModal');resetFrom()" href="" aria-label="Close">
+                    <h2 class="modalTitle">ثبت انبار جدید</h2>
+                    <a class="mainButton redButton" ng-click="close_modal('addStockModal');resetFrom()" href="" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-click="addBanking()" href="" class="mainButton greenButton"><i
+                    <a ng-click="addStock()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
                         پاک کردن </a>
@@ -18,24 +18,14 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <h3>اطلاعات حساب</h3>
-                        <div class="row">
-                            <div class="col">
-                                <label>نوع حساب<i class="fas fa-star-of-life"></i></label>
-                                <select ng-model="new_banking_data.type" class="form-control" id="bankdropdown">
-                                    <!-- <option value="" selected>نوع حساب</option> -->
-                                    <option value="BANK" selected>حساب بانکی</option>
-                                    <option value="CASH_REGISTER">حساب نقدی</option>
-                                    <option value="TANKHAH">حساب تنخواه</option>
-                                </select>
-                            </div>
-                        </div>
+                        <h3>اطلاعات انبار</h3>
+
 
                         <div class="row">
                             <div class="col">
-                                <label>نام حساب<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_banking_data.name" type="text" aria-label="First name"
-                                       class="form-control" placeholder="نام حساب">
+                                <label>نام انبار<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_stocks_data.name" type="text" aria-label="First name"
+                                       class="form-control" placeholder="نام انبار">
                             </div>
                         </div>
                         <div class="row">
@@ -45,37 +35,8 @@
                                 <label class="checkbox-item">
                                     <input style="float: left;" ng-checked="branch.is_checked" ng-model="branch.is_checked_m"
                                            type="checkbox"
-                                           ng-click="changeBankingBranchCheckBox(branch.id)">{{ branch.name }}
+                                           ng-click="changeStockBranchCheckBox(branch.id)">{{ branch.name }}
                                 </label>
-                            </div>
-                        </div>
-
-                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
-                            <div class="col">
-                                <label>نام بانک</label>
-                                <input ng-model="new_banking_data.bank_name" type="text" aria-label="First name"
-                                       class="form-control" placeholder="نام بانک">
-                            </div>
-                        </div>
-                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
-                            <div class="col">
-                                <label>شماره حساب</label>
-                                <input ng-model="new_banking_data.bank_account" type="text" aria-label="First name"
-                                       class="form-control" placeholder="شماره حساب">
-                            </div>
-                        </div>
-                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
-                            <div class="col">
-                                <label>شماره کارت</label>
-                                <input ng-model="new_banking_data.bank_card_number" type="text" aria-label="First name"
-                                       class="form-control" placeholder="شماره کارت">
-                            </div>
-                        </div>
-                        <div class="row" ng-show="new_banking_data.type == 'BANK'">
-                            <div class="col">
-                                <label>شماره شبا</label>
-                                <input ng-model="new_banking_data.shaba_number" type="text" aria-label="First name"
-                                       class="form-control" placeholder="شماره شبا">
                             </div>
                         </div>
 
@@ -93,7 +54,7 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="close_modal('errorModal', 'addBankingModal')" class="mainButton redButton" data-dismiss="modal" href=""
+                    <a ng-click="close_modal('errorModal', 'addStockModal')" class="mainButton redButton" data-dismiss="modal" href=""
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
@@ -114,15 +75,16 @@
         <div class="row userPageContent">
             <main class="col-sm-12 ">
                 <div class="tableButtons">
-                    <a class="addUser mainButton greenButton" ng-click="open_modal('addBankingModal')" data-toggle="modal"
+                    <a class="addUser mainButton greenButton" ng-click="open_modal('addStockModal')" data-toggle="modal"
                        data-backdrop="static" data-keyboard="false"><i
-                            class="fas fa-user-plus"></i> حساب جدید</a>
+                            class="fas fa-user-plus"></i> انبار جدید</a>
                     <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
                            class="form-control listFilter" type="search" placeholder="فیلتر کن">
                     
                 </div>
 
-                <div class="tableWrapper">
+
+<!--                 <div class="tableWrapper">
                     <table class="table">
                         <thead>
                         <tr>
@@ -162,8 +124,16 @@
                             </td>
                         </tr>
                         </tbody>
-                    </table>
-                </div>
+                    </table> -->
+
+                    <table-directive headers="table_headers"
+                                     config="table_config"
+                                     rows="stocks"
+                                     detail-callback="editStock(item_id)">
+                    </table-directive>
+
+
+                <!-- </div> -->
 
 
             </main>
