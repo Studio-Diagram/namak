@@ -69,6 +69,12 @@
                                             </select>
                                         </td>
                                         <td>
+                                            <small>انبار</small>
+                                            <select ng-model="new_invoice_return_data.stock_id"
+                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                            </select>
+                                        </td>
+                                        <td>
                                             <small>تامین کننده</small>
                                             <ui-select ng-model="new_invoice_return_data.supplier_id">
                                                 <ui-select-match placeholder="انتخاب تامین‌کننده">

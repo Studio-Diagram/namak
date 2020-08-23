@@ -24,7 +24,8 @@ angular.module("dashboard")
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':''
+                'banking_id':'',
+                'stock_id':''
             };
             $scope.search_data_expense = {
                 'search_word': '',
@@ -34,6 +35,7 @@ angular.module("dashboard")
             $scope.get_expenses();
             $scope.get_suppliers();
             $scope.get_banking_data();
+            $scope.get_stocks_data();
         };
 
         $scope.set_today_for_invoice = function () {
@@ -289,6 +291,20 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.get_stocks_data = function () {
+            dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
+                    $scope.stocks = data['stocks'];
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.resetFrom = function () {
             $scope.tags = [];
             $scope.new_invoice_expense_data = {
@@ -310,7 +326,9 @@ angular.module("dashboard")
                 'tax': 0,
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'banking_id': '',
+                'stock_id':''
             };
         };
 

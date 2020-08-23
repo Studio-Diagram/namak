@@ -24,6 +24,7 @@ def create_new_invoice_expense(request):
             branch_id = rec_data['branch_id']
             factor_number = rec_data['factor_number']
             banking_id = rec_data.get('banking_id')
+            stock_id = rec_data.get('stock_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -62,6 +63,11 @@ def create_new_invoice_expense(request):
             except:
                 banking_obj = None
 
+            try:
+                stock_obj = Stock.objects.get(pk=stock_id)
+            except:
+                stock_obj = None
+
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
@@ -87,6 +93,7 @@ def create_new_invoice_expense(request):
                 settlement_type=settlement_type,
                 factor_number=new_factor_number,
                 banking=banking_obj,
+                stock=stock_obj,
             )
             new_invoice.save()
 

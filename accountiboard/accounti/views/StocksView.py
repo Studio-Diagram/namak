@@ -103,6 +103,61 @@ class StockDetailView(View):
                             'error_msg': BANKING_NOT_FOUND,
                     }, status=404)
 
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def put(self, request, id, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        name = rec_data.get('name')
+        branches_in_request = rec_data.get('branches')
+        payload = request.payload
+        branch_id_list_jwt = {x['id'] for x in payload['sub_branch_list']}
+        branches_id_list_to_add = []
+
+        if not branches_in_request or not name:
+            return JsonResponse({
+                'error_msg': DATA_REQUIRE
+            }, status=401)
+
+        for branch in branches_in_request:
+            if branch['id'] not in branch_id_list_jwt:
+                return JsonResponse({
+                    'error_msg': ACCESS_DENIED
+                }, status=401)
+            elif 'is_checked' in branch and branch['is_checked']:
+                branches_id_list_to_add.append(branch['id'])
+
+        if not branches_id_list_to_add:
+            return JsonResponse({
+                'error_msg': DATA_REQUIRE_BRANCH
+            }, status=401)
+                
+        try:
+            current_stock = Stock.objects.get(pk=id)
+        except:
+            return JsonResponse({
+                'error_msg': STOCK_NOT_FOUND
+            }, status=404)
+
+        current_stock.name = name
+        current_stock.save()
+
+        StockToBranch.objects.filter(stock=current_stock).delete()
+
+        branch_objects = Branch.objects.filter(pk__in=branches_id_list_to_add)
+        for branch_object in branch_objects:
+            StockToBranch.objects.create(
+                branch = branch_object,
+                stock = current_stock,
+            )
+
+        return JsonResponse({
+            'msg': 'stocks info edited'
+        }, status=200)
+
+
+
 
 class StockByBranchView(View):
     @permission_decorator_class_based(token_authenticate,
@@ -127,7 +182,7 @@ class StockByBranchView(View):
             }, status=403)
 
         stocks_to_branches = StockToBranch.objects.filter(branch=current_branch)
-        stocks_list = [x.stock for x in stocks_to_branches]
+        stocks_list = [x.stock.id for x in stocks_to_branches]
 
         stocks_query = Stock.objects.filter(pk__in=stocks_list)
         for x in stocks_query:

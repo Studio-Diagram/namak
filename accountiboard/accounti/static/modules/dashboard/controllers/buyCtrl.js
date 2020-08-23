@@ -26,7 +26,8 @@ angular.module("dashboard")
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':''
+                'banking_id':'',
+                'stock_id':''
             };
             $scope.search_data_material = {
                 'search_word': '',
@@ -43,6 +44,7 @@ angular.module("dashboard")
             $scope.get_materials();
             $scope.get_shop_products();
             $scope.get_banking_data();
+            $scope.get_stocks_data();
             $scope.getNextFactorNumber('BUY');
         };
 
@@ -62,6 +64,21 @@ angular.module("dashboard")
                     data['cash_register'].forEach(function (cash_register) {
                         $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
                     });
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_stocks_data = function () {
+            dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    // $scope.branches = $rootScope.user_data.branches;
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
+                    $scope.stocks = data['stocks'];
 
                 }, function (error) {
                     $rootScope.is_page_loading = false;
@@ -616,7 +633,8 @@ angular.module("dashboard")
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id': ''
+                'banking_id': '',
+                'stock_id':''
             };
             if ($scope.search_data_material.search_word) {
                 $scope.search_data_material = {

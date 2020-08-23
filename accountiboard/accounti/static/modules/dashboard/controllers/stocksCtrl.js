@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("stocksCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.new_stocks_data = {
+                'id': 0,
                 'branches':[],
                 'name': ''
             };
@@ -49,16 +50,30 @@ angular.module("dashboard")
         };
 
         $scope.addStock = function () {
-            dashboardHttpRequest.addStock($scope.new_stocks_data)
-                .then(function (data) {
-                    $scope.get_stocks_data();
-                    $scope.resetFrom();
-                    $rootScope.close_modal('addStockModal');
-                    
-                }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal', 'addStockModal');
-                });
+            if ($scope.new_stocks_data.id == 0) {
+                dashboardHttpRequest.addStock($scope.new_stocks_data)
+                    .then(function (data) {
+                        $scope.get_stocks_data();
+                        $scope.resetFrom();
+                        $rootScope.close_modal('addStockModal');
+                        
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('errorModal', 'addStockModal');
+                    });
+            } else {
+                dashboardHttpRequest.updateStockDetail($scope.new_stocks_data.id, $scope.new_stocks_data)
+                    .then(function (data) {
+                        $scope.get_stocks_data();
+                        $scope.resetFrom();
+                        $rootScope.close_modal('addStockModal');
+                        
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('errorModal', 'addStockModal');
+                    });
+            }
+
         };
 
         $scope.editStock = function (stock_id) {
@@ -83,6 +98,7 @@ angular.module("dashboard")
                         })
                     });
                     
+                    $scope.new_stocks_data.id = data.id;
                     $scope.new_stocks_data.name = data.name;
                     $rootScope.open_modal('addStockModal');
                 }, function (error) {
@@ -143,6 +159,7 @@ angular.module("dashboard")
 
         $scope.resetFrom = function () {
             $scope.new_stocks_data = {
+                'id': 0,
                 'branches':[],
                 'name': ''
             };

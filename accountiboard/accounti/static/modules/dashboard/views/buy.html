@@ -158,6 +158,12 @@
                                             </select>
                                         </td>
                                         <td>
+                                            <small>انبار</small>
+                                            <select ng-model="new_invoice_purchase_data.stock_id"
+                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                            </select>
+                                        </td>
+                                        <td>
                                             <small>نوع پرداخت</small>
                                             <select ng-model="new_invoice_purchase_data.settlement_type"
                                                     class="form-control">

@@ -50,8 +50,8 @@ class BankingView(View):
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        name   = rec_data.get('name')
-        unit   = rec_data.get('unit')
+        name = rec_data.get('name')
+        unit = rec_data.get('unit')
         branches_in_request = rec_data.get('branches')
         bank_name = rec_data.get('bank_name')
         bank_account = rec_data.get('bank_account')
@@ -83,20 +83,20 @@ class BankingView(View):
 
         if type == 'CASH_REGISTER':
             current_banking = CashRegister.objects.create(
-                name   = name,
-                unit   = unit,
+                name = name,
+                unit = unit,
             )
 
         elif type == 'TANKHAH':
             current_banking = Tankhah.objects.create(
-                name   = name,
-                unit   = unit,
+                name = name,
+                unit = unit,
             )
 
         elif type == 'BANK':
             current_banking = Bank.objects.create(
-                name   = name,
-                unit   = unit,
+                name = name,
+                unit = unit,
                 bank_name = bank_name,
                 bank_account = bank_account,
                 bank_card_number = bank_card_number,
@@ -185,6 +185,119 @@ class BankingDetailView(View):
         return JsonResponse({
                 'error_msg': BANKING_NOT_FOUND,
         }, status=404)
+
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def put(self, request, id, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        name = rec_data.get('name')
+        unit = rec_data.get('unit')
+        branches_in_request = rec_data.get('branches')
+        bank_name = rec_data.get('bank_name')
+        bank_account = rec_data.get('bank_account')
+        bank_card_number = rec_data.get('bank_card_number')
+        shaba_number = rec_data.get('shaba_number')
+        new_type = rec_data.get('type')
+        payload = request.payload
+        branch_id_list_jwt = {x['id'] for x in payload['sub_branch_list']}
+        branches_id_list_to_add = []
+
+        if not branches_in_request or not name:
+            return JsonResponse({
+                'error_msg': DATA_REQUIRE
+            }, status=401)
+
+        for branch in branches_in_request:
+            if branch['id'] not in branch_id_list_jwt:
+                return JsonResponse({
+                    'error_msg': ACCESS_DENIED
+                }, status=401)
+            elif 'is_checked' in branch and branch['is_checked']:
+                branches_id_list_to_add.append(branch['id'])
+
+        if not branches_id_list_to_add:
+            return JsonResponse({
+                'error_msg': DATA_REQUIRE_BRANCH
+            }, status=401)
+
+        try:
+            current_base_banking = BankingBaseClass.objects.get(pk=id)
+        except:
+            return JsonResponse({
+                'error_msg': BANKING_NOT_FOUND
+            }, status=404)
+
+        try:
+            current_banking = Bank.objects.get(pk=id)
+            old_type = 'BANK'
+        except:
+            pass
+
+        try:
+            current_banking = CashRegister.objects.get(pk=id)
+            old_type = 'CASH_REGISTER'
+        except:
+            pass
+
+        try:
+            current_banking = Tankhah.objects.get(pk=id)
+            old_type = 'TANKHAH'
+        except:
+            pass
+
+        if old_type != new_type:
+            current_banking.delete()
+            if new_type == 'BANK':
+                current_banking = Bank.objects.create(
+                    name = name,
+                    unit = unit,
+                    bank_name = bank_name,
+                    bank_account = bank_account,
+                    bank_card_number = bank_card_number,
+                    shaba_number = shaba_number,
+                )
+            elif new_type == 'CASH_REGISTER':
+                current_banking = CashRegister.objects.create(
+                    name = name,
+                    unit = unit,
+                )
+            elif new_type == 'TANKHAH':
+                current_banking = Tankhah.objects.create(
+                    name = name,
+                    unit = unit,
+                )
+
+        elif old_type == new_type:
+            if new_type == 'BANK':
+                current_banking.name = name
+                current_banking.unit = unit
+                current_banking.bank_name = bank_name
+                current_banking.bank_account = bank_account
+                current_banking.bank_card_number = bank_card_number
+                current_banking.shaba_number = shaba_number
+                current_banking.save()
+            else:
+                current_banking.name = name
+                current_banking.unit = unit
+                current_banking.save()
+
+
+        BankingToBranch.objects.filter(banking=current_banking).delete()
+
+        branch_objects = Branch.objects.filter(pk__in=branches_id_list_to_add)
+        for branch_object in branch_objects:
+            BankingToBranch.objects.create(
+                branch = branch_object,
+                banking = current_banking,
+            )
+
+
+        return JsonResponse({
+            'msg': 'banking info edited'
+        }, status=200)
+
 
 
 

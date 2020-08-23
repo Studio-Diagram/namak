@@ -57,6 +57,7 @@ def create_new_invoice_return(request):
             invoice_date = rec_data['date']
             factor_number = rec_data['factor_number']
             banking_id = rec_data.get('banking_id')
+            stock_id = rec_data.get('stock_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -84,6 +85,11 @@ def create_new_invoice_return(request):
                 banking_obj = BankingBaseClass.objects.get(pk=banking_id)
             except:
                 banking_obj = None
+
+            try:
+                stock_obj = Stock.objects.get(pk=stock_id)
+            except:
+                stock_obj = None
 
             last_invoice_obj = InvoiceReturn.objects.filter(branch=branch_obj).order_by('id').last()
             if last_invoice_obj:
@@ -122,6 +128,7 @@ def create_new_invoice_return(request):
                     return_type=return_type,
                     factor_number=new_factor_number,
                     banking=banking_obj,
+                    stock=stock_obj,
                 )
                 new_invoice.save()
 

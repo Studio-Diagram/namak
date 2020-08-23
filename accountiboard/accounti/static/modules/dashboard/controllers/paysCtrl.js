@@ -12,7 +12,8 @@ angular.module("dashboard")
                 'settle_type': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':''
+                'banking_id':'',
+                'stock_id':''
             };
             $scope.search_data_pay = {
                 'search_word': '',
@@ -21,6 +22,7 @@ angular.module("dashboard")
             $scope.get_pays();
             $scope.get_suppliers();
             $scope.get_banking_data();
+            $scope.get_stocks_data();
 
         };
 
@@ -232,6 +234,20 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.get_stocks_data = function () {
+            dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
+                    $scope.stocks = data['stocks'];
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.openDeletePermissionModal = function (invoice_id) {
             $scope.deleteing_invoice_id = invoice_id;
             jQuery.noConflict();
@@ -263,7 +279,9 @@ angular.module("dashboard")
                 'supplier_id': '',
                 'payment_amount': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'banking_id': '',
+                'stock_id':''
             };
         };
         initialize();

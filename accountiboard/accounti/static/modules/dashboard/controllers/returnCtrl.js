@@ -18,7 +18,8 @@ angular.module("dashboard")
                 'return_type': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':''
+                'banking_id':'',
+                'stock_id':''
             };
             $scope.search_data_return = {
                 'search_word': '',
@@ -28,6 +29,7 @@ angular.module("dashboard")
             $scope.get_suppliers();
             $scope.get_shop_products();
             $scope.get_banking_data();
+            $scope.get_stocks_data();
         };
 
         $scope.set_today_for_invoice = function () {
@@ -263,6 +265,20 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.get_stocks_data = function () {
+            dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
+                    $scope.stocks = data['stocks'];
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.save_and_open_modal = function () {
             $scope.addReturn();
             $timeout(function () {
@@ -292,7 +308,8 @@ angular.module("dashboard")
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':''
+                'banking_id':'',
+                'stock_id':''
             };
             $scope.getNextFactorNumber('RETURN');
         };
