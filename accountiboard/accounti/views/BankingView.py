@@ -6,6 +6,7 @@ from django.views import View
 class BankingView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
@@ -45,6 +46,7 @@ class BankingView(View):
 
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -123,6 +125,7 @@ class BankingView(View):
 class BankingDetailView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
     def get(self, request, id, *args, **kwargs):
         payload = request.payload
@@ -188,6 +191,7 @@ class BankingDetailView(View):
 class BankingByBranchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
     def get(self, request, branch_id, *args, **kwargs):
         payload = request.payload
