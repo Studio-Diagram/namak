@@ -189,7 +189,6 @@ urlpatterns = [
     path('onward/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
     path('onward/branches/<int:branch_id>/', AdminBranchView.AdminBranchDetailView.as_view()),
 
-
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.edit_payment_invoice_sale),
     path('template/night-report', InvoiceSaleView.night_report_template),
     path('template/invoice-cash', InvoiceSaleView.print_cash_with_template),
@@ -198,8 +197,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),
+    url(r'^mobile', TemplateView.as_view(template_name='mobile.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
-
-
 
 ]

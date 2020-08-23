@@ -1,5 +1,5 @@
 angular.module("mainpage")
-    .controller("loginCtrl", function ($scope, $interval, $rootScope, $filter, $http, $auth, $timeout, $window, mainpageHttpRequest) {
+    .controller("loginCtrl", function ($scope, $interval, $rootScope, $filter, $http, $auth, $timeout, $window, mainpageHttpRequest, deviceDetector) {
         var initialize = function () {
             var reCaptcha_showing = $interval(function () {
                 jQuery.noConflict();
@@ -44,7 +44,13 @@ angular.module("mainpage")
                                 localStorage.full_name = JSON.stringify(data['user_data']['full_name']);
                                 localStorage.organization_name = JSON.stringify(data['user_data']['organization_name']);
                                 $auth.setToken(data['token']);
-                                $window.location.href = '/dashboard';
+                                $scope.deviceDetector = deviceDetector;
+                                if ($scope.deviceDetector.isMobile() || $scope.deviceDetector.isTablet()) {
+                                    $window.location.href = "/mobile";
+                                }
+                                else {
+                                    $window.location.href = '/dashboard';
+                                }
                             }, function (error) {
                                 $scope.form_state.is_error = true;
                                 $scope.form_state.is_loading = false;
