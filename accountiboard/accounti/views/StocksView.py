@@ -112,9 +112,7 @@ class StockByBranchView(View):
     def get(self, request, branch_id, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = {x['id'] for x in payload['sub_branch_list']}
-        cash_register = []
-        tankhah = []
-        bank = []
+        stocks = []
 
         if not branch_id:
             return JsonResponse({
@@ -128,24 +126,13 @@ class StockByBranchView(View):
                 'error_msg': ACCESS_DENIED
             }, status=403)
 
-        banking_to_branch = StockToBranch.objects.filter(branch=current_branch)
-        bankings_list = [x.banking for x in banking_to_branch]
+        stocks_to_branches = StockToBranch.objects.filter(branch=current_branch)
+        stocks_list = [x.stock for x in stocks_to_branches]
 
-        cash_registers_query = CashRegister.objects.filter(pk__in=bankings_list)
-        tankhahs_query = Tankhah.objects.filter(pk__in=bankings_list)
-        banks_query = Bank.objects.filter(pk__in=bankings_list)
-
-        for x in cash_registers_query:
-            cash_register.append({'id':x.id, 'name':x.name, 'type':'CASH_REGISTER', })
-
-        for x in tankhahs_query:
-            tankhah.append({'id':x.id, 'name':x.name, 'type':'TANKHAH'})
-
-        for x in banks_query:
-            bank.append({'id':x.id, 'name':x.name, 'type':'BANK'})
+        stocks_query = Stock.objects.filter(pk__in=stocks_list)
+        for x in stocks_query:
+            stocks.append({'id':x.id, 'name':x.name})
 
         return JsonResponse({
-                'cash_register': cash_register,
-                'tankhah': tankhah,
-                'bank': bank,
+                'stocks': stocks,
         }, status=200)
