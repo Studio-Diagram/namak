@@ -951,6 +951,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'changePassword': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/changePassword/",
+                    'data': data
+                });
+            },
             'getReport': function (data) {
                 return this.request({
                     'method': "GET",
@@ -967,6 +974,31 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/bugreport/",
+                });
+            },
+
+            'getBanking': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/banking/"
+                });
+            },
+            'getBankingDetail': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/banking/" + id + "/"
+                });
+            },
+            'getBankingByBranch': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/bankingByBranch/" + id + "/"
+                });
+            },
+            'addBanking': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/banking/",
                     'data': data
                 });
             }

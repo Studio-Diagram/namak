@@ -59,6 +59,7 @@
         <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/printerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/reportsCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/bankingCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -126,6 +127,8 @@
                 </a>
                 <a ng-click="update_profile()" href="" class="mainButton greenButton"><i
                         class="fas fa-save"></i> ثبت</a>
+                <a ng-click="change_password()" href="" class="mainButton greenButton"><i
+                        class="fas fa-save"></i> تغییر رمز عبور</a>
             </div>
             <div class="modal-body">
                 <form>

@@ -56,6 +56,7 @@ def create_new_invoice_return(request):
             branch_id = rec_data['branch_id']
             invoice_date = rec_data['date']
             factor_number = rec_data['factor_number']
+            banking_id = rec_data.get('banking_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -78,6 +79,11 @@ def create_new_invoice_return(request):
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
                                                 datetime.now().second).togregorian()
+
+            try:
+                banking_obj = BankingBaseClass.objects.get(pk=banking_id)
+            except:
+                banking_obj = None
 
             last_invoice_obj = InvoiceReturn.objects.filter(branch=branch_obj).order_by('id').last()
             if last_invoice_obj:
@@ -114,7 +120,8 @@ def create_new_invoice_return(request):
                     description=description,
                     numbers=numbers,
                     return_type=return_type,
-                    factor_number=new_factor_number
+                    factor_number=new_factor_number,
+                    banking=banking_obj,
                 )
                 new_invoice.save()
 

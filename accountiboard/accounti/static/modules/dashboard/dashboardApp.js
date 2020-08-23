@@ -196,6 +196,12 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/quick-access.html'
     };
 
+    var banking = {
+        name: 'manager.banking',
+        url: '/banking',
+        templateUrl: 'static/modules/dashboard/views/banking.html'
+    };
+
     $stateProvider.state(registerEmployee);
     $stateProvider.state(addEmployee);
     $stateProvider.state(menuCategory);
@@ -224,6 +230,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(lottery);
     $stateProvider.state(quick_access);
     $stateProvider.state(printers);
+    $stateProvider.state(banking);
 });
 
 angular.module("dashboard")
