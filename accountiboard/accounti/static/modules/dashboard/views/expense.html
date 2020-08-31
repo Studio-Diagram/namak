@@ -118,14 +118,14 @@
                                             </tags-input>
                                         </td>
 
-                                        <td>
+                                        <td ng-hide="true">
                                             <small>حساب بانکی</small>
                                             <select ng-model="new_invoice_expense_data.banking_id"
                                                     class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
                                             </select>
                                         </td>
 
-                                        <td>
+                                        <td ng-hide="true">
                                             <small>انبار</small>
                                             <select ng-model="new_invoice_expense_data.stock_id"
                                                     class="form-control" ng-options="stock.id as stock.name for stock in stocks">

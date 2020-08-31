@@ -69,6 +69,8 @@
                             class="fas fa-save"></i> ثبت</a>
                     <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن </a>
 
                 </div>
                 <div class="modal-body">
@@ -174,7 +176,7 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <table class="invoiceTable">
+                                <table ng-hide="true" class="invoiceTable">
                                     <tbody>
                                     <tr>
                                         <td>

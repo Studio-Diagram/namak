@@ -621,6 +621,9 @@ angular.module("dashboard")
         };
 
         $scope.resetFrom = function () {
+            $scope.selected_material = {
+                "id": 0
+            };
             $scope.new_invoice_purchase_data = {
                 'id': 0,
                 'factor_number': 0,
