@@ -945,7 +945,7 @@ def get_today_status(request):
 
     all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False, branch_id=branch_id)
     all_used_credit = CreditToInvoiceSale.objects.filter(invoice_sale__in=all_invoices).aggregate(Sum('used_price')).get('used_price__sum')
-    status['all_credits'] = all_used_credit
+    status['all_credits'] = all_used_credit if all_used_credit else 0
     for invoice in all_invoices:
         status['all_sales_price'] += invoice.total_price
         status['all_cash'] += invoice.cash
@@ -1393,7 +1393,6 @@ def delete_invoice(request):
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
-    branch_id = rec_data['branch_id']
     invoice_id = rec_data['invoice_id']
     description = rec_data['description']
 
@@ -1404,6 +1403,12 @@ def delete_invoice(request):
 
     invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
     invoice_obj.is_deleted = True
+
+    credit_used_in_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_obj)
+    for credit_to_invoice in credit_used_in_invoice:
+        credit_to_invoice.credit.used_price -= credit_to_invoice.used_price
+        credit_to_invoice.credit.save()
+        credit_to_invoice.delete()
 
     new_invoice_deleted = DeletedInvoiceSale(
         invoice_sale=invoice_obj,
