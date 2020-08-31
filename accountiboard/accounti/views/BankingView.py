@@ -11,9 +11,6 @@ class BankingView(View):
     def get(self, request, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = [x['id'] for x in payload['sub_branch_list']]
-        cash_register = []
-        tankhah = []
-        bank = []
 
         banking_to_branches = BankingToBranch.objects.filter(branch__in=branch_id_list_jwt)
         bankings_list = [x.banking for x in banking_to_branches]
@@ -22,19 +19,19 @@ class BankingView(View):
         tankhahs_query = Tankhah.objects.filter(pk__in=bankings_list)
         banks_query = Bank.objects.filter(pk__in=bankings_list)
 
-        for x in cash_registers_query:
-            banking_to_branches = BankingToBranch.objects.filter(banking=x.id)
-            cash_register.append({'id':x.id, 'name':x.name, 'unit':x.unit, 'branches':[b.branch.id for b in banking_to_branches]})
+        cash_register = [{'id':x.id, 'name':x.name, 'unit':x.unit,
+                        'branches':[b.branch.id for b in BankingToBranch.objects.filter(banking=x.id)]
+                        } for x in cash_registers_query]
 
-        for x in tankhahs_query:
-            banking_to_branches = BankingToBranch.objects.filter(banking=x.id)
-            tankhah.append({'id':x.id, 'name':x.name, 'unit':x.unit, 'branches':[b.branch.id for b in banking_to_branches]})
+        tankhah = [{'id':x.id, 'name':x.name, 'unit':x.unit,
+                    'branches':[b.branch.id for b in BankingToBranch.objects.filter(banking=x.id)]
+                    } for x in tankhahs_query]
 
-        for x in banks_query:
-            banking_to_branches = BankingToBranch.objects.filter(banking=x.id)
-            bank.append({'id':x.id, 'name':x.name, 'unit':x.unit, 'bank_name':x.bank_name,
+        bank = [{'id':x.id, 'name':x.name, 'unit':x.unit, 'bank_name':x.bank_name,
             'bank_account':x.bank_account, 'bank_card_number':x.bank_card_number,
-            'shaba_number':x.shaba_number, 'branches':[b.branch.id for b in banking_to_branches]})
+            'shaba_number':x.shaba_number,
+            'branches':[b.branch.id for b in BankingToBranch.objects.filter(banking=x.id)]
+            } for x in banks_query]
 
 
         return JsonResponse({
