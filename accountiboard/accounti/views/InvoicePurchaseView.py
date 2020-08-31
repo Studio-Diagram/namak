@@ -19,6 +19,17 @@ def get_invoice(request):
         invoice_date = invoice_object.created_time.date()
         jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                    year=invoice_date.year)
+
+        try:
+            banking_obj = BankingBaseClass.objects.get(pk=invoice_object.banking.id)
+        except:
+            banking_obj = None
+
+        try:
+            stock_obj = Stock.objects.get(pk=invoice_object.stock.id)
+        except:
+            stock_obj = None
+
         invoice_data = {
             'id': invoice_object.pk,
             'factor_number': invoice_object.factor_number,
@@ -31,7 +42,9 @@ def get_invoice(request):
             'tax': invoice_object.tax,
             'discount': invoice_object.discount,
             'created_date': jalali_date.strftime("%Y/%m/%d"),
-            'settlement_type_name': invoice_object.get_settlement_type_display()
+            'settlement_type_name': invoice_object.get_settlement_type_display(),
+            'banking': {'id': banking_obj.id, 'name': banking_obj.name} if banking_obj else {'id': None},
+            'stock': {'id': stock_obj.id, 'name': stock_obj.name} if stock_obj else {'id': None},
         }
 
         invoice_materials = PurchaseToMaterial.objects.filter(invoice_purchase=invoice_object)
@@ -77,6 +90,8 @@ def create_new_invoice_purchase(request):
             factor_number = rec_data['factor_number']
             username = rec_data['username']
             branch_id = rec_data['branch_id']
+            banking_id = rec_data.get('banking_id')
+            stock_id = rec_data.get('stock_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -101,6 +116,22 @@ def create_new_invoice_purchase(request):
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
 
+            if banking_id:
+                try:
+                    banking_obj = BankingBaseClass.objects.get(pk=banking_id)
+                except:
+                    return JsonResponse({"error_msg": BANKING_NOT_FOUND}, status=404)
+            else:
+                banking_obj = None
+
+            if stock_id:
+                try:
+                    stock_obj = Stock.objects.get(pk=stock_id)
+                except:
+                    return JsonResponse({"error_msg": STOCK_NOT_FOUND}, status=404)
+            else:
+                stock_obj = None
+
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
@@ -122,7 +153,9 @@ def create_new_invoice_purchase(request):
                 tax=tax,
                 discount=discount,
                 total_price=0,
-                factor_number=new_factor_number
+                factor_number=new_factor_number,
+                banking=banking_obj,
+                stock=stock_obj,
             )
             new_invoice.save()
 

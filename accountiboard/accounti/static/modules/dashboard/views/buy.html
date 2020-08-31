@@ -151,6 +151,7 @@
                                                    class="form-control listFilter tableLefty" placeholder="تاریخ"
                                                    type="text">
                                         </td>
+                                        
                                         <td>
                                             <small>نوع پرداخت</small>
                                             <select ng-model="new_invoice_purchase_data.settlement_type"
@@ -169,6 +170,24 @@
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="invoiceTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <small>حساب بانکی</small>
+                                            <select ng-model="new_invoice_purchase_data.banking_id"
+                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <small>انبار</small>
+                                            <select ng-model="new_invoice_purchase_data.stock_id"
+                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                            </select>
                                         </td>
                                     </tr>
                                     </tbody>

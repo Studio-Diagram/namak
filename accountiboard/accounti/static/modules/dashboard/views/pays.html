@@ -94,6 +94,20 @@
                                 <input style="font-family: 'B Yekan'" ng-model="new_pay_data.backup_code" type="text"
                                        class="form-control" placeholder="شماره ارجاع">
                             </div>
+                            <div class="col">
+                                <label>حساب بانکی</label>
+                                <select ng-model="new_pay_data.banking_id"
+                                        class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <label>انبار</label>
+                                <select ng-model="new_pay_data.stock_id"
+                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                </select>
+                            </div>
+
                         </div>
                     </form>
                 </div>
@@ -153,6 +167,7 @@
                             <th scope="col">میزان پرداختی</th>
                             <th scope="col">نوع پرداخت</th>
                             <th scope="col">شماره ارجاع</th>
+                            <th scope="col">بانکداری</th>
                             <th scope="col">تاریخ</th>
                             <th scope="col"></th>
                         </tr>
@@ -164,6 +179,7 @@
                             <td class="redText">{{ pay.payment_amount | number | persianNumber }} ریال</td>
                             <td>{{ pay.settle_type }}</td>
                             <td>{{ pay.backup_code | persianNumber }}</td>
+                            <td>{{ pay.banking }}</td>
                             <td>{{ pay.created_time | persianNumber }}</td>
                             <td><a ng-click="openDeletePermissionModal(pay.id)" href=""
                                    class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>

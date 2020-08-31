@@ -19,6 +19,8 @@ def create_new_invoice_settlement(request):
             branch_id = rec_data['branch_id']
             invoice_date = rec_data['date']
             factor_number = rec_data['factor_number']
+            banking_id = rec_data.get('banking_id')
+            stock_id = rec_data.get('stock_id')
 
             if not username:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -36,10 +38,28 @@ def create_new_invoice_settlement(request):
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not factor_number:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+            if not banking_id:
+                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
             now_time = datetime.now()
+
+            if banking_id:
+                try:
+                    banking_obj = BankingBaseClass.objects.get(pk=banking_id)
+                except:
+                    return JsonResponse({"error_msg": BANKING_NOT_FOUND}, status=404)
+            else:
+                banking_obj = None
+
+            if stock_id:
+                try:
+                    stock_obj = Stock.objects.get(pk=stock_id)
+                except:
+                    return JsonResponse({"error_msg": STOCK_NOT_FOUND}, status=404)
+            else:
+                stock_obj = None
 
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
@@ -61,7 +81,9 @@ def create_new_invoice_settlement(request):
                 backup_code=backup_code,
                 supplier=supplier_obj,
                 created_time=invoice_date_g,
-                factor_number=new_factor_number
+                factor_number=new_factor_number,
+                banking=banking_obj,
+                stock=stock_obj,
             )
             new_invoice.save()
 
@@ -90,6 +112,7 @@ def get_all_invoices(request):
             invoice_date = invoice.created_time.date()
             jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                        year=invoice_date.year)
+
             invoices.append({
                 'id': invoice.pk,
                 'factor_number': invoice.factor_number,
@@ -97,7 +120,8 @@ def get_all_invoices(request):
                 'payment_amount': invoice.payment_amount,
                 'settle_type': invoice.get_settle_type_display(),
                 'backup_code': invoice.backup_code,
-                'created_time': jalali_date.strftime("%Y/%m/%d")
+                'created_time': jalali_date.strftime("%Y/%m/%d"),
+                'banking': invoice.banking.name,
             })
 
         return JsonResponse({"response_code": 2, 'invoices': invoices})

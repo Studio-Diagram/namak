@@ -412,6 +412,17 @@ angular.module("dashboard")
                     });
             };
 
+            $scope.change_password = function () {
+                dashboardHttpRequest.changePassword($scope.user_profile_data)
+                    .then(function (data) {
+                        $rootScope.close_modal('userProfileModal');
+                        $rootScope.show_toast("با موفقیت انجام شد", 'success');
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('mainErrorModal', 'userProfileModal');
+                    });
+            };
+
             initialize();
 
         }

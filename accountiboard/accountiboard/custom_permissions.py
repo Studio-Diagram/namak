@@ -69,7 +69,8 @@ def session_authenticate(request, permitted_roles, branch_disable=False):
     }
 
 
-def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
+
+def token_authenticate(request, permitted_roles, bundles, branch_disable=False, *args, **kwargs):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
     request_branch = get_branch(request)
     if not payload:
@@ -107,14 +108,20 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False):
 
 def get_branch(request):
     try:
-        body_unicode = request.body.decode('utf-8')
-        rec_data = json.loads(body_unicode)
-        branch = None
-        if 'branch' in rec_data:
-            branch = rec_data['branch']
-        elif 'branch_id' in rec_data:
-            branch = rec_data['branch_id']
-        return branch
+        if request.method == 'POST':
+            body_unicode = request.body.decode('utf-8')
+            rec_data = json.loads(body_unicode)
+            branch = None
+            if 'branch' in rec_data:
+                branch = rec_data['branch']
+            elif 'branch_id' in rec_data:
+                branch = rec_data['branch_id']
+            return branch
+        elif request.method == 'GET':
+            branch_str = request.GET.get('branch', None)
+            if branch_str:
+                branch = int(branch_str)
+            return branch
     except:
         return None
 
