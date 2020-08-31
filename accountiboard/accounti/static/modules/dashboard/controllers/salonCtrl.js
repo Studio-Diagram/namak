@@ -301,27 +301,31 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username,
                 'invoice_id': $scope.new_invoice_data.invoice_sales_id
             };
-            dashboardHttpRequest.performCredit(sending_data)
-                .then(function (data) {
-                    $scope.disable_print_after_save_all_buttons = false;
-                    if (data['response_code'] === 2) {
-                        $scope.new_invoice_data.used_credit += data['used_credit'];
-                        $scope.new_invoice_data.total_credit -= data['used_credit'];
-                        $scope.getAllTodayInvoices();
-                        $scope.current_selected_table_name = $stateParams.table_name;
-                        if ($scope.current_selected_table_name) {
-                            $scope.selectTable($scope.current_selected_table_name);
+            if ($scope.new_invoice_data.total_price > $scope.new_invoice_data.used_credit) {
+                dashboardHttpRequest.performCredit(sending_data)
+                    .then(function (data) {
+                        $scope.disable_print_after_save_all_buttons = false;
+                        if (data['response_code'] === 2) {
+                            $scope.new_invoice_data.used_credit += data['used_credit'];
+                            $scope.new_invoice_data.total_credit -= data['used_credit'];
+                            $scope.getAllTodayInvoices();
+                            $scope.current_selected_table_name = $stateParams.table_name;
+                            if ($scope.current_selected_table_name) {
+                                $scope.selectTable($scope.current_selected_table_name);
+                            }
                         }
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
+                        else if (data['response_code'] === 3) {
+                            $scope.error_message = data['error_msg'];
+                            $scope.openErrorModal();
+                        }
+                    }, function (error) {
+                        $scope.disable_print_after_save_all_buttons = false;
+                        $scope.error_message = error;
                         $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.disable_print_after_save_all_buttons = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
+                    });
+            } else {
+                $scope.disable_print_after_save_all_buttons = false;
+            }
         };
 
         $scope.edit_settled_invoice_payment = function () {
