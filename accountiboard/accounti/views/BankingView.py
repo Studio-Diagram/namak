@@ -62,7 +62,7 @@ class BankingView(View):
         if not branches_in_request or not name:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE
-            }, status=401)
+            }, status=400)
 
         for branch in branches_in_request:
             if branch['id'] not in branch_id_list_jwt:
@@ -75,7 +75,7 @@ class BankingView(View):
         if not branches_id_list_to_add:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE_BRANCH
-            }, status=401)
+            }, status=400)
                 
 
         if type == 'CASH_REGISTER':
@@ -204,7 +204,7 @@ class BankingDetailView(View):
         if not branches_in_request or not name:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE
-            }, status=401)
+            }, status=400)
 
         for branch in branches_in_request:
             if branch['id'] not in branch_id_list_jwt:
