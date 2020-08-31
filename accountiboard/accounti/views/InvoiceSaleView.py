@@ -940,9 +940,12 @@ def get_today_status(request):
         "all_pays": 0,
         "all_games": 0,
         "all_sales": 0,
+        "all_credits": 0
     }
 
     all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False, branch_id=branch_id)
+    all_used_credit = CreditToInvoiceSale.objects.filter(invoice_sale__in=all_invoices).aggregate(Sum('used_price')).get('used_price__sum')
+    status['all_credits'] = all_used_credit
     for invoice in all_invoices:
         status['all_sales_price'] += invoice.total_price
         status['all_cash'] += invoice.cash
