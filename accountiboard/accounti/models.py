@@ -383,7 +383,7 @@ class InvoiceSettlement(models.Model):
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     tax = models.FloatField(null=False, default=0)
     discount = models.FloatField(null=False, default=0)
-    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=True, blank=True)
     stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
@@ -421,7 +421,7 @@ class InvoicePurchase(models.Model):
     total_price = models.FloatField(default=0)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
-    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=False, blank=False)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=True, blank=True)
     stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
