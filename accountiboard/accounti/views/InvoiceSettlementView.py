@@ -107,11 +107,6 @@ def get_all_invoices(request):
             jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                        year=invoice_date.year)
 
-            # print(invoice.banking)
-            # print(invoice.banking.name)
-            # banking_obj = BankingBaseClass.objects.get(pk=invoice.banking.id)
-            # banking_obj = BankingBaseClass.objects.get(pk=invoice.banking.id)
-
             invoices.append({
                 'id': invoice.pk,
                 'factor_number': invoice.factor_number,
