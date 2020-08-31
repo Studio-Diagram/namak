@@ -1025,6 +1025,7 @@ def get_kitchen_sail_detail(request):
     username = rec_data['username']
     branch_id = rec_data['branch_id']
     cash_id = rec_data['cash_id']
+    menu_category_id = rec_data['menu_category_id']
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
@@ -1039,6 +1040,9 @@ def get_kitchen_sail_detail(request):
                                                                              invoice_sales__cash_desk=cash_obj,
                                                                              menu_item__menu_category__kind="KITCHEN").order_by(
         "menu_item__name")
+
+    if menu_category_id:
+        all_invoices_menu_items_kitchen = all_invoices_menu_items_kitchen.filter(menu_item__menu_category__id=menu_category_id)
 
     for menu_item in all_invoices_menu_items_kitchen:
         found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
@@ -1104,6 +1108,7 @@ def get_other_sail_detail(request):
     username = rec_data['username']
     branch_id = rec_data['branch_id']
     cash_id = rec_data['cash_id']
+    menu_category_id = rec_data['menu_category_id']
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
@@ -1118,6 +1123,9 @@ def get_other_sail_detail(request):
                                                                            invoice_sales__cash_desk=cash_obj,
                                                                            menu_item__menu_category__kind="OTHER").order_by(
         "menu_item__name")
+
+    if menu_category_id:
+        all_invoices_menu_items_other = all_invoices_menu_items_other.filter(menu_item__menu_category__id=menu_category_id)
 
     for menu_item in all_invoices_menu_items_other:
         found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))

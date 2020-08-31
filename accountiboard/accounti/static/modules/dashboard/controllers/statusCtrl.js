@@ -75,7 +75,8 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id
+                'cash_id': $rootScope.cash_data.cash_id,
+                "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getKitchenDetailSales(sending_data)
                 .then(function (data) {
@@ -122,7 +123,8 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id
+                'cash_id': $rootScope.cash_data.cash_id,
+                "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getOtherDetailSales(sending_data)
                 .then(function (data) {
