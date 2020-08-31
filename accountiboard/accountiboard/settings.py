@@ -63,7 +63,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'multiselectfield',
     'corsheaders',
-    'compressor'
+    'compressor',
+    'dbbackup',  # django-dbbackup
 ]
 
 MIDDLEWARE = [
@@ -262,3 +263,9 @@ PAY_IR_API_URL_SEND = 'https://pay.ir/pg/send'
 PAY_IR_API_URL_PAYMENT_GATEWAY = 'https://pay.ir/pg/{token}'
 # Verification and committing transactions endpoint.
 PAY_IR_API_URL_VERIFY = 'https://pay.ir/pg/verify'
+
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+#check linux permissions when changing this
+DBBACKUP_STORAGE_OPTIONS = {'location': '/tmp/django-backups'}
