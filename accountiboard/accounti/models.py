@@ -99,6 +99,28 @@ class EmployeeToBranch(models.Model):
     position = models.CharField(max_length=55, blank=True)
 
 
+# subclass from this model
+class BankingBaseClass(models.Model):
+    name = models.CharField(max_length=30, blank=False, null=False)
+    unit = models.CharField(max_length=30, blank=True, null=True, default="IR-RIAL")
+
+class BankingToBranch(models.Model):
+    branch  = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE)
+
+class CashRegister(BankingBaseClass):
+    pass
+
+class Tankhah(BankingBaseClass):
+    pass
+
+class Bank(BankingBaseClass):
+    bank_name = models.CharField(max_length=255, null=True, blank=True)
+    bank_account = models.CharField(max_length=255, null=True, blank=True)
+    bank_card_number = models.CharField(max_length=30, null=True, blank=True)
+    shaba_number = models.CharField(max_length=255, null=True, blank=True)
+
+
 class Stock(models.Model):
     name = models.CharField(max_length=30, null=True, blank=True)
 
@@ -361,6 +383,8 @@ class InvoiceSettlement(models.Model):
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     tax = models.FloatField(null=False, default=0)
     discount = models.FloatField(null=False, default=0)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=True, blank=True)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Material(models.Model):
@@ -397,6 +421,8 @@ class InvoicePurchase(models.Model):
     total_price = models.FloatField(default=0)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=True, blank=True)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return "FactorNumber: " + str(self.factor_number) + " Time: " + str(self.created_time) + str(
@@ -461,6 +487,8 @@ class InvoiceExpense(models.Model):
     discount = models.FloatField(null=False)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, blank=True, null=True)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class ExpenseToTag(models.Model):
@@ -489,6 +517,8 @@ class InvoiceReturn(models.Model):
     description = models.TextField(null=True, blank=True)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE, blank=True, null=True)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, blank=True, null=True)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class DeletedItemsInvoiceSales(models.Model):
@@ -720,3 +750,4 @@ class BugReport(models.Model):
     image = models.ImageField(null=True)
     image_name = models.CharField(max_length=500, null=True, default="default.jpg")
     created_time = models.DateTimeField(auto_now_add=True)
+

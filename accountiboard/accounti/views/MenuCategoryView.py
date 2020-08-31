@@ -49,12 +49,13 @@ def get_categires_base_on_kind(request):
     rec_data = json.loads(request.read().decode('utf-8'))
     kind = rec_data['kind']
     username = rec_data['username']
+    current_branch = rec_data['current_branch']
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
     if not kind:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    menu_cats = MenuCategory.objects.filter(kind=kind).values()
+    menu_cats = MenuCategory.objects.filter(kind=kind, branch=current_branch).values()
 
     return JsonResponse({"response_code": 2, "categories": list(menu_cats)})

@@ -951,6 +951,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'changePassword': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/changePassword/",
+                    'data': data
+                });
+            },
             'getReport': function (data) {
                 return this.request({
                     'method': "GET",
@@ -967,9 +974,74 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/bugreport/",
+                });
+            },
+
+            'getBanking': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/banking/"
+                });
+            },
+            'getBankingDetail': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/banking/" + id + "/"
+                });
+            },
+            'updateBankingDetail': function (id, data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/banking/" + id + "/",
                     'data': data
                 });
-            }
+            },
+            'getBankingByBranch': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/bankingByBranch/" + id + "/"
+                });
+            },
+            'addBanking': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/banking/",
+                    'data': data
+                });
+            },
+            'getStocks': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocks/"
+                });
+            },
+            'getStockDetail': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocks/" + id + "/"
+                });
+            },
+            'updateStockDetail': function (id, data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/stocks/" + id + "/",
+                    'data': data
+                });
+            },
+            'getStockByBranch': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocksByBranch/" + id + "/"
+                });
+            },
+            'addStock': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/stocks/",
+                    'data': data
+                });
+            },
+
         };
         return service;
 

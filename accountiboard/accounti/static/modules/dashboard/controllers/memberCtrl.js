@@ -19,10 +19,10 @@ angular.module("dashboard")
                 'member_id': 0,
                 'total_credit': 0,
                 'expire_date': '',
-                'expire_time': '',
+                'expire_time': '00:00',
                 'start_date': '',
-                'start_time': '',
-                'credit_categories': [],
+                'start_time': '00:00',
+                'credit_category': '',
                 'username': $rootScope.user_data.username
             };
             $scope.new_member_data = {
@@ -44,11 +44,11 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username
             };
             $scope.credit_categories = [
-                ["BAR", "آیتم‌های بار"],
-                ["KITCHEN", "آیتم‌های آشپزخانه"],
-                ["OTHER", "آیتم‌های سایر"],
-                ["SHOP", "محصولات فروشگاهی"],
-                ["GAME", "بازی"]
+                {key: "BAR", name: "آیتم‌های بار"},
+                {key: "KITCHEN", name: "آیتم‌های آشپزخانه"},
+                {key: "OTHER", name: "آیتم‌های سایر"},
+                {key: "SHOP", name: "محصولات فروشگاهی"},
+                {key: "GAME", name: "بازی"}
             ];
             $scope.get_members_data($rootScope.user_data);
             $scope.config_clock();
@@ -118,16 +118,6 @@ angular.module("dashboard")
                     $scope.openErrorModal();
                 });
             $rootScope.open_modal("showMemberProfileModal");
-        };
-
-        $scope.change_credit_category_checkBox = function (category_name) {
-            var index_of_category_id = $scope.new_credit_data.credit_categories.indexOf(category_name);
-            if (index_of_category_id === -1) {
-                $scope.new_credit_data.credit_categories.push(category_name);
-            }
-            else {
-                $scope.new_credit_data.credit_categories.splice(index_of_category_id, 1);
-            }
         };
 
         $scope.check_gift_code = function () {
@@ -340,8 +330,10 @@ angular.module("dashboard")
                 'member_id': 0,
                 'total_credit': 0,
                 'expire_date': '',
-                'expire_time': '',
-                'credit_categories': [],
+                'expire_time': '00:00',
+                'start_date': '',
+                'start_time': '00:00',
+                'credit_category': '',
                 'username': $rootScope.user_data.username
             };
         };

@@ -829,69 +829,70 @@ def get_all_invoice_games(request):
 
 def delete_items(request):
     if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        invoice_id = rec_data['invoice_id']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        else:
-            invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-            employee = User.objects.get(phone=username)
-            shops = rec_data['shop']
-            menus = rec_data['menu']
-            games = rec_data['game']
-            message = rec_data['message']
-            if not message:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not len(shops) and not len(menus) and not len(games):
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            for shop_id in shops:
-                shop_product_obj = InvoicesSalesToShopProducts.objects.get(pk=shop_id)
-                new_deleted = DeletedItemsInvoiceSales(
-                    created_time=datetime.now(),
-                    item_type="SHOP",
-                    item_numbers=shop_product_obj.numbers,
-                    message=message,
-                    invoice_sales=invoice_object,
-                    employee=employee
-                )
-                new_deleted.save()
-                invoice_object.total_price -= int(shop_product_obj.shop_product.price) * int(shop_product_obj.numbers)
-                invoice_object.save()
-                shop_product_obj.delete()
-            for menu_id in menus:
-                menu_item_obj = InvoicesSalesToMenuItem.objects.get(pk=menu_id)
-                new_deleted = DeletedItemsInvoiceSales(
-                    created_time=datetime.now(),
-                    item_type="MENU",
-                    item_numbers=menu_item_obj.numbers,
-                    message=message,
-                    invoice_sales=invoice_object,
-                    employee=employee
-                )
-                new_deleted.save()
-                invoice_object.total_price -= int(menu_item_obj.menu_item.price) * int(menu_item_obj.numbers)
-                invoice_object.save()
-                menu_item_obj.delete()
-            for game_id in games:
-                game_obj = InvoicesSalesToGame.objects.get(game_id=game_id)
-                new_deleted = DeletedItemsInvoiceSales(
-                    created_time=datetime.now(),
-                    item_type="GAME",
-                    item_numbers=game_obj.game.points,
-                    message=message,
-                    invoice_sales=invoice_object,
-                    employee=employee
-                )
-                new_deleted.save()
-                invoice_object.total_price -= int(game_obj.game.points) * invoice_object.branch.min_paid_price
-                invoice_object.save()
-                game_obj.delete()
+        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-            return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    rec_data = json.loads(request.read().decode('utf-8'))
+    username = rec_data['username']
+    invoice_id = rec_data['invoice_id']
+    if not request.session.get('is_logged_in', None) == username:
+        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+    if not invoice_id:
+        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+    else:
+        invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+        employee = User.objects.get(phone=username)
+        shops = rec_data['shop']
+        menus = rec_data['menu']
+        games = rec_data['game']
+        message = rec_data['message']
+        if not message:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not len(shops) and not len(menus) and not len(games):
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        for shop_id in shops:
+            shop_product_obj = InvoicesSalesToShopProducts.objects.get(pk=shop_id)
+            new_deleted = DeletedItemsInvoiceSales(
+                created_time=datetime.now(),
+                item_type="SHOP",
+                item_numbers=shop_product_obj.numbers,
+                message=message,
+                invoice_sales=invoice_object,
+                employee=employee
+            )
+            new_deleted.save()
+            invoice_object.total_price -= int(shop_product_obj.shop_product.price) * int(shop_product_obj.numbers)
+            invoice_object.save()
+            shop_product_obj.delete()
+        for menu_id in menus:
+            menu_item_obj = InvoicesSalesToMenuItem.objects.get(pk=menu_id)
+            new_deleted = DeletedItemsInvoiceSales(
+                created_time=datetime.now(),
+                item_type="MENU",
+                item_numbers=menu_item_obj.numbers,
+                message=message,
+                invoice_sales=invoice_object,
+                employee=employee
+            )
+            new_deleted.save()
+            invoice_object.total_price -= int(menu_item_obj.menu_item.price) * int(menu_item_obj.numbers)
+            invoice_object.save()
+            menu_item_obj.delete()
+        for game_id in games:
+            game_obj = InvoicesSalesToGame.objects.get(game_id=game_id)
+            new_deleted = DeletedItemsInvoiceSales(
+                created_time=datetime.now(),
+                item_type="GAME",
+                item_numbers=game_obj.game.points,
+                message=message,
+                invoice_sales=invoice_object,
+                employee=employee
+            )
+            new_deleted.save()
+            invoice_object.total_price -= int(game_obj.game.points) * invoice_object.branch.min_paid_price
+            invoice_object.save()
+            game_obj.delete()
+
+        return JsonResponse({"response_code": 2})
 
 
 def get_today_status(request):
@@ -940,9 +941,13 @@ def get_today_status(request):
         "all_pays": 0,
         "all_games": 0,
         "all_sales": 0,
+        "all_credits": 0
     }
 
     all_invoices = InvoiceSales.objects.filter(cash_desk=cash_obj, is_deleted=False, branch_id=branch_id)
+    all_used_credit = CreditToInvoiceSale.objects.filter(invoice_sale__in=all_invoices).aggregate(
+        Sum('used_price')).get('used_price__sum')
+    status['all_credits'] = all_used_credit if all_used_credit else 0
     for invoice in all_invoices:
         status['all_sales_price'] += invoice.total_price
         status['all_cash'] += invoice.cash
@@ -1025,6 +1030,7 @@ def get_kitchen_sail_detail(request):
     username = rec_data['username']
     branch_id = rec_data['branch_id']
     cash_id = rec_data['cash_id']
+    menu_category_id = rec_data['menu_category_id']
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
@@ -1039,6 +1045,10 @@ def get_kitchen_sail_detail(request):
                                                                              invoice_sales__cash_desk=cash_obj,
                                                                              menu_item__menu_category__kind="KITCHEN").order_by(
         "menu_item__name")
+
+    if menu_category_id:
+        all_invoices_menu_items_kitchen = all_invoices_menu_items_kitchen.filter(
+            menu_item__menu_category__id=menu_category_id)
 
     for menu_item in all_invoices_menu_items_kitchen:
         found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
@@ -1104,6 +1114,7 @@ def get_other_sail_detail(request):
     username = rec_data['username']
     branch_id = rec_data['branch_id']
     cash_id = rec_data['cash_id']
+    menu_category_id = rec_data['menu_category_id']
 
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
@@ -1118,6 +1129,10 @@ def get_other_sail_detail(request):
                                                                            invoice_sales__cash_desk=cash_obj,
                                                                            menu_item__menu_category__kind="OTHER").order_by(
         "menu_item__name")
+
+    if menu_category_id:
+        all_invoices_menu_items_other = all_invoices_menu_items_other.filter(
+            menu_item__menu_category__id=menu_category_id)
 
     for menu_item in all_invoices_menu_items_other:
         found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
@@ -1382,7 +1397,6 @@ def delete_invoice(request):
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
-    branch_id = rec_data['branch_id']
     invoice_id = rec_data['invoice_id']
     description = rec_data['description']
 
@@ -1393,6 +1407,12 @@ def delete_invoice(request):
 
     invoice_obj = InvoiceSales.objects.filter(id=invoice_id).first()
     invoice_obj.is_deleted = True
+
+    credit_used_in_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_obj)
+    for credit_to_invoice in credit_used_in_invoice:
+        credit_to_invoice.credit.used_price -= credit_to_invoice.used_price
+        credit_to_invoice.credit.save()
+        credit_to_invoice.delete()
 
     new_invoice_deleted = DeletedInvoiceSale(
         invoice_sale=invoice_obj,
@@ -1485,5 +1505,6 @@ def night_report_template(request):
     report_data['difference'] = cash_object.current_money_in_cash - report_data['total_cash_desk']
     report_data['total_cash_desk'] = format(report_data['total_cash_desk'], ',d')
     report_data['difference'] = format(report_data['difference'], ',d')
-    report_data['cashier_name'] = "%s %s" % (cash_object.employee.first_name, cash_object.employee.last_name) if cash_object.employee else UNKNOWN_CASHIER
+    report_data['cashier_name'] = "%s %s" % (
+    cash_object.employee.first_name, cash_object.employee.last_name) if cash_object.employee else UNKNOWN_CASHIER
     return render(request, 'night_report.html', {"report_data": report_data})

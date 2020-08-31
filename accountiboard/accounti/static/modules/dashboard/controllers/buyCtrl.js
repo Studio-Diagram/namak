@@ -25,7 +25,9 @@ angular.module("dashboard")
                 'discount': 0,
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'banking_id':'',
+                'stock_id':''
             };
             $scope.search_data_material = {
                 'search_word': '',
@@ -41,7 +43,48 @@ angular.module("dashboard")
             $scope.get_suppliers();
             $scope.get_materials();
             $scope.get_shop_products();
+            $scope.get_banking_data();
+            $scope.get_stocks_data();
             $scope.getNextFactorNumber('BUY');
+        };
+
+        $scope.get_banking_data = function () {
+            dashboardHttpRequest.getBankingByBranch($rootScope.user_data.branch)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    $scope.allbanking_names = [];
+                    data['bank'].forEach(function (bank) {
+                        $scope.allbanking_names.push({'id':bank.id, 'name':bank.name});
+                    });
+
+                    data['tankhah'].forEach(function (tankhah) {
+                        $scope.allbanking_names.push({'id':tankhah.id, 'name':tankhah.name});
+                    });
+
+                    data['cash_register'].forEach(function (cash_register) {
+                        $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
+                    });
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+        };
+
+        $scope.get_stocks_data = function () {
+            dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    // $scope.branches = $rootScope.user_data.branches;
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
+                    $scope.stocks = data['stocks'];
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.add_material_item = function (item) {
@@ -107,7 +150,9 @@ angular.module("dashboard")
                             'tax': data['invoice']['tax'],
                             'discount': data['invoice']['discount'],
                             'branch_id': $rootScope.user_data.branch,
-                            'username': $rootScope.user_data.username
+                            'username': $rootScope.user_data.username,
+                            'banking_id': data['invoice']['banking']['id'],
+                            'stock_id': data['invoice']['stock']['id'],
                         };
                         $scope.openAddModal();
                     }
@@ -576,6 +621,9 @@ angular.module("dashboard")
         };
 
         $scope.resetFrom = function () {
+            $scope.selected_material = {
+                "id": 0
+            };
             $scope.new_invoice_purchase_data = {
                 'id': 0,
                 'factor_number': 0,
@@ -588,7 +636,9 @@ angular.module("dashboard")
                 'discount': 0,
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'username': $rootScope.user_data.username,
+                'banking_id': '',
+                'stock_id':''
             };
             if ($scope.search_data_material.search_word) {
                 $scope.search_data_material = {

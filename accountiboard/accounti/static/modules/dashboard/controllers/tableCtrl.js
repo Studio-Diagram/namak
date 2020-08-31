@@ -1,10 +1,9 @@
 angular.module("dashboard")
     .controller("tableCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
-            $scope.is_in_edit_mode = false;
             $scope.new_table_data = {
                 'table_id': 0,
-                'table_cat_id':'',
+                'table_cat_id': '',
                 'name': '',
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
@@ -15,12 +14,6 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-            $scope.search_data_table = {
-                'search_word': '',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
-            $scope.tableSearchWord = '';
             $scope.get_tables_data($rootScope.user_data);
             $scope.get_table_categories_data($rootScope.user_data);
         };
@@ -59,80 +52,13 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.openAddTableModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddTableModal = function () {
-            $scope.resetFrom();
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModal').modal('hide');
-            })(jQuery);
-        };
-
-        $scope.openAddTableCategoryModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModalTableCategory').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddTableCategoryModal = function () {
-            $scope.resetFrom();
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModalTableCategory').modal('hide');
-            })(jQuery);
-        };
-
         $scope.addTable = function () {
-            if ($scope.is_in_edit_mode) {
-                $scope.is_in_edit_mode = false;
-                dashboardHttpRequest.addTable($scope.new_table_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_tables_data($rootScope.user_data);
-                            $scope.closeAddTableModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
-            else {
-                dashboardHttpRequest.addTable($scope.new_table_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.get_tables_data($rootScope.user_data);
-                            $scope.resetFrom();
-                            $scope.closeAddTableModal();
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
-            }
-        };
-
-        $scope.addTableCategory = function () {
-            dashboardHttpRequest.addTableCategory($scope.new_table_category_data)
+            dashboardHttpRequest.addTable($scope.new_table_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.get_table_categories_data($rootScope.user_data);
                         $scope.get_tables_data($rootScope.user_data);
-                        $scope.closeAddTableCategoryModal();
+                        $scope.resetFrom();
+                        $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -144,25 +70,21 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.searchTable = function () {
-            if ($scope.search_data_table.search_word === '') {
-                $scope.get_tables_data($rootScope.user_data);
-            }
-            else {
-                dashboardHttpRequest.searchTable($scope.search_data_table)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $scope.tables = data['tables'];
-                        }
-                        else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
+        $scope.addTableCategory = function () {
+            dashboardHttpRequest.addTableCategory($scope.new_table_category_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_table_categories_data($rootScope.user_data);
+                        $rootScope.close_modal('addModalTableCategory');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
-                    });
-            }
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.getTable = function (table_id) {
@@ -208,7 +130,6 @@ angular.module("dashboard")
 
 
         $scope.editTable = function (table_id) {
-            $scope.is_in_edit_mode = true;
             var data = {
                 'username': $rootScope.user_data.username,
                 'table_id': table_id
@@ -244,7 +165,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.new_table_category_data['id'] = data['table_category']['id'];
                         $scope.new_table_category_data['name'] = data['table_category']['name'];
-                        $scope.openAddTableCategoryModal();
+                        $rootScope.close_modal('addModalTableCategory');
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -275,8 +196,8 @@ angular.module("dashboard")
 
         $scope.closeForm = function () {
             $scope.resetFrom();
-            $scope.closeAddTableModal();
-            $scope.closeAddTableCategoryModal();
+            $rootScope.close_modal('addModal');
+            $rootScope.close_modal('addModalTableCategory');
         };
 
         $scope.openErrorModal = function () {

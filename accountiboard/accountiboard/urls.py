@@ -8,6 +8,8 @@ from accounti.views import EmployeeView, boardgameView, MemberView, stockView, B
     OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView
 from accountiboard import settings
 from django.views.static import serve
+from accounti.views import BankingView
+from accounti.views import StocksView
 
 from admin_panel.views import AdminGeneralView, AdminNewsView, AdminBugReportView, AdminBranchView
 from django.conf.urls.static import static
@@ -147,6 +149,7 @@ urlpatterns = [
     path('api/createManualGiftCode/', CreditView.create_gift_code_manual),
     path('api/checkGiftCode/', CreditView.check_gift_code),
     path('api/profile/', UserView.ProfileView.as_view()),
+    path('api/changePassword/', UserView.ChangePasswordView.as_view()),
     path('api/report/', ReportView.ReportView.as_view()),
 
     path('api/bundles/', BundleView.BundleView.as_view()),
@@ -161,6 +164,15 @@ urlpatterns = [
 
     path('api/bugreport/', BugReportView.BugReportView.as_view()),
     path('api/latestnews/', LatestNewsView.LatestNewsView.as_view()),
+
+    path('api/banking/<int:id>/', BankingView.BankingDetailView.as_view()),
+    path('api/banking/', BankingView.BankingView.as_view()),
+    path('api/bankingByBranch/<str:branch_id>/', BankingView.BankingByBranchView.as_view()),
+
+    path('api/stocks/<int:id>/', StocksView.StockDetailView.as_view()),
+    path('api/stocks/', StocksView.StocksView.as_view()),
+    path('api/stocksByBranch/<str:branch_id>/', StocksView.StockByBranchView.as_view()),
+
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),
