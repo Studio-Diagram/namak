@@ -121,6 +121,14 @@
                                                     class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
                                             </select>
                                         </td>
+
+                                        <td>
+                                            <small>انبار</small>
+                                            <select ng-model="new_invoice_expense_data.stock_id"
+                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                            </select>
+                                        </td>
+
                                     </tr>
                                     </tbody>
                                 </table>

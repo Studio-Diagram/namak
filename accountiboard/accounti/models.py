@@ -384,6 +384,7 @@ class InvoiceSettlement(models.Model):
     tax = models.FloatField(null=False, default=0)
     discount = models.FloatField(null=False, default=0)
     banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Material(models.Model):
@@ -421,6 +422,7 @@ class InvoicePurchase(models.Model):
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=False, blank=False)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return "FactorNumber: " + str(self.factor_number) + " Time: " + str(self.created_time) + str(
@@ -486,6 +488,7 @@ class InvoiceExpense(models.Model):
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, blank=True, null=True)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class ExpenseToTag(models.Model):
@@ -515,6 +518,7 @@ class InvoiceReturn(models.Model):
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE, blank=True, null=True)
     branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, blank=True, null=True)
+    stock = models.ForeignKey(to=Stock, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class DeletedItemsInvoiceSales(models.Model):

@@ -100,6 +100,14 @@
                                         class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
                                 </select>
                             </div>
+
+                            <div class="col">
+                                <label>انبار</label>
+                                <select ng-model="new_pay_data.stock_id"
+                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                </select>
+                            </div>
+
                         </div>
                     </form>
                 </div>

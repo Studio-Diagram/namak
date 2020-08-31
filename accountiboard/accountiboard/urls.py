@@ -9,6 +9,7 @@ from accounti.views import EmployeeView, boardgameView, MemberView, stockView, B
 from accountiboard import settings
 from django.views.static import serve
 from accounti.views import BankingView
+from accounti.views import StocksView
 
 from admin_panel.views import AdminGeneralView, AdminNewsView, AdminBugReportView, AdminBranchView
 from django.conf.urls.static import static
@@ -167,6 +168,10 @@ urlpatterns = [
     path('api/banking/<int:id>/', BankingView.BankingDetailView.as_view()),
     path('api/banking/', BankingView.BankingView.as_view()),
     path('api/bankingByBranch/<str:branch_id>/', BankingView.BankingByBranchView.as_view()),
+
+    path('api/stocks/<int:id>/', StocksView.StockDetailView.as_view()),
+    path('api/stocks/', StocksView.StocksView.as_view()),
+    path('api/stocksByBranch/<str:branch_id>/', StocksView.StockByBranchView.as_view()),
 
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),

@@ -113,12 +113,13 @@
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-                <div class="tableButtons clearfix">
-                    <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                <div class="tableButtons">
                     <a class="addUser mainButton greenButton" ng-click="open_modal('addBankingModal')" data-toggle="modal"
                        data-backdrop="static" data-keyboard="false"><i
                             class="fas fa-user-plus"></i> حساب جدید</a>
+                    <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                    
                 </div>
 
                 <div class="tableWrapper">

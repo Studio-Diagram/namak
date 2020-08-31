@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("bankingCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.new_banking_data = {
+                'id': 0,
                 'branches':[],
                 'type':'',
                 'name': '',
@@ -12,7 +13,7 @@ angular.module("dashboard")
             };
             $scope.get_banking_data();
             $scope.get_branches_data();
-            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
+            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches);
         };
 
         $scope.get_banking_data = function () {
@@ -20,7 +21,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     // $scope.branches = $rootScope.user_data.branches;
-                    angular.copy($rootScope.user_data.branches, $scope.branches)
+                    angular.copy($rootScope.user_data.branches, $scope.branches);
                     $scope.banks = data['bank'];
                     $scope.tankhahs = data['tankhah'];
                     $scope.cash_registers = data['cash_register'];
@@ -66,16 +67,29 @@ angular.module("dashboard")
         };
 
         $scope.addBanking = function () {
-            dashboardHttpRequest.addBanking($scope.new_banking_data)
-                .then(function (data) {
-                    $scope.get_banking_data();
-                    $scope.resetFrom();
-                    $rootScope.close_modal('addBankingModal');
-                    
-                }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal', 'addBankingModal');
-                });
+            if ($scope.new_banking_data.id == 0) {
+                dashboardHttpRequest.addBanking($scope.new_banking_data)
+                    .then(function (data) {
+                        $scope.get_banking_data();
+                        $scope.resetFrom();
+                        $rootScope.close_modal('addBankingModal');
+                        
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('errorModal', 'addBankingModal');
+                    });
+            } else {
+                dashboardHttpRequest.updateBankingDetail($scope.new_banking_data.id, $scope.new_banking_data)
+                    .then(function (data) {
+                        $scope.get_banking_data();
+                        $scope.resetFrom();
+                        $rootScope.close_modal('addBankingModal');
+                        
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $rootScope.open_modal('errorModal', 'addBankingModal');
+                    });
+            }
         };
 
         $scope.editBanking = function (banking_id) {
@@ -106,7 +120,7 @@ angular.module("dashboard")
                         })
                     });
 
-                    
+                    $scope.new_banking_data.id = data.id;
                     $scope.new_banking_data.type = data.type;
                     $scope.new_banking_data.name = data.name;
                     $scope.new_banking_data.bank_name = data.bank_name;
@@ -173,6 +187,7 @@ angular.module("dashboard")
 
         $scope.resetFrom = function () {
             $scope.new_banking_data = {
+                'id': 0,
                 'branches':[],
                 'type':'',
                 'name': '',
@@ -182,7 +197,7 @@ angular.module("dashboard")
                 'shaba_number': '',
             };
             $scope.clearBankingBranchesCheckboxes();
-            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches)
+            angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches);
         };
 
         initialize();

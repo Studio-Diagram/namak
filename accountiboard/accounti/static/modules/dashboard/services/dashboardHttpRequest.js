@@ -989,6 +989,13 @@ angular.module('dashboard')
                     'url': "/api/banking/" + id + "/"
                 });
             },
+            'updateBankingDetail': function (id, data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/banking/" + id + "/",
+                    'data': data
+                });
+            },
             'getBankingByBranch': function (id) {
                 return this.request({
                     'method': "GET",
@@ -1001,7 +1008,40 @@ angular.module('dashboard')
                     'url': "/api/banking/",
                     'data': data
                 });
-            }
+            },
+            'getStocks': function () {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocks/"
+                });
+            },
+            'getStockDetail': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocks/" + id + "/"
+                });
+            },
+            'updateStockDetail': function (id, data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/stocks/" + id + "/",
+                    'data': data
+                });
+            },
+            'getStockByBranch': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/stocksByBranch/" + id + "/"
+                });
+            },
+            'addStock': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/stocks/",
+                    'data': data
+                });
+            },
+
         };
         return service;
 
