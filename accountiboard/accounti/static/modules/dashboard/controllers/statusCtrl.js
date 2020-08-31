@@ -1,20 +1,20 @@
 angular.module("dashboard")
     .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $auth, dashboardHttpRequest, offlineAPIHttpRequest) {
         var initialize = function () {
+            $scope.selected_detail_category = "";
             $scope.night_report_inputs = {
                 "income_report": 0,
                 "outcome_report": 0,
                 "event_tickets": 0,
                 "current_money_in_cash": 0
             };
-            $scope.bar_sale_detail_category_filter = "";
+            $scope.sale_detail_category_filter = "";
             if ($rootScope.cash_data.cash_id !== 0) {
                 $scope.get_status_data();
             }
             else {
                 $scope.get_today_cash();
             }
-            $scope.get_menu_categories_base_on_kind("BAR");
         };
 
         $scope.get_status_data = function () {
@@ -40,7 +40,17 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.change_detail_sale_category = function () {
+            if ($scope.selected_detail_category === "BAR")
+                $scope.get_bar_detail_sales();
+            else if ($scope.selected_detail_category === "KITCHEN")
+                $scope.get_kitchen_detail_sales();
+            else if ($scope.selected_detail_category === "OTHER")
+                $scope.get_other_detail_sales();
+        };
+
         $scope.get_menu_categories_base_on_kind = function (kind) {
+            $scope.selected_detail_category = kind;
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'kind': kind,
@@ -49,8 +59,7 @@ angular.module("dashboard")
             dashboardHttpRequest.getCategoriesBaseOnKind(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        if (kind === "BAR")
-                            $scope.bar_categories = data['categories'];
+                        $scope.detail_categories = data['categories'];
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -90,7 +99,7 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
-                "menu_category_id": $scope.bar_sale_detail_category_filter
+                "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getBarDetailSales(sending_data)
                 .then(function (data) {

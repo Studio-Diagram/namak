@@ -16,12 +16,12 @@
                                 <tr>
                                     <td>
                                         <small>فیلتر دسته‌بندی</small>
-                                        <select ng-change="get_bar_detail_sales()"
-                                                ng-model="bar_sale_detail_category_filter"
+                                        <select ng-change="change_detail_sale_category()"
+                                                ng-model="sale_detail_category_filter"
                                                 class="form-control">
                                             <option value="">همه</option>
-                                            <option ng-repeat="bar_category in bar_categories"
-                                                    value="{{ bar_category.id }}">{{ bar_category.name }}</option>
+                                            <option ng-repeat="category in detail_categories"
+                                                    value="{{ category.id }}">{{ category.name }}</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -53,9 +53,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
@@ -255,7 +252,7 @@
                                             <h4><i class="fas fa-coffee"></i> فروش بار</h4>
                                             <span class="">{{ status.all_bar | number | persianNumber }}</span>
                                             <small>ریال</small>
-                                            <button ng-click="get_bar_detail_sales()"
+                                            <button ng-click="get_menu_categories_base_on_kind('BAR');get_bar_detail_sales()"
                                                     class="mainButton smallButton grayButton mt-2">جزییات
                                             </button>
                                         </td>
@@ -263,7 +260,7 @@
                                             <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
                                             <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
                                             <small>ریال</small>
-                                            <button ng-click="get_kitchen_detail_sales()"
+                                            <button ng-click="get_menu_categories_base_on_kind('KITCHEN');get_kitchen_detail_sales()"
                                                     class="mainButton smallButton grayButton mt-2">جزییات
                                             </button>
                                         </td>
@@ -271,7 +268,7 @@
                                             <h4><i class="fas fa-file-invoice-dollar"></i>فروش سایر</h4>
                                             <span class="">{{ status.all_other | number | persianNumber }}</span>
                                             <small>ریال</small>
-                                            <button ng-click="get_other_detail_sales()"
+                                            <button ng-click="get_menu_categories_base_on_kind('OTHER');get_other_detail_sales()"
                                                     class="mainButton smallButton grayButton mt-2">جزییات
                                             </button>
                                         </td>
