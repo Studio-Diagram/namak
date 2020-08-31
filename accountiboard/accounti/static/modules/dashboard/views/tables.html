@@ -64,7 +64,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade mainModal" id="addModalTableCategory" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -104,7 +103,7 @@
                     <div class="col">
                         <div class="tableButtons">
                             <div class="buttonGroup">
-                                <a class="addUser mainButton greenButton" ng-click="openAddTableModal()"
+                                <a class="addUser mainButton greenButton" ng-click="open_modal('addModal')"
                                    data-toggle="modal"><i
                                         class="fas fa-user-plus"></i> میز جدید</a>
                             </div>
@@ -134,7 +133,7 @@
                         <div class="tableButtons">
                             <div class="buttonGroup">
                                 <a style="margin-left: 10px" class="addUser mainButton greenButton"
-                                   ng-click="openAddTableCategoryModal()" data-toggle="modal"><i
+                                   ng-click="open_modal('addModalTableCategory')" data-toggle="modal"><i
                                         class="fas fa-user-plus"></i>گروه میز جدید</a>
                             </div>
                         </div>
@@ -158,29 +157,7 @@
                         </div>
                     </div>
                 </div>
-
-                <nav ng-hide="1" aria-label="...">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <span class="page-link">قبلی</span>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">۱</a></li>
-                        <li class="page-item active">
-                                            <span class="page-link">
-                                                ۲
-                                                <span class="sr-only">(current)</span>
-                                            </span>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">۳</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">بعدی</a>
-                        </li>
-                    </ul>
-                </nav>
-
             </main>
-
-
         </div>
     </main>
 </div>
