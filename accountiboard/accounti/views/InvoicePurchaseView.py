@@ -19,7 +19,16 @@ def get_invoice(request):
         invoice_date = invoice_object.created_time.date()
         jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                    year=invoice_date.year)
-        banking_obj = BankingBaseClass.objects.get(pk=invoice_object.banking.id)
+
+        try:
+            banking_obj = BankingBaseClass.objects.get(pk=invoice_object.banking.id)
+        except:
+            banking_obj = None
+
+        try:
+            stock_obj = Stock.objects.get(pk=invoice_object.stock.id)
+        except:
+            stock_obj = None        
 
         invoice_data = {
             'id': invoice_object.pk,
@@ -34,7 +43,8 @@ def get_invoice(request):
             'discount': invoice_object.discount,
             'created_date': jalali_date.strftime("%Y/%m/%d"),
             'settlement_type_name': invoice_object.get_settlement_type_display(),
-            'banking': {'id': banking_obj.id, 'name': banking_obj.name}
+            'banking': {'id': banking_obj.id, 'name': banking_obj.name} if banking_obj else {'id': None},
+            'stock': {'id': stock_obj.id, 'name': stock_obj.name} if stock_obj else {'id': None},
         }
 
         invoice_materials = PurchaseToMaterial.objects.filter(invoice_purchase=invoice_object)

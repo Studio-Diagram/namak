@@ -151,7 +151,8 @@ angular.module("dashboard")
                             'discount': data['invoice']['discount'],
                             'branch_id': $rootScope.user_data.branch,
                             'username': $rootScope.user_data.username,
-                            'banking_id': data['invoice']['banking']['id']
+                            'banking_id': data['invoice']['banking']['id'],
+                            'stock_id': data['invoice']['stock']['id'],
                         };
                         $scope.openAddModal();
                     }
