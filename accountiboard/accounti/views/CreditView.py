@@ -4,6 +4,7 @@ from datetime import datetime
 from accounti.models import *
 import jdatetime, random
 from accountiboard.constants import *
+from django.db.models import Sum
 
 
 def get_all_credits_data_from_user(request):
@@ -111,7 +112,13 @@ def perform_credit_on_invoice_sale(request):
 
     all_member_credits = Credit.objects.filter(member=invoice_object.member, expire_time__gte=datetime.now(),
                                                start_time__lte=datetime.now())
+    all_used_credit_in_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object)
+    sum_used_credit = all_used_credit_in_this_invoice.aggregate(Sum('used_price'))['used_price__sum']
+    maximum_credit = invoice_object.total_price - sum_used_credit
+
     for credit in all_member_credits:
+        if maximum_credit <= 0:
+            break 
         if credit.total_price == credit.used_price:
             continue
 
@@ -125,6 +132,7 @@ def perform_credit_on_invoice_sale(request):
             new_credit_to_invoice = CreditToInvoiceSale(credit=credit, invoice_sale=invoice_object,
                                                         used_price=used_credit_price)
             new_credit_to_invoice.save()
+            maximum_credit -= used_credit_price
 
     return JsonResponse({"response_code": 2, 'used_credit': used_credit_price})
 
