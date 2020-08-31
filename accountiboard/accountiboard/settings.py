@@ -268,4 +268,4 @@ PAY_IR_API_URL_VERIFY = 'https://pay.ir/pg/verify'
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 #check linux permissions when changing this
-DBBACKUP_STORAGE_OPTIONS = {'location': '/tmp/django-backups'}
+DBBACKUP_STORAGE_OPTIONS = {'location': config.DB_BACKUP_PATH}
