@@ -103,14 +103,20 @@ def create_new_invoice_purchase(request):
             branch_obj = Branch.objects.get(pk=branch_id)
             supplier_obj = Supplier.objects.get(pk=supplier_id)
 
-            try:
-                banking_obj = BankingBaseClass.objects.get(pk=banking_id)
-            except:
+            if banking_id:
+                try:
+                    banking_obj = BankingBaseClass.objects.get(pk=banking_id)
+                except:
+                    return JsonResponse({"error_msg": BANKING_NOT_FOUND}, status=404)
+            else:
                 banking_obj = None
 
-            try:
-                stock_obj = Stock.objects.get(pk=stock_id)
-            except:
+            if stock_id:
+                try:
+                    stock_obj = Stock.objects.get(pk=stock_id)
+                except:
+                    return JsonResponse({"error_msg": STOCK_NOT_FOUND}, status=404)
+            else:
                 stock_obj = None
 
             invoice_date_split = invoice_date.split('/')

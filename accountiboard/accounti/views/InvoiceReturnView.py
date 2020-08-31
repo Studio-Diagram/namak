@@ -81,14 +81,20 @@ def create_new_invoice_return(request):
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
                                                 datetime.now().second).togregorian()
 
-            try:
-                banking_obj = BankingBaseClass.objects.get(pk=banking_id)
-            except:
+            if banking_id:
+                try:
+                    banking_obj = BankingBaseClass.objects.get(pk=banking_id)
+                except:
+                    return JsonResponse({"error_msg": BANKING_NOT_FOUND}, status=404)
+            else:
                 banking_obj = None
 
-            try:
-                stock_obj = Stock.objects.get(pk=stock_id)
-            except:
+            if stock_id:
+                try:
+                    stock_obj = Stock.objects.get(pk=stock_id)
+                except:
+                    return JsonResponse({"error_msg": STOCK_NOT_FOUND}, status=404)
+            else:
                 stock_obj = None
 
             last_invoice_obj = InvoiceReturn.objects.filter(branch=branch_obj).order_by('id').last()
