@@ -43,7 +43,8 @@ angular.module("dashboard")
         $scope.get_menu_categories_base_on_kind = function (kind) {
             var sending_data = {
                 'username': $rootScope.user_data.username,
-                'kind': kind
+                'kind': kind,
+                'current_branch': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getCategoriesBaseOnKind(sending_data)
                 .then(function (data) {
