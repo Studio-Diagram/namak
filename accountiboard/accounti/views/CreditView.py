@@ -53,7 +53,7 @@ def create_credit(request):
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
     member_id = rec_data['member_id']
-    credit_categories = rec_data['credit_categories']
+    credit_category = rec_data['credit_category']
     expire_date = rec_data['expire_date']
     expire_time = rec_data['expire_time']
     start_date = rec_data['start_date']
@@ -63,7 +63,7 @@ def create_credit(request):
     if not request.session.get('is_logged_in', None) == username:
         return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
-    if not credit_categories or not expire_date or not expire_time or not total_credit or not start_time or not start_date:
+    if not credit_category or not expire_date or not expire_time or not total_credit or not start_time or not start_date:
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
     try:
@@ -84,7 +84,7 @@ def create_credit(request):
                                       int(start_time_split[1]), 0).togregorian()
     new_credit = Credit(member=member_object, total_price=total_credit, expire_time=expire_date_g,
                         start_time=start_date_g,
-                        credit_categories=credit_categories)
+                        credit_categories=[credit_category])
     new_credit.save()
     return JsonResponse({"response_code": 2})
 

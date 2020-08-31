@@ -115,7 +115,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-4">
                             <div class="row mb-3">
                                 <div class="col">
                                     <label>مقدار اعتبار<i class="fas fa-star-of-life"></i></label>
@@ -151,13 +151,11 @@
                             <div class="row mr-2">
                                 <div class="col-md-12 pr-0">
                                     <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
-                                </div>
-                                <div ng-repeat="credit_category in credit_categories" class="checkbox-unit col-md-4">
-                                    <label class="checkbox-item">
-                                        <input style="float: left;" ng-checked="credit_category.is_checked"
-                                               type="checkbox" ng-model="credit_category.is_checked_m"
-                                               ng-click="change_credit_category_checkBox(credit_category[0])">{{ credit_category[1] }}
-                                    </label>
+                                    <select class="form-control" ng-model="new_credit_data.credit_category">
+                                        <option value="">دسته‌بندی اعتبار را انتخاب کنید</option>
+                                        <option ng-repeat="credit_category in credit_categories"
+                                                ng-value="credit_category.key">{{ credit_category.name }}</option>
+                                    </select>
                                 </div>
                             </div>
                             <hr>
@@ -169,7 +167,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-md-8">
                             <div class="tableWrapper">
                                 <table class="table">
                                     <thead>
@@ -192,8 +190,8 @@
                                         <td scope="row">{{ credit.start_time | persianNumber }}</td>
                                         <td scope="row">{{ credit.expire_date | persianNumber }}</td>
                                         <td scope="row">{{ credit.expire_time | persianNumber }}</td>
-                                        <td scope="row">{{ credit.total_price | persianNumber }}</td>
-                                        <td scope="row">{{ credit.used_price | persianNumber }}</td>
+                                        <td scope="row">{{ credit.total_price | number | persianNumber }}</td>
+                                        <td scope="row">{{ credit.used_price | number | persianNumber }}</td>
                                         <td scope="row">{{ credit.credit_categories }}</td>
                                         <td scope="row">{{ credit.kind }}</td>
                                     </tr>
@@ -203,9 +201,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
@@ -239,8 +234,8 @@
             <main class="col-sm-12 ">
                 <div class="tableButtons">
                     <div class="buttonGroup">
-                    <a class="addUser mainButton greenButton" ng-click="openAddMemberModal()" data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> مشتری جدید</a>
+                        <a class="addUser mainButton greenButton" ng-click="openAddMemberModal()" data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> مشتری جدید</a>
                     </div>
                     <div class="buttonGroup">
                         <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
