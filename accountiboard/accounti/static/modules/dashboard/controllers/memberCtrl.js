@@ -330,7 +330,9 @@ angular.module("dashboard")
                 'member_id': 0,
                 'total_credit': 0,
                 'expire_date': '',
-                'expire_time': '',
+                'expire_time': '00:00',
+                'start_date': '',
+                'start_time': '00:00',
                 'credit_category': '',
                 'username': $rootScope.user_data.username
             };

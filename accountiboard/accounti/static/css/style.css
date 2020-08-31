@@ -2427,3 +2427,11 @@ aside.leftAside {
     visibility: hidden;
     opacity: 0;
 }
+
+.formWrapper {
+    padding: 25px;
+    border: 1px solid var(--pageBorder);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}

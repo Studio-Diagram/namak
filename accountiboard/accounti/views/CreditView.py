@@ -113,34 +113,37 @@ def perform_credit_on_invoice_sale(request):
     all_member_credits = Credit.objects.filter(member=invoice_object.member, expire_time__gte=datetime.now(),
                                                start_time__lte=datetime.now())
     all_used_credit_in_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object)
-    sum_used_credit = all_used_credit_in_this_invoice.aggregate(Sum('used_price'))['used_price__sum']
-    maximum_credit = invoice_object.total_price - sum_used_credit
-
+    sum_used_credit = all_used_credit_in_this_invoice.aggregate(Sum('used_price')).get('used_price__sum')
+    maximum_credit = invoice_object.total_price - (sum_used_credit if sum_used_credit else 0)
+    credit_used_in_invoice = 0
     for credit in all_member_credits:
         if maximum_credit <= 0:
             break 
         if credit.total_price == credit.used_price:
             continue
 
-        used_credit_price = credit_handler(credit, invoice_object)
+        used_credit_price = credit_handler(credit, invoice_object, all_used_credit_in_this_invoice)
         if used_credit_price == "NO_CATEGORY":
             return JsonResponse({"response_code": 3, "error_msg": CREDIT_CATEGORY_NOT_HANDLED})
 
         if used_credit_price > 0:
-            credit.used_price = used_credit_price
+            credit.used_price += used_credit_price
             credit.save()
             new_credit_to_invoice = CreditToInvoiceSale(credit=credit, invoice_sale=invoice_object,
                                                         used_price=used_credit_price)
             new_credit_to_invoice.save()
+            all_used_credit_in_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_object)
             maximum_credit -= used_credit_price
+            credit_used_in_invoice += used_credit_price
 
-    return JsonResponse({"response_code": 2, 'used_credit': used_credit_price})
+    return JsonResponse({"response_code": 2, 'used_credit': credit_used_in_invoice})
 
 
-def credit_handler(credit_object, invoice_object):
+def credit_handler(credit_object, invoice_object, used_credits):
     total_price_can_use_credit = 0
     total_credit = credit_object.total_price - credit_object.used_price
     for category in credit_object.credit_categories:
+        sum_used_credit = used_credit_computer(category, used_credits)
         if category == "BAR":
             total_price_can_use_credit += bar_credit_handler(invoice_object)
         elif category == "KITCHEN":
@@ -154,12 +157,17 @@ def credit_handler(credit_object, invoice_object):
         else:
             return "NO_CATEGORY"
 
-    if total_credit >= total_price_can_use_credit:
-        used_credit = total_price_can_use_credit
-    else:
-        used_credit = total_credit
+        total_price_can_use_credit -= sum_used_credit
 
-    return used_credit
+    if total_credit >= total_price_can_use_credit:
+        return total_price_can_use_credit
+    else:
+        return total_credit
+
+
+def used_credit_computer(kind, used_credit_to_invoices):
+    sum_used_credit = used_credit_to_invoices.filter(credit__credit_categories__exact=[kind]).aggregate(Sum('used_price'))
+    return sum_used_credit.get('used_price__sum') if sum_used_credit.get('used_price__sum') else 0
 
 
 def bar_credit_handler(invoice_object):
