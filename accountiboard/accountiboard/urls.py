@@ -129,7 +129,7 @@ urlpatterns = [
     path('api/getSupplierRemainder/', SupplierView.get_remainder_supplier),
     path('api/createAllSuppliersExcel/', SupplierView.create_all_supplier_excel),
     path('api/createAllMaterialsExcel/', SupplierView.create_all_materials_buy),
-    path('api/getDetailProductNumber/', ShopProductView.get_detail_product_number),
+    path('api/getDetailProductNumber/', ShopProductView.GetDetailProductNumberView.as_view()),
     path('api/getMostUsedItemsForSupplier/', SupplierView.get_supplier_purchase_item_used),
     path('api/getWaitingList/', ReserveView.get_waiting_list_reserves),
     path('api/addWaitingList/', ReserveView.add_waiting_list),
