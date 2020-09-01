@@ -121,7 +121,7 @@ def get_all_invoices(request):
                 'settle_type': invoice.get_settle_type_display(),
                 'backup_code': invoice.backup_code,
                 'created_time': jalali_date.strftime("%Y/%m/%d"),
-                'banking': invoice.banking.name,
+                'banking': invoice.banking.name if invoice.banking else "",
             })
 
         return JsonResponse({"response_code": 2, 'invoices': invoices})
