@@ -18,7 +18,7 @@ class LatestNewsView(View):
                         'title': x.title,
                         'text' : x.text,
                         'link' : x.link,
-                        'datetime' : jdatetime.datetime.fromgregorian(
+                        'created_time' : jdatetime.datetime.fromgregorian(
                                                             day=x.datetime.day,
                                                             month=x.datetime.month,
                                                             year=x.datetime.year,
