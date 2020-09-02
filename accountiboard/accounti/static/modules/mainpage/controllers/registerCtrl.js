@@ -64,12 +64,30 @@ angular.module("mainpage")
                 });
         };
 
+        $scope.verify_password = function () {
+            if ($scope.new_user.password !== $scope.new_user.re_password) {
+                $scope.form_state.is_error = true;
+                $scope.form_state.is_loading = false;
+                $scope.form_state.error_msg = "رمز عبور باید با تکرار آن برابر باشد.";
+                return false;
+            }
+            else if ($scope.new_user.password.length < 8) {
+                $scope.form_state.is_error = true;
+                $scope.form_state.is_loading = false;
+                $scope.form_state.error_msg = "رمز عبور باید حداقل ۸ کاراکتر باشد.";
+                return false;
+            }
+            return true;
+        };
+
         $scope.send_verify_code_to_phone = function () {
+            if (!$scope.verify_password()){
+                return false
+            }
             jQuery.noConflict();
             (function ($) {
                 grecaptcha.ready(function () {
                     grecaptcha.execute('6LenhbwZAAAAALB_dr4AvmJyudUMsvSA2rlJkNBm', {action: 'submit'}).then(function (token) {
-
                         $scope.form_state.is_loading = true;
                         $scope.form_state.is_error = false;
                         mainpageHttpRequest.phoneVerify({
@@ -80,6 +98,7 @@ angular.module("mainpage")
                             .then(function (data) {
                                 $scope.form_state.is_loading = false;
                                 $scope.change_registration_state('personal_registration', 'phone_verify_final_step');
+                                $scope.minutes_counter = 120;
                                 $scope.start_timer();
                             }, function (error) {
                                 $scope.form_state.is_error = true;
@@ -107,6 +126,10 @@ angular.module("mainpage")
                 else if (current_state === "personal_registration" && target_state === "company_registration") {
                     $('#personalRegistrationForm').removeClass('showForm');
                     $('#companyRegistrationForm').addClass('showForm');
+                }
+                else if (current_state === "activation_code" && target_state === "personal_registration") {
+                    $('#phoneVerifyRegistrationForm').removeClass('showForm');
+                    $('#personalRegistrationForm').addClass('showForm');
                 }
             })(jQuery);
         };

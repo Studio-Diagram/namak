@@ -9,7 +9,7 @@ angular.module("dashboard")
                 'bank_name': '',
                 'bank_account': '',
                 'bank_card_number': '',
-                'shaba_number': '',
+                'shaba_number': ''
             };
             $scope.get_banking_data();
             $scope.get_branches_data();
@@ -20,7 +20,6 @@ angular.module("dashboard")
             dashboardHttpRequest.getBanking()
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    // $scope.branches = $rootScope.user_data.branches;
                     angular.copy($rootScope.user_data.branches, $scope.branches);
                     $scope.banks = data['bank'];
                     $scope.tankhahs = data['tankhah'];
@@ -67,7 +66,7 @@ angular.module("dashboard")
         };
 
         $scope.addBanking = function () {
-            if ($scope.new_banking_data.id == 0) {
+            if ($scope.new_banking_data.id === 0) {
                 dashboardHttpRequest.addBanking($scope.new_banking_data)
                     .then(function (data) {
                         $scope.get_banking_data();
@@ -95,8 +94,6 @@ angular.module("dashboard")
         $scope.editBanking = function (banking_id) {
             dashboardHttpRequest.getBankingDetail(banking_id)
                 .then(function (data) {
-                    // $scope.new_banking_data.branches = data.branches;
-                    // $scope.new_banking_data.branches = $scope.branches;
                     $scope.new_banking_data = {
                         'branches':$scope.branches,
                         // 'branches':[],
@@ -194,7 +191,7 @@ angular.module("dashboard")
                 'bank_name': '',
                 'bank_account': '',
                 'bank_card_number': '',
-                'shaba_number': '',
+                'shaba_number': ''
             };
             $scope.clearBankingBranchesCheckboxes();
             angular.copy($rootScope.user_data.branches, $scope.new_banking_data.branches);

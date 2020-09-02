@@ -26,7 +26,6 @@ angular.module("dashboard")
             dashboardHttpRequest.getStocks()
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    // $scope.branches = $rootScope.user_data.branches;
                     angular.copy($rootScope.user_data.branches, $scope.branches);
                     $scope.stocks = data['stocks'];
 
@@ -39,7 +38,7 @@ angular.module("dashboard")
                                 }
                             }
                         }
-                        $scope.stocks[i].branches_names.join(' ، ');
+                        $scope.stocks[i].branches_names = $scope.stocks[i].branches_names.join('، ');
                     }
 
                 }, function (error) {

@@ -142,7 +142,7 @@ angular.module("dashboard")
                             'name': data['table']['table_name'],
                             'table_cat_id': data['table']['table_cat_id']
                         };
-                        $scope.openAddTableModal();
+                        $scope.open_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -165,7 +165,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.new_table_category_data['id'] = data['table_category']['id'];
                         $scope.new_table_category_data['name'] = data['table_category']['name'];
-                        $rootScope.close_modal('addModalTableCategory');
+                        $rootScope.open_modal('addModalTableCategory');
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
