@@ -8,6 +8,9 @@ from accounti.models import *
 class AdminNewsView(View):
 
     def get(self, request, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
+
         context = {}
 
         all_news_q = LatestNews.objects.all()
@@ -34,6 +37,8 @@ class AdminNewsView(View):
 class AdminNewsCreateView(View):
 
     def post(self, request, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
         # create a form instance and populate it with data from the request:
         form = CreateNewsForm(request.POST)
         # check whether it's valid:
@@ -50,6 +55,8 @@ class AdminNewsCreateView(View):
 
 
     def get(self, request, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
         form = CreateNewsForm()
         return render(request, 'admin_panel_news_create.html', {'form': form})
 
@@ -58,6 +65,8 @@ class AdminNewsCreateView(View):
 class AdminNewsDeleteView(View):
 
     def post(self, request, latestnews_id, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
         try:
             current_news = LatestNews.objects.get(pk=latestnews_id)
         except:

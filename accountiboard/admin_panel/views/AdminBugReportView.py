@@ -1,13 +1,16 @@
 from datetime import datetime
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from accounti.models import *
 from accountiboard.settings import MEDIA_ROOT
 
 class AdminBugReportsView(View):
 
     def get(self, request, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
+
         context = {}
 
         all_bugreports_q = BugReport.objects.all()
@@ -35,6 +38,9 @@ class AdminBugReportsView(View):
 class AdminBugReportsDetailView(View):
 
     def get(self, request, bugreport_id, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
+
         context = {}
 
         try:

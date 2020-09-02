@@ -1,10 +1,14 @@
 from django.views import View
 from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
 from accounti.models import *
 
 class AdminView(View):
 
     def get(self, request, *args, **kwargs):
+        if not request.session.get('admin_is_logged_in'):
+            return HttpResponseRedirect('/onward/login/')
+
         context = {}
 
         all_branches_q = Branch.objects.all()
