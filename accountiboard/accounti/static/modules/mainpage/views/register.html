@@ -87,7 +87,7 @@
                     </button>
                     <button ng-click="send_verify_code_to_phone()" type="button"
                             class="submitButton fullWidthButton btn oilBlueButton"
-                            ng-disabled="!new_user.first_name || !new_user.last_name || !new_user.phone || !new_user.password || !new_user.re_password || (new_user.password !== new_user.re_password) || (new_user.password.length < 8)">
+                            ng-disabled="!new_user.first_name || !new_user.last_name || !new_user.phone || !new_user.password || !new_user.re_password">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
                         <span ng-hide="form_state.is_loading">ثبت و ادامه</span>
@@ -164,6 +164,10 @@
                     </table>
                 </div>
                 <div class="form-group submitButtonWrapper">
+                    <button ng-click="change_registration_state('activation_code', 'personal_registration')"
+                            type="button" class="mainButton transparentButton returnButton">
+                        <span>بازگشت</span>
+                    </button>
                     <button ng-click="register_new_user()" type="button"
                             class="submitButton btn oilBlueButton fullWidthButton"
                             ng-disabled="!new_user.sms_verify_token">
