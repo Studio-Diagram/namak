@@ -828,8 +828,8 @@ def get_all_invoice_games(request):
 
 
 def delete_items(request):
-    if request.method == "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+    if request.method != "POST":
+        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
     rec_data = json.loads(request.read().decode('utf-8'))
     username = rec_data['username']
