@@ -11,7 +11,7 @@ from django.views.static import serve
 from accounti.views import BankingView
 from accounti.views import StocksView
 
-from admin_panel.views import AdminGeneralView, AdminNewsView, AdminBugReportView, AdminBranchView
+from admin_panel.views import AdminGeneralView, AdminNewsView, AdminBugReportView, AdminBranchView, AdminLoginView
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -194,6 +194,8 @@ urlpatterns = [
 
     # Admin panel
     path('onward/', AdminGeneralView.AdminView.as_view()),
+    path('onward/login/', AdminLoginView.AdminLoginView.as_view()),
+    path('onward/logout/', AdminLoginView.AdminLogoutView.as_view()),
     path('onward/news/', AdminNewsView.AdminNewsView.as_view()),
     path('onward/news/create/', AdminNewsView.AdminNewsCreateView.as_view()),
     path('onward/news/delete/<int:latestnews_id>/', AdminNewsView.AdminNewsDeleteView.as_view()),

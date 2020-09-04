@@ -4,9 +4,11 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from admin_panel.forms.CreateNewsForm import *
 from accounti.models import *
+from accountiboard.custom_permissions import *
 
 class AdminNewsView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, *args, **kwargs):
         context = {}
 
@@ -33,6 +35,7 @@ class AdminNewsView(View):
 
 class AdminNewsCreateView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def post(self, request, *args, **kwargs):
         # create a form instance and populate it with data from the request:
         form = CreateNewsForm(request.POST)
@@ -48,7 +51,7 @@ class AdminNewsCreateView(View):
             # redirect to a new URL:
             return HttpResponseRedirect('/onward/news/')
 
-
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, *args, **kwargs):
         form = CreateNewsForm()
         return render(request, 'admin_panel_news_create.html', {'form': form})
@@ -57,6 +60,7 @@ class AdminNewsCreateView(View):
 
 class AdminNewsDeleteView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def post(self, request, latestnews_id, *args, **kwargs):
         try:
             current_news = LatestNews.objects.get(pk=latestnews_id)

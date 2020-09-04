@@ -1,7 +1,7 @@
 from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 import json
 import jwt
 from accountiboard.settings import JWT_SECRET
@@ -41,6 +41,19 @@ def permission_decorator_class_based(permission_func, permitted_roles, bundles, 
 
     return decorator
 
+def permission_decorator_class_based_simplified(permission_func):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(self, request, *args, **kwargs):
+            permission_result = permission_func(request, *args, **kwargs)
+            if permission_result.get('state'):
+                return view_func(self, request, *args, **kwargs)
+            return HttpResponseRedirect('/onward/login/')
+
+        return _wrapped_view
+
+    return decorator
+
 
 def session_authenticate(request, permitted_roles, branch_disable=False):
     user_roles = request.session.get('user_role', None)
@@ -67,6 +80,18 @@ def session_authenticate(request, permitted_roles, branch_disable=False):
         "state": False,
         "message": UNAUTHENTICATED
     }
+
+def session_authenticate_admin_panel(request, *args, **kwargs):
+    if request.session.get('admin_is_logged_in'):
+        return {
+            "state": True,
+            "message": NO_MESSAGE
+        }
+    else:
+        return {
+            "state": False,
+            "message": UNAUTHENTICATED
+        }
 
 
 

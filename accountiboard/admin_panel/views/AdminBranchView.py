@@ -1,10 +1,12 @@
 from django.views import View
 from django.shortcuts import render
 from accounti.models import *
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from accountiboard.custom_permissions import *
 
 class AdminBranchDetailView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, branch_id, *args, **kwargs):
         context = {}
 
