@@ -4,13 +4,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from admin_panel.forms.CreateNewsForm import *
 from accounti.models import *
+from accountiboard.custom_permissions import *
 
 class AdminNewsView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, *args, **kwargs):
-        if not request.session.get('admin_is_logged_in'):
-            return HttpResponseRedirect('/onward/login/')
-
         context = {}
 
         all_news_q = LatestNews.objects.all()
@@ -36,9 +35,8 @@ class AdminNewsView(View):
 
 class AdminNewsCreateView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def post(self, request, *args, **kwargs):
-        if not request.session.get('admin_is_logged_in'):
-            return HttpResponseRedirect('/onward/login/')
         # create a form instance and populate it with data from the request:
         form = CreateNewsForm(request.POST)
         # check whether it's valid:
@@ -53,10 +51,8 @@ class AdminNewsCreateView(View):
             # redirect to a new URL:
             return HttpResponseRedirect('/onward/news/')
 
-
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, *args, **kwargs):
-        if not request.session.get('admin_is_logged_in'):
-            return HttpResponseRedirect('/onward/login/')
         form = CreateNewsForm()
         return render(request, 'admin_panel_news_create.html', {'form': form})
 
@@ -64,9 +60,8 @@ class AdminNewsCreateView(View):
 
 class AdminNewsDeleteView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def post(self, request, latestnews_id, *args, **kwargs):
-        if not request.session.get('admin_is_logged_in'):
-            return HttpResponseRedirect('/onward/login/')
         try:
             current_news = LatestNews.objects.get(pk=latestnews_id)
         except:

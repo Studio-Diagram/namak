@@ -4,13 +4,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from accounti.models import *
 from accountiboard.settings import MEDIA_ROOT
+from accountiboard.custom_permissions import *
 
 class AdminBugReportsView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, *args, **kwargs):
-        if not request.session.get('admin_is_logged_in'):
-            return HttpResponseRedirect('/onward/login/')
-
         context = {}
 
         all_bugreports_q = BugReport.objects.all()
@@ -37,10 +36,8 @@ class AdminBugReportsView(View):
 
 class AdminBugReportsDetailView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, bugreport_id, *args, **kwargs):
-        if not request.session.get('admin_is_logged_in'):
-            return HttpResponseRedirect('/onward/login/')
-
         context = {}
 
         try:
