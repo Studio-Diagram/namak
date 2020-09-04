@@ -364,7 +364,7 @@ class Visitor(models.Model):
     phone = models.CharField(max_length=30, null=False)
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
 
-
+# TODO: remove stock from this model
 class InvoiceSettlement(models.Model):
     SETTLE_TYPES = (
         ('NOT_DEFINED', 'تعریف نشده'),
