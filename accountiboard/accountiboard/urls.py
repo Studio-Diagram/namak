@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from accounti.views import EmployeeView, boardgameView, MemberView, stockView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
-    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView
+    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView, InvoiceSalaryView
 from accountiboard import settings
 from django.views.static import serve
 from accounti.views import BankingView
@@ -213,5 +213,7 @@ urlpatterns = [
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),
     url(r'^mobile', TemplateView.as_view(template_name='mobile.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
+    # salaryInvoices
+    path('api/addInvoiceSalary/', InvoiceSalaryView.create_new_invoice_salary),
 
 ]
