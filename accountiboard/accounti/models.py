@@ -699,11 +699,11 @@ class Transaction(models.Model):
     token = models.CharField(max_length=1020, null=False, blank=False)
     amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
     mobile = models.CharField(max_length=20, null=True, blank=True)
-    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
+    factor_number = models.UUIDField(default=uuid4, blank=False, null=False)
     description = models.CharField(max_length=1275, null=True, blank=True)
     redirect = models.CharField(max_length=1020, null=True, blank=True)
-    cardNumber = models.CharField(max_length=25, null=True, blank=True)
-    transId = models.CharField(max_length=100, null=True, blank=True)
+    card_number = models.CharField(max_length=25, null=True, blank=True)
+    trans_id = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=255, null=True, blank=True)
 
 

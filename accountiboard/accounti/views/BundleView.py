@@ -186,8 +186,8 @@ class BundleView(View):
             amount = amount,
             mobile = payload['sub_phone'],
             redirect = settings.PAY_IR_REDIRECT_URL,
-            cardNumber = "Not paid yet",
-            transId = "Not paid yet",
+            card_number = "Not paid yet",
+            trans_id = "Not paid yet",
         )
 
         current_bundle = Bundle.objects.create(
@@ -205,7 +205,7 @@ class BundleView(View):
             "api": settings.PAY_IR_API_KEY,
             "amount" : amount,
             "redirect": settings.PAY_IR_REDIRECT_URL,
-            "factorNumber" : current_transaction.factorNumber,
+            "factorNumber" : current_transaction.factor_number,
             "mobile" : payload['sub_phone'],
             'description' : None,
         }
@@ -253,8 +253,8 @@ class PayirCallbackView(View):
                 raise e
 
             current_transaction = Transaction.objects.get(token=token)
-            current_transaction.transId = response["transId"]
-            current_transaction.cardNumber = response["cardNumber"]
+            current_transaction.trans_id = response["transId"]
+            current_transaction.card_number = response["cardNumber"]
             current_transaction.status = "paid"
 
             if current_transaction.subscription_discount and current_transaction.subscription_discount.num_of_use:
