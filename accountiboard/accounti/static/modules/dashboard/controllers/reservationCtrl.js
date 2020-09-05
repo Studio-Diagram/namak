@@ -95,9 +95,6 @@ angular.module("dashboard")
                     if (event.ctrlKey && event.keyCode === 52) {
                         $state.go('member');
                     }
-                    if (event.ctrlKey && event.keyCode === 53) {
-                        $state.go('boardgame');
-                    }
                     if (event.ctrlKey && event.keyCode === 54) {
 
                     }

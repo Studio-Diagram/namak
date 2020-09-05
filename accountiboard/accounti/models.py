@@ -165,31 +165,6 @@ class MenuItem(models.Model):
     menu_category = models.ForeignKey(MenuCategory, null=True, blank=False, on_delete=models.CASCADE)
 
 
-class Boardgame(models.Model):
-    CATEGORY = (
-        ('HEAVY', 'استراتژی سنگین'),
-        ('LIGHT', 'استراتژی سبک'),
-        ('FAMILY', 'خانواده و مهمانی'),
-        ('ABSTRACT', 'استراتژی انتزاعی'),
-    )
-    name = models.CharField(max_length=255, null=False)
-    category = models.CharField(max_length=50, choices=CATEGORY, blank=False, null=False)
-    min_players = models.IntegerField(null=False)
-    max_players = models.IntegerField(null=False)
-    best_players = models.IntegerField(null=False)
-    rate = models.FloatField(null=True, default=5)
-    learning_time = models.IntegerField(null=False)
-    duration = models.IntegerField(null=False)
-    image = models.ImageField(null=False)
-    image_name = models.CharField(max_length=500, null=True, default="default.jpg")
-    description = models.TextField()
-    bgg_code = models.IntegerField(null=False)
-    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
 class Member(models.Model):
     INTRO_CHOICES = (
         ('search', 'جست‌وجوی اینترنت'),

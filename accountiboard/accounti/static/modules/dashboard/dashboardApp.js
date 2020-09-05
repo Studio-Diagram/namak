@@ -61,11 +61,6 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/lottery',
         templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
-    var boardgame = {
-        name: 'boardgame',
-        url: '/boardgame',
-        templateUrl: 'static/modules/dashboard/views/boardgame.html'
-    };
 
     var stock = {
         name: 'manager.stock',
@@ -212,7 +207,6 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(menuCategory);
     $stateProvider.state(menuItem);
     $stateProvider.state(member);
-    $stateProvider.state(boardgame);
     $stateProvider.state(stock);
     $stateProvider.state(branch);
     $stateProvider.state(cash_manager);
