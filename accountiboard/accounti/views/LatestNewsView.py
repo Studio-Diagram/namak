@@ -19,11 +19,11 @@ class LatestNewsView(View):
                         'text' : x.text,
                         'link' : x.link,
                         'datetime' : jdatetime.datetime.fromgregorian(
-                                                            day=x.datetime.day,
-                                                            month=x.datetime.month,
-                                                            year=x.datetime.year,
-                                                            hour=x.datetime.hour,
-                                                            minute=x.datetime.minute
+                                                            day=x.created_time.day,
+                                                            month=x.created_time.month,
+                                                            year=x.created_time.year,
+                                                            hour=x.created_time.hour,
+                                                            minute=x.created_time.minute
                                     ).strftime('%Y/%m/%d %H:%M')
             } for x in all_news_queryset]
 
