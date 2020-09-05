@@ -74,8 +74,8 @@ class LoginView(View):
                 "id": employee_to_branch.branch.id,
                 "name": employee_to_branch.branch.name,
             } for employee_to_branch in branches]
-            this_organization = branches.first().branch.organization
-            cafe_owner_object = CafeOwner.objects.get(organization=this_organization)
+            organization_object = branches.first().branch.organization
+            cafe_owner_object = CafeOwner.objects.get(organization=organization_object)
             try:
                 bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
             except:
@@ -85,7 +85,14 @@ class LoginView(View):
 
         request.session['is_logged_in'] = username
 
-        jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
+        jwt_token = make_new_JWT_token(
+            user_obj.id,
+            user_obj.phone,
+            user_role,
+            bundle,
+            user_branches,
+            organization_object.id,
+        )
         return JsonResponse(
             {"response_code": 2,
              "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),

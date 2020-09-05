@@ -91,6 +91,11 @@ DATA_REQUIRE_BRANCH = 'حداقل یکی از شعبه ها را باید انت
 STOCK_NOT_FOUND = "انبار یافت نشد."
 SUPPLIER_NAME_MUST_BE_UNIQUE = "نام تامین کننده باید منحصر به فرد باشد"
 
+SUPPLIER_WITH_INVOICE_PURCHASE_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور خرید مرتبط امکان پذیر نیست"
+SUPPLIER_WITH_INVOICE_EXPENSE_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور هزینه مرتبط امکان پذیر نیست"
+SUPPLIER_WITH_INVOICE_RETURN_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور مرجوعی مرتبط امکان پذیر نیست"
+SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور پرداخت مرتبط امکان پذیر نیست"
+
 USER_TYPE = {
     "cafe_owner": 1,
     "employee": 2

@@ -1,10 +1,12 @@
 from django.http import JsonResponse
 import json, jdatetime, xlwt
-from datetime import timedelta, datetime
 from accounti.models import *
 from django.db.models import Sum
+from django.views import View
 from accountiboard import settings
 from accountiboard.constants import *
+from accountiboard.custom_permissions import *
+from datetime import timedelta, datetime
 
 
 def return_remainder_of_supplier(supplier_id, to_time):
@@ -181,6 +183,35 @@ def get_supplier(request):
         'remainder': return_remainder_of_supplier(supplier.id, "")
     }
     return JsonResponse({"response_code": 2, 'supplier': supplier_data})
+
+class DeleteSupplierView(View):
+    @permission_decorator_class_based(
+        token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        {USER_PLANS_CHOICES['FREE']},
+        branch_disable=True
+    )
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        supplier_id = rec_data['supplier_id']
+
+        current_supplier = Supplier.objects.get(pk=supplier_id)
+
+        if current_supplier.organization.id != request.payload['sub_organization']:
+            return JsonResponse({"error_msg": ACCESS_DENIED}, status=403)
+
+        if InvoicePurchase.objects.filter(supplier=current_supplier).count():
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_PURCHASE_CANT_BE_DELETED}, status=403)
+        elif InvoiceExpense.objects.filter(supplier=current_supplier).count():
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_EXPENSE_CANT_BE_DELETED}, status=403)
+        elif InvoiceReturn.objects.filter(supplier=current_supplier).count():
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_RETURN_CANT_BE_DELETED}, status=403)
+        elif InvoiceSettlement.objects.filter(supplier=current_supplier).count():
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED}, status=403)
+
+        current_supplier.delete()
+
+        return JsonResponse({})
 
 
 def get_sum_invoice_purchases_from_supplier(request):
