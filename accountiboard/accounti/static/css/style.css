@@ -2397,6 +2397,10 @@ aside.leftAside {
     flex: 0 0 calc(50% - 5px);
 }
 
+.quick-buttons .bigButton {
+    flex: 0 0 calc(100%);
+}
+
 .leftAside > div {
     overflow-y: scroll;
     height: calc(100vh - 100px);
