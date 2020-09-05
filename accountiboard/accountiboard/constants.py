@@ -89,7 +89,7 @@ BANKING_NOT_FOUND = "حساب بانکی یافت نشد."
 PASSWORD_CHANGED = "رمز ورود با موفقیت تغییر یافت"
 DATA_REQUIRE_BRANCH = 'حداقل یکی از شعبه ها را باید انتخاب کنید'
 STOCK_NOT_FOUND = "انبار یافت نشد."
-
+SUPPLIER_NAME_MUST_BE_UNIQUE = "نام تامین کننده باید منحصر به فرد باشد"
 
 USER_TYPE = {
     "cafe_owner": 1,

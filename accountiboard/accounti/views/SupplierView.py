@@ -67,7 +67,7 @@ def add_supplier(request):
         return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
     rec_data = json.loads(request.read().decode('utf-8'))
     supplier_id = rec_data['id']
-    name = rec_data['name']
+    name = rec_data['name'].strip()
     phone = rec_data['phone']
     salesman_name = rec_data['salesman_name']
     salesman_phone = rec_data['salesman_phone']
@@ -80,6 +80,9 @@ def add_supplier(request):
         return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
     organization_object = Branch.objects.get(id=branch_id).organization
+
+    if Supplier.objects.filter(organization=organization_object, name=name).count():
+        return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_NAME_MUST_BE_UNIQUE})
 
     if supplier_id == 0:
         new_supplier = Supplier(
