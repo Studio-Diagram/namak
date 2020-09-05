@@ -3,9 +3,16 @@ from accounti.models import *
 from datetime import datetime
 import jdatetime, json
 from accountiboard.constants import *
+from django.views import View
+from accountiboard.custom_permissions import *
 
-def create_new_invoice_salary(request):
-    if request.method == "POST":
+
+class InvoiceSalary(View):
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_salary_id = rec_data['id']
 
@@ -24,7 +31,7 @@ def create_new_invoice_salary(request):
             insurance = rec_data['reduction_description']
             tax = rec_data['tax']
             total_price = rec_data['total_price']
-            username = rec_data['username']
+
             settle_type = rec_data['settle_type']
             backup_code = rec_data['backup_code']
 
@@ -32,14 +39,11 @@ def create_new_invoice_salary(request):
             factor_number = rec_data['factor_number']
             banking_id = rec_data.get('banking_id')
 
-            if not username:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not request.session.get('is_logged_in', None) == username:
-                return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
             if not branch_id or not employee_id or not factor_number or not invoice_date or not backup_code or not settle_type :
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+                return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
             if not total_price or not tax or not insurance or not reduction or not reduction_description or not bonuses or not bounses_description or not base_salary or not over_time_pay or not benefits:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+                return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
 
             branch_obj = Branch.objects.get(pk=branch_id)
             employee_obj = Employee.objects.get(pk=employee_id)
@@ -88,12 +92,7 @@ def create_new_invoice_salary(request):
             )
             new_invoice.save()
 
-            return JsonResponse({"response_code": 2})
-
-        return JsonResponse({"response_code": 3, "error_msg": "Wrong ID!"})
-
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-
+            return JsonResponse({"msg": "invoice salary created"}, status=200)
 
 
 

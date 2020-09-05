@@ -214,6 +214,6 @@ urlpatterns = [
     url(r'^mobile', TemplateView.as_view(template_name='mobile.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
     # salaryInvoices
-    path('api/addInvoiceSalary/', InvoiceSalaryView.create_new_invoice_salary),
+    path('api/addInvoiceSalary/', InvoiceSalaryView.InvoiceSalary),
 
 ]
