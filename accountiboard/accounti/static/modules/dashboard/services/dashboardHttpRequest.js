@@ -154,34 +154,6 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addBoardgame': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/addBoardgame/",
-                    'data': data
-                });
-            },
-            'getBoardgames': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getBoardgames/",
-                    'data': data
-                });
-            },
-            'searchBoardgame': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/searchBoardgame/",
-                    'data': data
-                });
-            },
-            'getBoardgame': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getBoardgame/",
-                    'data': data
-                });
-            },
             'addMember': function (data) {
                 return this.request({
                     'method': "POST",
