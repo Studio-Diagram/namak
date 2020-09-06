@@ -290,29 +290,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="timeCalcModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">محاسبه موقت زمان بازی</h2>
-                    <a ng-click="closeTimeCalcModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ calcedPoints | number | persianNumber }} ریال به ازای هر نفر</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addInvoiceModal" tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -499,12 +476,6 @@
                                             <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
                                                     ng-disabled="new_invoice_data.current_game.start_time === '' || disable_print_after_save_all_buttons"
                                                     href="" class="mainButton grayButton">اتمام زمان بازی
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button ng-click="openTimeCalcModal()"
-                                                    ng-disabled="new_invoice_data.current_game.start_time === ''"
-                                                    class="mainButton grayButton">محاسبه موقت
                                             </button>
                                         </td>
                                     </tr>
