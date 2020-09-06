@@ -196,6 +196,8 @@ angular.module("dashboard")
         };
 
         $scope.addMember = function () {
+            if (!$scope.new_member_data.card_number)
+                 $scope.new_member_data.card_number = $scope.new_member_data.phone;
             dashboardHttpRequest.addMember($scope.new_member_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
