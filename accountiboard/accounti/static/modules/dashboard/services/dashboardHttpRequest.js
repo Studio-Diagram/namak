@@ -553,13 +553,6 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'timeCalc': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/timeCalc/",
-                    'data': data
-                });
-            },
             'addReserve': function (data) {
                 return this.request({
                     'method': "POST",

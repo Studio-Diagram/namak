@@ -31,15 +31,10 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
-    var menuCategory = {
-        name: 'manager.menuCategory',
-        url: '/menuCategory',
-        templateUrl: 'static/modules/dashboard/views/menu_category.html'
-    };
-    var menuItem = {
-        name: 'manager.menuItem',
-        url: '/menuItem',
-        templateUrl: 'static/modules/dashboard/views/menu_item.html'
+    var menu = {
+        name: 'manager.menu',
+        url: '/menu',
+        templateUrl: 'static/modules/dashboard/views/menu.html'
     };
     var printers = {
         name: 'manager.printers',
@@ -204,8 +199,7 @@ myApp.config(function ($stateProvider, $authProvider) {
 
     $stateProvider.state(registerEmployee);
     $stateProvider.state(addEmployee);
-    $stateProvider.state(menuCategory);
-    $stateProvider.state(menuItem);
+    $stateProvider.state(menu);
     $stateProvider.state(member);
     $stateProvider.state(stock);
     $stateProvider.state(branch);

@@ -3,7 +3,7 @@ angular.module("dashboard")
         var initialize = function () {
             var split_url = $location.path().split('/');
             if ($location.path() === '/manager' || $location.path() === '/manager/') {
-                $state.go('manager.addEmployee');
+                $state.go('manager.tables');
             }
             if ($location.path() === '/account_manager') {
                 $state.go('account_manager.buy');

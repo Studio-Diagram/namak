@@ -596,6 +596,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('show');
                 $('#addInvoiceModal').css('z-index', 1000);
+                $('#viewInvoiceModal').css('z-index', 1000);
             })(jQuery);
         };
 
@@ -613,23 +614,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('hide');
                 $('#addInvoiceModal').css('z-index', "");
-            })(jQuery);
-        };
-
-        $scope.openTimeCalcModal = function () {
-            $scope.calculateTime();
-            jQuery.noConflict();
-            (function ($) {
-                $('#timeCalcModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeTimeCalcModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#timeCalcModal').modal('hide');
-                $('#addInvoiceModal').css('z-index', "");
+                $('#viewInvoiceModal').css('z-index', "");
             })(jQuery);
         };
 
@@ -647,24 +632,6 @@ angular.module("dashboard")
                 $('#closeInvoicePermissionModal').modal('hide');
                 $('#addInvoiceModal').css('z-index', "");
             })(jQuery);
-        };
-
-        $scope.calculateTime = function () {
-            dashboardHttpRequest.timeCalc($scope.new_invoice_data.current_game)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.calcedPoints = data['price'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.closeTimeCalcModal();
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.closeTimeCalcModal();
-                    $scope.openErrorModal();
-                });
         };
 
         $scope.openPayModal = function () {
