@@ -206,10 +206,14 @@ angular.module("dashboard")
                         $scope.closeAddMemberModal();
                     }
                     else if (data['response_code'] === 3) {
+                        if ($scope.new_member_data.card_number == $scope.new_member_data.phone)
+                            $scope.new_member_data.card_number = '';
                         $scope.error_message = data['error_msg'];
                         $scope.openErrorModal();
                     }
                 }, function (error) {
+                    if ($scope.new_member_data.card_number == $scope.new_member_data.phone)
+                        $scope.new_member_data.card_number = '';
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
