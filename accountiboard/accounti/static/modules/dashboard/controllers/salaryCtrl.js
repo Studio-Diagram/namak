@@ -10,14 +10,14 @@ angular.module("dashboard")
                 'base_salary': 0,
                 'over_time_pay':0,
                 'benefits':0,
-                'bounous':0,
+                'bonuses':0,
                 'reduction':0,
                 'insurance':0,
                 'tax':0,
                 'total_price':0,
                 'backup_code': '',
                 'settle_type': '',
-                'bounses_description':'',
+                'bonuses_description':'',
                 'reduction_description':'',
                 'description':'',
                 'branch_id': $rootScope.user_data.branch,                
@@ -29,6 +29,10 @@ angular.module("dashboard")
             $scope.get_banking_data();
             $scope.get_employees_data($rootScope.user_data);
 
+        };
+        $scope.change_total_price = function () {
+            $scope.new_salary_data.total_price = 0;
+            $scope.new_salary_data.total_price = Number($scope.new_salary_data.base_salary) + Number($scope.new_salary_data.over_time_pay) + Number($scope.new_salary_data.benefits) + Number($scope.new_salary_data.bonuses) - Number($scope.new_salary_data.reduction) - Number($scope.new_salary_data.insurance) - Number($scope.new_salary_data.tax);
         };
         $scope.get_employees_data = function (data) {
             dashboardHttpRequest.getEmployees(data)
@@ -75,7 +79,7 @@ angular.module("dashboard")
                 'base_salary': 0,
                 'over_time_pay':0,
                 'benefits':0,
-                'bounous':0,
+                'bonuses':0,
                 'reduction':0,
                 'insurance':0,
                 'tax':0,

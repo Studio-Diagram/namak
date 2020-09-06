@@ -172,6 +172,7 @@ urlpatterns = [
     path('api/stocks/<int:id>/', StocksView.StockDetailView.as_view()),
     path('api/stocks/', StocksView.StocksView.as_view()),
     path('api/stocksByBranch/<str:branch_id>/', StocksView.StockByBranchView.as_view()),
+    path('api/addInvoiceSalary/', InvoiceSalaryView.InvoiceSalary.as_view()),
 
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
@@ -214,6 +215,6 @@ urlpatterns = [
     url(r'^mobile', TemplateView.as_view(template_name='mobile.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
     # salaryInvoices
-    path('api/addInvoiceSalary/', InvoiceSalaryView.InvoiceSalary),
+
 
 ]

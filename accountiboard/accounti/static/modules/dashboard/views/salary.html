@@ -109,12 +109,7 @@
                                                     </select>
                                                 </td>
         
-                                                <td ng-hide="true">
-                                                    <small>انبار</small>
-                                                    <select ng-model="new_invoice_expense_data.stock_id"
-                                                            class="form-control" ng-options="stock.id as stock.name for stock in stocks">
-                                                    </select>
-                                                </td>
+
         
                                             </tr>
                                             </tbody>
@@ -122,49 +117,93 @@
                                         <table class="invoiceTable invoiceItem">
                                             <tbody>
                                             <tr>
-                                                <th class="first"><input type="checkbox"
-                                                                         aria-label="Checkbox for following text input"></th>
+
                                                 <th class="first">#</th>
                                                 <th style="width: 30%" class="second">عنوان</th>
                                                 <th class="fifth">قیمت کل</th>
                                                 <th style="width: 25%;" class="sixth">توضیحات</th>
                                             </tr>
-                                            <tr ng-repeat="service in new_invoice_expense_data.services">
-                                                <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
-                                                        class="fas fa-trash"></i></a></th>
-                                                <td>{{ $index + 1 | persianNumber }}</td>
-                                                <td><input class="form-control" type="text"
-                                                           ng-model="service.service_name"></td>
+                                            <tr >
+
+                                                <td>{{ 1 | persianNumber }}</td>
+                                                <td>حقوق پایه</td>
                                                 <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
                                                            class="form-control" type="text"
-                                                           ng-model="service.price" format></td>
+                                                           ng-model="new_salary_data.base_salary" format></td>
                                                 <td><input class="form-control" type="text" ng-maxlength="60"
-                                                           ng-model="service.description"></td>
+                                                           ng-model="new_salary_data.description"></td>
+                                            </tr>
+
+                                            <tr >
+
+                                                <td>{{ 2| persianNumber }}</td>
+                                                <td>اضافه کار</td>
+                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.over_time_pay" format></td>
+                                                <td></td>
+
+                                            </tr>
+                                            <tr >
+  
+                                                <td>{{ 3 | persianNumber }}</td>
+                                                <td>مزایا</td>
+                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.bonuses" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                    ng-model="new_salary_data.bonuses_description"></td>
+
+                                            </tr>
+                                            <tr >
+
+                                                <td>{{ 4 | persianNumber }}</td>
+                                                <td>پاداش</td>
+                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.benefits" format></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr >
+
+                                                <td>{{ 5 | persianNumber }}</td>
+                                                <td>کسری</td>
+                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.reduction" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                           ng-model="new_salary_data.reduction_description"></td>
+                                            </tr>
+                                            <tr >
+
+                                                <td>{{ 6 | persianNumber }}</td>
+                                                <td>بیمه</td>
+                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.insurance" format></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr >
+
+                                                <td>{{ 7 | persianNumber }}</td>
+                                                <td>مالیات</td>
+                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.tax" format></td>
+                                                <td></td>
                                             </tr>
         
                                             </tbody>
                                         </table>
-                                        <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton"><i
-                                                class="fas fa-eraser"></i>
-                                            اضافه کردن سطر جدید</a>
+
                                         <table class="invoiceTable invoiceTotal">
                                             <tbody>
                                             <tr>
-                                                <th>تخفیف</th>
-                                                <td><input ng-model="new_invoice_expense_data.discount" type="text" class="form-control"
-                                                           aria-label="" ng-change="change_total_price()" format>
-                                                </td>
-                                            </tr>
+
                                             <tr>
-                                                <th>مالیات</th>
-                                                <td><input ng-model="new_invoice_expense_data.tax" type="text" class="form-control"
-                                                           aria-label="" ng-change="change_total_price()" format>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>جمع کل</th>
+                                                <th>خالص پرداختی</th>
                                                 <td>
-                                                    {{ new_invoice_expense_data.total_price | number:fractionSize | persianNumber }}</td>
+                                                    {{ new_salary_data.total_price | number:fractionSize | persianNumber }}</td>
                                             </tr>
                                             </tbody>
                                         </table>
