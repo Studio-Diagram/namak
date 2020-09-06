@@ -147,15 +147,10 @@ angular.module("dashboard")
         };
 
         $scope.editSupplier = function (supplier_id) {
-            $scope.is_in_edit_mode_supplier = true;
-            var data = {
-                'username': $rootScope.user_data.username,
-                'supplier_id': supplier_id
-            };
-            dashboardHttpRequest.getSupplier(data)
+            $scope.is_in_edit_mode_supplier = true;            
+            dashboardHttpRequest.getSupplier(supplier_id)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.new_supplier_data = {
+                    $scope.new_supplier_data = {
                             'id': data['supplier']['id'],
                             'name': data['supplier']['name'],
                             'phone': data['supplier']['phone'],
@@ -165,23 +160,15 @@ angular.module("dashboard")
                             'username': $rootScope.user_data.username
                         };
                         $scope.openAddModal();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
                 }, function (error) {
-                    $scope.error_message = error;
+                    $scope.error_message = data['error_msg'];
                     $scope.openErrorModal();
                 });
 
         };
 
         $scope.deleteSupplier = function (supplier_id) {
-            var data = {
-                'supplier_id': supplier_id
-            };
-            dashboardHttpRequest.deleteSupplier(data)
+            dashboardHttpRequest.deleteSupplier(supplier_id)
                 .then(function (data) {
                     $scope.get_suppliers();
                 }, function (error) {
