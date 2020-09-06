@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+from django.views import View
+from accountiboard.custom_permissions import *
 from accounti.models import *
 from datetime import datetime
 import jdatetime, json
@@ -6,13 +8,15 @@ from django.db.models import Sum
 from accountiboard.constants import *
 
 
-def get_invoice(request):
-    if request.method == "POST":
+class GetInvoicePurchaseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         invoice_id = rec_data['invoice_id']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         invoice_object = InvoicePurchase.objects.get(pk=invoice_id)
@@ -70,11 +74,13 @@ def get_invoice(request):
                 'description': item.description
             })
         return JsonResponse({"response_code": 2, "invoice": invoice_data})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
-def create_new_invoice_purchase(request):
-    if request.method == "POST":
+class CreateNewInvoicePurchaseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_purchase_id = rec_data['id']
 
@@ -194,17 +200,15 @@ def create_new_invoice_purchase(request):
 
         return JsonResponse({"response_code": 2})
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-
-def get_all_invoices(request):
-    if request.method == "POST":
+class GetAllInvoicesPurchaseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         branch_id = rec_data['branch_id']
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -226,62 +230,31 @@ def get_all_invoices(request):
             })
 
         return JsonResponse({"response_code": 2, 'invoices': invoices})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
-def get_all_invoice_games(request):
-    if request.method == "POST":
+class GetMaterialsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        invoice_id = rec_data['invoice_id']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        else:
-            invoice_object = InvoiceSales.objects.get(pk=invoice_id)
-            invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
-            games = []
-            for game in invoice_games:
-                if str(game.game.end_time) != "00:00:00":
-                    games.append({
-                        'id': game.game.pk,
-                        'numbers': game.game.numbers,
-                        'start_time': game.game.start_time,
-                        'end_time': game.game.end_time,
-                        'points': game.game.points,
-                        'total': game.game.points * 5000
-                    })
-            return JsonResponse({"response_code": 2, 'games': games})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        branch_id = rec_data.get('branch')
 
-
-def get_materials(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-
-    rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data.get('username')
-    branch_id = rec_data.get('branch')
-
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-
-    organization_object = Branch.objects.get(id=branch_id).organization
-    materials = Material.objects.filter(organization=organization_object)
-    materials_data = []
-    for material in materials:
-        last_material_price = 0
-        last_material = PurchaseToMaterial.objects.filter(material=material).last()
-        if last_material:
-            last_material_price = last_material.base_unit_price
-        materials_data.append({
-            'id': material.pk,
-            'name': material.name,
-            'unit': material.unit,
-            'price': last_material_price
-        })
-    return JsonResponse({"response_code": 2, 'materials': materials_data})
+        organization_object = Branch.objects.get(id=branch_id).organization
+        materials = Material.objects.filter(organization=organization_object)
+        materials_data = []
+        for material in materials:
+            last_material_price = 0
+            last_material = PurchaseToMaterial.objects.filter(material=material).last()
+            if last_material:
+                last_material_price = last_material.base_unit_price
+            materials_data.append({
+                'id': material.pk,
+                'name': material.name,
+                'unit': material.unit,
+                'price': last_material_price
+            })
+        return JsonResponse({"response_code": 2, 'materials': materials_data})
 
 
 def get_detail_product_number(shop_product_id):
@@ -321,67 +294,64 @@ def get_detail_product_number(shop_product_id):
     return real_shop_p_num
 
 
-def get_shop_products(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+class GetShopProductsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data.get('branch')
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data.get('username')
-    branch_id = rec_data.get('branch')
-
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-
-    shop_products = ShopProduct.objects.filter(branch_id=branch_id)
-    shop_products_data = []
-    for shop in shop_products:
-        last_shop_price = 0
-        last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
-        if last_shop:
-            last_shop_price = last_shop.base_unit_price
-        shop_products_data.append({
-            'id': shop.pk,
-            'name': shop.name,
-            'price': shop.price,
-            'buy_price': last_shop_price,
-            'real_numbers': get_detail_product_number(shop.id)
-        })
-    shop_products_data = sorted(shop_products_data, key=lambda i: i['real_numbers'])
-    shop_products_data.reverse()
-    return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
+        shop_products = ShopProduct.objects.filter(branch_id=branch_id)
+        shop_products_data = []
+        for shop in shop_products:
+            last_shop_price = 0
+            last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
+            if last_shop:
+                last_shop_price = last_shop.base_unit_price
+            shop_products_data.append({
+                'id': shop.pk,
+                'name': shop.name,
+                'price': shop.price,
+                'buy_price': last_shop_price,
+                'real_numbers': get_detail_product_number(shop.id)
+            })
+        shop_products_data = sorted(shop_products_data, key=lambda i: i['real_numbers'])
+        shop_products_data.reverse()
+        return JsonResponse({"response_code": 2, 'shop_products': shop_products_data})
 
 
-def get_last_buy_price(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+class GetLastBuyPriceView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        shop_product_id = rec_data['shop_product_id']
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data['username']
-    shop_product_id = rec_data['shop_product_id']
+        if not shop_product_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not shop_product_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        shop_product = ShopProduct.objects.get(pk=shop_product_id)
+        last_invoice_purchase = PurchaseToShopProduct.objects.filter(shop_product=shop_product).last()
+        if last_invoice_purchase:
+            last_price = last_invoice_purchase.base_unit_price
+        else:
+            last_price = 0
 
-    shop_product = ShopProduct.objects.get(pk=shop_product_id)
-    last_invoice_purchase = PurchaseToShopProduct.objects.filter(shop_product=shop_product).last()
-    if last_invoice_purchase:
-        last_price = last_invoice_purchase.base_unit_price
-    else:
-        last_price = 0
-
-    return JsonResponse({"response_code": 2, 'last_buy_price': last_price})
+        return JsonResponse({"response_code": 2, 'last_buy_price': last_price})
 
 
-def search_materials(request):
-    if request.method == "POST":
+class SearchMaterialsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
-        username = rec_data['username']
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         items_searched = Material.objects.filter(name__contains=search_word)
@@ -398,108 +368,101 @@ def search_materials(request):
                 'price': last_material_price
             })
         return JsonResponse({"response_code": 2, 'materials': materials})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
-def search_shop_products(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+class SearchShopProductsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        search_word = rec_data.get('search_word')
+        branch_id = rec_data.get('branch')
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    search_word = rec_data.get('search_word')
-    username = rec_data.get('username')
-    branch_id = rec_data.get('branch')
-
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not search_word or not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-    items_searched = ShopProduct.objects.filter(name__icontains=search_word, branch_id=branch_id)
-    shops = []
-    for shop in items_searched:
-        last_shop_price = 0
-        last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
-        if last_shop:
-            last_shop_price = last_shop.base_unit_price
-        shops.append({
-            'id': shop.pk,
-            'name': shop.name,
-            'price': shop.price,
-            'buy_price': last_shop_price,
-            'real_numbers': get_detail_product_number(shop.id)
-        })
-    return JsonResponse({"response_code": 2, 'shop_products': shops})
+        if not search_word or not branch_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        items_searched = ShopProduct.objects.filter(name__icontains=search_word, branch_id=branch_id)
+        shops = []
+        for shop in items_searched:
+            last_shop_price = 0
+            last_shop = PurchaseToShopProduct.objects.filter(shop_product=shop).last()
+            if last_shop:
+                last_shop_price = last_shop.base_unit_price
+            shops.append({
+                'id': shop.pk,
+                'name': shop.name,
+                'price': shop.price,
+                'buy_price': last_shop_price,
+                'real_numbers': get_detail_product_number(shop.id)
+            })
+        return JsonResponse({"response_code": 2, 'shop_products': shops})
 
 
-def add_material(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+class AddMaterialView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        material_name = rec_data.get('material_name')
+        branch_id = rec_data.get('branch')
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    material_name = rec_data.get('material_name')
-    username = rec_data.get('username')
-    branch_id = rec_data.get('branch')
+        if not material_name or not branch_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not material_name or not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        organization_object = Branch.objects.get(id=branch_id).organization
+        new_material = Material(name=material_name, organization=organization_object)
+        new_material.save()
 
-    organization_object = Branch.objects.get(id=branch_id).organization
-    new_material = Material(name=material_name, organization=organization_object)
-    new_material.save()
-
-    return JsonResponse(
-        {"response_code": 2, "new_material": {"id": new_material.pk, "name": new_material.name, "price": ZERO_PRICE}})
+        return JsonResponse(
+            {"response_code": 2, "new_material": {"id": new_material.pk, "name": new_material.name, "price": ZERO_PRICE}})
 
 
-def add_shop_product(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+class AddShopProductView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        shop_product_name = rec_data.get('shop_product_name')
+        branch_id = rec_data.get('branch')
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    shop_product_name = rec_data.get('shop_product_name')
-    username = rec_data.get('username')
-    branch_id = rec_data.get('branch')
+        if not shop_product_name or not branch_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not shop_product_name or not branch_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        new_shop_product = ShopProduct(name=shop_product_name, branch_id=branch_id)
+        new_shop_product.save()
 
-    new_shop_product = ShopProduct(name=shop_product_name, branch_id=branch_id)
-    new_shop_product.save()
-
-    return JsonResponse({"response_code": 2,
-                         "new_shop_product": {"id": new_shop_product.pk, "name": new_shop_product.name,
-                                              "sale_price": ZERO_PRICE,
-                                              "buy_price": ZERO_PRICE}})
+        return JsonResponse({"response_code": 2,
+                             "new_shop_product": {"id": new_shop_product.pk, "name": new_shop_product.name,
+                                                  "sale_price": ZERO_PRICE,
+                                                  "buy_price": ZERO_PRICE}})
 
 
-def delete_invoice_purchase(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
-    rec_data = json.loads(request.read().decode('utf-8'))
-    invoice_id = rec_data['invoice_id']
-    username = rec_data['username']
+class DeleteInvoicePurchaseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        invoice_id = rec_data['invoice_id']
 
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-    if not invoice_id:
-        return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not invoice_id:
+            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
-    invoice_obj = InvoicePurchase.objects.get(pk=invoice_id)
-    invoice_type = invoice_obj.settlement_type
+        invoice_obj = InvoicePurchase.objects.get(pk=invoice_id)
+        invoice_type = invoice_obj.settlement_type
 
-    if invoice_type == "CASH":
-        invoice_obj.delete()
+        if invoice_type == "CASH":
+            invoice_obj.delete()
 
-    elif invoice_type == "AMANi":
-        pass
+        elif invoice_type == "AMANi":
+            pass
 
-    elif invoice_type == "CREDIT":
-        if PurchaseToShopProduct.objects.filter(invoice_purchase=invoice_obj).count():
-            return JsonResponse({"response_code": 3, "error_msg": CAN_NOT_DELETE_PURCHASE_BECAUSE_SHOP_PRODUCT})
-        invoice_obj.delete()
+        elif invoice_type == "CREDIT":
+            if PurchaseToShopProduct.objects.filter(invoice_purchase=invoice_obj).count():
+                return JsonResponse({"response_code": 3, "error_msg": CAN_NOT_DELETE_PURCHASE_BECAUSE_SHOP_PRODUCT})
+            invoice_obj.delete()
 
-    return JsonResponse({"response_code": 2})
+        return JsonResponse({"response_code": 2})
