@@ -93,6 +93,7 @@ def create_new_invoice_return(request):
             new_factor_number = last_invoice_obj.factor_number + 1
         else:
             new_factor_number = 1
+
         if new_factor_number != factor_number:
             return JsonResponse({"response_code": 3, "error_msg": FACTOR_NUMBER_INVALID})
 
@@ -129,7 +130,19 @@ def create_new_invoice_return(request):
                     return JsonResponse({"response_code": 3,
                                          "error_msg": f"{NOT_ENOUGH_IN_STOCK} ( {shop_obj.name} ({shop_product_real_numbers}) )"})
 
-        for return_product in return_products:
+                if not supplier_id:
+                    return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
+                supplier_obj = Supplier.objects.get(pk=supplier_id)
+
+                can_returned_nums = 0
+                all_purchase_to_shop_p = PurchaseToShopProduct.objects.filter(shop_product=shop_obj,
+                                                                              invoice_purchase__supplier=supplier_obj)
+                for purchase in all_purchase_to_shop_p:
+                    can_returned_nums += purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
+
+                if can_returned_nums < int(numbers):
+                    return JsonResponse({"response_code": 3, "error_msg": NOT_ENOUGH_IN_SUPPLIER})
+
             shop_id = return_product['shop_id']
             description = return_product['description']
             numbers = return_product['numbers']
@@ -197,19 +210,9 @@ def create_new_invoice_return(request):
 
             elif return_type == 'CAFE_TO_SUPPLIER':
                 want_to_return = int(numbers)
-                if not supplier_id:
-                    return JsonResponse({"response_code": 3, "error_msg": SUPPLIER_REQUIRE})
-                supplier_obj = Supplier.objects.get(pk=supplier_id)
+
                 new_invoice.supplier = supplier_obj
                 new_invoice.save()
-
-                can_returned_nums = 0
-                all_purchase_to_shop_p = PurchaseToShopProduct.objects.filter(shop_product=shop_obj)
-                for purchase in all_purchase_to_shop_p:
-                    can_returned_nums += purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
-
-                if can_returned_nums < int(numbers):
-                    return JsonResponse({"response_code": 3, "error_msg": "Not Enough in Supplier!"})
 
                 for purchase in all_purchase_to_shop_p:
                     can_return_num_in_purchase = purchase.unit_numbers - purchase.buy_numbers - purchase.return_numbers
