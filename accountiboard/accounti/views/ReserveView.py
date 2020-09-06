@@ -237,7 +237,6 @@ class GetTodayForReserveView(View):
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data.get('username')
         branch_id = rec_data.get('branch')
 
         if not branch_id:
