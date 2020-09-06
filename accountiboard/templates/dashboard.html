@@ -37,8 +37,7 @@
         <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/menuCategoryCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/menuItemCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/menuCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/salonCtrl.js' %}"></script>
@@ -298,17 +297,10 @@
                            ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-id-card"></i>عضویت</a>
                     </li>
-
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
-                    </li>
                     <li class="nav-item">
                         <a ui-sref="account_manager.buy" href=""
                            ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-chess"></i>حسابداری</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
                     </li>
                     <li class="nav-item" class="nav-link">
                         <a ui-sref="manager.addEmployee"
