@@ -1257,6 +1257,7 @@ def print_cash_with_template(request):
         'tax': 0,
         'discount': 0,
         'payable': 0,
+        'credits': 0,
         'time': now_time.strftime("%H:%M"),
         'date': now_time.strftime("%Y/%m/%d"),
     }
@@ -1268,7 +1269,14 @@ def print_cash_with_template(request):
     print_data['table_name'] = invoice_obj.table.name
     print_data['total_price'] = format(int(invoice_obj.total_price), ',d')
     print_data['discount'] = format(int(invoice_obj.discount), ',d')
-    print_data['payable'] = format(int(invoice_obj.total_price - invoice_obj.discount), ',d')
+    print_data['tax'] = format(int(invoice_obj.tax), ',d')
+    sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_obj).aggregate(
+        Sum('used_price')).get('used_price__sum')
+    print_data['credits'] = format(int(sum_all_used_credit_on_this_invoice),
+                                   ',d') if sum_all_used_credit_on_this_invoice else 0
+    print_data['payable'] = format(
+        int(invoice_obj.total_price - invoice_obj.discount - sum_all_used_credit_on_this_invoice + invoice_obj.tax),
+        ',d')
     all_menu_item_invoice = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_obj)
     for menu_item in all_menu_item_invoice:
         is_append = False
@@ -1506,5 +1514,5 @@ def night_report_template(request):
     report_data['total_cash_desk'] = format(report_data['total_cash_desk'], ',d')
     report_data['difference'] = format(report_data['difference'], ',d')
     report_data['cashier_name'] = "%s %s" % (
-    cash_object.employee.first_name, cash_object.employee.last_name) if cash_object.employee else UNKNOWN_CASHIER
+        cash_object.employee.first_name, cash_object.employee.last_name) if cash_object.employee else UNKNOWN_CASHIER
     return render(request, 'night_report.html', {"report_data": report_data})
