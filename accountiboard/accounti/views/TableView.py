@@ -1,21 +1,22 @@
 from django.http import JsonResponse
+from django.views import View
+from accountiboard.custom_permissions import *
 import json
 from accounti.models import *
 from accountiboard.constants import *
 from django.db import IntegrityError
-from django.views import View
 
 
 class AddTableView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        table_id = rec_data['table_id']
-        table_cat_id = rec_data['table_cat_id']
-        name = rec_data['name']
+        table_id = rec_data.get('table_id')
+        table_cat_id = rec_data.get('table_cat_id')
+        name = rec_data.get('name')
 
         if not name:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -52,16 +53,14 @@ class AddTableView(View):
 
 
 class SearchTableView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
+        search_word = rec_data.get('search_word')
+
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         items_searched = Table.objects.filter(name__contains=search_word)
@@ -76,15 +75,12 @@ class SearchTableView(View):
 
 
 class GetTableView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         table_id = rec_data['table_id']
         table = Table.objects.get(pk=table_id)
@@ -97,10 +93,9 @@ class GetTableView(View):
 
 
 class AddTableCategoryView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         name = rec_data.get('name')
@@ -132,16 +127,12 @@ class AddTableCategoryView(View):
 
 
 class GetTablesView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data.get('username')
         branch_id = rec_data.get('branch')
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         tables = Table.objects.filter(category__branch_id=branch_id).order_by('id')
         tables_data = []
@@ -156,17 +147,13 @@ class GetTablesView(View):
 
 
 class GetTableCategoryView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         table_cat_id = rec_data.get('table_cat_id')
-
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         if not table_cat_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -180,16 +167,12 @@ class GetTableCategoryView(View):
 
 
 class GetTableCategoriesView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data.get('username')
         branch_id = rec_data.get('branch')
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         table_cats = TableCategory.objects.filter(branch_id=branch_id).order_by('id')
         table_cats_data = []
