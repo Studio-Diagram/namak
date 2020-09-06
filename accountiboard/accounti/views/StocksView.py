@@ -5,9 +5,9 @@ from django.views import View
 
 class StocksView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = [x['id'] for x in payload['sub_branch_list']]
@@ -28,9 +28,9 @@ class StocksView(View):
 
 
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         name   = rec_data.get('name')
@@ -77,9 +77,9 @@ class StocksView(View):
 
 class StockDetailView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def get(self, request, id, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = [x['id'] for x in payload['sub_branch_list']]
@@ -104,9 +104,9 @@ class StockDetailView(View):
                     }, status=404)
 
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def put(self, request, id, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         name = rec_data.get('name')
@@ -161,9 +161,9 @@ class StockDetailView(View):
 
 class StockByBranchView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def get(self, request, branch_id, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = {x['id'] for x in payload['sub_branch_list']}

@@ -5,10 +5,10 @@ from datetime import datetime, timedelta
 from django.views import View
 
 class AddBranchView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['FREE'], USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         correct_mins = ["00", "15", "30", "45"]
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -62,16 +62,12 @@ class AddBranchView(View):
 
 
 class GetBranchesView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         branch_id = rec_data['branch']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         branches = Branch.objects.filter(organization=Branch.objects.get(pk=branch_id).organization)
         branches_data = []
         for branch in branches:
@@ -86,16 +82,13 @@ class GetBranchesView(View):
 
 
 class SearchBranchView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         items_searched = Branch.objects.filter(name__contains=search_word)
@@ -112,15 +105,11 @@ class SearchBranchView(View):
 
 
 class GetBranchView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch_id = rec_data['branch']
         branch = Branch.objects.get(pk=branch_id)
@@ -138,21 +127,15 @@ class GetBranchView(View):
 
 
 class GetWorkingTimeForReserveView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         branch_id = rec_data['branch']
 
-        if not username:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         branch = Branch.objects.get(pk=branch_id)
 

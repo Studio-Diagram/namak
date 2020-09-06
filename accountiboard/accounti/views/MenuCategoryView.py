@@ -1,22 +1,20 @@
 from django.http import JsonResponse
+from django.views import View
+from accountiboard.custom_permissions import *
 import json
 from accounti.models import *
 from accountiboard.constants import *
-from django.views import View
 
 class ChangeListOrderView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        menu_cat_id = rec_data['menu_cat_id']
-        change_type = rec_data['change_type']
-        username = rec_data['username']
+        menu_cat_id = rec_data.get('menu_cat_id')
+        change_type = rec_data.get('change_type')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
         if not menu_cat_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -45,18 +43,15 @@ class ChangeListOrderView(View):
 
 
 class GetCategoriesBasedOnKindView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        kind = rec_data['kind']
-        username = rec_data['username']
-        current_branch = rec_data['current_branch']
+        kind = rec_data.get('kind')
+        current_branch = rec_data.get('current_branch')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNAUTHENTICATED})
         if not kind:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
