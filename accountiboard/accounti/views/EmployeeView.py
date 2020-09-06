@@ -56,7 +56,6 @@ class LoginView(View):
                 "name": cafe_owner_to_branch.name
             } for cafe_owner_to_branch in user_branch_objects]
             user_role = [USER_ROLES['CAFE_OWNER']]
-            request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
             try:
                 bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
             except:
@@ -65,7 +64,6 @@ class LoginView(View):
             employee_object = Employee.objects.get(user=user_obj)
             if employee_object.is_active != True:
                 return JsonResponse({"response_code": 3, "error_msg": "You don't have access rights."}, status=403)
-            request.session['user_role'] = employee_object.employee_roles
             user_role = employee_object.employee_roles
             branches = EmployeeToBranch.objects.filter(employee=employee_object)
             branch_object = branches.first().branch.id
@@ -82,8 +80,6 @@ class LoginView(View):
                 bundle = USER_PLANS_CHOICES['FREE']
         else:
             return JsonResponse({"response_code": 3}, status=403)
-
-        request.session['is_logged_in'] = username
 
         jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
         return JsonResponse(
