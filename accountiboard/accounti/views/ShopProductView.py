@@ -4,14 +4,15 @@ from accounti.models import *
 from django.db.models import Sum
 from accountiboard import settings
 from accountiboard.constants import *
+from accountiboard.custom_permissions import *
 from django.views import View
 
 
 class GetDetailProductNumberView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         shop_product_name = rec_data['shop_product_name']
