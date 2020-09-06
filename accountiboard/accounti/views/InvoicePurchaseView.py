@@ -495,7 +495,7 @@ def delete_invoice_purchase(request):
         invoice_obj.delete()
 
     elif invoice_type == "AMANi":
-        pass
+        return JsonResponse({"response_code": 3, "error_msg": CAN_NOT_DELETE_PURCHASE_BECAUSE_AMANI})
 
     elif invoice_type == "CREDIT":
         if PurchaseToShopProduct.objects.filter(invoice_purchase=invoice_obj).count():
