@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from django.views.generic import TemplateView
-from accounti.views import EmployeeView, MemberView, stockView, BranchView, InvoiceSaleView, \
+from accounti.views import EmployeeView, MemberView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
     OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView
@@ -34,10 +34,6 @@ urlpatterns = [
     path('api/getMembers/', MemberView.GetMembersView.as_view()),
     path('api/searchMember/', MemberView.SearchMemberView.as_view()),
     path('api/getMember/', MemberView.GetMemberView.as_view()),
-    path('api/addStock/', stockView.add_stock),
-    path('api/getStocks/', stockView.get_stocks),
-    path('api/searchStock/', stockView.search_stock),
-    path('api/getStock/', stockView.get_stock),
     path('api/addBranch/', BranchView.AddBranchView.as_view()),
     path('api/getBranches/', BranchView.GetBranchesView.as_view()),
     path('api/searchBranch/', BranchView.SearchBranchView.as_view()),
