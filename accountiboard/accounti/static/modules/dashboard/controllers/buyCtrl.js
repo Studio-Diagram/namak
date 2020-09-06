@@ -26,8 +26,8 @@ angular.module("dashboard")
                 'date': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':'',
-                'stock_id':''
+                'banking_id': '',
+                'stock_id': ''
             };
             $scope.search_data_material = {
                 'search_word': '',
@@ -54,15 +54,15 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.allbanking_names = [];
                     data['bank'].forEach(function (bank) {
-                        $scope.allbanking_names.push({'id':bank.id, 'name':bank.name});
+                        $scope.allbanking_names.push({'id': bank.id, 'name': bank.name});
                     });
 
                     data['tankhah'].forEach(function (tankhah) {
-                        $scope.allbanking_names.push({'id':tankhah.id, 'name':tankhah.name});
+                        $scope.allbanking_names.push({'id': tankhah.id, 'name': tankhah.name});
                     });
 
                     data['cash_register'].forEach(function (cash_register) {
-                        $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
+                        $scope.allbanking_names.push({'id': cash_register.id, 'name': cash_register.name});
                     });
 
                 }, function (error) {
@@ -572,11 +572,16 @@ angular.module("dashboard")
         };
 
         $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
+            if ($scope.read_only_mode) {
+                $scope.closeAddModal();
+            }
+            else {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#closeInvoicePermissionModal').modal('show');
+                    $('#addModal').css('z-index', 1000);
+                })(jQuery);
+            }
         };
 
         $scope.closePermissionModal = function () {
@@ -638,7 +643,7 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
                 'banking_id': '',
-                'stock_id':''
+                'stock_id': ''
             };
             if ($scope.search_data_material.search_word) {
                 $scope.search_data_material = {
