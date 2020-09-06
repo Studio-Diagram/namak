@@ -96,7 +96,6 @@ USER_TYPE = {
     "employee": 2
 }
 USER_ROLES = {
-    "ADMIN": "ADMIN",
     "CAFE_OWNER": "CAFE_OWNER",
     "MANAGER": "MANAGER",
     "CASHIER": "CASHIER",
