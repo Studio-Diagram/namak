@@ -113,7 +113,7 @@ urlpatterns = [
     path('api/deleteInvoiceExpense/', InvoiceExpenseView.delete_invoice_expense),
     path('api/deleteInvoiceReturn/', InvoiceReturnView.delete_invoice_return),
     path('api/deleteInvoiceSettlement/', InvoiceSettlementView.delete_invoice_settlement),
-    path('api/getNextFactorNumber/', GeneralInvoiceView.get_invoice_number),
+    path('api/getNextFactorNumber/', GeneralInvoiceView.GetInvoiceNumberView.as_view()),
     path('api/addTableCategory/', TableView.AddTableCategoryView.as_view()),
     path('api/getTableCategory/', TableView.GetTableCategoryView.as_view()),
     path('api/getTableCategories/', TableView.GetTableCategoriesView.as_view()),
