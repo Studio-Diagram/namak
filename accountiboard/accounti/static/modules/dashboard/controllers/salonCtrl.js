@@ -596,6 +596,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('show');
                 $('#addInvoiceModal').css('z-index', 1000);
+                $('#viewInvoiceModal').css('z-index', 1000);
             })(jQuery);
         };
 
@@ -613,6 +614,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('hide');
                 $('#addInvoiceModal').css('z-index', "");
+                $('#viewInvoiceModal').css('z-index', "");
             })(jQuery);
         };
 

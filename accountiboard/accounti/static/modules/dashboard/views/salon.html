@@ -117,6 +117,10 @@
                     <a class="mainButton redButton" data-dismiss="modal" href="#" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
+                    <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                            ng-click="print_cash()"
+                            class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری
+                    </button>
                     <a class="mainButton greenButton" href=""
                        ng-click="initiate_edit_payment_invoice_sale();">
                         <span aria-hidden="true">تغییر نحوه تسویه</span>
