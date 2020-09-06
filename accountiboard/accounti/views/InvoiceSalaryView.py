@@ -28,13 +28,11 @@ class InvoiceSalary(View):
             bounses_description = rec_data['bounses_description']
             reduction = rec_data['reduction']
             reduction_description = rec_data['reduction_description']
-            insurance = rec_data['reduction_description']
+            insurance = rec_data['insurance']
             tax = rec_data['tax']
             total_price = rec_data['total_price']
-
             settle_type = rec_data['settle_type']
             backup_code = rec_data['backup_code']
-
             invoice_date = rec_data['date']
             factor_number = rec_data['factor_number']
             banking_id = rec_data.get('banking_id')

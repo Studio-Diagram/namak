@@ -1041,6 +1041,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'addSalary':function(data){
+                return this.request({
+                    'method':"POST",
+                    'url': "/api/addInvoiceSalary/",
+                    'data':data
+                })
+            }
 
         };
         return service;

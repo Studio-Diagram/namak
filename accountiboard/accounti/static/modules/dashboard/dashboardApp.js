@@ -206,6 +206,12 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
+    var salary ={
+        name: 'account_manager.salary',
+        url:'/salary',
+        templateUrl:'static/modules/dashboard/views/salary.html'
+        
+    };
 
     $stateProvider.state(registerEmployee);
     $stateProvider.state(addEmployee);
@@ -237,6 +243,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(printers);
     $stateProvider.state(banking);
     $stateProvider.state(stocks);
+    $stateProvider.state(salary);
 });
 
 angular.module("dashboard")
