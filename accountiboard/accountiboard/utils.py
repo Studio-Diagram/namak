@@ -9,7 +9,7 @@ from PIL import Image
 from io import BytesIO
 
 
-def make_new_JWT_token(id, phone, roles, bundle, branch_list):
+def make_new_JWT_token(id, phone, roles, bundle, branch_list, organization):
     payload = {
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
         'iat': datetime.datetime.utcnow(),
@@ -18,6 +18,7 @@ def make_new_JWT_token(id, phone, roles, bundle, branch_list):
         'sub_roles': roles,
         'sub_bundle': bundle,
         'sub_branch_list': branch_list,
+        'sub_organization': organization,
     }
     return jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 

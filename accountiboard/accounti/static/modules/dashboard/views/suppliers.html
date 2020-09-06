@@ -114,6 +114,7 @@
                             <th scope="col">شماره تماس</th>
                             <th scope="col">مانده حساب</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -128,6 +129,10 @@
                             </td>
                             <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+
+                            <td><a ng-click="deleteSupplier(supplier.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a>
                             </td>
                         </tr>
                         </tbody>

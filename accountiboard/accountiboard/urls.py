@@ -59,6 +59,7 @@ urlpatterns = [
     path('api/getSuppliers/', SupplierView.get_suppliers),
     path('api/getSupplier/', SupplierView.get_supplier),
     path('api/searchSupplier/', SupplierView.search_supplier),
+    path('api/deleteSupplier/', SupplierView.DeleteSupplierView.as_view()),
     path('api/getMaterials/', InvoicePurchaseView.get_materials),
     path('api/searchMaterials/', InvoicePurchaseView.search_materials),
     path('api/addInvoicePurchase/', InvoicePurchaseView.create_new_invoice_purchase),

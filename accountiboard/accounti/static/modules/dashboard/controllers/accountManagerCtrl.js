@@ -177,6 +177,19 @@ angular.module("dashboard")
 
         };
 
+        $scope.deleteSupplier = function (supplier_id) {
+            var data = {
+                'supplier_id': supplier_id
+            };
+            dashboardHttpRequest.deleteSupplier(data)
+                .then(function (data) {
+                    $scope.get_suppliers();
+                }, function (error) {
+                    $scope.error_message = error.data.error_msg;
+                    $scope.openErrorModal();
+                });
+        };
+
         $scope.resetFrom = function () {
             $scope.new_supplier_data = {
                 'id': 0,

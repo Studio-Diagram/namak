@@ -315,6 +315,13 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'deleteSupplier': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/deleteSupplier/",
+                    'data': data
+                });
+            },
             'getMaterials': function (data) {
                 return this.request({
                     'method': "POST",
