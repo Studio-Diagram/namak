@@ -94,15 +94,10 @@ class CreateNewInvoicePurchaseView(View):
             discount = rec_data['discount']
             invoice_date = rec_data['date']
             factor_number = rec_data['factor_number']
-            username = rec_data['username']
             branch_id = rec_data['branch_id']
             banking_id = rec_data.get('banking_id')
             stock_id = rec_data.get('stock_id')
 
-            if not username:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not request.session.get('is_logged_in', None) == username:
-                return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if len(material_items) == 0 and len(shop_product_items) == 0:
