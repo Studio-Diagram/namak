@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from accountiboard.custom_permissions import *
 import json
 from datetime import datetime
 from accounti.models import *
@@ -9,17 +10,13 @@ from django.views import View
 
 
 class GetAllCreditsDataFromUserView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         member_id = rec_data['member_id']
-
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         if not member_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -51,13 +48,12 @@ class GetAllCreditsDataFromUserView(View):
 
 
 class CreateCreditView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         member_id = rec_data['member_id']
         credit_category = rec_data['credit_category']
         expire_date = rec_data['expire_date']
@@ -65,9 +61,6 @@ class CreateCreditView(View):
         start_date = rec_data['start_date']
         start_time = rec_data['start_time']
         total_credit = rec_data['total_credit']
-
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         if not credit_category or not expire_date or not expire_time or not total_credit or not start_time or not start_date:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -96,18 +89,14 @@ class CreateCreditView(View):
 
 
 class PerformCreditOnInvoiceSaleView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         invoice_id = rec_data['invoice_id']
         used_credit_price = 0
-
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         try:
             invoice_object = InvoiceSales.objects.get(pk=invoice_id)
@@ -228,18 +217,15 @@ def game_credit_handler(invoice_object):
 
 
 class CheckGiftCodeView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
         gift_code = rec_data['gift_code']
         gift_code = gift_code.lower()
         member_id = rec_data['member_id']
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
         if not gift_code:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -271,10 +257,10 @@ class CheckGiftCodeView(View):
 
 
 class CreateGiftCodeManualView(View):
-    # @permission_decorator_class_based(token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         s = "abcdefghijklmnopqrstuvwxyz0123456789"
         gift_len = 5
