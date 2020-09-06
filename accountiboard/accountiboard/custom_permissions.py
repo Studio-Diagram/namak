@@ -118,7 +118,7 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
 
     for role in payload['sub_roles']:
         if role in permitted_roles:
-            if bundles.issubset(payload_bundles):
+            if payload_bundles.issubset(bundles):
                 if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
                     return {
                         "state": True,
