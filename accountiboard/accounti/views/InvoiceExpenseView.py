@@ -1,12 +1,17 @@
 from django.http import JsonResponse
+from django.views import View
+from accountiboard.custom_permissions import *
 from accounti.models import *
 from datetime import datetime
 import jdatetime, json
 from accountiboard.constants import *
 
 
-def create_new_invoice_expense(request):
-    if request.method == "POST":
+class CreateNewInvoiceExpenseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_expense_id = rec_data['id']
 
@@ -20,17 +25,10 @@ def create_new_invoice_expense(request):
             services = rec_data['services']
             discount = rec_data['discount']
             invoice_date = rec_data['date']
-            username = rec_data['username']
             branch_id = rec_data['branch_id']
             factor_number = rec_data['factor_number']
             banking_id = rec_data.get('banking_id')
             stock_id = rec_data.get('stock_id')
-
-            if not username:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-            if not request.session.get('is_logged_in', None) == username:
-                return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
 
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
@@ -132,17 +130,15 @@ def create_new_invoice_expense(request):
 
         return JsonResponse({"response_code": 3, "error_msg": "Wrong ID!"})
 
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
-
-def get_all_invoices(request):
-    if request.method == "POST":
+class GetAllInvoicesExpenseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        branch_id = rec_data['branch_id']
+        branch_id = rec_data.get('branch_id')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -164,17 +160,17 @@ def get_all_invoices(request):
             })
 
         return JsonResponse({"response_code": 2, 'invoices': invoices})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
-def search_expense(request):
-    if request.method == "POST":
+class SearchExpenseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        username = rec_data['username']
+        search_word = rec_data.get('search_word')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         items_searched = InvoiceExpense.objects.filter(supplier__name__contains=search_word)
@@ -191,17 +187,17 @@ def search_expense(request):
                 'date': jalali_date.strftime("%Y/%m/%d")
             })
         return JsonResponse({"response_code": 2, 'expenses': expenses})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
-def delete_invoice_expense(request):
-    if request.method == "POST":
+class DeleteInvoiceExpenseView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_id = rec_data['invoice_id']
-        username = rec_data['username']
+        invoice_id = rec_data.get('invoice_id')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -215,27 +211,23 @@ def delete_invoice_expense(request):
             invoice_obj.delete()
 
         return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
 
 
-def get_all_tags(request):
-    if request.method != "POST":
-        return JsonResponse({"response_code": 4, "error_msg": METHOD_NOT_ALLOWED})
+class GetAllTagsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        branch_id = rec_data.get('branch')
 
-    rec_data = json.loads(request.read().decode('utf-8'))
-    username = rec_data.get('username')
-    branch_id = rec_data.get('branch')
+        organization_object = Branch.objects.get(id=branch_id).organization
+        all_tags = ExpenseTag.objects.filter(organization=organization_object).order_by("name")
+        all_tags_data = []
+        for tag in all_tags:
+            all_tags_data.append({
+                "id": tag.pk,
+                "name": tag.name
+            })
 
-    if not request.session.get('is_logged_in', None) == username:
-        return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-
-    organization_object = Branch.objects.get(id=branch_id).organization
-    all_tags = ExpenseTag.objects.filter(organization=organization_object).order_by("name")
-    all_tags_data = []
-    for tag in all_tags:
-        all_tags_data.append({
-            "id": tag.pk,
-            "name": tag.name
-        })
-
-    return JsonResponse({"response_code": 2, 'tags': all_tags_data})
+        return JsonResponse({"response_code": 2, 'tags': all_tags_data})
