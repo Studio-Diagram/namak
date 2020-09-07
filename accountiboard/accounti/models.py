@@ -769,7 +769,7 @@ class InvoiceSalary(models.Model):
     over_time_pay = models.IntegerField(default=0)
     benefits = models.IntegerField( default=0)
     bonuses = models.IntegerField(default=0)
-    bounses_description = models.TextField(null=True, blank=True)
+    bonuses_description = models.TextField(null=True, blank=True)
     reduction = models.IntegerField( default=0)
     reduction_description = models.TextField(null=True, blank=True)
     insurance = models.IntegerField(default=0)
