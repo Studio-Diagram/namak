@@ -3,6 +3,7 @@ angular.module("dashboard")
         var initialize = function () {
             $scope.error_message = '';
             $scope.cash_id = $stateParams.cash_id;
+            $scope.show_initiate_edit_payment_invoice_sale = false;
             $scope.get_cash();
         };
 

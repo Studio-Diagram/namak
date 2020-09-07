@@ -12,7 +12,7 @@
                         ng-click="print_cash()"
                         class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری
                 </button>
-                <a class="mainButton greenButton" href=""
+                <a ng-show="show_initiate_edit_payment_invoice_sale" class="mainButton greenButton" href=""
                    ng-click="initiate_edit_payment_invoice_sale();">
                     <span aria-hidden="true">تغییر نحوه تسویه</span>
                 </a>
