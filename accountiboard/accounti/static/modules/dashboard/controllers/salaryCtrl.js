@@ -28,6 +28,9 @@ angular.module("dashboard")
 
             $scope.get_banking_data();
             $scope.get_employees_data($rootScope.user_data);
+            $scope.getInvoiceSalaries();
+
+
 
         };
         $scope.change_total_price = function () {
@@ -145,22 +148,41 @@ angular.module("dashboard")
             (function ($) {
                 $scope.new_salary_data.invoice_date = $("#datepicker").val();
             })(jQuery);
-            dashboardHttpRequest.addSalary($scope.new_salary_data)
+            dashboardHttpRequest.addInvoiceSalary($scope.new_salary_data)
                 .then(function (data) {
-                    if (status === 200) {
-
+                        $scope.getInvoiceSalaries();
+                        console.log("I'm here")
                         $scope.resetFrom();
-                        $scope.close_modal(addModal);
-                    }
-                    else if (status === 400) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                        $scope.close_modal('addModal');
+                    
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    console.log("fhhthtu")
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal', 'addModal');
                 });
         };
+
+        $scope.getInvoiceSalaries= function () {
+            var sending_data = {
+                
+                'branch_id': $rootScope.user_data.branch,
+                
+            };
+            dashboardHttpRequest.getSalaries(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    $scope.salaries = data['invoices'];
+                    console.log($scope.salaries);
+                   
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal');
+                    
+                });
+        };
+
 
         $scope.openErrorModal = function () {
             jQuery.noConflict();

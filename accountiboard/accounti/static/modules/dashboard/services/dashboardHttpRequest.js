@@ -1041,13 +1041,21 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addSalary':function(data){
+            'addInvoiceSalary':function(data){
                 return this.request({
                     'method':"POST",
-                    'url': "/api/addInvoiceSalary/",
+                    'url': "/api/salary/",
                     'data':data
                 })
-            }
+            },
+            'getSalaries':function(data){
+                return this.request({
+                    'method':"POST",
+                    'url': "/api/salaries/",
+                    'data':data
+                    
+                })
+            },
 
         };
         return service;
