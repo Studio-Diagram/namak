@@ -13,7 +13,7 @@ class InvoiceSalaryView(View):
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
                                       {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
-    def post(self, request, *args, **kwargs):
+    def post(self, request, invoice_id, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_salary_id = rec_data['id']
 
@@ -95,6 +95,26 @@ class InvoiceSalaryView(View):
 
 
 
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def delete(self, request, invoice_id, *args, **kwargs):
+        if not invoice_id:
+            return JsonResponse({"error_msg": DATA_REQUIRE},status=400)
+
+        invoice_obj = InvoiceSalary.objects.get(pk=invoice_id)
+        invoice_obj.delete()
+
+
+        return JsonResponse(status =200)
+
+
+
+
+
+
+
 class InvoiceSalariesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
@@ -126,6 +146,10 @@ class InvoiceSalariesView(View):
 
         return JsonResponse({'invoices': invoices},status=200)
     
+
+
+
+
 
 
 # def get_all_invoices(request):

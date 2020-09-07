@@ -148,7 +148,7 @@ angular.module("dashboard")
             (function ($) {
                 $scope.new_salary_data.invoice_date = $("#datepicker").val();
             })(jQuery);
-            dashboardHttpRequest.addInvoiceSalary($scope.new_salary_data)
+            dashboardHttpRequest.addInvoiceSalary($scope.new_salary_data,'0')
                 .then(function (data) {
                         $scope.getInvoiceSalaries();
                         console.log("I'm here")
@@ -196,6 +196,28 @@ angular.module("dashboard")
             })(jQuery);
         };
 
+        $scope.delete_invoice_salary = function (invoice_id) {
+
+            dashboardHttpRequest.deleteInvoiceSalary(invoice_id)
+                .then(function (data) {
+                    $scope.closeDeletePermissionModal();
+
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal');
+                });
+        };
+
+        $scope.openDeletePermissionModal = function (invoice_id) {
+            $scope.deleteing_invoice_id = invoice_id;
+            $rootScope.open_modal("deleteInvoicePermissionModal")
+        };
+
+        $scope.closeDeletePermissionModal = function () {
+            $scope.deleteing_invoice_id = 0;
+            $rootScope.close_modal("deleteInvoicePermissionModal")
+        };
 
         initialize();
 

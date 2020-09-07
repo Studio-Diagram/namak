@@ -1041,11 +1041,18 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addInvoiceSalary':function(data){
+            'addInvoiceSalary':function(data,id){
                 return this.request({
                     'method':"POST",
-                    'url': "/api/salary/",
+                    'url': "/api/salary/"+ id +"/",
                     'data':data
+                })
+            },
+            'deleteInvoiceSalary':function(id){
+                return this.request({
+                    'method':"DELETE",
+                    'url': "/api/salary/"+ id +"/",
+                    
                 })
             },
             'getSalaries':function(data){
