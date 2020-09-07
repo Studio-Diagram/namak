@@ -1,13 +1,14 @@
 from django.http import JsonResponse
 from accounti.models import *
-from datetime import datetime
+# from datetime import datetime
+import datetime
 import jdatetime, json
 from accountiboard.constants import *
 from django.views import View
 from accountiboard.custom_permissions import *
 
 
-class InvoiceSalary(View):
+class InvoiceSalaryView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
                                       {USER_PLANS_CHOICES['FREE']},
@@ -25,7 +26,7 @@ class InvoiceSalary(View):
             over_time_pay = rec_data['over_time_pay']
             benefits = rec_data['benefits']
             bonuses = rec_data['bonuses']
-            bounses_description = rec_data['bounses_description']
+            bonuses_description = rec_data['bonuses_description']
             reduction = rec_data['reduction']
             reduction_description = rec_data['reduction_description']
             insurance = rec_data['insurance']
@@ -33,19 +34,19 @@ class InvoiceSalary(View):
             total_price = rec_data['total_price']
             settle_type = rec_data['settle_type']
             backup_code = rec_data['backup_code']
-            invoice_date = rec_data['date']
+            invoice_date = rec_data['invoice_date']
             factor_number = rec_data['factor_number']
             banking_id = rec_data.get('banking_id')
 
 
             if not branch_id or not employee_id or not factor_number or not invoice_date or not backup_code or not settle_type :
                 return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
-            if not total_price or not tax or not insurance or not reduction or not reduction_description or not bonuses or not bounses_description or not base_salary or not over_time_pay or not benefits:
+            if not total_price or not tax or not insurance or not reduction or not reduction_description or not bonuses or not bonuses_description or not base_salary or not over_time_pay or not benefits:
                 return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
 
             branch_obj = Branch.objects.get(pk=branch_id)
             employee_obj = Employee.objects.get(pk=employee_id)
-            now_time = datetime.now()
+            now_time = datetime.datetime.now()
 
             if banking_id:
                 try:
@@ -57,8 +58,8 @@ class InvoiceSalary(View):
 
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
-                                                int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
-                                                datetime.now().second).togregorian()
+                                                int(invoice_date_split[0]), now_time.hour, now_time.now().minute,
+                                                now_time.now().second).togregorian()
 
             last_invoice_obj = InvoiceSalary.objects.filter(branch=branch_obj).order_by('id').last()
             if last_invoice_obj:
@@ -76,13 +77,13 @@ class InvoiceSalary(View):
                 over_time_pay= over_time_pay,
                 benefits=benefits,
                 bonuses=bonuses,
-                bounses_description=bounses_description,
+                bonuses_description=bonuses_description,
                 reduction=reduction,
                 reduction_description=reduction_description,
                 insurance=insurance,
                 tax=tax,
                 total_price=total_price,
-                invoice_time=invoice_date_g,
+                invoice_date=invoice_date_g,
                 factor_number=new_factor_number,
                 backup_code=backup_code,
                 settle_type=settle_type,
