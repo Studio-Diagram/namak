@@ -952,6 +952,7 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/bugreport/",
+                    'data': data
                 });
             },
 
