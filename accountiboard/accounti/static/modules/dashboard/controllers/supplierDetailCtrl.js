@@ -76,21 +76,11 @@ angular.module("dashboard")
         };
 
         $scope.get_supplier = function () {
-            var data = {
-                'username': $rootScope.user_data.username,
-                'supplier_id': $scope.supplier_id
-            };
-            dashboardHttpRequest.getSupplier(data)
+            dashboardHttpRequest.getSupplier($scope.supplier_id)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.supplier_name = data['supplier']['name']
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.supplier_name = data['supplier']['name'];
                 }, function (error) {
-                    $scope.error_message = 500;
+                    $scope.error_message = data['error_msg'];
                     $scope.openErrorModal();
                 });
         };

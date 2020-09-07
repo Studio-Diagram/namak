@@ -301,24 +301,22 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'getSupplier': function (data) {
+            'getSupplier': function (supplier_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getSupplier/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/supplier/" + supplier_id + "/",
+                });
+            },
+            'deleteSupplier': function (supplier_id) {
+                return this.request({
+                    'method': "DELETE",
+                    'url': "/api/supplier/" + supplier_id + "/",
                 });
             },
             'searchSupplier': function (data) {
                 return this.request({
                     'method': "POST",
                     'url': "/api/searchSupplier/",
-                    'data': data
-                });
-            },
-            'deleteSupplier': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteSupplier/",
                     'data': data
                 });
             },

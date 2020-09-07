@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 import json, jdatetime, xlwt
 from accounti.models import *
 from django.db.models import Sum
@@ -159,16 +160,17 @@ class SearchSupplierView(View):
         return JsonResponse({"response_code": 2, 'suppliers': suppliers})
 
 
-class GetSupplierView(View):
+class SupplierView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        supplier_id = rec_data.get('supplier_id')
+    def get(self, request, supplier_id, *args, **kwargs):
+        supplier = get_object_or_404(Supplier, pk=supplier_id)
 
-        supplier = Supplier.objects.get(pk=supplier_id)
+        if supplier.organization.id != request.payload['sub_organization']:
+            return JsonResponse({"error_msg": ACCESS_DENIED}, status=403)
+
         supplier_data = {
             'id': supplier.pk,
             'name': supplier.name,
@@ -177,20 +179,14 @@ class GetSupplierView(View):
             'salesman_phone': supplier.salesman_phone,
             'remainder': return_remainder_of_supplier(supplier.id, "")
         }
-        return JsonResponse({"response_code": 2, 'supplier': supplier_data})
+        return JsonResponse({'supplier': supplier_data})
 
-class DeleteSupplierView(View):
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['FREE']},
-        branch_disable=True
-    )
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        supplier_id = rec_data['supplier_id']
-
-        current_supplier = Supplier.objects.get(pk=supplier_id)
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def delete(self, request, supplier_id, *args, **kwargs):
+        current_supplier = get_object_or_404(Supplier, pk=supplier_id)
 
         if current_supplier.organization.id != request.payload['sub_organization']:
             return JsonResponse({"error_msg": ACCESS_DENIED}, status=403)
