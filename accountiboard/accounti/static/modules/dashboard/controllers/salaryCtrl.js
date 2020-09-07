@@ -86,7 +86,7 @@ angular.module("dashboard")
                 'total_price':0,
                 'backup_code': '',
                 'settle_type': '',
-                'bounses_description':'',
+                'bonuses_description':'',
                 'reduction_description':'',
                 'description':'',
                 'branch_id': $rootScope.user_data.branch,                
@@ -150,7 +150,7 @@ angular.module("dashboard")
                     if (status === 200) {
 
                         $scope.resetFrom();
-                        $scope.closeAddModal();
+                        $scope.close_modal(addModal);
                     }
                     else if (status === 400) {
                         $scope.error_message = data['error_msg'];
