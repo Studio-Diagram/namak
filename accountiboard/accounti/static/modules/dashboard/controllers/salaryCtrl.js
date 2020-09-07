@@ -163,12 +163,8 @@ angular.module("dashboard")
         };
 
         $scope.getInvoiceSalaries= function () {
-            var sending_data = {
-                
-                'branch_id': $rootScope.user_data.branch,
-                
-            };
-            dashboardHttpRequest.getSalaries(sending_data)
+
+            dashboardHttpRequest.getSalaries($rootScope.user_data.branch)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     $scope.salaries = data['invoices'];

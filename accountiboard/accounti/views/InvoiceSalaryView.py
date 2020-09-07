@@ -100,10 +100,8 @@ class InvoiceSalariesView(View):
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
                                       {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
+    def get(self, request,branch_id, *args, **kwargs):
 
-        branch_id = rec_data['branch_id']
         if not branch_id:
             return JsonResponse({"error_msg": DATA_REQUIRE},status=400)
 

@@ -1050,9 +1050,9 @@ angular.module('dashboard')
             },
             'getSalaries':function(data){
                 return this.request({
-                    'method':"POST",
-                    'url': "/api/salaries/",
-                    'data':data
+                    'method':"GET",
+                    'url': "/api/salaries/"+data+"/",
+                    
                     
                 })
             },
