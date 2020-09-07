@@ -179,7 +179,7 @@ class CashView(View):
             'cash': invoice_sale.cash,
             'total_price': invoice_sale.total_price,            
             'created_time': invoice_sale.created_time,
-            'settle_time': invoice_sale.settle_time,
+            'settle_time': invoice_sale.settle_time.time().strftime("%H:%M") if invoice_sale.settle_time else '',
             'settlement_type': invoice_sale.settlement_type,
             'guest_numbers': invoice_sale.guest_numbers,
             'member': invoice_sale.member.__str__() if invoice_sale.member else "مهمان",

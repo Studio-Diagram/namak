@@ -66,6 +66,7 @@
                             <th scope="col">تعداد مهمانان</th>
                             <th scope="col">میز</th>
                             <th scope="col">شعبه</th>
+                            <th scope="col">ساعت تسویه</th>
                             <th scope="col">مبلغ فاکتور</th>
                             <th scope="col"></th>
                         </tr>
@@ -77,6 +78,7 @@
                             <td>{{ invoice.guest_numbers | persianNumber }}</td>
                             <td>{{ invoice.table }}</td>
                             <td>{{ invoice.branch }}</td>
+                            <td>{{ invoice.settle_time | persianNumber}}</td>
                             <td>{{ invoice.total_price | number | persianNumber }} ریال</td>
                             <td ng-click="showInvoice(invoice.id)">
                                 <a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
