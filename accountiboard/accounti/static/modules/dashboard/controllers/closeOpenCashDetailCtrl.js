@@ -5,6 +5,7 @@ angular.module("dashboard")
             $scope.cash_id = $stateParams.cash_id;
             $scope.show_initiate_edit_payment_invoice_sale = false;
             $scope.get_cash();
+            $scope.get_status_data();
         };
 
         $scope.get_cash = function () {
@@ -12,12 +13,35 @@ angular.module("dashboard")
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     $scope.current_cash = data;
+                    $scope.current_cash.is_closed ? $scope.current_cash.is_closed = "بسته‌شده" : $scope.current_cash.is_closed = "باز";
                 }, function (error) {
                     $rootScope.is_page_loading = false;
                     $scope.error_message = error.data.error_msg;
                     $scope.openErrorModal();
                 });
 
+        };
+
+        $scope.get_status_data = function () {
+            var sending_data = {
+                'branch_id': $rootScope.user_data.branch,
+                'cash_id': $scope.cash_id
+            };
+            dashboardHttpRequest.getTodayStatus(sending_data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.status = data['all_today_status'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = 500;
+                    $scope.openErrorModal();
+                });
         };
 
         $scope.display_float_to_int = function (price) {

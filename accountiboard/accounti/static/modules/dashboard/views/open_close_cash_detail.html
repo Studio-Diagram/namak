@@ -36,6 +36,7 @@
                             <th scope="col">گزارش دریافت</th>
                             <th scope="col">بلیط رویداد</th>
                             <th scope="col">پول نقد</th>
+                            <th scope="col">کل فروش</th>
                             <th scope="col">بسته شده</th>
                         </tr>
                         </thead>
@@ -48,13 +49,13 @@
                             <td>{{ current_cash.income_report  | persianNumber}}</td>
                             <td>{{ current_cash.event_tickets  | persianNumber}}</td>
                             <td>{{ current_cash.current_money_in_cash | persianNumber }}</td>
+                            <td>{{ status.all_sales_price | number | persianNumber }} ریال</td>
                             <td>{{ current_cash.is_closed }}</td>
                         </tr>
                         </tbody>
                     </table>
 
                 </div>
-
 
                 <div class="tableWrapper">
 
