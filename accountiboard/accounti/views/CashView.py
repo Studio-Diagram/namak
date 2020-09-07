@@ -182,17 +182,19 @@ class CashView(View):
             'settle_time': invoice_sale.settle_time,
             'settlement_type': invoice_sale.settlement_type,
             'guest_numbers': invoice_sale.guest_numbers,
-            'member': f"{invoice_sale.member.first_name} {invoice_sale.member.last_name}" if invoice_sale.member else "مهمان",
+            'member': invoice_sale.member.__str__() if invoice_sale.member else "مهمان",
             'branch': invoice_sale.branch.name,
             'table': invoice_sale.table.name,
         } for invoice_sale in all_related_invoice_sales]
 
         return JsonResponse({
             'id': current_cash.pk,
-            'employee': f"{current_cash.employee.first_name} {current_cash.employee.last_name}",
+            'employee': current_cash.employee.get_full_name() if current_cash.employee else '',
             'current_money_in_cash': current_cash.current_money_in_cash,
-            'created_date_time': jdatetime.datetime.fromgregorian(datetime=current_cash.created_date_time).strftime("%H:%M %Y/%m/%d"),
-            'ended_date_time': jdatetime.datetime.fromgregorian(datetime=current_cash.ended_date_time).strftime("%H:%M %Y/%m/%d"),
+            'created_date_time': jdatetime.datetime.fromgregorian(datetime=current_cash.created_date_time).strftime("%H:%M %Y/%m/%d") if
+                current_cash.created_date_time else '',
+            'ended_date_time': jdatetime.datetime.fromgregorian(datetime=current_cash.ended_date_time).strftime("%H:%M %Y/%m/%d") if
+                current_cash.ended_date_time else '',
             'income_report': current_cash.income_report,
             'outcome_report': current_cash.outcome_report,
             'event_tickets': current_cash.event_tickets,

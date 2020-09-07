@@ -353,6 +353,14 @@ myApp.directive('tableDirective', function () {
 
 });
 
+myApp.directive('settledInvoiceModalDirective', function() {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/settled-invoice-modal.html',
+        controller: 'settledInvoiceModalCtrl'
+    }
+});
+
 function configureTemplateFactory($provide) {
     // Set a suffix outside the decorator function
     var cacheBuster = Date.now().toString();
