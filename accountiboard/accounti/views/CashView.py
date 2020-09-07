@@ -7,6 +7,7 @@ from accounti.models import *
 from django.db.models import Sum
 from functools import wraps
 from accountiboard.constants import *
+from django.shortcuts import get_object_or_404
 
 
 class GetAllCashView(View):
@@ -156,3 +157,45 @@ class CheckCashExistView(View):
                 return JsonResponse({"response_code": 3, 'error_msg': OLD_CASH, 'error_mode': 'OLD_CASH'})
         if current_cash.count() == 1:
             return JsonResponse({"response_code": 2})
+
+
+class CashView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
+    def get(self, request, cash_id, *args, **kwargs):
+
+        current_cash = get_object_or_404(Cash, pk=cash_id)
+
+        all_branches_this_user = {branch['id'] for branch in request.payload['sub_branch_list']}
+
+        if current_cash.branch.id not in all_branches_this_user:
+            return JsonResponse({"error_msg": ACCESS_DENIED}, status=403)
+
+        all_related_invoice_sales = InvoiceSales.objects.filter(cash_desk=current_cash)
+        all_related_invoice_sales_list = [{
+            'id': invoice_sale.id,
+            'cash': invoice_sale.cash,
+            'total_price': invoice_sale.total_price,            
+            'created_time': invoice_sale.created_time,
+            'settle_time': invoice_sale.settle_time,
+            'settlement_type': invoice_sale.settlement_type,
+            'guest_numbers': invoice_sale.guest_numbers,
+            'member': f"{invoice_sale.member.first_name} {invoice_sale.member.last_name}" if invoice_sale.member else "مهمان",
+            'branch': invoice_sale.branch.name,
+            'table': invoice_sale.table.name,
+        } for invoice_sale in all_related_invoice_sales]
+
+        return JsonResponse({
+            'id': current_cash.pk,
+            'employee': f"{current_cash.employee.first_name} {current_cash.employee.last_name}",
+            'current_money_in_cash': current_cash.current_money_in_cash,
+            'created_date_time': jdatetime.datetime.fromgregorian(datetime=current_cash.created_date_time).strftime("%H:%M %Y/%m/%d"),
+            'ended_date_time': jdatetime.datetime.fromgregorian(datetime=current_cash.ended_date_time).strftime("%H:%M %Y/%m/%d"),
+            'income_report': current_cash.income_report,
+            'outcome_report': current_cash.outcome_report,
+            'event_tickets': current_cash.event_tickets,
+            'is_closed': current_cash.is_close,
+            'related_invoice_sales': all_related_invoice_sales_list,
+        })

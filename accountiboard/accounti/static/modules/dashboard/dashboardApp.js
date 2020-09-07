@@ -180,6 +180,12 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
+    var open_close_cash_detail = {
+        name: 'account_manager.manage_cash_detail',
+        url: '/manage_cash/:cash_id',
+        templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
+    };
+
     var quick_access = {
         name: 'quickAccess',
         url: '/quickAccess',
@@ -218,6 +224,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(expenseCategory);
     $stateProvider.state(reservation);
     $stateProvider.state(open_close_cash);
+    $stateProvider.state(open_close_cash_detail);
     $stateProvider.state(tables);
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);

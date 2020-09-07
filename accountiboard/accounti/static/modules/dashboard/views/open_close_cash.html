@@ -60,6 +60,7 @@
                             <th scope="col">زمان پایان</th>
                             <th scope="col">درآمد کلی ( ریال )</th>
                             <th scope="col">بسته شده</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -73,6 +74,10 @@
                             <td>
                                 <span ng-show="cash.is_closed === 1">بسته‌شده</span>
                                 <span ng-hide="cash.is_closed === 1">باز</span>
+                            </td>
+                            <td>
+                                <a ui-sref="account_manager.manage_cash_detail({ cash_id: cash.id })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>
                         </tbody>

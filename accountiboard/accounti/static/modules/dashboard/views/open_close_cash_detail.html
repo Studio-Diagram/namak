@@ -1,0 +1,238 @@
+<div ng-controller="closeOpenCashDetailCtrl">
+    <div class="modal fade mainModal" id="show_invoice_purchase" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        
+    </div>
+
+
+
+    <div class="modal fade mainModal" id="viewInvoiceModal2" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">فاکتور فروش </h2>
+                    <a class="mainButton redButton" data-dismiss="modal" href="#" aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                            ng-click="print_cash()"
+                            class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری
+                    </button>
+                    <a class="mainButton greenButton" href=""
+                       ng-click="initiate_edit_payment_invoice_sale();">
+                        <span aria-hidden="true">تغییر نحوه تسویه</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <main class="col-sm-12">
+                                <table class="invoiceTable invoiceItem">
+                                    <tbody>
+                                    <tr>
+                                        <th class="first"><input type="checkbox"
+                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first">#</th>
+                                        <th class="second">عنوان</th>
+                                        <th class="third">قیمت واحد</th>
+                                        <th class="forth">تعداد</th>
+                                        <th class="fifth">قیمت کل</th>
+                                        <th class="sixth">توضیحات</th>
+                                    </tr>
+                                    <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
+                                        <th class="first"><input
+                                                ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
+                                                type="checkbox"
+                                                aria-label="Checkbox for following text input"></th>
+                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ old_item.name }}</td>
+                                        <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ old_item.nums | persianNumber }}</td>
+                                        <td>{{ old_item.total | number | persianNumber }}</td>
+                                        <td>{{ old_item.description }}</td>
+                                    </tr>
+                                    <tr ng-repeat="new_item in new_invoice_data.menu_items_new">
+                                        <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
+                                                class="fas fa-trash"></i></a></th>
+                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ new_item.name }}</td>
+                                        <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
+                                        <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
+                                                   ng-change="changeItemNumber($index)"></td>
+                                        <td>{{ new_item.total | number | persianNumber }}</td>
+                                        <td><input class="form-control" type="text" ng-maxlength="60"
+                                                   ng-model="new_item.description"></td>
+                                    </tr>
+
+                                    <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
+                                        <th class="first"><input ng-click="will_delete_items_adder('shop', old_item.id)"
+                                                                 type="checkbox"
+                                                                 aria-label="Checkbox for following text input"></th>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
+                                        <td>{{ old_item.name }}</td>
+                                        <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ old_item.nums | persianNumber }}</td>
+                                        <td>{{ old_item.total | persianNumber }}</td>
+                                        <td>{{ old_item.description }}</td>
+                                    </tr>
+                                    <tr ng-repeat="new_item in new_invoice_data.shop_items_new">
+                                        <th class="first"><a ng-click="deleteNewItemShop($index)"
+                                                             style="cursor: pointer"><i class="fas fa-trash"></i></a>
+                                        </th>
+                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ new_item.name }}</td>
+                                        <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
+                                        <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
+                                                   ng-change="changeItemShopNumber($index)"></td>
+                                        <td>{{ new_item.total | persianNumber }}</td>
+                                        <td><input class="form-control" type="text" ng-maxlength="60"
+                                                   ng-model="new_item.description"></td>
+                                    </tr>
+
+                                    <tr ng-repeat="game in new_invoice_data.games">
+                                        <th class="first"><input ng-click="will_delete_items_adder('game', game.id)"
+                                                                 type="checkbox"
+                                                                 aria-label="Checkbox for following text input"></th>
+                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>بازی {{ game.numbers | persianNumber }} نفره
+                                            ( {{ game.start_time | persianNumber }}
+                                            تا {{ game.end_time | persianNumber }} )
+                                        </td>
+                                        <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
+                                        <td style="direction: ltr">{{ game.points | persianNumber }}</td>
+                                        <td>{{ game.total | number | persianNumber }}</td>
+                                        <td></td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+                                <table class="invoiceTable invoiceTotal">
+                                    <tbody>
+                                    <tr>
+                                        <th>اعتبار</th>
+                                        <td>
+                                            {{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>اعتبار مصرفی</th>
+                                        <td>
+                                            {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>انعام</th>
+                                        <td>{{ new_invoice_data.tip | number:fractionSize | persianNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>تخفیف</th>
+                                        <td>{{ new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>جمع کل</th>
+                                        <td>
+                                            {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <main class="pageContent container-fluid">
+        <div class="tableButtons">
+            <div class="buttonGroup"></div>
+            <div class="buttonGroup">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a ui-sref="account_manager.manage_cash">صندوق ها</a></li>
+                        <li class="breadcrumb-item">صندوق شماره {{ cash_id }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+
+                <div class="tableWrapper">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">شماره</th>
+                            <th scope="col">تاریخ باز شدن</th>
+                            <th scope="col">تاریخ بسته شدن</th>
+                            <th scope="col">گزارش پرداخت</th>
+                            <th scope="col">گزارش دریافت</th>
+                            <th scope="col">بلیط رویداد</th>
+                            <th scope="col">پول نقد</th>
+                            <th scope="col">بسته شده</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ current_cash.id | persianNumber }}</td>
+                            <td>{{ current_cash.created_date_time }}</td>
+                            <td>{{ current_cash.ended_date_time }}</td>
+                            <td>{{ current_cash.outcome_report | persianNumber}}</td>
+                            <td>{{ current_cash.income_report  | persianNumber}}</td>
+                            <td>{{ current_cash.event_tickets  | persianNumber}}</td>
+                            <td>{{ current_cash.current_money_in_cash | persianNumber }}</td>
+                            <td>{{ current_cash.is_closed }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+                <div class="tableWrapper">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">شماره</th>
+                            <th scope="col">مهمان</th>
+                            <th scope="col">تعداد مهمانان</th>
+                            <th scope="col">میز</th>
+                            <th scope="col">شعبه</th>
+                            <th scope="col">مبلغ فاکتور</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="cash in current_cash.related_invoice_sales">
+                            <td>{{ cash.id | persianNumber }}</td>
+                            <td>{{ cash.member }}</td>
+                            <td>{{ cash.guest_numbers | persianNumber }}</td>
+                            <td>{{ cash.table }}</td>
+                            <td>{{ cash.branch }}</td>
+                            <td>{{ cash.total_price | number | persianNumber }} ریال</td>
+                            <td ng-click="showInvoice(cash.id)">
+                                <a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </main>
+        </div>
+    </main>
+</div>

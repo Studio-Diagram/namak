@@ -103,6 +103,7 @@ urlpatterns = [
     path('api/closeCash/', CashView.CloseCashView.as_view()),
     path('api/openCash/', CashView.OpenCashView.as_view()),
     path('api/checkCashExist/', CashView.CheckCashExistView.as_view()),
+    path('api/cash/<int:cash_id>/', CashView.CashView.as_view()),
     path('api/getWorkingTime/', BranchView.GetWorkingTimeForReserveView.as_view()),
     path('api/getTodayForReserve/', ReserveView.GetTodayForReserveView.as_view()),
     path('api/deleteInvoicePurchase/', InvoicePurchaseView.DeleteInvoicePurchaseView.as_view()),

@@ -651,6 +651,12 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'getCash': function (cash_id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/cash/" + cash_id + "/"
+                });
+            },
             'logOut': function (data) {
                 return this.request({
                     'method': "POST",
