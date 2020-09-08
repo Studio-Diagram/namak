@@ -220,6 +220,48 @@ angular.module("dashboard")
             $rootScope.close_modal("deleteInvoicePermissionModal")
         };
 
+
+        $scope.showInvoiceSalary = function (invoice_id) {
+            
+            dashboardHttpRequest.getInvoiceSalary(invoice_id)
+                .then(function (data) {
+                        console.log(data)
+                        $scope.new_salary_data = {
+                            'id': data['invoice']['id'],
+                            'factor_number': data['invoice']['factor_number'],
+                            'employee_id': data['invoice']['employee_id'],
+                            'settle_type': data['invoice']['settlement_type'],
+                            'branch_id': $rootScope.user_data.branch,
+                            'banking_id': data['invoice']['banking']['id'],
+                            'backup_code': data['invoice']['backup_code'],
+
+
+                            'base_salary': data['invoice']['base_salary'],
+                            'over_time_pay':data['invoice']['over_time_pay'],
+                            'benefits':data['invoice']['benefits'],
+                            'bonuses':data['invoice']['bonuses'],
+                            'reduction':data['invoice']['reduction'],
+                            'insurance':data['invoice']['insurance'],
+                            'tax':data['invoice']['tax'],
+                            'total_price':data['invoice']['total_price'],
+                            
+    
+                            'bonuses_description':data['invoice']['bonuses_description'],
+                            'reduction_description':data['invoice']['reduction_description'],
+                            'description':data['invoice']['description'],
+                            
+                            
+                        };
+                        $scope.open_modal('detailModal');
+
+                
+                }, function (error) {
+                    
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal');
+                });
+        };
+
         initialize();
 
 

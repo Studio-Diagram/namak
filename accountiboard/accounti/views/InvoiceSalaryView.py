@@ -41,8 +41,8 @@ class InvoiceSalaryView(View):
 
             if not branch_id or not employee_id or not factor_number or not invoice_date or not backup_code or not settle_type :
                 return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
-            if not total_price or not tax or not insurance or not reduction or not reduction_description or not bonuses or not bonuses_description or not base_salary or not over_time_pay or not benefits:
-                return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
+            # if not total_price or not tax or not insurance or not reduction or not reduction_description or not bonuses or not bonuses_description or not base_salary or not over_time_pay or not benefits:
+            #     return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
 
             branch_obj = Branch.objects.get(pk=branch_id)
             employee_obj = Employee.objects.get(pk=employee_id)
@@ -110,7 +110,46 @@ class InvoiceSalaryView(View):
                                       {USER_PLANS_CHOICES['FREE']},
                                       branch_disable=True)
     def get(self, request, invoice_id, *args, **kwargs):
-        pass
+        if not invoice_id:
+            return JsonResponse({"error_msg": DATA_REQUIRE},status=400)
+
+        invoice_obj = InvoiceSalary.objects.get(pk=invoice_id)
+        try:
+            banking_obj = BankingBaseClass.objects.get(pk=invoice_obj.banking.id)
+        except:
+            banking_obj = None
+     
+        invoice_date = invoice_obj.invoice_date.date()
+        jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                    year=invoice_date.year)
+
+        invoice_data = {
+                'id': invoice_obj.pk,
+                'factor_number': invoice_obj.factor_number,
+                'employee_name': invoice_obj.employee.user.get_full_name(),
+                'employee_id': invoice_obj.employee.id,
+                'total_price': invoice_obj.total_price,
+                'settle_type': invoice_obj.get_settle_type_display(),
+                'backup_code': invoice_obj.backup_code,
+                'invoice_date': jalali_date.strftime("%Y/%m/%d"),
+                'banking': {'id':banking_obj.id, 'name': banking_obj.name} if banking_obj else {'id': None},
+                'base_salary': invoice_obj.base_salary,
+                'over_time_pay':invoice_obj.over_time_pay,
+                'benefits':invoice_obj.benefits,
+                'bonuses':invoice_obj.bonuses,
+                'reduction':invoice_obj.reduction,
+                'insurance':invoice_obj.insurance,
+                'tax':invoice_obj.tax,
+                'bonuses_description':invoice_obj.bonuses_description,
+                'reduction_description':invoice_obj.reduction_description,
+                'description':invoice_obj.description,
+                'branch_id': invoice_obj.branch.id,                
+                
+            }
+
+
+        return JsonResponse({"invoice":invoice_data},status =200)
+
 
 
 
@@ -125,9 +164,7 @@ class InvoiceSalaryView(View):
         invoice_obj = InvoiceSalary.objects.get(pk=invoice_id)
         invoice_obj.delete()
 
-
         return JsonResponse({"msg":INVOICE_DELETED},status =200)
-
 
 
 

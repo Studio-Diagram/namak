@@ -1055,6 +1055,20 @@ angular.module('dashboard')
                     
                 })
             },
+            'getInvoiceSalary':function(id){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/salary/"+ id +"/",
+                    
+                })
+            },
+            'editInvoiceSalary':function(id){
+                return this.request({
+                    'method':"PUT",
+                    'url': "/api/salary/"+ id +"/",
+                    
+                })
+            },
             'getSalaries':function(data){
                 return this.request({
                     'method':"GET",
