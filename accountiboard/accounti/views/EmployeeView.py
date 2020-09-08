@@ -360,7 +360,12 @@ class AddMenuCategoryView(View):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         if menu_category_id == 0:
-            new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id)
+            first_menu_category = MenuCategory.objects.filter(branch=branch_id).order_by('list_order').first()
+            if first_menu_category:
+                list_order = first_menu_category.list_order - 1
+            else:
+                list_order = 0
+            new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id, list_order=list_order)
             new_menu_category.save()
             for printer_id in printers_id:
                 printer_object = Printer.objects.get(pk=printer_id)
