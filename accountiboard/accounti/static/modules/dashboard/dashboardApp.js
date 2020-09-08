@@ -79,11 +79,6 @@ myApp.config(function ($stateProvider, $authProvider) {
         },
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
-    var cash = {
-        name: 'cash_manager.cash',
-        url: '/cash/:cash_id',
-        template: '<cash-detail-directive></cash-detail-directive>'
-    };
     var account_manager = {
         name: 'account_manager',
         url: '/account_manager',
@@ -181,6 +176,28 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
     };
 
+    var big_cash_detail_view_in_open_close_cash = {
+        name: 'account_manager.manage_cash_detail_big',
+        url: '/manage_cash/detail/:cash_id',
+        template: '<cash-detail-directive></cash-detail-directive>',
+        params: {
+            "display_cash_number": true,
+            "show_submit_today_cash_button": false,
+            "show_print_today_cash_button": false,
+        }
+    };
+
+    var cash = {
+        name: 'cash_manager.cash',
+        url: '/cash/:cash_id',
+        template: '<cash-detail-directive></cash-detail-directive>',
+        params: {
+            "display_cash_number": false,
+            "show_submit_today_cash_button": true,
+            "show_print_today_cash_button": true,
+        }
+    };
+
     var quick_access = {
         name: 'quickAccess',
         url: '/quickAccess',
@@ -220,6 +237,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(reservation);
     $stateProvider.state(open_close_cash);
     $stateProvider.state(open_close_cash_detail);
+    $stateProvider.state(big_cash_detail_view_in_open_close_cash);
     $stateProvider.state(tables);
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);

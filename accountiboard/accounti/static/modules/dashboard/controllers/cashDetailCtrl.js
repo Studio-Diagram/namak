@@ -15,6 +15,10 @@ angular.module("dashboard")
             else {
                 $scope.get_today_cash();
             }
+            $scope.display_cash_number = $stateParams.display_cash_number;
+            $scope.cash_id = $stateParams.cash_id;
+            $scope.show_submit_today_cash_button = $stateParams.show_submit_today_cash_button;
+            $scope.show_print_today_cash_button = $stateParams.show_print_today_cash_button;
         };
 
         $scope.get_status_data = function () {

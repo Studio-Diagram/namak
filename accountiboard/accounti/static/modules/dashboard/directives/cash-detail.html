@@ -182,13 +182,26 @@
 <main class="pageContent container-fluid">
     <div class="row saloonPageContent">
         <main class="col-sm-12 ">
-            <div class="tableButtons">
+
+            <div ng-show="display_cash_number" class="tableButtons">
+                <div class="buttonGroup"></div>
                 <div class="buttonGroup">
-                    <a ng-click="open_modal('submit_cash_today_modal')" class="addUser mainButton greenButton"
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a ui-sref="account_manager.manage_cash">صندوق ها</a></li>
+                            <li class="breadcrumb-item">صندوق شماره {{ cash_id | persianNumber }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <div ng-show="show_submit_today_cash_button || show_print_today_cash_button" class="tableButtons">
+                <div class="buttonGroup">
+                    <a ng-show="show_submit_today_cash_button" ng-click="open_modal('submit_cash_today_modal')" class="addUser mainButton greenButton"
                        href=""
                        data-toggle="modal"><i
                             class="far fa-calendar-check"></i> ثبت اطلاعات روزانه</a>
-                    <a ng-click="print_night_report()" class="addUser mainButton blueButton ml-3" href=""
+                    <a ng-show="show_print_today_cash_button" ng-click="print_night_report()" class="addUser mainButton blueButton ml-3" href=""
                        data-toggle="modal"><i
                             class="far fa-calendar-check"></i>پرینت گزارش روزانه</a>
                 </div>
