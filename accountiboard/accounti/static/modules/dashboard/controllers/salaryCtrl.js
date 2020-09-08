@@ -201,6 +201,7 @@ angular.module("dashboard")
             dashboardHttpRequest.deleteInvoiceSalary(invoice_id)
                 .then(function (data) {
                     $scope.closeDeletePermissionModal();
+                    $scope.getInvoiceSalaries();
 
                 }, function (error) {
                     $rootScope.is_page_loading = false;

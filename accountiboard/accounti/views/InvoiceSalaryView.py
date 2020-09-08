@@ -95,6 +95,25 @@ class InvoiceSalaryView(View):
 
 
 
+
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def put(self, request, invoice_id, *args, **kwargs):
+        pass
+
+
+
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def get(self, request, invoice_id, *args, **kwargs):
+        pass
+
+
+
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
                                       {USER_PLANS_CHOICES['FREE']},
@@ -107,7 +126,7 @@ class InvoiceSalaryView(View):
         invoice_obj.delete()
 
 
-        return JsonResponse(status =200)
+        return JsonResponse({"msg":INVOICE_DELETED},status =200)
 
 
 

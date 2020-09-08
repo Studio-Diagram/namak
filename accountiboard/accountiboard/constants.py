@@ -89,6 +89,7 @@ BANKING_NOT_FOUND = "حساب بانکی یافت نشد."
 PASSWORD_CHANGED = "رمز ورود با موفقیت تغییر یافت"
 DATA_REQUIRE_BRANCH = 'حداقل یکی از شعبه ها را باید انتخاب کنید'
 STOCK_NOT_FOUND = "انبار یافت نشد."
+INVOICE_DELETED = "با موفقیت حذف شد"
 
 
 USER_TYPE = {
