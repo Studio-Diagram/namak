@@ -693,7 +693,7 @@
                 <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href=""
                                                                                                class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                 </td>
-                <td ng-show="invoice.is_settled" ng-click="showInvoice(invoice.invoice_id)"><a href=""
+                <td ng-show="invoice.is_settled" ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)"><a href=""
                                                                                                class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                 </td>
             </tr>
@@ -767,7 +767,7 @@
                             <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href=""
                                                                                                            class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
-                            <td ng-show="invoice.is_settled" ng-click="showInvoice(invoice.invoice_id)"><a href=""
+                            <td ng-show="invoice.is_settled" ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)"><a href=""
                                                                                                            class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>

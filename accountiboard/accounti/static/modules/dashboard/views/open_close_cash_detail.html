@@ -85,7 +85,7 @@
                             <td>{{ invoice.branch }}</td>
                             <td>{{ invoice.settle_time | persianNumber}}</td>
                             <td>{{ invoice.total_price | number | persianNumber }} ریال</td>
-                            <td ng-click="showInvoice(invoice.id)">
+                            <td ng-click="showInvoice(invoice.id, showEditPaymentButton=false, showPrintButton=false)">
                                 <a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>
