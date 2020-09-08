@@ -81,8 +81,8 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
     var cash = {
         name: 'cash_manager.cash',
-        url: '/cash',
-        templateUrl: 'static/modules/dashboard/views/cash.html'
+        url: '/cash/:cash_id',
+        template: '<cash-detail-directive></cash-detail-directive>'
     };
     var account_manager = {
         name: 'account_manager',
@@ -352,6 +352,14 @@ myApp.directive('settledInvoiceModalDirective', function() {
         restrict: 'EA',
         templateUrl: '/static/modules/dashboard/directives/settled-invoice-modal.html',
         controller: 'settledInvoiceModalCtrl'
+    }
+});
+
+myApp.directive('cashDetailDirective', function() {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/cash-detail.html',
+        controller: 'cashDetailCtrl'
     }
 });
 

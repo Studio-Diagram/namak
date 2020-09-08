@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $auth, dashboardHttpRequest, offlineAPIHttpRequest) {
+    .controller("cashDetailCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $auth, dashboardHttpRequest, offlineAPIHttpRequest, $stateParams) {
         var initialize = function () {
             $scope.selected_detail_category = "";
             $scope.night_report_inputs = {
@@ -9,7 +9,7 @@ angular.module("dashboard")
                 "current_money_in_cash": 0
             };
             $scope.sale_detail_category_filter = "";
-            if ($rootScope.cash_data.cash_id !== 0) {
+            if ($stateParams.cash_id !== 0) {
                 $scope.get_status_data();
             }
             else {
@@ -21,7 +21,7 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id
+                'cash_id': $stateParams.cash_id
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
@@ -75,7 +75,7 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getKitchenDetailSales(sending_data)
@@ -99,7 +99,7 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getBarDetailSales(sending_data)
@@ -123,7 +123,7 @@ angular.module("dashboard")
             var sending_data = {
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getOtherDetailSales(sending_data)
@@ -147,11 +147,11 @@ angular.module("dashboard")
             dashboardHttpRequest.getTodayCash($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $rootScope.cash_data.cash_id = data['cash_id'];
+                        $stateParams.cash_id = data['cash_id'];
                         $scope.get_status_data();
                     }
                     else if (data['response_code'] === 3) {
-                        $rootScope.cash_data.cash_id = 0;
+                        $stateParams.cash_id = 0;
                     }
                 }, function (error) {
                     $scope.error_message = 500;
@@ -217,7 +217,7 @@ angular.module("dashboard")
 
         $scope.print_night_report = function () {
             var sending_data = {
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 'location_url': "https://namak.works/"
             };
             $http({
