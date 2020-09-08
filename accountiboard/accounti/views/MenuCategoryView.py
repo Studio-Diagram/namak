@@ -16,7 +16,7 @@ class ChangeListOrderView(View):
         branch_id = rec_data.get('branch_id')
 
         if not menu_cat_id:
-            return JsonResponse({"error_msg": DATA_REQUIRE}, status=403)
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         all_menu_categories_current_branch = MenuCategory.objects.filter(branch=branch_id).order_by('list_order')
         all_menu_categories_list = [x for x in all_menu_categories_current_branch]
@@ -24,10 +24,8 @@ class ChangeListOrderView(View):
         if not all_menu_categories_list:
             JsonResponse({"error_msg": MENU_CATEGORY_NOT_FOUND}, status=403)
 
-        # check if have to reorder all:
         if len({x.list_order for x in all_menu_categories_list}) < len(all_menu_categories_list):
             reorder = True
-        # otherwise just update the two affected menu_categories:
         else:
             reorder = False
 
