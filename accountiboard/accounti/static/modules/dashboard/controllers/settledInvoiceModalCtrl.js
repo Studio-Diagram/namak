@@ -1,8 +1,9 @@
 angular.module("dashboard")
-    .controller("settledInvoiceModalCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $stateParams) {
+    .controller("settledInvoiceModalCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $stateParams, $location) {
         var initialize = function () {
             $scope.error_message = '';
             $scope.cash_id = $stateParams.cash_id;
+            $scope.mode = $location.absUrl().split("/").slice(-2)[0];
         };
 
         $scope.showInvoice = function (invoice_id) {
@@ -50,6 +51,16 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $('#viewSettledInvoiceModal').modal('show');
+                switch ($scope.mode) {
+                    case "manage_cash":
+                        $scope.settledInvoiceEditPaymentButton = false;
+                        $scope.settledInvoicePrintButton = false;
+                        break;
+                    case "salon":
+                        $scope.settledInvoiceEditPaymentButton = true;
+                        $scope.settledInvoicePrintButton = true;
+                        break;
+                }
             })(jQuery);
         };
 
