@@ -5,6 +5,19 @@ import json
 from accounti.models import *
 from accountiboard.constants import *
 
+
+def reorder_model_objects(all_menu_categories_list, current_menu_cat_index, index_offset):
+    temp = all_menu_categories_list[current_menu_cat_index]
+    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index - 1]
+    all_menu_categories_list[current_menu_cat_index + index_offset] = temp
+
+def swap_list_orders(all_menu_categories_list, current_menu_cat_index, index_offset):
+    temp = all_menu_categories_list[current_menu_cat_index + index_offset].list_order
+    all_menu_categories_list[current_menu_cat_index + index_offset].list_order = all_menu_categories_list[current_menu_cat_index].list_order
+    all_menu_categories_list[current_menu_cat_index].list_order = temp
+    all_menu_categories_list[current_menu_cat_index + index_offset].save()
+    all_menu_categories_list[current_menu_cat_index].save()
+
 class ChangeListOrderView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
@@ -38,32 +51,19 @@ class ChangeListOrderView(View):
             if current_menu_cat_index == 0:
                 return JsonResponse({})
             else:
-                if reorder:                
-                    temp = all_menu_categories_list[current_menu_cat_index]
-                    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index - 1]
-                    all_menu_categories_list[current_menu_cat_index - 1] = temp
+                if reorder:
+                    reorder_model_objects(all_menu_categories_list, current_menu_cat_index, -1)
                 else:
-                    temp = all_menu_categories_list[current_menu_cat_index - 1].list_order
-                    all_menu_categories_list[current_menu_cat_index - 1].list_order = all_menu_categories_list[current_menu_cat_index].list_order
-                    all_menu_categories_list[current_menu_cat_index].list_order = temp
-                    all_menu_categories_list[current_menu_cat_index - 1].save()
-                    all_menu_categories_list[current_menu_cat_index].save()
-
+                    swap_list_orders(all_menu_categories_list, current_menu_cat_index, -1)
 
         elif change_type == 'DOWN':
             if current_menu_cat_index == len(all_menu_categories_list) - 1:
                 return JsonResponse({})
             else:
-                if reorder: 
-                    temp = all_menu_categories_list[current_menu_cat_index]
-                    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index + 1]
-                    all_menu_categories_list[current_menu_cat_index + 1] = temp
+                if reorder:
+                    reorder_model_objects(all_menu_categories_list, current_menu_cat_index, 1)
                 else:
-                    temp = all_menu_categories_list[current_menu_cat_index + 1].list_order
-                    all_menu_categories_list[current_menu_cat_index + 1].list_order = all_menu_categories_list[current_menu_cat_index].list_order
-                    all_menu_categories_list[current_menu_cat_index].list_order = temp
-                    all_menu_categories_list[current_menu_cat_index + 1].save()
-                    all_menu_categories_list[current_menu_cat_index].save()
+                    swap_list_orders(all_menu_categories_list, current_menu_cat_index, 1)
 
         if reorder:
             for i, menu_cat in enumerate(all_menu_categories_list):
