@@ -225,17 +225,11 @@ angular.module("dashboard")
             var sending_data = {
                 "menu_cat_id": menu_cat_id,
                 "change_type": type,
-                "username": $rootScope.user_data.username
+                "branch_id": $rootScope.user_data.branch
             };
             dashboardHttpRequest.changeMenuCategoryOrder(sending_data)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.get_menu_category_data($rootScope.user_data);
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.get_menu_category_data($rootScope.user_data);
                 }, function (error) {
                     $scope.error_message = error;
                     $scope.openErrorModal();

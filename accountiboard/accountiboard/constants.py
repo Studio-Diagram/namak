@@ -98,6 +98,7 @@ SUPPLIER_WITH_INVOICE_RETURN_CANT_BE_DELETED = "حذف کردن این تامی�
 SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور پرداخت مرتبط امکان پذیر نیست"
 
 NOT_ENOUGH_IN_SUPPLIER = "از این محصول به تعداد کافی برای این تامین کننده وجود ندارد."
+MENU_CATEGORY_NOT_FOUND = "دسته‌بندی منو یافت نشد"
 
 USER_TYPE = {
     "cafe_owner": 1,
