@@ -16,8 +16,8 @@ angular.module("dashboard")
                     $scope.current_cash.is_closed ? $scope.current_cash.is_closed = "بسته‌شده" : $scope.current_cash.is_closed = "باز";
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error.data.error_msg;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
 
         };
@@ -34,36 +34,21 @@ angular.module("dashboard")
                         $scope.status = data['all_today_status'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.error_message = data['error_msg'];
+                        $rootScope.open_modal('mainErrorModal');
+
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = 500;
+                    $rootScope.open_modal('mainErrorModal');
+
                 });
         };
 
         $scope.display_float_to_int = function (price) {
             return Math.round(price);
         };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
-        };
-
 
 
         initialize();
