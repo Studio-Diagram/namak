@@ -26,6 +26,11 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
+            $scope.new_printer_data = {
+                'printer_id': 0,
+                'name': '',
+                'branch': $rootScope.user_data.branch
+            };
             $scope.printers = [];
             $scope.error_message = "";
 
@@ -50,6 +55,42 @@ angular.module("dashboard")
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
+        };
+
+        $scope.addPrinter = function () {
+            dashboardHttpRequest.addPrinter($scope.new_printer_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.get_printers_data($rootScope.user_data);
+                        $scope.resetFrom();
+                        $rootScope.close_modal('addPrinterModal');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $rootScope.open_modal('errorModal', 'addPrinterModal');
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $rootScope.open_modal('errorModal', 'addPrinterModal');
+                });
+        };
+
+        $scope.editPrinter = function (printer_id) {
+            dashboardHttpRequest.getPrinter(printer_id)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $scope.new_printer_data = data['printer'];
+                        $rootScope.open_modal('addPrinterModal');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
+
         };
 
         $scope.changePrinterCheckBox = function (is_checked, printer_id) {
@@ -323,6 +364,11 @@ angular.module("dashboard")
                 'menu_category_id': 0,
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch
+            };
+            $scope.new_printer_data = {
+                'printer_id': 0,
+                'name': '',
+                'branch': $rootScope.user_data.branch
             };
         };
         initialize();

@@ -1,4 +1,39 @@
 <div ng-controller="menuCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addPrinterModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">ثبت پرینتر جدید</h2>
+                    <a class="mainButton redButton" ng-click="close_modal('addPrinterModal')" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+                    <a ng-click="addPrinter()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                        پاک کردن </a>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3>اطلاعات پرینتر</h3>
+                        <div class="row">
+                            <div class="col">
+                                <label>نام پرینتر<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_printer_data.name" type="text" aria-label="First name"
+                                       class="form-control" placeholder="نام پرینتر">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addMenuCategoryModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -7,7 +42,8 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت دسته‌بندی جدید</h2>
-                    <a class="mainButton redButton" ng-click="close_modal('addMenuCategoryModal');resetFrom()" href="" aria-label="Close">
+                    <a class="mainButton redButton" ng-click="close_modal('addMenuCategoryModal');resetFrom()" href=""
+                       aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <a ng-click="addMenuCategory()" href="" class="mainButton greenButton"><i
@@ -105,7 +141,8 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت آیتم جدید</h2>
-                    <a ng-click="close_modal('closeAddMenuItemModal');resetFrom()" class="mainButton redButton" data-dismiss="modal" href=""
+                    <a ng-click="close_modal('closeAddMenuItemModal');resetFrom()" class="mainButton redButton"
+                       data-dismiss="modal" href=""
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
@@ -147,81 +184,128 @@
     </div>
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <div class="tableButtons">
-                    <div class="buttonGroup">
-                        <a class="addUser mainButton greenButton" ng-click="open_modal('addMenuCategoryModal')"
-                           data-toggle="modal"
-                           data-backdrop="static" data-keyboard="false">
-                            <i class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
-                    </div>
-                </div>
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th style="width: 2em;" scope="col"></th>
-                            <th scope="col">نام دسته‌بندی</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="category in menu_categories">
-                            <td scope="row">
-                                <a ng-click="change_order(category.id, 'UP')"><i class="fas fa-sort-up"></i></a>
-                                <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-sort-down"></i></a>
-                            </td>
-                            <td style="vertical-align: middle" scope="row">{{ category.name }}</td>
-                            <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)" href=""
-                                                                  class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <div class="col-md-6">
+                <div class="row">
+                    <main class="col-sm-12 ">
+                        <div class="tableButtons">
+                            <div class="buttonGroup">
+                                <a class="addUser mainButton greenButton" ng-click="open_modal('addMenuItemModal')"
+                                   data-toggle="modal"><i
+                                        class="fas fa-user-plus"></i> آیتم جدید</a>
+                            </div>
+                            <div class="buttonGroup">
+                                <form>
+                                    <input ng-keyup="searchMenuItem()" ng-model="searach_data_menu_item.search_word"
+                                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tableWrapper">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">نام آیتم</th>
+                                    <th scope="col">قیمت آیتم ( ریال )</th>
+                                    <th scope="col">دسته‌بندی آیتم</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in menu_items">
+                                    <th scope="row">{{ item.name }}</th>
+                                    <th scope="row">{{ item.price | number | persianNumber }}</th>
+                                    <th scope="row">{{ item.category_name }}</th>
+                                    <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
+                                                                      class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                    </td>
+                                    <td style="text-align: center"><a ng-click="openDeleteConfirmModal(item.id)"
+                                                                      href=""><i
+                                            class="fas fa-trash"></i></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
 
+                        </div>
+                    </main>
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <main class="col-sm-12 ">
+                        <div class="tableButtons">
+                            <div class="buttonGroup">
+                                <a class="addUser mainButton greenButton" ng-click="open_modal('addMenuCategoryModal')"
+                                   data-toggle="modal"
+                                   data-backdrop="static" data-keyboard="false">
+                                    <i class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
+                            </div>
+                        </div>
+                        <div class="tableWrapper">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th style="width: 2em;" scope="col"></th>
+                                    <th scope="col">نام دسته‌بندی</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="category in menu_categories">
+                                    <td scope="row">
+                                        <a ng-click="change_order(category.id, 'UP')"><i class="fas fa-sort-up"></i></a>
+                                        <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-sort-down"></i></a>
+                                    </td>
+                                    <td style="vertical-align: middle" scope="row">{{ category.name }}</td>
+                                    <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)"
+                                                                          href=""
+                                                                          class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-            </main>
-            <main class="col-sm-12 ">
-                <div class="tableButtons">
-                    <div class="buttonGroup">
-                        <a class="addUser mainButton greenButton" ng-click="open_modal('addMenuItemModal')" data-toggle="modal"><i
-                                class="fas fa-user-plus"></i> آیتم جدید</a>
-                    </div>
-                    <div class="buttonGroup">
-                        <form>
-                            <input ng-keyup="searchMenuItem()" ng-model="searach_data_menu_item.search_word"
-                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                        </form>
-                    </div>
-                </div>
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">نام آیتم</th>
-                            <th scope="col">قیمت آیتم ( ریال )</th>
-                            <th scope="col">دسته‌بندی آیتم</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="item in menu_items">
-                            <th scope="row">{{ item.name }}</th>
-                            <th scope="row">{{ item.price | number | persianNumber }}</th>
-                            <th scope="row">{{ item.category_name }}</th>
-                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
-                                                              class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
-                            <td style="text-align: center"><a ng-click="openDeleteConfirmModal(item.id)" href=""><i
-                                    class="fas fa-trash"></i></a></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        </div>
 
+                    </main>
+                    <main class="col-sm-12 ">
+                        <div class="tableButtons">
+                            <div class="buttonGroup">
+                                <a class="addUser mainButton greenButton" ng-click="open_modal('addPrinterModal')"
+                                   data-toggle="modal"
+                                   data-backdrop="static" data-keyboard="false"><i
+                                        class="fas fa-user-plus"></i> پرینتر جدید</a>
+                            </div>
+                            <div class="buttonGroup">
+                                <form>
+                                    <input ng-keyup="searchMenuCategory()"
+                                           ng-model="searach_data_menu_category.search_word"
+                                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tableWrapper">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">نام پرینتر</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="printer in printers">
+                                    <td style="vertical-align: middle" scope="row">{{ printer.printer_name }}</td>
+                                    <td style="vertical-align: middle"><a ng-click="editPrinter(printer.printer_id)"
+                                                                          href=""
+                                                                          class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </main>
                 </div>
-            </main>
+            </div>
         </div>
     </main>
 </div>

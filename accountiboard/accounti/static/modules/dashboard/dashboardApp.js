@@ -36,11 +36,6 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/menu',
         templateUrl: 'static/modules/dashboard/views/menu.html'
     };
-    var printers = {
-        name: 'manager.printers',
-        url: '/printers',
-        templateUrl: 'static/modules/dashboard/views/printer.html'
-    };
     var member_manager = {
         name: 'member_manager',
         url: '/member_manager',
@@ -229,7 +224,6 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);
     $stateProvider.state(quick_access);
-    $stateProvider.state(printers);
     $stateProvider.state(banking);
     $stateProvider.state(stocks);
 });
