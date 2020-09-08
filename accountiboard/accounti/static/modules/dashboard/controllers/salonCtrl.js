@@ -1358,14 +1358,6 @@ angular.module("dashboard")
             $scope.clear_invoice_sale();
         };
 
-        $scope.closeViewInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#viewInvoiceModal').modal('hide');
-            })(jQuery);
-            $scope.reset_deleted_items();
-        };
-
         $scope.editInvoice = function (invoice_id) {
             $scope.is_in_edit_mode_invoice = true;
             $scope.will_delete_items.invoice_id = invoice_id;
