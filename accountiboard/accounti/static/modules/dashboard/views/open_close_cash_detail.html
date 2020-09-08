@@ -1,0 +1,99 @@
+<div ng-controller="closeOpenCashDetailCtrl">
+    <div class="modal fade mainModal" id="show_invoice_purchase" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        
+    </div>
+
+    <settled-invoice-modal-directive>
+    </settled-invoice-modal-directive>
+
+    <main class="pageContent container-fluid">
+        <div class="tableButtons">
+            <div class="buttonGroup"></div>
+            <div class="buttonGroup">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a ui-sref="account_manager.manage_cash">صندوق ها</a></li>
+                        <li class="breadcrumb-item">صندوق شماره {{ cash_id | persianNumber }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="row userPageContent">
+            <main class="col-sm-12 ">
+
+                <div class="tableWrapper">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">شماره</th>
+                            <th scope="col">تاریخ باز شدن</th>
+                            <th scope="col">تاریخ بسته شدن</th>
+                            <th scope="col">گزارش پرداخت</th>
+                            <th scope="col">گزارش دریافت</th>
+                            <th scope="col">بلیط رویداد</th>
+                            <th scope="col">پول نقد</th>
+                            <th scope="col">کل فروش</th>
+                            <th scope="col">بسته شده</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ current_cash.id | persianNumber }}</td>
+                            <td>{{ current_cash.created_date_time | persianNumber}}</td>
+                            <td>{{ current_cash.ended_date_time | persianNumber}}</td>
+                            <td>{{ current_cash.outcome_report | persianNumber}}</td>
+                            <td>{{ current_cash.income_report  | persianNumber}}</td>
+                            <td>{{ current_cash.event_tickets  | persianNumber}}</td>
+                            <td>{{ current_cash.current_money_in_cash | persianNumber }}</td>
+                            <td>{{ status.all_sales_price | number | persianNumber }} ریال</td>
+                            <td>
+                                <span ng-show="current_cash.is_closed">بسته‌شده</span>
+                                <span ng-show="!current_cash.is_closed">باز</span>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="tableWrapper">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">شماره</th>
+                            <th scope="col">مهمان</th>
+                            <th scope="col">تعداد مهمانان</th>
+                            <th scope="col">میز</th>
+                            <th scope="col">شعبه</th>
+                            <th scope="col">ساعت تسویه</th>
+                            <th scope="col">مبلغ فاکتور</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="invoice in current_cash.related_invoice_sales">
+                            <td>{{ invoice.id | persianNumber }}</td>
+                            <td>{{ invoice.member }}</td>
+                            <td>{{ invoice.guest_numbers | persianNumber }}</td>
+                            <td>{{ invoice.table }}</td>
+                            <td>{{ invoice.branch }}</td>
+                            <td>{{ invoice.settle_time | persianNumber}}</td>
+                            <td>{{ invoice.total_price | number | persianNumber }} ریال</td>
+                            <td ng-click="showInvoice(invoice.id, showEditPaymentButton=false, showPrintButton=false)">
+                                <a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </main>
+        </div>
+    </main>
+</div>

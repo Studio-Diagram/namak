@@ -649,6 +649,12 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'getCashAndRelatedInvoices': function (cash_id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/invoiceSalesByCash/" + cash_id + "/"
+                });
+            },
             'logOut': function (data) {
                 return this.request({
                     'method': "POST",
@@ -944,6 +950,7 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/bugreport/",
+                    'data': data
                 });
             },
 
