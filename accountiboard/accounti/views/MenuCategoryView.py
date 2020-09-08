@@ -19,12 +19,12 @@ class ChangeListOrderView(View):
             return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         all_menu_categories_current_branch = MenuCategory.objects.filter(branch=branch_id).order_by('list_order')
-        all_menu_categories_list = [x for x in all_menu_categories_current_branch]
+        all_menu_categories_list = [menu_category for menu_category in all_menu_categories_current_branch]
 
         if not all_menu_categories_list:
             JsonResponse({"error_msg": MENU_CATEGORY_NOT_FOUND}, status=403)
 
-        if len({x.list_order for x in all_menu_categories_list}) < len(all_menu_categories_list):
+        if len({menu_category.list_order for menu_category in all_menu_categories_list}) < len(all_menu_categories_list):
             reorder = True
         else:
             reorder = False
