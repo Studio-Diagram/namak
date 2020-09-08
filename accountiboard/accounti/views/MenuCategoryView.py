@@ -24,6 +24,13 @@ class ChangeListOrderView(View):
         if not all_menu_categories_list:
             JsonResponse({"error_msg": MENU_CATEGORY_NOT_FOUND}, status=403)
 
+        # check if have to reorder all:
+        if len({x.list_order for x in all_menu_categories_list}) < len(all_menu_categories_list):
+            reorder = True
+        # otherwise just update the two affected menu_categories:
+        else:
+            reorder = False
+
         for i, menu_cat in enumerate(all_menu_categories_list):
             if menu_cat_id == menu_cat.id:
                 current_menu_cat_index = i
@@ -33,37 +40,37 @@ class ChangeListOrderView(View):
             if current_menu_cat_index == 0:
                 return JsonResponse({})
             else:
-                temp = all_menu_categories_list[current_menu_cat_index]
-                all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index - 1]
-                all_menu_categories_list[current_menu_cat_index - 1] = temp
+                if reorder:                
+                    temp = all_menu_categories_list[current_menu_cat_index]
+                    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index - 1]
+                    all_menu_categories_list[current_menu_cat_index - 1] = temp
+                else:
+                    temp = all_menu_categories_list[current_menu_cat_index - 1].list_order
+                    all_menu_categories_list[current_menu_cat_index - 1].list_order = all_menu_categories_list[current_menu_cat_index].list_order
+                    all_menu_categories_list[current_menu_cat_index].list_order = temp
+                    all_menu_categories_list[current_menu_cat_index - 1].save()
+                    all_menu_categories_list[current_menu_cat_index].save()
+
 
         elif change_type == 'DOWN':
             if current_menu_cat_index == len(all_menu_categories_list) - 1:
                 return JsonResponse({})
             else:
-                temp = all_menu_categories_list[current_menu_cat_index]
-                all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index + 1]
-                all_menu_categories_list[current_menu_cat_index + 1] = temp
+                if reorder: 
+                    temp = all_menu_categories_list[current_menu_cat_index]
+                    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index + 1]
+                    all_menu_categories_list[current_menu_cat_index + 1] = temp
+                else:
+                    temp = all_menu_categories_list[current_menu_cat_index + 1].list_order
+                    all_menu_categories_list[current_menu_cat_index + 1].list_order = all_menu_categories_list[current_menu_cat_index].list_order
+                    all_menu_categories_list[current_menu_cat_index].list_order = temp
+                    all_menu_categories_list[current_menu_cat_index + 1].save()
+                    all_menu_categories_list[current_menu_cat_index].save()
 
-        # check if have to reorder all:
-        if len({x.list_order for x in all_menu_categories_list}) < len(all_menu_categories_list):
+        if reorder:
             for i, menu_cat in enumerate(all_menu_categories_list):
                 menu_cat.list_order = i
                 menu_cat.save()
-        # otherwise just update the two affected menu_categories:
-        else:
-            if change_type == 'UP':
-                temp = all_menu_categories_list[current_menu_cat_index - 1].list_order
-                all_menu_categories_list[current_menu_cat_index - 1].list_order = all_menu_categories_list[current_menu_cat_index].list_order
-                all_menu_categories_list[current_menu_cat_index].list_order = temp
-                all_menu_categories_list[current_menu_cat_index - 1].save()
-                all_menu_categories_list[current_menu_cat_index].save()
-            elif change_type == 'DOWN':
-                temp = all_menu_categories_list[current_menu_cat_index + 1].list_order
-                all_menu_categories_list[current_menu_cat_index + 1].list_order = all_menu_categories_list[current_menu_cat_index].list_order
-                all_menu_categories_list[current_menu_cat_index].list_order = temp
-                all_menu_categories_list[current_menu_cat_index + 1].save()
-                all_menu_categories_list[current_menu_cat_index].save()
 
         return JsonResponse({})
 
