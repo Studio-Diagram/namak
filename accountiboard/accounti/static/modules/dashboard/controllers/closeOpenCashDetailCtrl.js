@@ -4,12 +4,12 @@ angular.module("dashboard")
             $scope.error_message = '';
             $scope.cash_id = $stateParams.cash_id;
             $scope.show_initiate_edit_payment_invoice_sale = false;
-            $scope.get_cash();
+            $scope.get_cash_and_related_invoices();
             $scope.get_status_data();
         };
 
-        $scope.get_cash = function () {
-            dashboardHttpRequest.getCash($scope.cash_id)
+        $scope.get_cash_and_related_invoices = function () {
+            dashboardHttpRequest.getCashAndRelatedInvoices($scope.cash_id)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     $scope.current_cash = data;

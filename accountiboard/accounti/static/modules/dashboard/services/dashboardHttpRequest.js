@@ -651,10 +651,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'getCash': function (cash_id) {
+            'getCashAndRelatedInvoices': function (cash_id) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/cash/" + cash_id + "/"
+                    'url': "/api/invoiceSalesByCash/" + cash_id + "/"
                 });
             },
             'logOut': function (data) {
