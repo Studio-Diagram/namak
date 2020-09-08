@@ -8,7 +8,7 @@ from accountiboard.constants import *
 
 def reorder_model_objects(all_menu_categories_list, current_menu_cat_index, index_offset):
     temp = all_menu_categories_list[current_menu_cat_index]
-    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index - 1]
+    all_menu_categories_list[current_menu_cat_index] = all_menu_categories_list[current_menu_cat_index + index_offset]
     all_menu_categories_list[current_menu_cat_index + index_offset] = temp
 
 def swap_list_orders(all_menu_categories_list, current_menu_cat_index, index_offset):
