@@ -50,7 +50,11 @@
                             <td>{{ current_cash.event_tickets  | persianNumber}}</td>
                             <td>{{ current_cash.current_money_in_cash | persianNumber }}</td>
                             <td>{{ status.all_sales_price | number | persianNumber }} ریال</td>
-                            <td>{{ current_cash.is_closed }}</td>
+                            <td>
+                                <span ng-show="current_cash.is_closed">بسته‌شده</span>
+                                <span ng-show="!current_cash.is_closed">باز</span>
+
+                            </td>
                         </tr>
                         </tbody>
                     </table>

@@ -13,7 +13,6 @@ angular.module("dashboard")
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     $scope.current_cash = data;
-                    $scope.current_cash.is_closed ? $scope.current_cash.is_closed = "بسته‌شده" : $scope.current_cash.is_closed = "باز";
                 }, function (error) {
                     $rootScope.is_page_loading = false;
                     $rootScope.error_message = error.data.error_msg;
