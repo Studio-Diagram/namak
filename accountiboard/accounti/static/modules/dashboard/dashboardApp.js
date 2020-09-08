@@ -16,23 +16,28 @@ myApp.directive('ngEnter', function () {
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Bearer';
-    var registerEmployee = {
-        name: 'manager',
-        url: '/manager',
-        templateUrl: 'static/modules/dashboard/views/manager.html'
+    var cafe_management = {
+        name: 'cafe_management',
+        url: '/cafe',
+        templateUrl: 'static/modules/dashboard/views/cafe_management.html'
     };
-    var addEmployee = {
-        name: 'manager.addEmployee',
-        url: '/addEmployee',
+    var branch_management = {
+        name: 'branch_management',
+        url: '/branch',
+        templateUrl: 'static/modules/dashboard/views/branch_management.html'
+    };
+    var employee = {
+        name: 'cafe_management.employee',
+        url: '/employee',
         templateUrl: 'static/modules/dashboard/views/add_employee.html'
     };
     var tables = {
-        name: 'manager.tables',
+        name: 'branch_management.tables',
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
     var menu = {
-        name: 'manager.menu',
+        name: 'branch_management.menu',
         url: '/menu',
         templateUrl: 'static/modules/dashboard/views/menu.html'
     };
@@ -52,14 +57,8 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
 
-    var stock = {
-        name: 'manager.stock',
-        url: '/stock',
-        templateUrl: 'static/modules/dashboard/views/stock.html'
-    };
-
     var branch = {
-        name: 'manager.branch',
+        name: 'cafe_management.branch',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch.html'
     };
@@ -188,21 +187,21 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var banking = {
-        name: 'manager.banking',
+        name: 'cafe_management.banking',
         url: '/banking',
         templateUrl: 'static/modules/dashboard/views/banking.html'
     };
     var stocks = {
-        name: 'manager.stocks',
+        name: 'cafe_management.stocks',
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
 
-    $stateProvider.state(registerEmployee);
-    $stateProvider.state(addEmployee);
+    $stateProvider.state(cafe_management);
+    $stateProvider.state(branch_management);
+    $stateProvider.state(employee);
     $stateProvider.state(menu);
     $stateProvider.state(member);
-    $stateProvider.state(stock);
     $stateProvider.state(branch);
     $stateProvider.state(cash_manager);
     $stateProvider.state(salon);
