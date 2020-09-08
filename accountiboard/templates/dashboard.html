@@ -291,22 +291,27 @@
                     <li class="nav-item">
                         <a ui-sref="reservation"
                            ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
-                           class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                           class="nav-link"><i class="fas fa-phone"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
                         <a ui-sref="member_manager.member" href=""
                            ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-id-card"></i>عضویت</a>
+                                class="fas fa-smile-wink"></i>مشتریان</a>
                     </li>
                     <li class="nav-item">
                         <a ui-sref="account_manager.buy" href=""
                            ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
-                           fa-chess"></i>حسابداری</a>
+                           fa-calculator"></i>حسابداری</a>
                     </li>
                     <li class="nav-item" class="nav-link">
-                        <a ui-sref="manager.addEmployee"
-                           ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-cogs"></i>مدیریت</a>
+                        <a ui-sref="branch_management.menu"
+                           ng-class="isActive('/branch') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-code-branch"></i>مدیریت شعبه</a>
+                    </li>
+                    <li class="nav-item" class="nav-link">
+                        <a ui-sref="cafe_management.employee"
+                           ng-class="isActive('/cafe') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-store"></i>مدیریت کافه</a>
                     </li>
                 </ul>
             </nav>
