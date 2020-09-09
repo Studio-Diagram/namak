@@ -58,7 +58,7 @@ def permission_decorator_class_based_simplified(permission_func):
 def session_authenticate(request, permitted_roles, branch_disable=False):
     user_roles = request.session.get('user_role', None)
     if request.session.get('is_logged_in', None) and user_roles:
-        request_branch = get_branch(request)
+        request_branch = get_branch(request, *args, **kwargs)
         session_branch = request.session.get('branch_list', None)
         if not session_branch:
             return {
@@ -97,7 +97,7 @@ def session_authenticate_admin_panel(request, *args, **kwargs):
 
 def token_authenticate(request, permitted_roles, bundles, branch_disable=False, *args, **kwargs):
     payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    request_branch = get_branch(request)
+    request_branch = get_branch(request, *args, **kwargs)
     if not payload:
         return {
             "state": False,
@@ -131,20 +131,19 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
     }
 
 
-def get_branch(request):
+def get_branch(request, *args, **kwargs):
+    branch = None
     try:
         if request.method == 'POST':
             body_unicode = request.body.decode('utf-8')
             rec_data = json.loads(body_unicode)
-            branch = None
             if 'branch' in rec_data:
                 branch = rec_data['branch']
             elif 'branch_id' in rec_data:
                 branch = rec_data['branch_id']
             return branch
         elif request.method == 'GET':
-            branch_str = request.GET.get('branch', None)
-            if branch_str:
+            if branch_str := kwargs.get('branch_id') or kwargs.get('branch'):
                 branch = int(branch_str)
             return branch
     except:

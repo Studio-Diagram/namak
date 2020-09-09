@@ -3,6 +3,7 @@ from accountiboard.constants import *
 from accountiboard.custom_permissions import *
 from datetime import datetime, timedelta
 from django.views import View
+from django.shortcuts import get_object_or_404
 
 class AddBranchView(View):
     @permission_decorator_class_based(token_authenticate,
@@ -104,15 +105,12 @@ class SearchBranchView(View):
         return JsonResponse({"response_code": 2, 'branches': branches})
 
 
-class GetBranchView(View):
+class BranchView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-
-        branch_id = rec_data['branch']
-        branch = Branch.objects.get(pk=branch_id)
+    def get(self, request, branch_id, *args, **kwargs):
+        branch = get_object_or_404(Branch, pk=branch_id)
         branch_data = {
             'id': branch.pk,
             'name': branch.name,
@@ -123,7 +121,7 @@ class GetBranchView(View):
             'min_paid_price': branch.min_paid_price,
             'guest_pricing': branch.guest_pricing
         }
-        return JsonResponse({"response_code": 2, 'branch': branch_data})
+        return JsonResponse({'branch': branch_data})
 
 
 class GetWorkingTimeForReserveView(View):
