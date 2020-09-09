@@ -123,6 +123,33 @@ class BranchView(View):
         }
         return JsonResponse({'branch': branch_data})
 
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+    def put(self, request, branch_id, *args, **kwargs):
+        branch = get_object_or_404(Branch, pk=branch_id)
+        allowed_keys = {'name', 'address', 'start_working_time', 'end_working_time',
+            'min_paid_price', 'guest_pricing', 'game_data'}
+        rec_data = json.loads(request.read().decode('utf-8'))
+
+        for key in rec_data:
+            if key in allowed_keys:
+                setattr(branch, key, rec_data[key])
+
+        branch.save()
+
+        branch_data = {
+            'id': branch.pk,
+            'name': branch.name,
+            'address': branch.address,
+            'start_time': branch.start_working_time.strftime("%H:%M"),
+            'end_time': branch.end_working_time.strftime("%H:%M"),
+            'game_data': [json.loads(game_data_single_object) for game_data_single_object in branch.game_data],
+            'min_paid_price': branch.min_paid_price,
+            'guest_pricing': branch.guest_pricing
+        }
+        return JsonResponse({'branch': branch_data})
+
 
 class GetWorkingTimeForReserveView(View):
     @permission_decorator_class_based(token_authenticate,

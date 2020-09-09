@@ -142,7 +142,7 @@ def get_branch(request, *args, **kwargs):
             elif 'branch_id' in rec_data:
                 branch = rec_data['branch_id']
             return branch
-        elif request.method == 'GET':
+        else:
             if branch_str := kwargs.get('branch_id') or kwargs.get('branch'):
                 branch = int(branch_str)
             return branch
