@@ -178,7 +178,7 @@ myApp.config(function ($stateProvider, $authProvider) {
 
     var big_cash_detail_view_in_open_close_cash = {
         name: 'account_manager.manage_cash_detail_big',
-        url: '/manage_cash/detail/:cash_id',
+        url: '/manage_cash/:cash_id/detail',
         template: '<cash-detail-directive></cash-detail-directive>',
         params: {
             "display_cash_number": true,
