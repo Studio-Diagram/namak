@@ -133,18 +133,21 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
 
 def get_branch(request, *args, **kwargs):
     branch = None
+    branch_list = []
     try:
-        if request.method == 'POST':
+        if request.method in {'POST', 'PUT'}:
             body_unicode = request.body.decode('utf-8')
             rec_data = json.loads(body_unicode)
-            if branch_str := rec_data.get('branch_id') or rec_data.get('branch'):
-                branch = int(branch_str)
-            return branch
-        else:
-            if branch_str := kwargs.get('branch_id') or kwargs.get('branch') \
-                or request.GET.get('branch_id') or request.GET.get('branch'):
-                branch = int(branch_str)
-            return branch
+            branch_list.extend([rec_data.get('branch_id'), rec_data.get('branch')])
+
+        branch_list.extend([
+            kwargs.get('branch_id'), kwargs.get('branch'),
+            request.GET.get('branch_id'), request.GET.get('branch'),
+        ])
+
+        for branch in branch_list:
+            if branch:
+                return int(branch)
     except:
         return None
 
