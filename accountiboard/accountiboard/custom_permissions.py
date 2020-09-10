@@ -132,7 +132,6 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
 
 
 def get_branch(request, *args, **kwargs):
-    branch = None
     branch_list = []
     try:
         if request.method in {'POST', 'PUT'}:
