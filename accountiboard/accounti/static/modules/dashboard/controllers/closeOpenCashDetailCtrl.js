@@ -28,19 +28,11 @@ angular.module("dashboard")
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.status = data['all_today_status'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $rootScope.error_message = data['error_msg'];
-                        $rootScope.open_modal('mainErrorModal');
-
-                    }
+                    $scope.status = data['all_today_status'];
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $rootScope.error_message = 500;
+                    $rootScope.error_message = error.data.error_msg;
                     $rootScope.open_modal('mainErrorModal');
-
                 });
         };
 
