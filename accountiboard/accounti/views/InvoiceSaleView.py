@@ -863,10 +863,12 @@ class GetTodayStatusView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data.get('branch_id')
-        cash_id = rec_data.get('cash_id')
+    def get(self, request, *args, **kwargs):
+        branch_id = request.GET.get('branch_id')
+        cash_id = request.GET.get('cash_id')
+
+        if not branch_id or not cash_id:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         branch_obj = Branch.objects.get(pk=branch_id)
         cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
@@ -981,36 +983,37 @@ class GetTodayStatusView(View):
             for invoice in all_invoice_pays_t:
                 status['all_pays'] += invoice.payment_amount
 
-        return JsonResponse({"response_code": 2, "all_today_status": status})
+        return JsonResponse({"all_today_status": status})
 
 
-class GetKitchenSaleDetailView(View):
+class GetSaleDetailsByCategoryView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data.get('branch_id')
-        cash_id = rec_data.get('cash_id')
-        menu_category_id = rec_data.get('menu_category_id')
+    def get(self, request, *args, **kwargs):
+        branch_id = request.GET.get('branch_id')
+        cash_id = request.GET.get('cash_id')
+        category = request.GET.get('category')
+        menu_category_id = request.GET.get('menu_category_id')
 
-        if not branch_id or not cash_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
+        if not branch_id or not cash_id or category not in {"KITCHEN", "BAR", "OTHER"}:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         branch_obj = Branch.objects.get(pk=branch_id)
         cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
         sale_details = []
 
-        all_invoices_menu_items_kitchen = InvoicesSalesToMenuItem.objects.filter(invoice_sales__is_deleted=False,
-                                                                                 invoice_sales__cash_desk=cash_obj,
-                                                                                 menu_item__menu_category__kind="KITCHEN").order_by(
-            "menu_item__name")
+        all_invoices_menu_items_by_category = InvoicesSalesToMenuItem.objects.filter(
+                invoice_sales__is_deleted=False,
+                invoice_sales__cash_desk=cash_obj,
+                menu_item__menu_category__kind=category
+        ).order_by("menu_item__name")
 
         if menu_category_id:
-            all_invoices_menu_items_kitchen = all_invoices_menu_items_kitchen.filter(
+            all_invoices_menu_items_by_category = all_invoices_menu_items_by_category.filter(
                 menu_item__menu_category__id=menu_category_id)
 
-        for menu_item in all_invoices_menu_items_kitchen:
+        for menu_item in all_invoices_menu_items_by_category:
             found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
             if found_item:
                 found_item[0]['numbers'] += menu_item.numbers
@@ -1021,88 +1024,7 @@ class GetKitchenSaleDetailView(View):
                 })
 
         sale_details = sorted(sale_details, key=lambda i: i['numbers'], reverse=True)
-        return JsonResponse({"response_code": 2, "sale_details": sale_details})
-
-
-class GetBarSaleDetailView(View):
-    @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data.get('branch_id')
-        cash_id = rec_data.get('cash_id')
-        menu_category_id = rec_data.get('menu_category_id')
-
-        if not branch_id or not cash_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-        branch_obj = Branch.objects.get(pk=branch_id)
-        cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
-        sale_details = []
-
-        all_invoices_menu_items_bar = InvoicesSalesToMenuItem.objects.filter(invoice_sales__is_deleted=False,
-                                                                             invoice_sales__cash_desk=cash_obj,
-                                                                             menu_item__menu_category__kind="BAR").order_by(
-            "menu_item__name")
-
-        if menu_category_id:
-            all_invoices_menu_items_bar = all_invoices_menu_items_bar.filter(menu_item__menu_category__id=menu_category_id)
-
-        for menu_item in all_invoices_menu_items_bar:
-            found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
-            if found_item:
-                found_item[0]['numbers'] += menu_item.numbers
-            else:
-                sale_details.append({
-                    "name": menu_item.menu_item.name,
-                    "Category_name": menu_item.menu_item.menu_category.name,
-                    "numbers": menu_item.numbers
-                })
-
-        sale_details = sorted(sale_details, key=lambda i: i['numbers'], reverse=True)
-        return JsonResponse({"response_code": 2, "sale_details": sale_details})
-
-
-class GetOtherSaleDetailView(View):
-    @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data.get('branch_id')
-        cash_id = rec_data.get('cash_id')
-        menu_category_id = rec_data.get('menu_category_id')
-
-        if not branch_id or not cash_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-        branch_obj = Branch.objects.get(pk=branch_id)
-        cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()
-        sale_details = []
-
-        all_invoices_menu_items_other = InvoicesSalesToMenuItem.objects.filter(invoice_sales__is_deleted=False,
-                                                                               invoice_sales__cash_desk=cash_obj,
-                                                                               menu_item__menu_category__kind="OTHER").order_by(
-            "menu_item__name")
-
-        if menu_category_id:
-            all_invoices_menu_items_other = all_invoices_menu_items_other.filter(
-                menu_item__menu_category__id=menu_category_id)
-
-        for menu_item in all_invoices_menu_items_other:
-            found_item = list(filter(lambda item: item['name'] == menu_item.menu_item.name, sale_details))
-            if found_item:
-                found_item[0]['numbers'] += menu_item.numbers
-            else:
-                sale_details.append({
-                    "name": menu_item.menu_item.name,
-                    "numbers": menu_item.numbers
-                })
-
-        sale_details = sorted(sale_details, key=lambda i: i['numbers'], reverse=True)
-
-        return JsonResponse({"response_code": 2, "sale_details": sale_details})
+        return JsonResponse({"sale_details": sale_details})
 
 
 class PrintAfterSaveView(View):

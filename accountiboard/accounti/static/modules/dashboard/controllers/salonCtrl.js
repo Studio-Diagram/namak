@@ -134,24 +134,17 @@ angular.module("dashboard")
 
         $scope.get_status_data = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.status = data['all_today_status'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.status = data['all_today_status'];
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 

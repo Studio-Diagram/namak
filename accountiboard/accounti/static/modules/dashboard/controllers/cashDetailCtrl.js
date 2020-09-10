@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("statusCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $auth, dashboardHttpRequest, offlineAPIHttpRequest) {
+    .controller("cashDetailCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $auth, dashboardHttpRequest, offlineAPIHttpRequest, $stateParams) {
         var initialize = function () {
             $scope.selected_detail_category = "";
             $scope.night_report_inputs = {
@@ -9,34 +9,31 @@ angular.module("dashboard")
                 "current_money_in_cash": 0
             };
             $scope.sale_detail_category_filter = "";
-            if ($rootScope.cash_data.cash_id !== 0) {
+            if ($stateParams.cash_id !== 0) {
                 $scope.get_status_data();
             }
             else {
                 $scope.get_today_cash();
             }
+            $scope.display_cash_number = $stateParams.display_cash_number;
+            $scope.cash_id = $stateParams.cash_id;
+            $scope.show_submit_today_cash_button = $stateParams.show_submit_today_cash_button;
+            $scope.show_print_today_cash_button = $stateParams.show_print_today_cash_button;
         };
 
         $scope.get_status_data = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id
+                'cash_id': $stateParams.cash_id
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.status = data['all_today_status'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.status = data['all_today_status'];
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
@@ -73,73 +70,52 @@ angular.module("dashboard")
 
         $scope.get_kitchen_detail_sales = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getKitchenDetailSales(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.sale_details = data['sale_details'];
-                        $scope.open_modal("sale_details");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.sale_details = data['sale_details'];
+                    $scope.open_modal("sale_details");
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
         $scope.get_bar_detail_sales = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getBarDetailSales(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.sale_details = data['sale_details'];
-                        $scope.open_modal("sale_details");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.sale_details = data['sale_details'];
+                    $scope.open_modal("sale_details");
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
         $scope.get_other_detail_sales = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
             };
             dashboardHttpRequest.getOtherDetailSales(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.sale_details = data['sale_details'];
-                        $scope.open_modal("sale_details");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.sale_details = data['sale_details'];
+                    $scope.open_modal("sale_details");
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
@@ -147,11 +123,11 @@ angular.module("dashboard")
             dashboardHttpRequest.getTodayCash($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $rootScope.cash_data.cash_id = data['cash_id'];
+                        $stateParams.cash_id = data['cash_id'];
                         $scope.get_status_data();
                     }
                     else if (data['response_code'] === 3) {
-                        $rootScope.cash_data.cash_id = 0;
+                        $stateParams.cash_id = 0;
                     }
                 }, function (error) {
                     $scope.error_message = 500;
@@ -217,7 +193,7 @@ angular.module("dashboard")
 
         $scope.print_night_report = function () {
             var sending_data = {
-                'cash_id': $rootScope.cash_data.cash_id,
+                'cash_id': $stateParams.cash_id,
                 'location_url': "https://namak.works/"
             };
             $http({

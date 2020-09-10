@@ -38,6 +38,7 @@
                             <th scope="col">پول نقد</th>
                             <th scope="col">کل فروش</th>
                             <th scope="col">بسته شده</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -54,6 +55,9 @@
                                 <span ng-show="current_cash.is_closed">بسته‌شده</span>
                                 <span ng-show="!current_cash.is_closed">باز</span>
 
+                            </td>
+                            <td>
+                                <a ui-sref="account_manager.manage_cash_detail_big({ cash_id: current_cash.id })" class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>
                         </tbody>
