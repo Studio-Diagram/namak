@@ -70,7 +70,6 @@ angular.module("dashboard")
 
         $scope.get_kitchen_detail_sales = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
@@ -78,23 +77,16 @@ angular.module("dashboard")
             dashboardHttpRequest.getKitchenDetailSales(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.sale_details = data['sale_details'];
-                        $scope.open_modal("sale_details");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.sale_details = data['sale_details'];
+                    $scope.open_modal("sale_details");
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
         $scope.get_bar_detail_sales = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
@@ -102,23 +94,16 @@ angular.module("dashboard")
             dashboardHttpRequest.getBarDetailSales(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.sale_details = data['sale_details'];
-                        $scope.open_modal("sale_details");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.sale_details = data['sale_details'];
+                    $scope.open_modal("sale_details");
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
         $scope.get_other_detail_sales = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $stateParams.cash_id,
                 "menu_category_id": $scope.sale_detail_category_filter
@@ -126,17 +111,11 @@ angular.module("dashboard")
             dashboardHttpRequest.getOtherDetailSales(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.sale_details = data['sale_details'];
-                        $scope.open_modal("sale_details");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.sale_details = data['sale_details'];
+                    $scope.open_modal("sale_details");
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 

@@ -531,23 +531,23 @@ angular.module('dashboard')
             },
             'getKitchenDetailSales': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getKitchenDetailSales/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    "&cash_id=" + data.cash_id + "&category=KITCHEN&menu_category_id=" + data.menu_category_id
                 });
             },
             'getBarDetailSales': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getBarDetailSales/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    "&cash_id=" + data.cash_id + "&category=BAR&menu_category_id=" + data.menu_category_id
                 });
             },
             'getOtherDetailSales': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getOtherDetailSales/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    "&cash_id=" + data.cash_id + "&category=OTHER&menu_category_id=" + data.menu_category_id
                 });
             },
             'addReserve': function (data) {
