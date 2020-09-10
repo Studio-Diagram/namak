@@ -137,13 +137,12 @@ def get_branch(request, *args, **kwargs):
         if request.method == 'POST':
             body_unicode = request.body.decode('utf-8')
             rec_data = json.loads(body_unicode)
-            if 'branch' in rec_data:
-                branch = rec_data['branch']
-            elif 'branch_id' in rec_data:
-                branch = rec_data['branch_id']
+            if branch_str := rec_data.get('branch_id') or rec_data.get('branch'):
+                branch = int(branch_str)
             return branch
         else:
-            if branch_str := kwargs.get('branch_id') or kwargs.get('branch'):
+            if branch_str := kwargs.get('branch_id') or kwargs.get('branch') \
+                or request.GET.get('branch_id') or request.GET.get('branch'):
                 branch = int(branch_str)
             return branch
     except:
