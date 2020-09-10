@@ -863,10 +863,12 @@ class GetTodayStatusView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data.get('branch_id')
-        cash_id = rec_data.get('cash_id')
+    def get(self, request, *args, **kwargs):
+        branch_id = request.GET.get('branch_id')
+        cash_id = request.GET.get('cash_id')
+
+        if not branch_id or not cash_id:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
 
         branch_obj = Branch.objects.get(pk=branch_id)
         cash_obj = Cash.objects.filter(pk=cash_id, branch=branch_obj).first()

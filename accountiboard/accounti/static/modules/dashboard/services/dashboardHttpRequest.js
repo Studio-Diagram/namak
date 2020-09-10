@@ -525,9 +525,8 @@ angular.module('dashboard')
             },
             'getTodayStatus': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getTodayStatus/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getTodayStatus/?branch_id=" + data.branch_id + "&cash_id=" + data.cash_id,
                 });
             },
             'getKitchenDetailSales': function (data) {
