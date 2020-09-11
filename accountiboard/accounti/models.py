@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
-# from django.contrib.postgres.fields import JSONField
 from django.db.models import JSONField
 from django.utils import timezone
 from uuid import uuid4

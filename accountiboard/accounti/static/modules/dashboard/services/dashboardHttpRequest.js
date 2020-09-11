@@ -231,11 +231,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'getBranch': function (data) {
+            'getBranch': function (branch_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getBranch/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/branch/" + branch_id + "/"
                 });
             },
             'getMenuItemsWithCategories': function (data) {

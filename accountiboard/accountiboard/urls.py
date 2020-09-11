@@ -37,7 +37,7 @@ urlpatterns = [
     path('api/addBranch/', BranchView.AddBranchView.as_view()),
     path('api/getBranches/', BranchView.GetBranchesView.as_view()),
     path('api/searchBranch/', BranchView.SearchBranchView.as_view()),
-    path('api/getBranch/', BranchView.GetBranchView.as_view()),
+    path('api/branch/<int:branch_id>/', BranchView.BranchView.as_view()),
     path('api/getMenuItemsWithCategories/', EmployeeView.GetMenuItemsWithCategoriesView.as_view()),
     path('api/getTables/', TableView.GetTablesView.as_view()),
     path('api/addTable/', TableView.AddTableView.as_view()),
