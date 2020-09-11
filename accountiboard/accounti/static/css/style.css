@@ -2352,6 +2352,10 @@ aside.leftAside {
     width: 33.333333333%;
 }
 
+.registerDataTable tbody tr:hover {
+    background: transparent;
+}
+
 .registerDataTable tbody tr td .title {
     color: #A3AAB2;
 }
@@ -2439,4 +2443,35 @@ aside.leftAside {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+}
+
+.infoTable tbody tr td {
+    text-align: right;
+    width: 33.333333333%;
+}
+
+.infoTable tbody tr:hover {
+    background: transparent;
+}
+
+.infoTable tbody tr td .title {
+    color: #A3AAB2;
+    font-size: 0.9em;
+    font-weight: 300;
+    line-height: 1.5rem;
+}
+
+.infoTableWrapper {
+    border: 1px solid #C6CACF;
+    border-radius: 10px;
+    margin: 2em 0;
+    background: var(--white);
+}
+
+.priceField::after {
+    content: ' ﷼ ';
+}
+
+.tableWithBorderTopTR tr:last-child {
+    border-top: 1px solid var(--grayButtonBorder);
 }

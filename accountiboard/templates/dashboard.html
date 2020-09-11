@@ -61,6 +61,8 @@
         <script src="{% static 'modules/dashboard/controllers/stocksCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/cashDetailCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/addMemberDirectiveCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/branchDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/gameBranchDetailCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -305,7 +307,7 @@
                            fa-calculator"></i>حسابداری</a>
                     </li>
                     <li class="nav-item" class="nav-link">
-                        <a ui-sref="branch_management.menu"
+                        <a ui-sref="branch_management.details"
                            ng-class="isActive('/branch') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-code-branch"></i>مدیریت شعبه</a>
                     </li>

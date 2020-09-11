@@ -5,11 +5,14 @@ from datetime import datetime, timedelta
 from django.views import View
 from django.shortcuts import get_object_or_404
 
+
 class AddBranchView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['FREE'], USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE'], USER_PLANS_CHOICES['STANDARDNORMAL'],
+                                       USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         correct_mins = ["00", "15", "30", "45"]
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -64,8 +67,10 @@ class AddBranchView(View):
 
 class GetBranchesView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
+                                       USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -84,9 +89,11 @@ class GetBranchesView(View):
 
 class SearchBranchView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
+                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data['search_word']
@@ -107,16 +114,18 @@ class SearchBranchView(View):
 
 class BranchView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
+                                       USER_PLANS_CHOICES['ENTERPRISE']})
     def get(self, request, branch_id, *args, **kwargs):
         branch = get_object_or_404(Branch, pk=branch_id)
         branch_data = {
             'id': branch.pk,
             'name': branch.name,
             'address': branch.address,
-            'start_time': branch.start_working_time.strftime("%H:%M"),
-            'end_time': branch.end_working_time.strftime("%H:%M"),
+            'start_working_time': branch.start_working_time.strftime("%H:%M"),
+            'end_working_time': branch.end_working_time.strftime("%H:%M"),
             'game_data': [json.loads(game_data_single_object) for game_data_single_object in branch.game_data],
             'min_paid_price': branch.min_paid_price,
             'guest_pricing': branch.guest_pricing
@@ -124,17 +133,27 @@ class BranchView(View):
         return JsonResponse({'branch': branch_data})
 
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
+                                       USER_PLANS_CHOICES['ENTERPRISE']})
     def put(self, request, branch_id, *args, **kwargs):
         branch = get_object_or_404(Branch, pk=branch_id)
         allowed_keys = {'name', 'address', 'start_working_time', 'end_working_time',
-            'min_paid_price', 'guest_pricing', 'game_data'}
+                        'min_paid_price', 'guest_pricing', 'game_data'}
         rec_data = json.loads(request.read().decode('utf-8'))
 
         for key in rec_data:
             if key in allowed_keys:
-                setattr(branch, key, rec_data[key])
+                if key == 'start_working_time' or key == 'end_working_time':
+                    setattr(branch, key, datetime.strptime(rec_data.get(key), '%H:%M'))
+                elif key == "game_data":
+                    setattr(branch, key, [json.dumps({
+                        "which_hour": game_data_object.get('which_hour'),
+                        "price_per_hour": game_data_object.get('price_per_hour')
+                    }) for game_data_object in rec_data.get(key)])
+                else:
+                    setattr(branch, key, rec_data.get(key))
 
         branch.save()
 
@@ -142,8 +161,8 @@ class BranchView(View):
             'id': branch.pk,
             'name': branch.name,
             'address': branch.address,
-            'start_time': branch.start_working_time.strftime("%H:%M"),
-            'end_time': branch.end_working_time.strftime("%H:%M"),
+            'start_working_time': branch.start_working_time.strftime("%H:%M"),
+            'end_working_time': branch.end_working_time.strftime("%H:%M"),
             'game_data': [json.loads(game_data_single_object) for game_data_single_object in branch.game_data],
             'min_paid_price': branch.min_paid_price,
             'guest_pricing': branch.guest_pricing
@@ -153,8 +172,10 @@ class BranchView(View):
 
 class GetWorkingTimeForReserveView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
+                                       USER_PLANS_CHOICES['ENTERPRISE']})
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']

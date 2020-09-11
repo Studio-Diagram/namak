@@ -237,6 +237,13 @@ angular.module('dashboard')
                     'url': "/api/branch/" + branch_id + "/"
                 });
             },
+            'updateBranch': function (branch_id, data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/branch/" + branch_id + "/",
+                    'data': data
+                });
+            },
             'getMenuItemsWithCategories': function (data) {
                 return this.request({
                     'method': "POST",

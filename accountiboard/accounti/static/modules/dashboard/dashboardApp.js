@@ -41,6 +41,16 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/menu',
         templateUrl: 'static/modules/dashboard/views/menu.html'
     };
+    var branch_details = {
+        name: 'branch_management.details',
+        url: '/details',
+        templateUrl: 'static/modules/dashboard/views/branch_details.html'
+    };
+    var game_branch_details = {
+        name: 'branch_management.game_details',
+        url: '/game_details',
+        templateUrl: 'static/modules/dashboard/views/game_branch_details.html'
+    };
     var member_manager = {
         name: 'member_manager',
         url: '/member_manager',
@@ -218,6 +228,8 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(branch_management);
     $stateProvider.state(employee);
     $stateProvider.state(menu);
+    $stateProvider.state(branch_details);
+    $stateProvider.state(game_branch_details);
     $stateProvider.state(member);
     $stateProvider.state(branch);
     $stateProvider.state(cash_manager);

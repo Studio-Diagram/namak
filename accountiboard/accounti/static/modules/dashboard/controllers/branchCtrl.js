@@ -153,7 +153,6 @@ angular.module("dashboard")
         };
 
         $scope.editBranch = function (branch_id) {
-            console.log('editBranch ran', branch_id);
             $scope.is_in_edit_mode = true;
             dashboardHttpRequest.getBranch(branch_id)
                 .then(function (data) {
@@ -161,8 +160,8 @@ angular.module("dashboard")
                             'branch_id': data['branch']['id'],
                             'name': data['branch']['name'],
                             'address': data['branch']['address'],
-                            'start_time': data['branch']['start_time'],
-                            'end_time': data['branch']['end_time'],
+                            'start_time': data['branch']['start_working_time'],
+                            'end_time': data['branch']['end_working_time'],
                             'game_data': data['branch']['game_data'],
                             'min_paid_price': data['branch']['min_paid_price'],
                             'guest_pricing': data['branch']['guest_pricing']
