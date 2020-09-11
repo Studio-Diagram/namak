@@ -1,0 +1,98 @@
+<div class="modal fade mainModal littleModal" id="addMemberModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">ثبت مشتری جدید</h2>
+                <a class="mainButton redButton closeModal" ng-click="reset_member_form();close_modal('addMemberModal')" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+                <a ng-click="addMember()" href="" class="mainButton greenButton"><i
+                        class="fas fa-save"></i> ثبت</a>
+                <a ng-click="reset_member_form()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    پاک کردن </a>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <h3>اطلاعات مشتری</h3>
+                    <div class="row">
+                        <div class="col">
+                            <label>نام<i class="fas fa-star-of-life"></i></label>
+                            <input ng-required="$touched" ng-model="new_member_data.first_name" type="text"
+                                   aria-label="First name"
+                                   class="form-control" placeholder="نام">
+                        </div>
+                        <div class="col">
+                            <label>نام خانوادگی<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.last_name" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="نام خانوادگی">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>شماره تلفن<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.phone" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="شماره تلفن">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>روز تولد<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.day_of_birth" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="روز  تولد">
+                        </div>
+                        <div class="col">
+                            <label>ماه تولد<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.month_of_birth" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="ماه  تولد">
+                        </div>
+                        <div class="col">
+                            <label>سال تولد<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.year_of_birth" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="سال  تولد">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                            <select ng-model="new_member_data.intro" class="form-control" id="sel1">
+                                <option ng-selected="new_member_data.intro === null" value="">نحوه آشنایی با کافه
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
+                                    معرفی دوستان
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'friends'" value="HEAVY">
+                                    جست‌وجوی اینترنت
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'instagram'" value="ABSTRACT">
+                                    اینستاگرام
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'roomiz'" value="FAMILY">
+                                    سایت رومیز
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'events'" value="FAMILY">
+                                    شرکت در رویدادها
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'other'" value="FAMILY">
+                                    سایر
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>شماره کارت</label><br>
+                            <small>خالی گذاشتن این فیلد باعث می شود شماره کارت ، شماره تلفن عضو باشد.</small>
+                            <input ng-model="new_member_data.card_number" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="شماره کارت">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>

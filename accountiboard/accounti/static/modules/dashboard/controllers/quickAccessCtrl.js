@@ -18,19 +18,6 @@ angular.module("dashboard")
                 'discount': 0,
                 'tip': 0
             };
-            $scope.new_member_data = {
-                'member_id': 0,
-                'first_name': '',
-                'last_name': '',
-                'card_number': '',
-                'year_of_birth': '',
-                'month_of_birth': '',
-                'day_of_birth': '',
-                'phone': '',
-                'intro': 'other',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
             $scope.serach_data_member = {
                 'search_word': '',
                 'branch': $rootScope.user_data.branch,
@@ -196,26 +183,9 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.addMember = function () {
-            dashboardHttpRequest.addMember($scope.new_member_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.resetFrom();
-                        $scope.close_modal('addMemberModal');
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
-        };
-
         $scope.searchMember = function () {
             if ($scope.serach_data_member.search_word === '') {
-                $scope.get_members_data($rootScope.user_data);
+                $scope.members = [];
             }
             else {
                 dashboardHttpRequest.searchMember($scope.serach_data_member)
@@ -248,27 +218,6 @@ angular.module("dashboard")
                 $('#errorModalQ').modal('hide');
                 $('#addMemberModal').css('z-index', "");
             })(jQuery);
-        };
-
-        $scope.resetFrom = function () {
-            $scope.new_member_data = {
-                'member_id': 0,
-                'first_name': '',
-                'last_name': '',
-                'card_number': '',
-                'year_of_birth': '',
-                'month_of_birth': '',
-                'day_of_birth': '',
-                'phone': '',
-                'intro': 'other',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
-        };
-
-        $scope.closeForm = function () {
-            $scope.resetFrom();
-            $scope.close_modal('addMemberModal');
         };
 
         $scope.endCurrentGame = function (game_id) {

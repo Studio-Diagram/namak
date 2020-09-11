@@ -357,14 +357,21 @@ myApp.directive('tableDirective', function () {
             headers: '=',
             rows: '=',
             config: '=',
-            detailCallback: '&'
+            detailCallback: '&',
+            rightSideDetailCallback: '&'
         },
-        templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
+        templateUrl: '/static/modules/dashboard/directives/reusable-table.html',
+        link: function (scope) {
+            if (scope.config.has_second_button_on_right_side === undefined)
+                scope.config.has_second_button_on_right_side = false;
+            if (scope.config.has_row_numbers === undefined)
+                scope.config.has_row_numbers = true;
+        }
     }
 
 });
 
-myApp.directive('settledInvoiceModalDirective', function() {
+myApp.directive('settledInvoiceModalDirective', function () {
     return {
         restrict: 'EA',
         templateUrl: '/static/modules/dashboard/directives/settled-invoice-modal.html',
@@ -372,7 +379,15 @@ myApp.directive('settledInvoiceModalDirective', function() {
     }
 });
 
-myApp.directive('cashDetailDirective', function() {
+myApp.directive('addMemberModalDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/add-member-modal.html',
+        controller: 'addMemberDirectiveCtrl'
+    }
+});
+
+myApp.directive('cashDetailDirective', function () {
     return {
         restrict: 'EA',
         templateUrl: '/static/modules/dashboard/directives/cash-detail.html',
