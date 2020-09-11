@@ -167,8 +167,8 @@ angular.module("dashboard")
 
         };
 
-        $scope.deleteSupplier = function (supplier_id) {
-            dashboardHttpRequest.deleteSupplier(supplier_id)
+        $scope.deleteSupplier = function () {
+            dashboardHttpRequest.deleteSupplier($scope.deleteing_supplier_id)
                 .then(function (data) {
                     $scope.get_suppliers();
                 }, function (error) {
@@ -188,5 +188,22 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username
             };
         };
+
+        $scope.openDeletePermissionModal = function (supplier_id) {
+            $scope.deleteing_supplier_id = supplier_id;
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteSupplierPermissionModal').modal('show');
+            })(jQuery);
+        };
+
+        $scope.closeDeletePermissionModal = function () {
+            $scope.deleteing_supplier_id = 0;
+            jQuery.noConflict();
+            (function ($) {
+                $('#deleteSupplierPermissionModal').modal('hide');
+            })(jQuery);
+        };
+
         initialize();
     });
