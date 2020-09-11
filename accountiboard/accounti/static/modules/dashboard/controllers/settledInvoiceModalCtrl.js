@@ -15,7 +15,7 @@ angular.module("dashboard")
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.new_invoice_data = {
+                        $scope.show_invoice_data = {
                             'invoice_sales_id': data['invoice']['invoice_sales_id'],
                             'table_id': data['invoice']['table_id'],
                             'table_name': data['invoice']['table_name'],

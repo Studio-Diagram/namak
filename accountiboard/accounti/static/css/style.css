@@ -2475,3 +2475,17 @@ aside.leftAside {
 .tableWithBorderTopTR tr:last-child {
     border-top: 1px solid var(--grayButtonBorder);
 }
+
+.arrowButton {
+    width: 5%;
+    vertical-align: middle !important;
+}
+
+.arrowButton i:hover {
+    cursor: pointer;
+}
+
+.cashTable.cashDate td span {
+    font-size: 1.2em;
+    font-weight: 400;
+}

@@ -245,16 +245,19 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th style="width: 2em;" scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
                                     <th scope="col">نام دسته‌بندی</th>
                                     <th scope="col"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="category in menu_categories">
-                                    <td scope="row">
-                                        <a ng-click="change_order(category.id, 'UP')"><i class="fas fa-sort-up"></i></a>
-                                        <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-sort-down"></i></a>
+                                    <td class="arrowButton" scope="row">
+                                        <a ng-click="change_order(category.id, 'UP')"><i class="fas fa-arrow-up"></i></a>
+                                    </td>
+                                    <td class="arrowButton" scope="row">
+                                        <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-arrow-down"></i></a>
                                     </td>
                                     <td style="vertical-align: middle" scope="row">{{ category.name }}</td>
                                     <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)"

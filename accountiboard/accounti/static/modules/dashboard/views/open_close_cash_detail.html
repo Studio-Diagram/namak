@@ -2,7 +2,7 @@
     <div class="modal fade mainModal" id="show_invoice_purchase" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        
+
     </div>
 
     <settled-invoice-modal-directive>
@@ -15,7 +15,11 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a ui-sref="account_manager.manage_cash">صندوق ها</a></li>
-                        <li class="breadcrumb-item">صندوق شماره {{ cash_id | persianNumber }}</li>
+                        <li class="breadcrumb-item">
+                            <span> صندوق شماره </span>
+                            <span>&nbsp;</span>
+                            <span ng-bind="cash_id | persianNumber"></span>
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -44,20 +48,21 @@
                         <tbody>
                         <tr>
                             <td>{{ current_cash.id | persianNumber }}</td>
-                            <td>{{ current_cash.created_date_time | persianNumber}}</td>
-                            <td>{{ current_cash.ended_date_time | persianNumber}}</td>
-                            <td>{{ current_cash.outcome_report | persianNumber}}</td>
-                            <td>{{ current_cash.income_report  | persianNumber}}</td>
-                            <td>{{ current_cash.event_tickets  | persianNumber}}</td>
+                            <td>{{ current_cash.created_date_time | persianNumber }}</td>
+                            <td>{{ current_cash.ended_date_time | persianNumber }}</td>
+                            <td>{{ current_cash.outcome_report | persianNumber }}</td>
+                            <td>{{ current_cash.income_report  | persianNumber }}</td>
+                            <td>{{ current_cash.event_tickets  | persianNumber }}</td>
                             <td>{{ current_cash.current_money_in_cash | persianNumber }}</td>
-                            <td>{{ status.all_sales_price | number | persianNumber }} ریال</td>
+                            <td>{{ current_cash.all_sales_price | number | persianNumber }} ریال</td>
                             <td>
                                 <span ng-show="current_cash.is_closed">بسته‌شده</span>
                                 <span ng-show="!current_cash.is_closed">باز</span>
 
                             </td>
                             <td>
-                                <a ui-sref="account_manager.manage_cash_detail_big({ cash_id: current_cash.id })" class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                <a ui-sref="account_manager.manage_cash_detail_big({ cash_id: current_cash.id })"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                         </tr>
                         </tbody>
@@ -87,7 +92,7 @@
                             <td>{{ invoice.guest_numbers | persianNumber }}</td>
                             <td>{{ invoice.table }}</td>
                             <td>{{ invoice.branch }}</td>
-                            <td>{{ invoice.settle_time | persianNumber}}</td>
+                            <td>{{ invoice.settle_time | persianNumber }}</td>
                             <td>{{ invoice.total_price | number | persianNumber }} ریال</td>
                             <td ng-click="showInvoice(invoice.id, showEditPaymentButton=false, showPrintButton=false)">
                                 <a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>

@@ -189,7 +189,12 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a ui-sref="account_manager.manage_cash">صندوق ها</a></li>
-                            <li class="breadcrumb-item"><a ui-sref="account_manager.manage_cash_detail({ cash_id: cash_id })">صندوق شماره {{ cash_id | persianNumber }}</a></li>
+                            <li class="breadcrumb-item">
+                                <a ui-sref="account_manager.manage_cash_detail({ cash_id: cash_id })">
+                                    <span>صندوق شماره</span>
+                                    <span ng-bind="cash_id | persianNumber"></span>
+                                </a>
+                            </li>
                             <li class="breadcrumb-item">جزییات</li>
                         </ol>
                     </nav>
@@ -209,6 +214,29 @@
             </div>
             <div class="container-fluid">
                 <div class="row">
+                    <div ng-if="display_cash_number" class="col-sm-12">
+                        <h3>تاریخ صندوق</h3>
+                        <div class="tableWrapper">
+                            <table class="cashTable cashDate">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <h4>تاریخ و زمان باز شدن</h4>
+                                        <span>{{ status.cash.start_time | persianNumber }}</span>
+                                        <span> - </span>
+                                        <span>{{ status.cash.start_date | persianNumber }}</span>
+                                    </td>
+                                    <td>
+                                        <h4>تاریخ و زمان بسته شدن</h4>
+                                        <span>{{ status.cash.end_time | persianNumber }}</span>
+                                        <span> - </span>
+                                        <span>{{ status.cash.end_date | persianNumber }}</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <h3>گزارش فروش</h3>
                         <div class="tableWrapper">

@@ -88,7 +88,6 @@ angular.module("dashboard")
                 if (event.keyCode === 27) {
                     $scope.closeAddInvoiceModal();
                     $scope.closePayModal();
-                    $scope.closeTimeCalcModal();
                     $scope.closeDeleteModal();
                     $scope.closeErrorModal();
                     $scope.closeDeleteInvoiceModal();
@@ -461,7 +460,6 @@ angular.module("dashboard")
                         }, function (error) {
                             $scope.disable_print_after_save_all_buttons = false;
                             $scope.error_message = 500;
-                            $scope.closeTimeCalcModal();
                             $scope.openErrorModal();
                         });
                 }, function errorCallback(response) {
@@ -513,7 +511,6 @@ angular.module("dashboard")
                                 }
                             }, function (error) {
                                 $scope.error_message = 500;
-                                $scope.closeTimeCalcModal();
                                 $scope.openErrorModal();
                             });
 
@@ -1603,7 +1600,6 @@ angular.module("dashboard")
                 }, function (error) {
                     $scope.disable_print_after_save_all_buttons = false;
                     $scope.error_message = 500;
-                    $scope.closeTimeCalcModal();
                     $scope.openErrorModal();
                 });
         };

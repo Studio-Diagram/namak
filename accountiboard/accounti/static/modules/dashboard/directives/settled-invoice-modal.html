@@ -22,6 +22,30 @@
                 <div class="container-fluid">
                     <div class="row">
                         <main class="col-sm-12">
+                            <table class="invoiceTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <small>شماره فاکتور</small>
+                                            <a href=""
+                                               class="">{{ show_invoice_data.invoice_sales_id | persianNumber }}</a>
+                                        </td>
+                                        <td>
+                                            <small>میز</small>
+                                            <span ng-bind="show_invoice_data.table_name"></span>
+                                        </td>
+                                        <td>
+                                            <small>مهمان</small>
+                                            <span ng-bind="show_invoice_data.member_name"></span>
+                                        </td>
+                                        <td>
+                                            <small>تعداد مهمانان</small>
+                                            <span ng-bind="show_invoice_data.guest_numbers | persianNumber"></span>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
                             <table class="invoiceTable invoiceItem">
                                 <tbody>
                                 <tr>
@@ -34,7 +58,7 @@
                                     <th class="fifth">قیمت کل</th>
                                     <th class="sixth">توضیحات</th>
                                 </tr>
-                                <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
+                                <tr ng-repeat="old_item in show_invoice_data.menu_items_old">
                                     <th class="first"><input
                                             ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
                                             type="checkbox"
@@ -47,7 +71,7 @@
                                     <td>{{ old_item.description }}</td>
                                 </tr>
                                 
-                                <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
+                                <tr ng-repeat="old_item in show_invoice_data.shop_items_old">
                                     <th class="first"><input ng-click="will_delete_items_adder('shop', old_item.id)"
                                                              type="checkbox"
                                                              aria-label="Checkbox for following text input"></th>
@@ -59,7 +83,7 @@
                                     <td>{{ old_item.description }}</td>
                                 </tr>
                                 
-                                <tr ng-repeat="game in new_invoice_data.games">
+                                <tr ng-repeat="game in show_invoice_data.games">
                                     <th class="first"><input ng-click="will_delete_items_adder('game', game.id)"
                                                              type="checkbox"
                                                              aria-label="Checkbox for following text input"></th>
@@ -82,25 +106,25 @@
                                 <tr>
                                     <th>اعتبار</th>
                                     <td>
-                                        {{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
+                                        {{ show_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
                                 </tr>
                                 <tr>
                                     <th>اعتبار مصرفی</th>
                                     <td>
-                                        {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                        {{ show_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                 </tr>
                                 <tr>
                                     <th>انعام</th>
-                                    <td>{{ new_invoice_data.tip | number:fractionSize | persianNumber }}</td>
+                                    <td>{{ show_invoice_data.tip | number:fractionSize | persianNumber }}</td>
                                 </tr>
                                 <tr>
                                     <th>تخفیف</th>
-                                    <td>{{ new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
+                                    <td>{{ show_invoice_data.discount | number:fractionSize | persianNumber }}</td>
                                 </tr>
                                 <tr>
                                     <th>جمع کل</th>
                                     <td>
-                                        {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                        {{ show_invoice_data.total_price - show_invoice_data.discount - show_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                 </tr>
                                 </tbody>
                             </table>

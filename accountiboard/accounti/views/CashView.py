@@ -174,6 +174,7 @@ class InvoiceSalesByCashView(View):
             return JsonResponse({"error_msg": ACCESS_DENIED}, status=403)
 
         all_related_invoice_sales = InvoiceSales.objects.filter(cash_desk=current_cash)
+        all_invoice_sales_total_price = all_related_invoice_sales.aggregate(Sum('total_price')).get('total_price__sum')
         all_related_invoice_sales_list = [{
             'id': invoice_sale.id,
             'cash': invoice_sale.cash,
@@ -199,5 +200,6 @@ class InvoiceSalesByCashView(View):
             'outcome_report': current_cash.outcome_report,
             'event_tickets': current_cash.event_tickets,
             'is_closed': current_cash.is_close,
+            'all_sales_price': all_invoice_sales_total_price if all_invoice_sales_total_price else 0,
             'related_invoice_sales': all_related_invoice_sales_list,
         })
