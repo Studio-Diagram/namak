@@ -16,35 +16,40 @@ myApp.directive('ngEnter', function () {
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Bearer';
-    var registerEmployee = {
-        name: 'manager',
-        url: '/manager',
-        templateUrl: 'static/modules/dashboard/views/manager.html'
+    var cafe_management = {
+        name: 'cafe_management',
+        url: '/cafe',
+        templateUrl: 'static/modules/dashboard/views/cafe_management.html'
     };
-    var addEmployee = {
-        name: 'manager.addEmployee',
-        url: '/addEmployee',
+    var branch_management = {
+        name: 'branch_management',
+        url: '/branch',
+        templateUrl: 'static/modules/dashboard/views/branch_management.html'
+    };
+    var employee = {
+        name: 'cafe_management.employee',
+        url: '/employee',
         templateUrl: 'static/modules/dashboard/views/add_employee.html'
     };
     var tables = {
-        name: 'manager.tables',
+        name: 'branch_management.tables',
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
-    var menuCategory = {
-        name: 'manager.menuCategory',
-        url: '/menuCategory',
-        templateUrl: 'static/modules/dashboard/views/menu_category.html'
+    var menu = {
+        name: 'branch_management.menu',
+        url: '/menu',
+        templateUrl: 'static/modules/dashboard/views/menu.html'
     };
-    var menuItem = {
-        name: 'manager.menuItem',
-        url: '/menuItem',
-        templateUrl: 'static/modules/dashboard/views/menu_item.html'
+    var branch_details = {
+        name: 'branch_management.details',
+        url: '/details',
+        templateUrl: 'static/modules/dashboard/views/branch_details.html'
     };
-    var printers = {
-        name: 'manager.printers',
-        url: '/printers',
-        templateUrl: 'static/modules/dashboard/views/printer.html'
+    var game_branch_details = {
+        name: 'branch_management.game_details',
+        url: '/game_details',
+        templateUrl: 'static/modules/dashboard/views/game_branch_details.html'
     };
     var member_manager = {
         name: 'member_manager',
@@ -61,20 +66,9 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/lottery',
         templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
-    var boardgame = {
-        name: 'boardgame',
-        url: '/boardgame',
-        templateUrl: 'static/modules/dashboard/views/boardgame.html'
-    };
-
-    var stock = {
-        name: 'manager.stock',
-        url: '/stock',
-        templateUrl: 'static/modules/dashboard/views/stock.html'
-    };
 
     var branch = {
-        name: 'manager.branch',
+        name: 'cafe_management.branch',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch.html'
     };
@@ -93,11 +87,6 @@ myApp.config(function ($stateProvider, $authProvider) {
             }
         },
         templateUrl: 'static/modules/dashboard/views/salon.html'
-    };
-    var cash = {
-        name: 'cash_manager.cash',
-        url: '/cash',
-        templateUrl: 'static/modules/dashboard/views/cash.html'
     };
     var account_manager = {
         name: 'account_manager',
@@ -190,6 +179,34 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
+    var open_close_cash_detail = {
+        name: 'account_manager.manage_cash_detail',
+        url: '/manage_cash/:cash_id',
+        templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
+    };
+
+    var big_cash_detail_view_in_open_close_cash = {
+        name: 'account_manager.manage_cash_detail_big',
+        url: '/manage_cash/:cash_id/detail',
+        template: '<cash-detail-directive></cash-detail-directive>',
+        params: {
+            "display_cash_number": true,
+            "show_submit_today_cash_button": false,
+            "show_print_today_cash_button": false,
+        }
+    };
+
+    var cash = {
+        name: 'cash_manager.cash',
+        url: '/cash/:cash_id',
+        template: '<cash-detail-directive></cash-detail-directive>',
+        params: {
+            "display_cash_number": false,
+            "show_submit_today_cash_button": true,
+            "show_print_today_cash_button": true,
+        }
+    };
+
     var quick_access = {
         name: 'quickAccess',
         url: '/quickAccess',
@@ -197,23 +214,23 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var banking = {
-        name: 'manager.banking',
+        name: 'cafe_management.banking',
         url: '/banking',
         templateUrl: 'static/modules/dashboard/views/banking.html'
     };
     var stocks = {
-        name: 'manager.stocks',
+        name: 'cafe_management.stocks',
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
 
-    $stateProvider.state(registerEmployee);
-    $stateProvider.state(addEmployee);
-    $stateProvider.state(menuCategory);
-    $stateProvider.state(menuItem);
+    $stateProvider.state(cafe_management);
+    $stateProvider.state(branch_management);
+    $stateProvider.state(employee);
+    $stateProvider.state(menu);
+    $stateProvider.state(branch_details);
+    $stateProvider.state(game_branch_details);
     $stateProvider.state(member);
-    $stateProvider.state(boardgame);
-    $stateProvider.state(stock);
     $stateProvider.state(branch);
     $stateProvider.state(cash_manager);
     $stateProvider.state(salon);
@@ -230,11 +247,12 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(expenseCategory);
     $stateProvider.state(reservation);
     $stateProvider.state(open_close_cash);
+    $stateProvider.state(open_close_cash_detail);
+    $stateProvider.state(big_cash_detail_view_in_open_close_cash);
     $stateProvider.state(tables);
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);
     $stateProvider.state(quick_access);
-    $stateProvider.state(printers);
     $stateProvider.state(banking);
     $stateProvider.state(stocks);
 });
@@ -351,11 +369,42 @@ myApp.directive('tableDirective', function () {
             headers: '=',
             rows: '=',
             config: '=',
-            detailCallback: '&'
+            detailCallback: '&',
+            rightSideDetailCallback: '&'
         },
-        templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
+        templateUrl: '/static/modules/dashboard/directives/reusable-table.html',
+        link: function (scope) {
+            if (scope.config.has_second_button_on_right_side === undefined)
+                scope.config.has_second_button_on_right_side = false;
+            if (scope.config.has_row_numbers === undefined)
+                scope.config.has_row_numbers = true;
+        }
     }
 
+});
+
+myApp.directive('settledInvoiceModalDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/settled-invoice-modal.html',
+        controller: 'settledInvoiceModalCtrl'
+    }
+});
+
+myApp.directive('addMemberModalDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/add-member-modal.html',
+        controller: 'addMemberDirectiveCtrl'
+    }
+});
+
+myApp.directive('cashDetailDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/cash-detail.html',
+        controller: 'cashDetailCtrl'
+    }
 });
 
 function configureTemplateFactory($provide) {

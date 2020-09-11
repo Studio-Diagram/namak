@@ -49,12 +49,10 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
     return (amount, True, f'Discount code "{discount.name}" applied.')
 
 class BundleView(View):
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['FREE']},
-        branch_disable=True
-    )
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
 
@@ -108,12 +106,10 @@ class BundleView(View):
 
         }, status=200)
 
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['FREE']},
-        branch_disable=True
-    )
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         bundle = rec_data.get('bundle')
@@ -186,8 +182,8 @@ class BundleView(View):
             amount = amount,
             mobile = payload['sub_phone'],
             redirect = settings.PAY_IR_REDIRECT_URL,
-            cardNumber = "Not paid yet",
-            transId = "Not paid yet",
+            card_number = "Not paid yet",
+            trans_id = "Not paid yet",
         )
 
         current_bundle = Bundle.objects.create(
@@ -205,7 +201,7 @@ class BundleView(View):
             "api": settings.PAY_IR_API_KEY,
             "amount" : amount,
             "redirect": settings.PAY_IR_REDIRECT_URL,
-            "factorNumber" : current_transaction.factorNumber,
+            "factorNumber" : current_transaction.factor_number,
             "mobile" : payload['sub_phone'],
             'description' : None,
         }
@@ -253,8 +249,8 @@ class PayirCallbackView(View):
                 raise e
 
             current_transaction = Transaction.objects.get(token=token)
-            current_transaction.transId = response["transId"]
-            current_transaction.cardNumber = response["cardNumber"]
+            current_transaction.trans_id = response["transId"]
+            current_transaction.card_number = response["cardNumber"]
             current_transaction.status = "paid"
 
             if current_transaction.subscription_discount and current_transaction.subscription_discount.num_of_use:
@@ -301,12 +297,10 @@ class PayirCallbackView(View):
 
 
 class CheckSubscriptionDiscountView(View):
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['FREE']},
-        branch_disable=True
-    )
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         code = rec_data.get('code')

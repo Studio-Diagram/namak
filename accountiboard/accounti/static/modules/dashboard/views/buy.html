@@ -44,7 +44,8 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">تایید حذف فاکتور</h2>
-                    <a ng-click="delete_invoice_purchase(deleteing_invoice_id)" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="delete_invoice_purchase(deleteing_invoice_id)" href="" class="mainButton greenButton">
+                        بله</a>
                     <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
@@ -54,7 +55,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal" id="addModal" tabindex="-1" role="dialog"
+    <div class="modal fade mainModal" id="addModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -65,35 +67,46 @@
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
-                    <a ng-hide="read_only_mode" href="" ng-click="addInvoicePurchase()" class="mainButton greenButton"><i
+                    <a ng-hide="read_only_mode" href="" ng-click="addInvoicePurchase()"
+                       class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
-                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();" class="mainButton greenButton"><i
+                    <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
+                       class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت و جدید</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                    <a ng-hide="read_only_mode" ng-click="resetFrom()" href="" class="mainButton grayButton"><i
+                            class="fas fa-eraser"></i>
                         پاک کردن </a>
 
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <aside class="col-sm-3">
+                            <aside ng-if="!read_only_mode" class="col-sm-3">
                                 <nav class="nav nav-justified">
                                     <a ng-click="changeMenuNav('MAT')" href=""
                                        ng-class="current_menu_nav === 'MAT' ? 'nav-link iconButton active' : 'nav-link iconButton'">
-مواد اولیه
+                                        مواد اولیه <i class="fa fa-question-circle"
+                                                     title="برای ایجاد مواد اولیه نام ماده را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
+                                                     data-toggle="tooltip" tooltip></i>
                                     </a>
                                     <a ng-click="changeMenuNav('SHOP')" href=""
                                        ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'">
-                                        فروشگاهی
+                                        فروشگاهی <i class="fa fa-question-circle"
+                                                     title="برای ایجاد محصولات فروشگاهی نام محصول را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
+                                                     data-toggle="tooltip" tooltip></i>
                                     </a>
                                 </nav>
                                 <nav class=" nav flex-column cafeMenuNav">
                                     <ul>
                                         <div class="accordion">
-                                            <ui-select ng-keyup="search_material($select.search, $select.items)" ng-show="current_menu_nav === 'MAT'" ng-change="add_material_item($select.selected)" ng-model="selected_material.id">
+                                            <ui-select ng-keyup="search_material($select.search, $select.items)"
+                                                       ng-show="current_menu_nav === 'MAT'"
+                                                       ng-change="add_material_item($select.selected)"
+                                                       ng-model="selected_material.id">
                                                 <ui-select-match placeholder="انتخاب محصول">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="material.id as material in materials | filter: $select.search">
+                                                <ui-select-choices
+                                                        repeat="material.id as material in materials | filter: $select.search">
                                                     <div ng-bind="material.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
@@ -101,15 +114,19 @@
                                                 <a ng-click="add_material_to_data_base_after_search(search_data_material.search_word)"
                                                    href="" class="nav-link"
                                                    ng-show="can_add_material">{{ search_data_material.search_word }}<i
-                                                        style="float: left;color: #00ff05"
+                                                        style="float: left;color: #80ab51"
                                                         class="fas fa-plus-square"></i></a>
                                             </li>
 
 
-                                            <ui-select ng-keyup="search_shop_products($select.search, $select.items)"  ng-show="current_menu_nav === 'SHOP'" ng-change="add_item_shop_from_search_dropdown($select.selected)" ng-model="selected_material.id">
+                                            <ui-select ng-keyup="search_shop_products($select.search, $select.items)"
+                                                       ng-show="current_menu_nav === 'SHOP'"
+                                                       ng-change="add_item_shop_from_search_dropdown($select.selected)"
+                                                       ng-model="selected_material.id">
                                                 <ui-select-match placeholder="انتخاب محصول">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="shop.id as shop in shop_products | filter: $select.search">
+                                                <ui-select-choices
+                                                        repeat="shop.id as shop in shop_products | filter: $select.search">
                                                     <div ng-bind="shop.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
@@ -117,7 +134,7 @@
                                                 <a ng-click="add_shop_product_to_data_base_after_search(search_data_shop_products.search_word)"
                                                    href="" class="nav-link"
                                                    ng-show="can_add_shop_product">{{ search_data_shop_products.search_word }}<i
-                                                        style="float: left;color: #00ff05"
+                                                        style="float: left;color: #80ab51"
                                                         class="fas fa-plus-square"></i></a>
                                             </li>
 
@@ -138,7 +155,7 @@
                                 </nav>
 
                             </aside>
-                            <main class="col-sm-9">
+                            <main ng-class="read_only_mode ? 'col-sm-12' : 'col-sm-9'">
                                 <table class="invoiceTable">
                                     <tbody>
                                     <tr>
@@ -149,14 +166,16 @@
                                         </td>
                                         <td>
                                             <small>تاریخ فاکتور</small>
-                                            <input ng-model="new_invoice_purchase_data.date" id="datepicker"
+                                            <input ng-disabled="read_only_mode"
+                                                   ng-model="new_invoice_purchase_data.date" id="datepicker"
                                                    class="form-control listFilter tableLefty" placeholder="تاریخ"
                                                    type="text">
                                         </td>
-                                        
+
                                         <td>
                                             <small>نوع پرداخت</small>
-                                            <select ng-model="new_invoice_purchase_data.settlement_type"
+                                            <select ng-disabled="read_only_mode"
+                                                    ng-model="new_invoice_purchase_data.settlement_type"
                                                     class="form-control">
                                                 <option value="CASH">نقدی</option>
                                                 <option value="CREDIT">اعتباری</option>
@@ -165,10 +184,13 @@
                                         </td>
                                         <td>
                                             <small>تامین کننده</small>
-                                            <ui-select ng-change="get_most_items_supplier(new_invoice_purchase_data.supplier_id)" ng-model="new_invoice_purchase_data.supplier_id">
+                                            <ui-select ng-disabled="read_only_mode"
+                                                       ng-change="get_most_items_supplier(new_invoice_purchase_data.supplier_id)"
+                                                       ng-model="new_invoice_purchase_data.supplier_id">
                                                 <ui-select-match placeholder="انتخاب تامین‌کننده">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                <ui-select-choices
+                                                        repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
@@ -181,14 +203,18 @@
                                     <tr>
                                         <td>
                                             <small>حساب بانکی</small>
-                                            <select ng-model="new_invoice_purchase_data.banking_id"
-                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            <select ng-disabled="read_only_mode"
+                                                    ng-model="new_invoice_purchase_data.banking_id"
+                                                    class="form-control"
+                                                    ng-options="banking.id as banking.name for banking in allbanking_names">
                                             </select>
                                         </td>
                                         <td>
                                             <small>انبار</small>
-                                            <select ng-model="new_invoice_purchase_data.stock_id"
-                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                            <select ng-disabled="read_only_mode"
+                                                    ng-model="new_invoice_purchase_data.stock_id"
+                                                    class="form-control"
+                                                    ng-options="stock.id as stock.name for stock in stocks">
                                             </select>
                                         </td>
                                     </tr>
@@ -197,50 +223,58 @@
                                 <table class="invoiceTable invoiceItem">
                                     <tbody>
                                     <tr>
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first"></th>
                                         <th class="first">#</th>
                                         <th style="width: 30%" class="second">عنوان</th>
                                         <th style="width: 25%" class="third">قیمت واحد</th>
-                                        <th style="width: 10%;" class="forth">تعداد</th>
+                                        <th style="width: 15%;" class="forth">تعداد</th>
                                         <th class="fifth">قیمت کل</th>
                                         <th style="width: 25%;" class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="item in new_invoice_purchase_data.material_items">
-                                        <th class="first"><a ng-click="deleteNewItem('material', $index)" style="cursor: pointer"><i
+                                        <th class="first"><a ng-if="!read_only_mode"
+                                                             ng-click="deleteNewItem('material', $index)"
+                                                             style="cursor: pointer"><i
                                                 class="fas fa-trash"></i></a></th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="text"
-                                                   ng-trim="false" ng-model="item.price"
+                                        <td><input class="form-control iranian-number" type="text"
+                                                   ng-trim="false" ng-model="item.price" ng-disabled="read_only_mode"
                                                    ng-change="changeItemPrice($index)" format></td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
+                                        <td><input class="form-control iranian-number" type="number"
+                                                   ng-disabled="read_only_mode"
                                                    ng-model="item.nums"
                                                    ng-change="changeItemNumber($index)"></td>
-                                        <td>{{ display_float_to_int(item.total) | number:fractionSize | persianNumber }}</td>
+                                        <td>
+                                            {{ display_float_to_int(item.total) | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
+                                                   ng-disabled="read_only_mode"
                                                    ng-model="item.description"></td>
                                     </tr>
 
                                     <tr ng-repeat="item in new_invoice_purchase_data.shop_product_items">
-                                        <th class="first"><a ng-click="deleteNewItem('shop', $index)" style="cursor: pointer"><i
+                                        <th class="first"><a ng-if="!read_only_mode"
+                                                             ng-click="deleteNewItem('shop', $index)"
+                                                             style="cursor: pointer"><i
                                                 class="fas fa-trash"></i></a></th>
-                                        <td>{{ $index | persianNumber }}</td>
+                                        <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
                                         <td>
                                             <label>قیمت خرید</label>
-                                            <input style="font-family: 'B Yekan'" class="form-control" type="text"
-                                                   ng-trim="false" ng-model="item.price"
+                                            <input class="form-control iranian-number" type="text"
+                                                   ng-trim="false" ng-model="item.price" ng-disabled="read_only_mode"
                                                    ng-change="changeItemShopPrice($index)" format>
                                             <label>قیمت فروش</label>
-                                            <input style="font-family: 'B Yekan'" class="form-control" type="text"
+                                            <input class="form-control iranian-number" type="text"
                                                    ng-trim="false" ng-model="item.sale_price"
+                                                   ng-disabled="read_only_mode"
                                                    ng-change="changeItemShopPrice($index)" format></td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
-                                                   ng-model="item.nums"
+                                        <td><input class="form-control iranian-number" type="number"
+                                                   ng-model="item.nums" ng-disabled="read_only_mode"
                                                    ng-change="changeItemShopNumber($index)"></td>
                                         <td>{{ item.total | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
+                                                   ng-disabled="read_only_mode"
                                                    ng-model="item.description"></td>
                                     </tr>
 
@@ -250,13 +284,17 @@
                                     <tbody>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td><input ng-model="new_invoice_purchase_data.discount" type="text" class="form-control"
+                                        <td><input ng-disabled="read_only_mode"
+                                                   ng-model="new_invoice_purchase_data.discount" type="text"
+                                                   class="form-control"
                                                    aria-label="" ng-change="change_total_price()" format>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>مالیات</th>
-                                        <td><input ng-model="new_invoice_purchase_data.tax" type="text" class="form-control"
+                                        <td><input ng-disabled="read_only_mode" ng-model="new_invoice_purchase_data.tax"
+                                                   type="text"
+                                                   class="form-control"
                                                    aria-label="" ng-change="change_total_price()" format>
                                         </td>
                                     </tr>
@@ -280,7 +318,8 @@
     <main class="pageContent container-fluid">
         <div class="tableButtons">
             <div class="buttonGroup">
-                <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">فاکتور خرید جدید</a>
+                <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">فاکتور
+                    خرید جدید</a>
             </div>
         </div>
         <div class="row userPageContent">

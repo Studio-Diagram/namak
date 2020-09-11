@@ -1,0 +1,140 @@
+<div class="modal fade mainModal" id="viewSettledInvoiceModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">فاکتور فروش </h2>
+                <a class="mainButton redButton" data-dismiss="modal" href="#" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+                <button ng-show="settledInvoicePrintButton"
+                        ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                        ng-click="print_cash()"
+                        class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری
+                </button>
+                <a ng-show="settledInvoiceEditPaymentButton" class="mainButton greenButton" href=""
+                   ng-click="initiate_edit_payment_invoice_sale();">
+                    <span aria-hidden="true">تغییر نحوه تسویه</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <main class="col-sm-12">
+                            <table class="invoiceTable">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <small>شماره فاکتور</small>
+                                            <a href=""
+                                               class="">{{ show_invoice_data.invoice_sales_id | persianNumber }}</a>
+                                        </td>
+                                        <td>
+                                            <small>میز</small>
+                                            <span ng-bind="show_invoice_data.table_name"></span>
+                                        </td>
+                                        <td>
+                                            <small>مهمان</small>
+                                            <span ng-bind="show_invoice_data.member_name"></span>
+                                        </td>
+                                        <td>
+                                            <small>تعداد مهمانان</small>
+                                            <span ng-bind="show_invoice_data.guest_numbers | persianNumber"></span>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            <table class="invoiceTable invoiceItem">
+                                <tbody>
+                                <tr>
+                                    <th class="first"><input type="checkbox"
+                                                             aria-label="Checkbox for following text input"></th>
+                                    <th class="first">#</th>
+                                    <th class="second">عنوان</th>
+                                    <th class="third">قیمت واحد</th>
+                                    <th class="forth">تعداد</th>
+                                    <th class="fifth">قیمت کل</th>
+                                    <th class="sixth">توضیحات</th>
+                                </tr>
+                                <tr ng-repeat="old_item in show_invoice_data.menu_items_old">
+                                    <th class="first"><input
+                                            ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
+                                            type="checkbox"
+                                            aria-label="Checkbox for following text input"></th>
+                                    <td>{{ $index | persianNumber }}</td>
+                                    <td>{{ old_item.name }}</td>
+                                    <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
+                                    <td>{{ old_item.nums | persianNumber }}</td>
+                                    <td>{{ old_item.total | number | persianNumber }}</td>
+                                    <td>{{ old_item.description }}</td>
+                                </tr>
+                                
+                                <tr ng-repeat="old_item in show_invoice_data.shop_items_old">
+                                    <th class="first"><input ng-click="will_delete_items_adder('shop', old_item.id)"
+                                                             type="checkbox"
+                                                             aria-label="Checkbox for following text input"></th>
+                                    <td>{{ $index + 1 | persianNumber }}</td>
+                                    <td>{{ old_item.name }}</td>
+                                    <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
+                                    <td>{{ old_item.nums | persianNumber }}</td>
+                                    <td>{{ old_item.total | persianNumber }}</td>
+                                    <td>{{ old_item.description }}</td>
+                                </tr>
+                                
+                                <tr ng-repeat="game in show_invoice_data.games">
+                                    <th class="first"><input ng-click="will_delete_items_adder('game', game.id)"
+                                                             type="checkbox"
+                                                             aria-label="Checkbox for following text input"></th>
+                                    <td>{{ $index | persianNumber }}</td>
+                                    <td>بازی {{ game.numbers | persianNumber }} نفره
+                                        ( {{ game.start_time | persianNumber }}
+                                        تا {{ game.end_time | persianNumber }} )
+                                    </td>
+                                    <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
+                                    <td style="direction: ltr">{{ game.points | persianNumber }}</td>
+                                    <td>{{ game.total | number | persianNumber }}</td>
+                                    <td></td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+                            <table class="invoiceTable invoiceTotal">
+                                <tbody>
+                                <tr>
+                                    <th>اعتبار</th>
+                                    <td>
+                                        {{ show_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <th>اعتبار مصرفی</th>
+                                    <td>
+                                        {{ show_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <th>انعام</th>
+                                    <td>{{ show_invoice_data.tip | number:fractionSize | persianNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <th>تخفیف</th>
+                                    <td>{{ show_invoice_data.discount | number:fractionSize | persianNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <th>جمع کل</th>
+                                    <td>
+                                        {{ show_invoice_data.total_price - show_invoice_data.discount - show_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </main>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>

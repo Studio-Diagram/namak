@@ -282,7 +282,8 @@ form.generalForm .submitButtonWrapper {
 }
 
 .mainAside nav ul li a i {
-    padding-left: 30px;
+    padding-left: 25px;
+    font-size: 1.1em;
 }
 
 main.pageContent {
@@ -2351,6 +2352,10 @@ aside.leftAside {
     width: 33.333333333%;
 }
 
+.registerDataTable tbody tr:hover {
+    background: transparent;
+}
+
 .registerDataTable tbody tr td .title {
     color: #A3AAB2;
 }
@@ -2397,6 +2402,10 @@ aside.leftAside {
     flex: 0 0 calc(50% - 5px);
 }
 
+.quick-buttons .bigButton {
+    flex: 0 0 calc(100%);
+}
+
 .leftAside > div {
     overflow-y: scroll;
     height: calc(100vh - 100px);
@@ -2434,4 +2443,49 @@ aside.leftAside {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+}
+
+.infoTable tbody tr td {
+    text-align: right;
+    width: 33.333333333%;
+}
+
+.infoTable tbody tr:hover {
+    background: transparent;
+}
+
+.infoTable tbody tr td .title {
+    color: #A3AAB2;
+    font-size: 0.9em;
+    font-weight: 300;
+    line-height: 1.5rem;
+}
+
+.infoTableWrapper {
+    border: 1px solid #C6CACF;
+    border-radius: 10px;
+    margin: 2em 0;
+    background: var(--white);
+}
+
+.priceField::after {
+    content: ' ﷼ ';
+}
+
+.tableWithBorderTopTR tr:last-child {
+    border-top: 1px solid var(--grayButtonBorder);
+}
+
+.arrowButton {
+    width: 5%;
+    vertical-align: middle !important;
+}
+
+.arrowButton i:hover {
+    cursor: pointer;
+}
+
+.cashTable.cashDate td span {
+    font-size: 1.2em;
+    font-weight: 400;
 }

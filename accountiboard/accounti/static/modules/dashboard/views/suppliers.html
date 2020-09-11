@@ -1,4 +1,21 @@
 <div ng-controller="accountManagerCtrl">
+    <div class="modal fade mainModal alertModal redAlertModal" id="deleteSupplierPermissionModal" data-backdrop="static"
+         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">تایید حذف فاکتور</h2>
+                    <a ng-click="deleteSupplier()" href="" class="mainButton greenButton">
+                        بله</a>
+                    <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                </div>
+                <div class="modal-body">
+                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ تمام اطلاعات فاکتور شما از بین
+                        می‌رود.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
          data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -114,6 +131,7 @@
                             <th scope="col">شماره تماس</th>
                             <th scope="col">مانده حساب</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -128,6 +146,10 @@
                             </td>
                             <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+
+                            <td><a ng-click="openDeletePermissionModal(supplier.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a>
                             </td>
                         </tr>
                         </tbody>

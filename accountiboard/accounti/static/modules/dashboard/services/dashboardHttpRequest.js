@@ -154,34 +154,6 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addBoardgame': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/addBoardgame/",
-                    'data': data
-                });
-            },
-            'getBoardgames': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getBoardgames/",
-                    'data': data
-                });
-            },
-            'searchBoardgame': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/searchBoardgame/",
-                    'data': data
-                });
-            },
-            'getBoardgame': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getBoardgame/",
-                    'data': data
-                });
-            },
             'addMember': function (data) {
                 return this.request({
                     'method': "POST",
@@ -259,10 +231,16 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'getBranch': function (data) {
+            'getBranch': function (branch_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getBranch/",
+                    'method': "GET",
+                    'url': "/api/branch/" + branch_id + "/"
+                });
+            },
+            'updateBranch': function (branch_id, data) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/branch/" + branch_id + "/",
                     'data': data
                 });
             },
@@ -329,11 +307,16 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'getSupplier': function (data) {
+            'getSupplier': function (supplier_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getSupplier/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/supplier/" + supplier_id + "/",
+                });
+            },
+            'deleteSupplier': function (supplier_id) {
+                return this.request({
+                    'method': "DELETE",
+                    'url': "/api/supplier/" + supplier_id + "/",
                 });
             },
             'searchSupplier': function (data) {
@@ -548,37 +531,29 @@ angular.module('dashboard')
             },
             'getTodayStatus': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getTodayStatus/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getTodayStatus/?branch_id=" + data.branch_id + "&cash_id=" + data.cash_id,
                 });
             },
             'getKitchenDetailSales': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getKitchenDetailSales/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    "&cash_id=" + data.cash_id + "&category=KITCHEN&menu_category_id=" + data.menu_category_id
                 });
             },
             'getBarDetailSales': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getBarDetailSales/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    "&cash_id=" + data.cash_id + "&category=BAR&menu_category_id=" + data.menu_category_id
                 });
             },
             'getOtherDetailSales': function (data) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getOtherDetailSales/",
-                    'data': data
-                });
-            },
-            'timeCalc': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/timeCalc/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    "&cash_id=" + data.cash_id + "&category=OTHER&menu_category_id=" + data.menu_category_id
                 });
             },
             'addReserve': function (data) {
@@ -677,6 +652,12 @@ angular.module('dashboard')
                     'method': "POST",
                     'url': "/api/checkCashExist/",
                     'data': data
+                });
+            },
+            'getCashAndRelatedInvoices': function (cash_id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/invoiceSalesByCash/" + cash_id + "/"
                 });
             },
             'logOut': function (data) {
@@ -974,6 +955,7 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/bugreport/",
+                    'data': data
                 });
             },
 

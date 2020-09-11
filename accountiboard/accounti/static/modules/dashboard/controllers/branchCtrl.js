@@ -154,31 +154,21 @@ angular.module("dashboard")
 
         $scope.editBranch = function (branch_id) {
             $scope.is_in_edit_mode = true;
-            var data = {
-                'username': $rootScope.user_data.username,
-                'branch': branch_id
-            };
-            dashboardHttpRequest.getBranch(data)
+            dashboardHttpRequest.getBranch(branch_id)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
                         $scope.new_branch_data = {
                             'branch_id': data['branch']['id'],
                             'name': data['branch']['name'],
                             'address': data['branch']['address'],
-                            'start_time': data['branch']['start_time'],
-                            'end_time': data['branch']['end_time'],
+                            'start_time': data['branch']['start_working_time'],
+                            'end_time': data['branch']['end_working_time'],
                             'game_data': data['branch']['game_data'],
                             'min_paid_price': data['branch']['min_paid_price'],
                             'guest_pricing': data['branch']['guest_pricing']
                         };
                         $scope.openAddBranchModal();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
                 }, function (error) {
-                    $scope.error_message = error;
+                    $scope.error_message = error.data.error_msg;
                     $scope.openErrorModal();
                 });
 

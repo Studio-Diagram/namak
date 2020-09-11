@@ -88,7 +88,6 @@ angular.module("dashboard")
                 if (event.keyCode === 27) {
                     $scope.closeAddInvoiceModal();
                     $scope.closePayModal();
-                    $scope.closeTimeCalcModal();
                     $scope.closeDeleteModal();
                     $scope.closeErrorModal();
                     $scope.closeDeleteInvoiceModal();
@@ -106,9 +105,6 @@ angular.module("dashboard")
                 }
                 if (event.ctrlKey && event.keyCode === 52) {
                     $state.go('member');
-                }
-                if (event.ctrlKey && event.keyCode === 53) {
-                    $state.go('boardgame');
                 }
                 if (event.ctrlKey && event.keyCode === 54) {
 
@@ -137,24 +133,17 @@ angular.module("dashboard")
 
         $scope.get_status_data = function () {
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id
             };
             dashboardHttpRequest.getTodayStatus(sending_data)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.status = data['all_today_status'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.status = data['all_today_status'];
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
@@ -471,7 +460,6 @@ angular.module("dashboard")
                         }, function (error) {
                             $scope.disable_print_after_save_all_buttons = false;
                             $scope.error_message = 500;
-                            $scope.closeTimeCalcModal();
                             $scope.openErrorModal();
                         });
                 }, function errorCallback(response) {
@@ -523,7 +511,6 @@ angular.module("dashboard")
                                 }
                             }, function (error) {
                                 $scope.error_message = 500;
-                                $scope.closeTimeCalcModal();
                                 $scope.openErrorModal();
                             });
 
@@ -599,6 +586,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('show');
                 $('#addInvoiceModal').css('z-index', 1000);
+                $('#viewInvoiceModal').css('z-index', 1000);
             })(jQuery);
         };
 
@@ -616,23 +604,7 @@ angular.module("dashboard")
             (function ($) {
                 $('#errorModal').modal('hide');
                 $('#addInvoiceModal').css('z-index', "");
-            })(jQuery);
-        };
-
-        $scope.openTimeCalcModal = function () {
-            $scope.calculateTime();
-            jQuery.noConflict();
-            (function ($) {
-                $('#timeCalcModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeTimeCalcModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#timeCalcModal').modal('hide');
-                $('#addInvoiceModal').css('z-index', "");
+                $('#viewInvoiceModal').css('z-index', "");
             })(jQuery);
         };
 
@@ -650,24 +622,6 @@ angular.module("dashboard")
                 $('#closeInvoicePermissionModal').modal('hide');
                 $('#addInvoiceModal').css('z-index', "");
             })(jQuery);
-        };
-
-        $scope.calculateTime = function () {
-            dashboardHttpRequest.timeCalc($scope.new_invoice_data.current_game)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.calcedPoints = data['price'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.closeTimeCalcModal();
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.closeTimeCalcModal();
-                    $scope.openErrorModal();
-                });
         };
 
         $scope.openPayModal = function () {
@@ -1393,21 +1347,6 @@ angular.module("dashboard")
             $scope.clear_invoice_sale();
         };
 
-        $scope.openViewInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#viewInvoiceModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeViewInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#viewInvoiceModal').modal('hide');
-            })(jQuery);
-            $scope.reset_deleted_items();
-        };
-
         $scope.editInvoice = function (invoice_id) {
             $scope.is_in_edit_mode_invoice = true;
             $scope.will_delete_items.invoice_id = invoice_id;
@@ -1468,57 +1407,6 @@ angular.module("dashboard")
                 "total": $scope.new_invoice_data.cash_amount + $scope.new_invoice_data.pos_amount
             };
             $rootScope.open_modal('editSettledInvoicePayment', 'viewInvoiceModal');
-        };
-
-        $scope.showInvoice = function (invoice_id) {
-            $scope.will_delete_items.invoice_id = invoice_id;
-            var sending_data = {
-                "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getInvoice(sending_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.new_invoice_data = {
-                            'invoice_sales_id': data['invoice']['invoice_sales_id'],
-                            'table_id': data['invoice']['table_id'],
-                            'table_name': data['invoice']['table_name'],
-                            'member_id': data['invoice']['member_id'],
-                            'guest_numbers': data['invoice']['guest_numbers'],
-                            'member_name': data['invoice']['member_name'],
-                            'member_data': data['invoice']['member_data'],
-                            'current_game': {
-                                'id': data['invoice']['current_game']['id'],
-                                'numbers': data['invoice']['current_game']['numbers'],
-                                'start_time': data['invoice']['current_game']['start_time']
-                            },
-                            'menu_items_old': data['invoice']['menu_items_old'],
-                            'shop_items_old': data['invoice']['shop_items_old'],
-                            'menu_items_new': [],
-                            'shop_items_new': [],
-                            'games': data['invoice']['games'],
-                            'total_price': data['invoice']['total_price'],
-                            'discount': data['invoice']['discount'],
-                            'tip': data['invoice']['tip'],
-                            "cash_amount": Number(data['invoice']['cash_amount']),
-                            "pos_amount": Number(data['invoice']['pos_amount']),
-                            'total_credit': data['invoice']['total_credit'],
-                            'used_credit': data['invoice']['used_credit'],
-                            'branch_id': $rootScope.user_data.branch,
-                            'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
-                        };
-                        $scope.openViewInvoiceModal();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
-                });
         };
 
 
@@ -1712,7 +1600,6 @@ angular.module("dashboard")
                 }, function (error) {
                     $scope.disable_print_after_save_all_buttons = false;
                     $scope.error_message = 500;
-                    $scope.closeTimeCalcModal();
                     $scope.openErrorModal();
                 });
         };

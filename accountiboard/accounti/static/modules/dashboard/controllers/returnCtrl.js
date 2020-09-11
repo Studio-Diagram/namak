@@ -32,6 +32,10 @@ angular.module("dashboard")
             $scope.get_stocks_data();
         };
 
+        $scope.delete_product_row = function (product_index) {
+            $scope.new_invoice_return_data.return_products.splice(product_index, 1);
+        };
+
         $scope.set_today_for_invoice = function () {
             jQuery.noConflict();
             (function ($) {
@@ -52,27 +56,6 @@ angular.module("dashboard")
                 'description': ''
             });
         };
-
-        $scope.get_last_buy_price = function (shop_product_id) {
-            var sending_data = {
-                'shop_product_id': shop_product_id,
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.getLastBuyPrice(sending_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.new_invoice_return_data.buy_price = data['last_buy_price'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
-        };
-
 
         $scope.get_shop_products = function () {
             dashboardHttpRequest.getShopProducts($rootScope.user_data)
@@ -300,12 +283,16 @@ angular.module("dashboard")
                 'id': 0,
                 'factor_number': 0,
                 'supplier_id': 0,
-                'shop_id': '',
-                'numbers': 0,
-                'buy_price': 0,
-                'return_type': '',
-                'description': '',
+                'return_products': [
+                    {
+                        'shop_id': '',
+                        'numbers': 0,
+                        'buy_price': 0,
+                        'description': ''
+                    }
+                ],
                 'date': '',
+                'return_type': '',
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
                 'banking_id':'',

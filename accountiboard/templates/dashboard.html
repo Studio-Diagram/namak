@@ -37,10 +37,8 @@
         <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/menuCategoryCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/menuItemCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/menuCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/boardgameCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/salonCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/accountManagerCtrl.js' %}"></script>
@@ -50,17 +48,21 @@
         <script src="{% static 'modules/dashboard/controllers/supplierCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/supplierDetailCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/returnCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/statusCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/expenseCategoryCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/reservationCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/closeOpenCashDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/settledInvoiceModalCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/lotteryCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/printerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/reportsCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/bankingCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/stocksCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/cashDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/addMemberDirectiveCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/branchDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/gameBranchDetailCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -273,7 +275,7 @@
                 نرم افزار مدیریت کافه
             </span>
                 <span class="namakVersion">
-                    v1.0.21
+                    v1.0.22
                 </span>
             </a>
             <nav class=" nav flex-column myNav">
@@ -292,34 +294,27 @@
                     <li class="nav-item">
                         <a ui-sref="reservation"
                            ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
-                           class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                           class="nav-link"><i class="fas fa-phone"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
                         <a ui-sref="member_manager.member" href=""
                            ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-id-card"></i>عضویت</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a ui-sref="boardgame" href=""
-                           ng-class="isActive('/boardgame') ? 'nav-link active' : 'nav-link'"><i class="fas
-                           fa-chess"></i>قفسه بازی‌ها</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
+                                class="fas fa-smile-wink"></i>مشتریان</a>
                     </li>
                     <li class="nav-item">
                         <a ui-sref="account_manager.buy" href=""
                            ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
-                           fa-chess"></i>حسابداری</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
+                           fa-calculator"></i>حسابداری</a>
                     </li>
                     <li class="nav-item" class="nav-link">
-                        <a ui-sref="manager.addEmployee"
-                           ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-cogs"></i>مدیریت</a>
+                        <a ui-sref="branch_management.details"
+                           ng-class="isActive('/branch') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-code-branch"></i>مدیریت شعبه</a>
+                    </li>
+                    <li class="nav-item" class="nav-link">
+                        <a ui-sref="cafe_management.employee"
+                           ng-class="isActive('/cafe') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-store"></i>مدیریت کافه</a>
                     </li>
                 </ul>
             </nav>

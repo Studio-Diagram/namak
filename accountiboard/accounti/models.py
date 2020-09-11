@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
-# from django.contrib.postgres.fields import JSONField
 from django.db.models import JSONField
 from django.utils import timezone
 from uuid import uuid4
@@ -163,31 +162,6 @@ class MenuItem(models.Model):
     price = models.CharField(max_length=30, null=True, blank=True)
     is_delete = models.SmallIntegerField(default=0, null=False)
     menu_category = models.ForeignKey(MenuCategory, null=True, blank=False, on_delete=models.CASCADE)
-
-
-class Boardgame(models.Model):
-    CATEGORY = (
-        ('HEAVY', 'استراتژی سنگین'),
-        ('LIGHT', 'استراتژی سبک'),
-        ('FAMILY', 'خانواده و مهمانی'),
-        ('ABSTRACT', 'استراتژی انتزاعی'),
-    )
-    name = models.CharField(max_length=255, null=False)
-    category = models.CharField(max_length=50, choices=CATEGORY, blank=False, null=False)
-    min_players = models.IntegerField(null=False)
-    max_players = models.IntegerField(null=False)
-    best_players = models.IntegerField(null=False)
-    rate = models.FloatField(null=True, default=5)
-    learning_time = models.IntegerField(null=False)
-    duration = models.IntegerField(null=False)
-    image = models.ImageField(null=False)
-    image_name = models.CharField(max_length=500, null=True, default="default.jpg")
-    description = models.TextField()
-    bgg_code = models.IntegerField(null=False)
-    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
 
 
 class Member(models.Model):
@@ -699,11 +673,11 @@ class Transaction(models.Model):
     token = models.CharField(max_length=1020, null=False, blank=False)
     amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
     mobile = models.CharField(max_length=20, null=True, blank=True)
-    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
+    factor_number = models.UUIDField(default=uuid4, blank=False, null=False)
     description = models.CharField(max_length=1275, null=True, blank=True)
     redirect = models.CharField(max_length=1020, null=True, blank=True)
-    cardNumber = models.CharField(max_length=25, null=True, blank=True)
-    transId = models.CharField(max_length=100, null=True, blank=True)
+    card_number = models.CharField(max_length=25, null=True, blank=True)
+    trans_id = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=255, null=True, blank=True)
 
 
@@ -740,7 +714,7 @@ class LatestNews(models.Model):
     title = models.CharField(max_length=300, blank=False, null=False)
     text = models.CharField(max_length=4000, blank=False, null=False)
     link = models.CharField(max_length=300, blank=True, null=True)
-    datetime = models.DateTimeField(default=timezone.now)
+    created_time = models.DateTimeField(default=timezone.now)
 
 
 class BugReport(models.Model):

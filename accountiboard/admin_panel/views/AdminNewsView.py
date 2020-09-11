@@ -24,7 +24,7 @@ class AdminNewsView(View):
                     'news_title': news.title,
                     'news_text': news.text,
                     'news_link': news.link,
-                    'news_datetime': news.datetime.strftime("%m/%d/%Y, %H:%M:%S"),
+                    'news_datetime': news.created_time.strftime("%m/%d/%Y, %H:%M:%S"),
                 }
             )
          

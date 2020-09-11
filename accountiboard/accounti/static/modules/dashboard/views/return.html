@@ -98,20 +98,17 @@
                                 <table class="invoiceTable invoiceItem">
                                     <tbody>
                                     <tr>
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first"></th>
                                         <th class="first">#</th>
                                         <th style="width: 30%" class="second">محصول</th>
                                         <th class="fifth">تعداد</th>
                                         <th style="width: 25%;" class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="return_product in new_invoice_return_data.return_products">
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
+                                        <th class="first"><a href="" ng-click="delete_product_row($index)"><i class="fa fa-trash"></i></a></th>
                                         <td>{{ 1 | persianNumber }}</td>
                                         <td>
-                                            <ui-select ng-change="get_last_buy_price(return_product.shop_id)"
-                                                       ng-model="return_product.shop_id">
+                                            <ui-select ng-model="return_product.shop_id">
                                                 <ui-select-match placeholder="انتخاب محصول">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
@@ -121,8 +118,7 @@
                                             </ui-select>
 
                                         </td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
-                                                   min="0"
+                                        <td><input class="form-control iranian-number" type="number" min="0"
                                                    ng-model="return_product.numbers"></td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-model="return_product.description"></td>
