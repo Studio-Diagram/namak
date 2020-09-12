@@ -1,0 +1,20 @@
+<div class="row">
+    <main ng-controller="subManagerCtrl" class="col-2 col-xl-2 tableNavigation">
+        <a class="mainButton fullWidthButton mt-3"
+           ui-sref="branch_management.menu.general"
+           ng-class="isActive('/branch/menu/general') ? 'oilBlueButton' : 'grayButton'">
+            منوی کافه
+        </a>
+        <a class="mainButton fullWidthButton mt-3"
+           ui-sref="branch_management.menu.printers"
+           ng-class="isActive('/branch/menu/printers') ? 'oilBlueButton' : 'grayButton'">
+            پرینترها
+        </a>
+    </main>
+    <main class="col-10 col-xl-10">
+        <div class="preloader" ng-show="is_sub_page_loading"></div>
+        <div ng-hide="is_sub_page_loading">
+            <ui-view></ui-view>
+        </div>
+    </main>
+</div>

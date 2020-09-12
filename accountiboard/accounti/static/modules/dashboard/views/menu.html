@@ -1,39 +1,4 @@
 <div ng-controller="menuCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addPrinterModal"
-         tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت پرینتر جدید</h2>
-                    <a class="mainButton redButton" ng-click="close_modal('addPrinterModal')" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="addPrinter()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <h3>اطلاعات پرینتر</h3>
-                        <div class="row">
-                            <div class="col">
-                                <label>نام پرینتر<i class="fas fa-star-of-life"></i></label>
-                                <input ng-model="new_printer_data.name" type="text" aria-label="First name"
-                                       class="form-control" placeholder="نام پرینتر">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-
-                </div>
-            </div>
-        </div>
-    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addMenuCategoryModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -205,8 +170,8 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">نام آیتم</th>
-                                    <th scope="col">قیمت آیتم ( ریال )</th>
-                                    <th scope="col">دسته‌بندی آیتم</th>
+                                    <th scope="col">قیمت</th>
+                                    <th scope="col">دسته‌بندی</th>
                                     <th scope="col"></th>
                                     <th scope="col"></th>
                                 </tr>
@@ -214,8 +179,8 @@
                                 <tbody>
                                 <tr ng-repeat="item in menu_items">
                                     <th scope="row">{{ item.name }}</th>
-                                    <th scope="row">{{ item.price | number | persianNumber }}</th>
-                                    <th scope="row">{{ item.category_name }}</th>
+                                    <td class="priceField">{{ item.price | number | persianNumber }}</td>
+                                    <td>{{ item.category_name }}</td>
                                     <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
                                                                       class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                                     </td>
@@ -248,6 +213,7 @@
                                     <th scope="col"></th>
                                     <th scope="col"></th>
                                     <th scope="col">نام دسته‌بندی</th>
+                                    <th scope="col">پرینتر</th>
                                     <th scope="col"></th>
                                 </tr>
                                 </thead>
@@ -259,8 +225,11 @@
                                     <td class="arrowButton" scope="row">
                                         <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-arrow-down"></i></a>
                                     </td>
-                                    <td style="vertical-align: middle" scope="row">{{ category.name }}</td>
-                                    <td style="vertical-align: middle"><a ng-click="editMenuCategory(category.id)"
+                                    <td scope="row" class="align-middle">{{ category.name }}</td>
+                                    <td class="align-middle" scope="row">
+                                        <span ng-repeat="printer in category.printers" ng-bind="($index + 1 !== category.printers.length) ? printer.name + ' ، ' : printer.name"></span>
+                                    </td>
+                                    <td class="align-middle"><a ng-click="editMenuCategory(category.id)"
                                                                           href=""
                                                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                                     </td>
@@ -270,42 +239,6 @@
 
                         </div>
 
-                    </main>
-                    <main class="col-sm-12 ">
-                        <div class="tableButtons">
-                            <div class="buttonGroup">
-                                <a class="addUser mainButton greenButton" ng-click="open_modal('addPrinterModal')"
-                                   data-toggle="modal"
-                                   data-backdrop="static" data-keyboard="false"><i
-                                        class="fas fa-user-plus"></i> پرینتر جدید</a>
-                            </div>
-                            <div class="buttonGroup">
-                                <form>
-                                    <input ng-keyup="searchMenuCategory()"
-                                           ng-model="searach_data_menu_category.search_word"
-                                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                                </form>
-                            </div>
-                        </div>
-                        <div class="tableWrapper">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">نام پرینتر</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="printer in printers">
-                                    <td style="vertical-align: middle" scope="row">{{ printer.printer_name }}</td>
-                                    <td style="vertical-align: middle"><a ng-click="editPrinter(printer.printer_id)"
-                                                                          href=""
-                                                                          class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </main>
                 </div>
             </div>

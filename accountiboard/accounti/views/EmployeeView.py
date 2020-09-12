@@ -284,17 +284,16 @@ class GetMenuCategoriesView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']})
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data['branch']
-
+    def get(self, request, branch_id, *args, **kwargs):
         all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
-        menu_categories = []
-        for category in all_menu_categories:
-            menu_categories.append({
-                "id": category.pk,
-                "name": category.name,
-            })
+        menu_categories = [{
+            'id': menu_category.pk,
+            'name': menu_category.name,
+            'printers': [{
+                'id': printer.pk,
+                'name': printer.printer.name
+            } for printer in PrinterToCategory.objects.filter(menu_category=menu_category)]
+        } for menu_category in all_menu_categories]
         return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
 
 

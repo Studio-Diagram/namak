@@ -92,11 +92,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'getMenuCategories': function (data) {
+            'getMenuCategories': function (branch_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/getMenuCategories/",
-                    'data': data
+                    'method': "GET",
+                    'url': "/api/getMenuCategories/" + branch_id + "/"
                 });
             },
             'getPrinters': function (data) {

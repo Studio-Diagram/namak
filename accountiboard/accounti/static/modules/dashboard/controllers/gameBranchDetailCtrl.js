@@ -44,7 +44,6 @@ angular.module("dashboard")
         };
 
         $scope.setDefaultData = function (data) {
-            console.log(data.game_data[0].price_per_hour);
             $scope.game_branch_data.guest_pricing = data.guest_pricing;
             $scope.game_branch_data.min_paid_price = data.min_paid_price;
             $scope.game_branch_data.game_data = angular.copy(data.game_data);

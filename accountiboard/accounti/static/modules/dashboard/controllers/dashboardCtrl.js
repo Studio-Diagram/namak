@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $auth, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
             var initialize = function () {
                 $rootScope.is_page_loading = true;
+                $rootScope.is_sub_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
                 if (localStorage.user && localStorage.branch && localStorage.branches && localStorage.user_roles) {
                     if (!$scope.isAuthenticated()) {

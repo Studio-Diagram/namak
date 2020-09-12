@@ -36,10 +36,20 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
-    var menu = {
+    var menu_manager = {
         name: 'branch_management.menu',
         url: '/menu',
+        templateUrl: 'static/modules/dashboard/views/menu_manager.html'
+    };
+    var menu_general = {
+        name: 'branch_management.menu.general',
+        url: '/general',
         templateUrl: 'static/modules/dashboard/views/menu.html'
+    };
+    var menu_printers = {
+        name: 'branch_management.menu.printers',
+        url: '/printers',
+        templateUrl: 'static/modules/dashboard/views/printers.html'
     };
     var branch_details = {
         name: 'branch_management.details',
@@ -227,7 +237,9 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(cafe_management);
     $stateProvider.state(branch_management);
     $stateProvider.state(employee);
-    $stateProvider.state(menu);
+    $stateProvider.state(menu_manager);
+    $stateProvider.state(menu_general);
+    $stateProvider.state(menu_printers);
     $stateProvider.state(branch_details);
     $stateProvider.state(game_branch_details);
     $stateProvider.state(member);
