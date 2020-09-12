@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth) {
         var initialize = function () {
             $scope.is_in_edit_mode = false;
+            $scope.deleting_invoice_id = 0;
             $scope.current_menu_nav = "MENU";
             $scope.invoice_delete_description = "";
             $scope.disable_print_after_save_all_buttons = false;
@@ -90,7 +91,6 @@ angular.module("dashboard")
                     $scope.closePayModal();
                     $scope.closeDeleteModal();
                     $scope.closeErrorModal();
-                    $scope.closeDeleteInvoiceModal();
                     $rootScope.close_modal("editSettledInvoicePayment", "viewInvoiceModal");
                     $rootScope.close_modal("viewInvoiceModal");
                 }
@@ -594,7 +594,7 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $('#settle_button').prop("disabled", false);
-                if ($scope.new_invoice_data.current_game.start_time || !$scope.new_invoice_data.invoice_sales_id)
+                if ($scope.new_invoice_data.current_game.start_time)
                     $('#settle_button').prop("disabled", true);
             })(jQuery);
         };
@@ -684,35 +684,23 @@ angular.module("dashboard")
             $scope.read_only_mode = false;
         };
 
-        $scope.openDeleteInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteInvoiceModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeDeleteInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteInvoiceModal').modal('hide');
-                $('#addInvoiceModal').css('z-index', "");
-            })(jQuery);
+        $scope.openDeleteInvoiceModal = function (invoice_id) {
+            $scope.deleting_invoice_id = invoice_id;
+            $rootScope.open_modal('deleteInvoiceModal');
         };
 
         $scope.delete_invoice = function () {
             var sending_data = {
-                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
-                "description": $scope.invoice_delete_description,
-                "username": $rootScope.user_data.username,
-                "branch_id": $rootScope.user_data.branch
+                "invoice_id": $scope.deleting_invoice_id,
+                "description": $scope.invoice_delete_description
             };
             dashboardHttpRequest.deleteInvoiceSale(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.delete_invoice_offline(sending_data);
                         $scope.invoice_delete_description = "";
-                        $scope.closeDeleteInvoiceModal();
+                        $scope.deleting_invoice_id = 0;
+                        $scope.close_modal('deleteInvoiceModal');
                         $scope.closeAddInvoiceModal();
                         $scope.getAllTodayInvoices();
                         if ($rootScope.cash_state === "OLD_CASH_WITH_UNSETTLED_INVOICES") {

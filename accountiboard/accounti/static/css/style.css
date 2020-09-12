@@ -19,6 +19,9 @@
     --mainBody: #eaeff5;
     --white: #fff;
     --okr: #c7af2a;
+    --okrBoarder: #B29E2D;
+    --newGray: #E2E7ED;
+    --newGrayBorder: #C6CACF;
     --grayButtonBorder: #D8D8D8;
     --navBarLineHover: #3DA7B1;
     --oilBlueBorder: #4AA5AD;
@@ -396,6 +399,17 @@ button.yellowButton {
 
 button.yellowButton:hover {
     background: var(--myYellowBorder);
+    color: white;
+    cursor: pointer;
+}
+
+button.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+button.okrButton:hover {
+    background: var(--okrBoarder);
     color: white;
     cursor: pointer;
 }
@@ -1610,15 +1624,27 @@ span.badge.badge-pill.badge-warning {
 }
 
 .tableWrapper span.badge.badge-danger.ng-binding {
-    font-size: 0.85em;
-    padding: 0.8em;
-    background-color: var(--myRed);
+    padding: 8px;
+    background-color: #F2E4E7;
+    color: #DB4E54;
+    font-size: 12px;
+    border: 1px solid #CE4249;
+    font-weight: 400;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .tableWrapper span.badge.badge-success.ng-binding {
-    font-size: 0.85em;
-    padding: 0.8em;
-    background-color: var(--myGreen);
+    font-size: 12px;
+    padding: 8px;
+    background-color: #D6E2CD;
+    font-weight: 400;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .tableWrapper span.badge.badge-warning.ng-binding {
@@ -2488,4 +2514,160 @@ aside.leftAside {
 .cashTable.cashDate td span {
     font-size: 1.2em;
     font-weight: 400;
+}
+
+.invoiceSaleModal {
+    top: 75px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+    background: transparent;
+    border: none;
+}
+
+.invoiceSaleModal .modal-content {
+    background: transparent !important;
+}
+
+.invoiceSaleModal .modal-dialog {
+    background: transparent;
+}
+
+.invoiceSaleModal .modal-body {
+    background-color: var(--mainBody);
+    border: 10px solid var(--myBlack) !important;
+    padding: 0;
+}
+
+.invoiceSaleModal .modal-body .rightSideInvoiceSale {
+    padding-left: 0 !important;
+}
+
+.invoiceSaleModal .modalTitle {
+    font-size: 20px !important;
+    border: none !important;
+    font-weight: 900;
+    color: var(--white);
+}
+
+.invoiceSaleModal .modalHeader {
+    border: none !important;
+}
+
+.modal-backdrop.show {
+    opacity: .75 !important;
+}
+
+.generalInfoInvoiceSale label {
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+.nav-group {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.nav-group button {
+    border-radius: 0;
+    border-left: none;
+    background-color: var(--white);
+    border-color: black;
+    width: 25%;
+    color: var(--myBlack);
+}
+
+.nav-group button.active {
+    color: var(--white);
+    background-color: var(--myBlack);
+}
+
+.nav-group > button:first-child {
+    border-right: 1px solid var(--myBlack);
+    -webkit-border-radius: 0 5px 5px 0;
+    -moz-border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.nav-group > button:last-child {
+    border-left: 1px solid var(--myBlack);
+    -webkit-border-radius: 5px 0 0 5px;
+    -moz-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+.nav-group button:hover {
+    cursor: pointer;
+}
+
+.rightSideInvoiceSale {
+    border-left: 1px solid #C6CACF;
+}
+
+.rightSideInvoiceSale .nav-group {
+    background: var(--white);
+    padding: 14px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.leftSideInvoiceSale {
+    padding: 15px 15px 26px 15px !important;
+}
+
+.tableButtonWrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.tableButtonWrapper a {
+    font-size: 12px !important;
+}
+
+a.newGrayButton {
+    background: var(--newGray);
+    color: var(--myBlack);
+    border-color: var(--newGrayBorder) !important;
+}
+
+a.newGrayButton:hover {
+    background: var(--newGrayBorder);
+    color: var(--myBlack);
+    cursor: pointer;
+}
+
+.searchProductWrapper {
+    padding: 10px 71px 30px 71px;
+}
+
+.searchProductWrapper label {
+    margin-bottom: 5px;
+    font-size: 11px;
+}
+
+.searchProductWrapper input {
+
+}
+
+.productCard {
+    flex: 0 1 50%;
+    background: var(--white);
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+    padding: 10px;
+}
+
+.productsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.productCard:nth-child(-n+2) {
+    border-top: 1px solid #C6CACF;
+}
+
+.productCard:nth-child(2n) {
+    border-left: none;
 }
