@@ -2652,16 +2652,37 @@ a.newGrayButton:hover {
 }
 
 .productCard {
-    flex: 0 1 50%;
+    display: grid;
     background: var(--white);
     border-bottom: 1px solid #C6CACF;
     border-left: 1px solid #C6CACF;
-    padding: 10px;
+    padding: 12px;
+    min-height: 70px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 8px 0;
+}
+
+.productCard span:first-child {
+    grid-column: 1 / 4;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.productCard span:nth-last-child(-n + 2) {
+    font-size: 13px;
+    color: #767A80;
+
+}
+
+.productCard:hover {
+    cursor: pointer;
+    background-color: #C6CACF;
 }
 
 .productsWrapper {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 
 .productCard:nth-child(-n+2) {
