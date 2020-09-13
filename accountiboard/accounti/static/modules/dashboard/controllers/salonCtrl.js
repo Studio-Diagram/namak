@@ -9,6 +9,10 @@ angular.module("dashboard")
             $scope.is_in_edit_mode_invoice = false;
             $scope.first_time_edit_payment_init = true;
             $scope.price_per_hour_person = 100000;
+            $scope.deleting_item = {
+                type: "",
+                id: 0
+            };
             $scope.selected_category = {
                 "items": []
             };
@@ -667,20 +671,16 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.openDeleteModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteItemsModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
+        $scope.openDeleteModal = function (deleting_item_type, deleting_item_id) {
+            $scope.deleting_item = {
+                type: deleting_item_type,
+                id: deleting_item_id
+            };
+            $rootScope.open_modal('deleteItemsModal', 'addInvoiceModal');
         };
 
         $scope.closeDeleteModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteItemsModal').modal('hide');
-                $('#addInvoiceModal').css('z-index', "");
-            })(jQuery);
+            $rootScope.close_modal('deleteItemsModal', 'addInvoiceModal');
             $scope.read_only_mode = false;
         };
 
@@ -719,6 +719,12 @@ angular.module("dashboard")
         };
 
         $scope.delete_items = function () {
+            if ($scope.deleting_item.type === "MENU")
+                $scope.will_delete_items.menu.push($scope.deleting_item.id);
+            else if ($scope.deleting_item.type === "SHOP")
+                $scope.will_delete_items.shop.push($scope.deleting_item.id);
+            else if ($scope.deleting_item.type === "GAME")
+                $scope.will_delete_items.game.push($scope.deleting_item.id);
             dashboardHttpRequest.deleteItems($scope.will_delete_items)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -736,44 +742,6 @@ angular.module("dashboard")
                     $scope.openErrorModal();
                 });
             $scope.closeDeleteModal();
-        };
-
-        $scope.will_delete_items_adder = function (deleted_type, p_id, menu_item_number_and_id) {
-            if (deleted_type === 'shop') {
-                var found = $scope.will_delete_items.shop.findIndex(function (element) {
-                    return element === p_id;
-                });
-                if (found !== -1) {
-                    $scope.will_delete_items.shop.splice(found, 1);
-                }
-                else if (found === -1) {
-                    $scope.will_delete_items.shop.push(p_id);
-                }
-            }
-            else if (deleted_type === 'menu') {
-                var found2 = $scope.will_delete_items.menu.findIndex(function (element) {
-                    return element === p_id;
-                });
-                if (found2 !== -1) {
-                    $scope.will_delete_items.menu.splice(found2, 1);
-                    $scope.will_delete_items.menu_items_number_id.splice(menu_item_number_and_id, 1);
-                }
-                else if (found2 === -1) {
-                    $scope.will_delete_items.menu.push(p_id);
-                    $scope.will_delete_items.menu_items_number_id.push(menu_item_number_and_id);
-                }
-            }
-            else if (deleted_type === 'game') {
-                var found3 = $scope.will_delete_items.game.findIndex(function (element) {
-                    return element === p_id;
-                });
-                if (found3 !== -1) {
-                    $scope.will_delete_items.game.splice(found3, 1);
-                }
-                else if (found3 === -1) {
-                    $scope.will_delete_items.game.push(p_id);
-                }
-            }
         };
 
         $scope.get_shop_products = function () {
@@ -878,12 +846,7 @@ angular.module("dashboard")
         };
 
         $scope.changeMenuNav = function (name) {
-            if (name === "MENU") {
-                $scope.current_menu_nav = name;
-            }
-            else if (name === "SHOP") {
-                $scope.current_menu_nav = name;
-            }
+            $scope.current_menu_nav = name;
         };
 
         $scope.changeItemNumber = function (item_index) {
@@ -1599,8 +1562,7 @@ angular.module("dashboard")
                 'menu': [],
                 'menu_items_number_id': [],
                 'game': [],
-                "message": '',
-                'username': $rootScope.user_data.username
+                "message": ''
             };
         };
 
