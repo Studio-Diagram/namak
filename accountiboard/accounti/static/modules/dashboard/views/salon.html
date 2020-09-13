@@ -311,7 +311,7 @@
                                                ng-model="new_invoice_data.invoice_sales_id" disabled>
                                     </div>
                                 </div>
-                                <table class="invoiceTable invoiceItem">
+                                <table class="invoiceTable invoiceItem newInvoiceSaleTable">
                                     <tbody>
                                     <tr>
                                         <th class="first"></th>
@@ -322,11 +322,11 @@
                                         <th class="sixth">توضیحات</th>
                                     </tr>
                                     <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
-                                        <th class="first">
+                                        <td class="first">
                                             <a ng-click="openDeleteModal('MENU', old_item.id)" style="cursor: pointer">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                        </th>
+                                        </td>
                                         <td>{{ old_item.name }}</td>
                                         <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
                                         <td>{{ old_item.nums | persianNumber }}</td>
@@ -335,11 +335,11 @@
                                     </tr>
 
                                     <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
-                                        <th class="first">
+                                        <td class="first">
                                             <a ng-click="openDeleteModal('SHOP', old_item.id)" style="cursor: pointer">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                        </th>
+                                        </td>
                                         <td>{{ old_item.name }}</td>
                                         <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
                                         <td>{{ old_item.nums | persianNumber }}</td>
@@ -347,11 +347,11 @@
                                         <td>{{ old_item.description }}</td>
                                     </tr>
                                     <tr ng-repeat="game in new_invoice_data.games">
-                                        <th class="first">
+                                        <td class="first">
                                             <a ng-click="openDeleteModal('GAME', game.id)" style="cursor: pointer">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                        </th>
+                                        </td>
                                         <td>بازی {{ game.numbers | persianNumber }} نفره
                                             ( {{ game.start_time | persianNumber }}
                                             تا {{ game.end_time | persianNumber }} )
@@ -362,8 +362,8 @@
                                         <td></td>
                                     </tr>
                                     <tr ng-repeat="new_item in new_invoice_data.menu_items_new">
-                                        <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
-                                                class="fas fa-trash"></i></a></th>
+                                        <td class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
+                                                class="fas fa-trash"></i></a></td>
                                         <td>{{ new_item.name }}</td>
                                         <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
@@ -373,9 +373,9 @@
                                                    ng-model="new_item.description"></td>
                                     </tr>
                                     <tr ng-repeat="new_item in new_invoice_data.shop_items_new">
-                                        <th class="first"><a ng-click="deleteNewItemShop($index)"
+                                        <td class="first"><a ng-click="deleteNewItemShop($index)"
                                                              style="cursor: pointer"><i class="fas fa-trash"></i></a>
-                                        </th>
+                                        </td>
                                         <td>{{ new_item.name }}</td>
                                         <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
                                         <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"

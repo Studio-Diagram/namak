@@ -2811,3 +2811,41 @@ a.newGrayButton:hover {
 .gameCardInfo button {
     grid-column: 1 / 4;
 }
+
+table.newInvoiceSaleTable tbody tr th {
+    background: #EAEFF5 !important;
+}
+
+table.newInvoiceSaleTable tr:first-child td:last-child, table.newInvoiceSaleTable tr:first-child th:last-child {
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    border-top-left-radius: 10px;
+}
+
+element {
+
+}
+
+table.newInvoiceSaleTable tr:first-child td:first-child, table.newInvoiceSaleTable tr:first-child th:first-child {
+
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+table.newInvoiceSaleTable tr td, table.newInvoiceSaleTable tr th {
+    border-left: 1px dotted var(--pageBorder) !important;
+}
+
+table.newInvoiceSaleTable tbody tr .first a {
+    color: #C6CACF;
+    background: #EAEFF5;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+table.newInvoiceSaleTable tbody tr .first {
+
+}
