@@ -22,7 +22,7 @@ urlpatterns = [
     path('api/searchEmployee/', EmployeeView.SearchEmployeeView.as_view()),
     path('api/getEmployee/', EmployeeView.GetEmployeeView.as_view()),
     path('api/getMenuCategory/', EmployeeView.GetMenuCategoryView.as_view()),
-    path('api/getMenuCategories/', EmployeeView.GetMenuCategoriesView.as_view()),
+    path('api/getMenuCategories/<int:branch_id>/', EmployeeView.GetMenuCategoriesView.as_view()),
     path('api/addMenuCategory/', EmployeeView.AddMenuCategoryView.as_view()),
     path('api/searchMenuCategory/', EmployeeView.SearchMenuCategoryView.as_view()),
     path('api/getMenuItem/', EmployeeView.GetMenuItemView.as_view()),

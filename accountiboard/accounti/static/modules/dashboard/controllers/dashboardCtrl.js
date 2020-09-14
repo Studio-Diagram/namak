@@ -27,6 +27,7 @@ angular.module("dashboard")
                     $location.search('token', null);
                 }
                 $rootScope.is_page_loading = true;
+                $rootScope.is_sub_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
                 if (localStorage.user && localStorage.branch && localStorage.branches && localStorage.user_roles) {
                     if (!$scope.isAuthenticated()) {

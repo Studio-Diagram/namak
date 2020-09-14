@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("menuCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
+            $rootScope.is_page_loading = false;
             $scope.new_menu_category_data = {
                 'menu_category_id': 0,
                 'name': '',
@@ -35,14 +36,14 @@ angular.module("dashboard")
             $scope.error_message = "";
 
             $scope.get_menu_item_data($rootScope.user_data);
-            $scope.get_menu_category_data($rootScope.user_data);
+            $scope.get_menu_category_data();
             $scope.get_printers_data();
         };
 
         $scope.get_printers_data = function () {
             dashboardHttpRequest.getPrinters($rootScope.user_data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.printers = data['printers'];
                     }
@@ -51,46 +52,10 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
-        };
-
-        $scope.addPrinter = function () {
-            dashboardHttpRequest.addPrinter($scope.new_printer_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.get_printers_data($rootScope.user_data);
-                        $scope.resetFrom();
-                        $rootScope.close_modal('addPrinterModal');
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $rootScope.open_modal('errorModal', 'addPrinterModal');
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $rootScope.open_modal('errorModal', 'addPrinterModal');
-                });
-        };
-
-        $scope.editPrinter = function (printer_id) {
-            dashboardHttpRequest.getPrinter(printer_id)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.new_printer_data = data['printer'];
-                        $rootScope.open_modal('addPrinterModal');
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
-
         };
 
         $scope.changePrinterCheckBox = function (is_checked, printer_id) {
@@ -103,10 +68,10 @@ angular.module("dashboard")
             }
         };
 
-        $scope.get_menu_category_data = function (data) {
-            dashboardHttpRequest.getMenuCategories(data)
+        $scope.get_menu_category_data = function () {
+            dashboardHttpRequest.getMenuCategories($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.menu_categories = data['menu_categories'];
                     }
@@ -115,7 +80,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -124,7 +89,7 @@ angular.module("dashboard")
         $scope.get_menu_item_data = function (data) {
             dashboardHttpRequest.getMenuItems(data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.menu_items = data['menu_items'];
                     }
@@ -133,7 +98,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -176,7 +141,7 @@ angular.module("dashboard")
             dashboardHttpRequest.addMenuCategory($scope.new_menu_category_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.get_menu_category_data($rootScope.user_data);
+                        $scope.get_menu_category_data();
                         $scope.resetFrom();
                         $scope.closeAddMenuCategoryModal();
                     }
@@ -229,7 +194,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.changeMenuCategoryOrder(sending_data)
                 .then(function (data) {
-                    $scope.get_menu_category_data($rootScope.user_data);
+                    $scope.get_menu_category_data();
                 }, function (error) {
                     $scope.error_message = error;
                     $scope.openErrorModal();
@@ -358,11 +323,6 @@ angular.module("dashboard")
                 'menu_category_id': 0,
                 'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch
-            };
-            $scope.new_printer_data = {
-                'printer_id': 0,
-                'name': '',
-                'branch': $rootScope.user_data.branch
             };
         };
         initialize();
