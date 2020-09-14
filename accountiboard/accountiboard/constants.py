@@ -100,6 +100,9 @@ SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED = "حذف کردن این تا�
 NOT_ENOUGH_IN_SUPPLIER = "از این محصول به تعداد کافی برای این تامین کننده وجود ندارد."
 MENU_CATEGORY_NOT_FOUND = "دسته‌بندی منو یافت نشد"
 
+ALREADY_HAVE_ACTIVE_AND_RESERVE_BUNDLE = "در حال حاضر شما یک اشتراک فعال و رزرو شده دارید. خرید اشتراک بیشتر مقدور نیست"
+DOWNGRADING_BUNDLES_NOT_POSSIBLE = "کاهش اشتراک فعلی مقدور نمی باشد"
+
 USER_TYPE = {
     "cafe_owner": 1,
     "employee": 2

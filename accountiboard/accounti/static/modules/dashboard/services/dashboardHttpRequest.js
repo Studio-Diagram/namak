@@ -1023,6 +1023,40 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'getBundles': function (data) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/bundles/"
+                });
+            },
+            'buyBundle': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/bundles/",
+                    'data': data
+                });
+            },
+            'getAllTransactions': function (data) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/transactions/"
+                });
+            },
+            'payirVerifyGenToken': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/payirverify-gentoken/",
+                    'data': data
+                });
+            },
+            'checkBundleDiscount': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/check-subscription-discount/",
+                    'data': data
+                });
+            },
+
 
         };
         return service;

@@ -143,8 +143,10 @@ urlpatterns = [
     path('api/report/', ReportView.ReportView.as_view()),
 
     path('api/bundles/', BundleView.BundleView.as_view()),
-    path('api/payir/callback/', BundleView.PayirCallbackView.as_view()),
+
     path('api/check-subscription-discount/', BundleView.CheckSubscriptionDiscountView.as_view()),
+    path('api/transactions/', BundleView.TransactionsView.as_view()),
+    path('api/payirverify-gentoken/', BundleView.PayirVerifyGenNewTokenView.as_view()),
 
     path('api/kick_unkick_employee/', EmployeeView.KickUnkickEmployeeView.as_view()),
 

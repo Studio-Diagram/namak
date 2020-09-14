@@ -1,6 +1,31 @@
 angular.module("dashboard")
     .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $auth, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
             var initialize = function () {
+                if ($location.search().status && $location.search().token) {
+                    data = {
+                        "status": $location.search().status,
+                        "token": $location.search().token
+                    };
+                    dashboardHttpRequest.payirVerifyGenToken(data)
+                        .then(function (data) {
+                            $auth.setToken(data['token']);
+                            if (data["bundle_activation_status"] == "activated")
+                                $scope.transaction_successful_activated = true;
+                            else if (data["bundle_activation_status"] == "reserved")
+                                $scope.transaction_successful_reserved = true;
+                            else
+                                $scope.transaction_unsuccessful = true;
+                            jQuery.noConflict();
+                            (function ($) {
+                                $('#transactionResultModal').modal('show');
+                            })(jQuery);
+                        }, function (error) {
+                            $scope.error_message = error;
+                            $scope.openErrorModal();
+                        });
+                    $location.search('status', null);
+                    $location.search('token', null);
+                }
                 $rootScope.is_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
                 if (localStorage.user && localStorage.branch && localStorage.branches && localStorage.user_roles) {

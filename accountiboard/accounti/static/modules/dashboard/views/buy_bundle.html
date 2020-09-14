@@ -1,0 +1,203 @@
+<div ng-controller="buyBundleCtrl">
+
+    <style>
+        .fa-check, .fa-check-circle {
+            color: green;
+        }
+        .fa-times {
+            color: red;
+        }
+
+        .fa-check-circle {
+            margin-top: 2em;
+            font-size: 2em;
+        }
+
+        .plan-month-holder {
+            background-color: white;
+            width: 22em;
+            height: 15em;
+            display: inline-block;
+            margin: 15px;
+            text-align:center;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        h3 {
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+        }
+
+        h2 {
+            text-align:center;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+        }
+
+    </style>
+
+
+
+
+    <div class="modal fade mainModal" id="buyBundleModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 class="modalTitle">خرید اشتراک</h2>
+                    <a ng-click="closeBuyBundleModal()" class="mainButton redButton" href=""
+                       aria-label="Close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                    </a>
+
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+
+                        <center>
+                            <h3 ng-show="plan_type == 'standard_normal'">پلن حرفه ای</h3>
+                            <h3 ng-show="plan_type == 'standard_bg'">پلن بازی</h3>
+                        </center>
+
+                        <div class="plan-month-holder" style="margin-right: 55px" 
+                            ng-click="add_days_to_bundle(30)">
+                            <h2>یک ماهه</h2>
+                            <h3>{{one_month_price | number | persianNumber}} ریال</h3>
+                            <i ng-show="one_month" class="fas fa-check-circle"></i>
+                        </div>
+
+                        <div class="plan-month-holder" 
+                            ng-click="add_days_to_bundle(90)">
+                            <h2>سه ماهه</h2>
+                            <h3>{{three_month_price | number | persianNumber}} ریال</h3>
+                            <i ng-show="three_month" class="fas fa-check-circle"></i>
+                        </div>
+
+                        <div class="plan-month-holder"
+                            ng-click="add_days_to_bundle(365)">
+                            <h2>یک ساله</h2>
+                            <h3>{{twelve_month_price | number | persianNumber}} ریال</h3>
+                            <i ng-show="twelve_month" class="fas fa-check-circle"></i>
+                        </div>
+
+                        <div class="tableWrapper" style="margin-right: 55px">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>اشتراک</th>
+                                    <td>
+                                        <span ng-show="one_month">یک ماهه </span>
+                                        <span ng-show="three_month">سه ماهه </span>
+                                        <span ng-show="twelve_month">یک ساله </span>
+
+                                        <span ng-show="plan_type == 'standard_normal'">حرفه ای</span>
+                                        <span ng-show="plan_type == 'standard_bg'">بازی</span>
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>کد تخفیف</th>
+                                    <td ng-show="!discount_checked || !discount_applied" style="display: inline-flex;">
+                                        <input class="form-control" type="text" ng-maxlength="20"
+                                        ng-disabled="read_only_mode"
+                                        ng-model="entered_discount" style="width: 13em; margin-left: 2em;">
+
+                                        <button ng-click="check_discount()" class="mainButton greenButton">بررسی کد تخفیف</button>
+
+                                        <div ng-show="discount_checked" style="margin-right: 2em;">
+                                            <span ng-show="!discount_applied">کد تخفیف اشتباه است</span>
+                                        </div>
+
+                                        <td ng-show="discount_checked && discount_applied">
+                                            <span>کد تخفیف صحیح است. مقدار تخفیف: {{ discount_amount | number | persianNumber }} ریال</span>
+                                        </td>
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th>مالیات</th>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>قابل پرداخت</th>
+                                    <td>{{ AVAILABLE_BUNDLES[chosen_bundle_plus_days] - discount_amount | number | persianNumber }} ریال</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <center>
+                            <button ng-click="buy_bundle()" class="mainButton greenButton">پرداخت</button>
+                        </center>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="tableWrapper">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>امکانات</th>
+                <th>کافه محلی</th>
+                <th>کافه حرفه ای</th>
+                <th>کافه بازی</th>
+            </tr>
+            <tr>
+                <td>قابلیت قشنگ</td>
+                <td><i class="fas fa-check"></i></td>
+                <td><i class="fas fa-check"></i></td>
+                <td><i class="fas fa-check"></i></td>
+            </tr>
+            <tr>
+
+                <td>قابلیت خفن</td>
+                <td><i class="fas fa-times"></i></td>
+                <td><i class="fas fa-check"></i></td>
+                <td><i class="fas fa-check"></i></td>
+            </tr>
+            <tr>
+
+                <td>قابلیت خیلی خفن</td>
+                <td><i class="fas fa-times"></i></td>
+                <td><i class="fas fa-times"></i></td>
+                <td><i class="fas fa-check"></i></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>رایگان</td>
+                <td><button ng-click="openBuyBundleModal('standard_normal')" class="mainButton greenButton">خرید</button></td>
+                <td><button ng-click="openBuyBundleModal('standard_bg')" class="mainButton greenButton">خرید</button></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+
+</div>

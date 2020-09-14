@@ -63,6 +63,10 @@
         <script src="{% static 'modules/dashboard/controllers/addMemberDirectiveCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchDetailCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/gameBranchDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/namakCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/bundlesCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/buyBundleCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/transactionsCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -117,6 +121,44 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade mainModal alertModal redAlertModal" id="transactionResultModal" data-backdrop="static"
+     data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">نتیجه پرداخت</h2>
+                <a ng-click="closeDeleteModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                   aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <main class="col-sm-12">
+                            <span ng-show="transaction_successful_activated" 
+                                class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی جدید فعال شد
+                            </span>
+                            <span ng-show="transaction_successful_reserved" 
+                                class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی رزرو شد
+                            </span>
+                            <span ng-show="transaction_unsuccessful" 
+                                class="alertText">پرداخت با خطا مواجه شد
+                            </span>
+
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
