@@ -11,6 +11,7 @@ angular.module("dashboard")
             $scope.first_time_edit_payment_init = true;
             $scope.price_per_hour_person = 100000;
             $scope.credit_state = "SHOW_CREDITS";
+            $scope.menu_items_with_categories = [];
             $scope.deleting_item = {
                 type: "",
                 id: 0
@@ -57,8 +58,7 @@ angular.module("dashboard")
                 'used_credit': 0,
                 'credits_data': [],
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
-                'username': $rootScope.user_data.username
+                'cash_id': $rootScope.cash_data.cash_id
             };
 
             $scope.will_delete_items = {
@@ -67,8 +67,7 @@ angular.module("dashboard")
                 'menu': [],
                 'menu_items_number_id': [],
                 'game': [],
-                "message": '',
-                'username': $rootScope.user_data.username
+                "message": ''
             };
 
             $scope.tables_have_invoice = [];
@@ -79,13 +78,11 @@ angular.module("dashboard")
 
             $scope.search_data_menu_item = {
                 'search_word': '',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
 
             $scope.search_data_shop_products = {
-                'search_word': '',
-                'username': $rootScope.user_data.username
+                'search_word': ''
             };
             $scope.check_cash();
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
@@ -100,30 +97,6 @@ angular.module("dashboard")
                     $scope.closeErrorModal();
                     $rootScope.close_modal("editSettledInvoicePayment", "viewInvoiceModal");
                     $rootScope.close_modal("viewInvoiceModal");
-                }
-                if (event.ctrlKey && event.keyCode === 49) {
-
-                }
-                if (event.ctrlKey && event.keyCode === 50) {
-                    $state.go('dashboard.cash_manager.salon');
-                }
-                if (event.ctrlKey && event.keyCode === 51) {
-                    $state.go('dashboard.reservation');
-                }
-                if (event.ctrlKey && event.keyCode === 52) {
-                    $state.go('dashboard.member');
-                }
-                if (event.ctrlKey && event.keyCode === 54) {
-
-                }
-                if (event.ctrlKey && event.keyCode === 55) {
-                    $state.go('dashboard.account_manager.buy');
-                }
-                if (event.ctrlKey && event.keyCode === 56) {
-
-                }
-                if (event.ctrlKey && event.keyCode === 57) {
-                    $state.go('dashboard.manager.addEmployee');
                 }
             }
         };
@@ -160,8 +133,7 @@ angular.module("dashboard")
 
         $scope.check_cash = function () {
             var sending_data = {
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.checkCashExist(sending_data)
                 .then(function (data) {
@@ -193,8 +165,7 @@ angular.module("dashboard")
         $scope.close_cash = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.closeCash(sending_data)
                 .then(function (data) {
@@ -216,8 +187,7 @@ angular.module("dashboard")
         $scope.close_cash_offline = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             offlineAPIHttpRequest.close_cash(sending_data)
                 .then(function (data) {
@@ -276,7 +246,6 @@ angular.module("dashboard")
 
         $scope.open_cash_offline = function (new_cash_id) {
             var sending_data = {
-                "username": $rootScope.user_data.username,
                 "branch": $rootScope.user_data.branch,
                 "cash_server_id": new_cash_id
             };
@@ -297,7 +266,6 @@ angular.module("dashboard")
         $scope.perform_credit = function () {
             $scope.disable_print_after_save_all_buttons = true;
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'invoice_id': $scope.new_invoice_data.invoice_sales_id
             };
             if ($scope.new_invoice_data.total_price > $scope.new_invoice_data.used_credit) {
@@ -329,7 +297,6 @@ angular.module("dashboard")
 
         $scope.edit_settled_invoice_payment = function () {
             var sending_data = {
-                "username": $rootScope.user_data.username,
                 "invoice_data": $scope.editable_invoice
             };
             dashboardHttpRequest.editPaymentInvoiceSale(sending_data)
@@ -375,7 +342,6 @@ angular.module("dashboard")
                 'invoice_id': $scope.new_invoice_data.invoice_sales_id,
                 'cash': $scope.new_invoice_data.cash,
                 'card': $scope.new_invoice_data.card,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.settleInvoiceSale(sending_data)
                 .then(function (data) {
@@ -922,7 +888,6 @@ angular.module("dashboard")
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.getAllTodayInvoices(sending_data)
                 .then(function (data) {
@@ -947,7 +912,6 @@ angular.module("dashboard")
         $scope.getAllInvoiceGames = function (invoice_id) {
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 "invoice_id": parseInt(invoice_id)
             };
             dashboardHttpRequest.getAllInvoiceGames(sending_data)
@@ -969,7 +933,6 @@ angular.module("dashboard")
             $scope.disable_print_after_save_all_buttons = true;
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 "game_id": parseInt(game_id)
             };
             dashboardHttpRequest.endCurrentGame(sending_data)
@@ -1226,7 +1189,6 @@ angular.module("dashboard")
 
         $scope.get_member_data = function (card_number) {
             var data = {
-                'username': $rootScope.user_data.username,
                 'member_id': 0,
                 'card_number': card_number,
                 'branch': $rootScope.user_data.branch
@@ -1313,7 +1275,6 @@ angular.module("dashboard")
             var sending_data = {
                 "invoice_id": invoice_id,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -1345,7 +1306,6 @@ angular.module("dashboard")
                             'credits_data': data['invoice']['credits_data'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
                         };
                         $scope.can_settle_invoice();
                         $scope.openAddInvoiceModal();
@@ -1376,7 +1336,6 @@ angular.module("dashboard")
             var sending_data = {
                 "invoice_id": invoice_id,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -1409,8 +1368,7 @@ angular.module("dashboard")
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
-                            'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
+                            'cash_id': $rootScope.cash_data.cash_id
                         };
                     }
                     else if (data['response_code'] === 3) {
@@ -1427,8 +1385,7 @@ angular.module("dashboard")
             $scope.will_delete_items.invoice_id = invoice_id;
             var sending_data = {
                 "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -1461,8 +1418,7 @@ angular.module("dashboard")
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
-                            'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
+                            'cash_id': $rootScope.cash_data.cash_id
                         };
                         jQuery.noConflict();
                         (function ($) {
@@ -1538,8 +1494,7 @@ angular.module("dashboard")
                 'used_credit': 0,
                 'credits_data': [],
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
-                'username': $rootScope.user_data.username
+                'cash_id': $rootScope.cash_data.cash_id
             };
             $scope.new_invoice_data.table_id = last_table_id;
             $scope.new_invoice_data.table_name = $scope.current_selected_table_name;
@@ -1548,8 +1503,7 @@ angular.module("dashboard")
         $scope.ready_for_settle = function (invoice_id) {
             var sending_data = {
                 "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.readyForSettle(sending_data)
                 .then(function (data) {
