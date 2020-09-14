@@ -168,7 +168,7 @@
                             </ui-select>
                         </div>
                     </div>
-                    <div ng-hide="['INVOICE_SALE'].indexOf(report_data.report_category) !== -1" class="row">
+                    <div ng-hide="['INVOICE_SALE','INVOICE_SALARY'].indexOf(report_data.report_category) !== -1" class="row">
                         <div class="col">
                             <ui-select multiple ng-model="report_data.suppliers">
                                 <ui-select-match placeholder="انتخاب تامین‌کننده‌ها">{{ $item.name }}</ui-select-match>
@@ -179,7 +179,7 @@
                             </ui-select>
                         </div>
                     </div>
-                    <div ng-hide="['INVOICE_SALE', 'INVOICE_PAY', 'INVOICE_RETURN'].indexOf(report_data.report_category) !== -1"
+                    <div ng-hide="['INVOICE_SALE', 'INVOICE_PAY', 'INVOICE_RETURN','INVOICE_SALARY'].indexOf(report_data.report_category) !== -1"
                          class="row">
                         <div class="col">
                             <ui-select search-enabled="false" multiple ng-model="report_data.settlement_types">
@@ -191,6 +191,18 @@
                             </ui-select>
                         </div>
                     </div>
+                    <div ng-hide="['INVOICE_SALE', 'INVOICE_PAY', 'INVOICE_RETURN','INVOICE_PURCHASE','INVOICE_EXPENSE'].indexOf(report_data.report_category) !== -1"
+                    class="row">
+                   <div class="col">
+                       <ui-select search-enabled="false" multiple ng-model="report_data.employees">
+                           <ui-select-match placeholder="انتخاب کارمند">{{ $item.full_name }}</ui-select-match>
+                           <ui-select-choices
+                                   repeat="employee.id as employee in employees | filter: $select.search">
+                               <div ng-bind="employee.full_name"></div>
+                           </ui-select-choices>
+                       </ui-select>
+                   </div>
+                     </div>
                 </form>
                 <div ng-show="reports_result" class="tableWrapper">
                     <table class="table">

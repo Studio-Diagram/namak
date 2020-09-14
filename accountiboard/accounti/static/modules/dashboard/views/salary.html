@@ -168,7 +168,7 @@
 
                                                 <td>{{ 1 | persianNumber }}</td>
                                                 <td>حقوق پایه</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                <td><input  style="font-family: 'B Yekan'"
                                                            class="form-control" type="text"
                                                            ng-model="new_salary_data.base_salary" format></td>
                                                 <td><input class="form-control" type="text" ng-maxlength="60"
@@ -179,7 +179,7 @@
 
                                                 <td>{{ 2| persianNumber }}</td>
                                                 <td>اضافه کار</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                <td><input  style="font-family: 'B Yekan'"
                                                            class="form-control" type="text"
                                                            ng-model="new_salary_data.over_time_pay" format></td>
                                                 <td></td>
@@ -189,8 +189,8 @@
   
                                                 <td>{{ 3 | persianNumber }}</td>
                                                 <td>مزایا</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
-                                                           class="form-control" type="text"
+                                                <td><input  style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text" 
                                                            ng-model="new_salary_data.bonuses" format></td>
                                                 <td><input class="form-control" type="text" ng-maxlength="60"
                                                     ng-model="new_salary_data.bonuses_description"></td>
@@ -200,7 +200,7 @@
 
                                                 <td>{{ 4 | persianNumber }}</td>
                                                 <td>پاداش</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                <td><input  style="font-family: 'B Yekan'"
                                                            class="form-control" type="text"
                                                            ng-model="new_salary_data.benefits" format></td>
                                                 <td></td>
@@ -209,43 +209,41 @@
 
                                                 <td>{{ 5 | persianNumber }}</td>
                                                 <td>کسری</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                                <td><input n style="font-family: 'B Yekan'"
                                                            class="form-control" type="text"
                                                            ng-model="new_salary_data.reduction" format></td>
                                                 <td><input class="form-control" type="text" ng-maxlength="60"
                                                            ng-model="new_salary_data.reduction_description"></td>
                                             </tr>
-                                            <tr >
+                                           
 
-                                                <td>{{ 6 | persianNumber }}</td>
-                                                <td>بیمه</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
-                                                           class="form-control" type="text"
-                                                           ng-model="new_salary_data.insurance" format></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr >
 
-                                                <td>{{ 7 | persianNumber }}</td>
-                                                <td>مالیات</td>
-                                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
-                                                           class="form-control" type="text"
-                                                           ng-model="new_salary_data.tax" format></td>
-                                                <td></td>
-                                            </tr>
         
                                             </tbody>
                                         </table>
 
                                         <table class="invoiceTable invoiceTotal">
                                             <tbody>
-                                            <tr>
+                                                
+                                                <tr>
+                                                    <th>مالیات</th>
+                                                    <td><input  style="font-family: 'B Yekan'"
+                                                        class="form-control" type="text"
+                                                        ng-model="new_salary_data.tax" format></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>بیمه</th>
+                                                    <td><input   style="font-family: 'B Yekan'"
+                                                        class="form-control" type="text"
+                                                        ng-model="new_salary_data.insurance" format></td>
+                                                </tr>
 
-                                            <tr>
-                                                <th>خالص پرداختی</th>
-                                                <td>
-                                                    {{ new_salary_data.total_price | number:fractionSize | persianNumber }}</td>
-                                            </tr>
+                                                <tr>
+                                                    <th>خالص پرداختی</th>
+                                                    <td ng-bind ="new_salary_data.base_salary + new_salary_data.over_time_pay + new_salary_data.benefits + new_salary_data.bonuses - new_salary_data.reduction - new_salary_data.insurance - new_salary_data.tax">
+                                                         <!-- {{ (new_salary_data.base_salary + new_salary_data.over_time_pay + new_salary_data.benefits + new_salary_data.bonuses) -( new_salary_data.reduction + new_salary_data.insurance + new_salary_data.tax) | number:fractionSize | persianNumber }} -->
+                                                        </td> 
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </main>
@@ -306,7 +304,7 @@
                                                 </td>
                                                 <td>
                                                     <small>تاریخ فاکتور</small>
-                                                    <input ng-model="new_salary_data.invoice_date" id="datepicker"
+                                                    <input ng-model="new_salary_data.invoice_date" id="datepicker1"
                                                            class="form-control listFilter tableLefty" placeholder="تاریخ"
                                                            type="text">
                                                 </td>

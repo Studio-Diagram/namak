@@ -90,6 +90,7 @@ PASSWORD_CHANGED = "رمز ورود با موفقیت تغییر یافت"
 DATA_REQUIRE_BRANCH = 'حداقل یکی از شعبه ها را باید انتخاب کنید'
 STOCK_NOT_FOUND = "انبار یافت نشد."
 INVOICE_DELETED = "با موفقیت حذف شد"
+INVOICE_EDITED = "تغییرات اعمال با موفقیت اعمال شد"
 
 
 USER_TYPE = {

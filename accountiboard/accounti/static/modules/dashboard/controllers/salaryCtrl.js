@@ -25,10 +25,20 @@ angular.module("dashboard")
                 
             };
 
-
+            $interval(function(){
+                console.log($scope.new_salary_data)
+            },10000);
             $scope.get_banking_data();
             $scope.get_employees_data($rootScope.user_data);
             $scope.getInvoiceSalaries();
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+
+                    $("#datepicker1").datepicker();
+                    
+                });
+            })(jQuery);
 
 
 
@@ -218,6 +228,7 @@ angular.module("dashboard")
         $scope.closeDeletePermissionModal = function () {
             $scope.deleteing_invoice_id = 0;
             $rootScope.close_modal("deleteInvoicePermissionModal")
+            $scope.resetFrom()
         };
 
 
@@ -230,10 +241,11 @@ angular.module("dashboard")
                             'id': data['invoice']['id'],
                             'factor_number': data['invoice']['factor_number'],
                             'employee_id': data['invoice']['employee_id'],
-                            'settle_type': data['invoice']['settlement_type'],
+                            'settle_type': data['invoice']['settle_type'],
                             'branch_id': $rootScope.user_data.branch,
                             'banking_id': data['invoice']['banking']['id'],
                             'backup_code': data['invoice']['backup_code'],
+                            'invoice_date': data['invoice']['invoice_date'],
 
 
                             'base_salary': data['invoice']['base_salary'],
@@ -253,7 +265,7 @@ angular.module("dashboard")
                             
                         };
                         $scope.open_modal('detailModal');
-
+                        console.log(data['invoice']['settle_type'])
                 
                 }, function (error) {
                     
@@ -262,6 +274,24 @@ angular.module("dashboard")
                 });
         };
 
+        $scope.editSalary= function (){
+            jQuery.noConflict();
+            (function ($) {
+                $scope.new_salary_data.invoice_date = $("#datepicker1").val();
+            })(jQuery);
+            dashboardHttpRequest.editInvoiceSalary($scope.new_salary_data,$scope.new_salary_data.id)
+                .then(function (data) {
+                        $scope.getInvoiceSalaries();
+                        
+                        $scope.resetFrom();
+                        $scope.close_modal('detailModal');
+                    
+                }, function (error) {
+                    
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal', 'detailModal');
+                });
+        };
         initialize();
 
 

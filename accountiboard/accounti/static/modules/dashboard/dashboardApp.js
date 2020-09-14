@@ -151,7 +151,11 @@ myApp.config(function ($stateProvider, $authProvider) {
             "s_types": {
                 dynamic: true,
                 value: null
-            }
+            },
+            "employees":{
+                dynamic: true,
+                value: null
+            },
         },
         templateUrl: 'static/modules/dashboard/views/reports.html'
     };

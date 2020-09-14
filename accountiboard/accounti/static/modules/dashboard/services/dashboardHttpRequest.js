@@ -1062,10 +1062,11 @@ angular.module('dashboard')
                     
                 })
             },
-            'editInvoiceSalary':function(id){
+            'editInvoiceSalary':function(data,id){
                 return this.request({
                     'method':"PUT",
                     'url': "/api/salary/"+ id +"/",
+                    'data':data
                     
                 })
             },
