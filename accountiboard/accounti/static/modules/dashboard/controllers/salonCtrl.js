@@ -55,6 +55,7 @@ angular.module("dashboard")
                 'tip': 0,
                 'total_credit': 0,
                 'used_credit': 0,
+                'credits_data': [],
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username
@@ -1341,6 +1342,7 @@ angular.module("dashboard")
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
                             'username': $rootScope.user_data.username
@@ -1403,6 +1405,7 @@ angular.module("dashboard")
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
@@ -1454,6 +1457,7 @@ angular.module("dashboard")
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
@@ -1532,6 +1536,7 @@ angular.module("dashboard")
                 'tip': 0,
                 'total_credit': 0,
                 'used_credit': 0,
+                'credits_data': [],
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
                 'username': $rootScope.user_data.username

@@ -305,6 +305,7 @@ class GetInvoiceSaleView(View):
             'games': [],
             'used_credit': 0,
             'total_credit': 0,
+            'credits_data': [],
             'cash_amount': invoice_object.cash,
             "pos_amount": invoice_object.pos
         }
@@ -366,11 +367,24 @@ class GetInvoiceSaleView(View):
             invoice_data['used_credit'] = sum_all_used_credit_on_this_invoice['used_price__sum']
 
         if invoice_object.member:
-            total_member_credit = Credit.objects.filter(member=invoice_object.member,
-                                                        expire_time__gte=datetime.now()).aggregate(
+            total_member_credit_objects = Credit.objects.filter(member=invoice_object.member,
+                                                                expire_time__gte=datetime.now())
+            all_credit_types = Credit.CATEGORIES
+            for credit_type in all_credit_types:
+                all_credits_from_type = total_member_credit_objects.filter(credit_categories__exact=[credit_type[0]])
+                sum_all_credit_from_type = all_credits_from_type.aggregate(Sum('total_price')).get('total_price__sum')
+                sum_used_credit_from_type = all_credits_from_type.aggregate(Sum('used_price')).get('used_price__sum')
+                invoice_data.get('credits_data').append({
+                    'type': credit_type[0],
+                    'name': credit_type[1],
+                    'total_price': sum_all_credit_from_type if sum_all_credit_from_type else 0,
+                    'used_price': sum_used_credit_from_type if sum_used_credit_from_type else 0
+                })
+
+            total_member_credit_price = total_member_credit_objects.aggregate(
                 total_credit=(Sum('total_price') - Sum('used_price')))
-            if total_member_credit['total_credit']:
-                invoice_data['total_credit'] = total_member_credit['total_credit']
+            if total_member_credit_price['total_credit']:
+                invoice_data['total_credit'] = total_member_credit_price['total_credit']
 
         return JsonResponse({"response_code": 2, "invoice": invoice_data})
 
@@ -908,7 +922,6 @@ class GetTodayStatusView(View):
         time0am = datetime.time(datetime_object_0am)
 
         yesterday = date.today() - timedelta(1)
-
 
         cash_start_date = cash_obj.created_date_time.date()
         cash_end_date = cash_obj.ended_date_time.date() if cash_obj.ended_date_time else None
