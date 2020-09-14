@@ -46,7 +46,7 @@ angular.module("mainpage")
             mainpageHttpRequest.forgetPassword($scope.user_forget_password_data)
                 .then(function (data) {
                     $scope.form_state.is_loading = false;
-                    $state.go("login");
+                    $state.go("main.login");
                 }, function (error) {
                     $scope.form_state.is_error = true;
                     $scope.form_state.is_loading = false;
