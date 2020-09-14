@@ -909,6 +909,7 @@ class GetTodayStatusView(View):
 
         yesterday = date.today() - timedelta(1)
 
+
         cash_start_date = cash_obj.created_date_time.date()
         cash_end_date = cash_obj.ended_date_time.date() if cash_obj.ended_date_time else None
 

@@ -341,7 +341,59 @@
                                                         class="mainButton grayButton">اعمال اعتبار
                                                 </button>
                                             </div>
-                                            <div ng-if="credit_state === 'ADD_CREDITS'" class="addCredits"></div>
+                                            <div ng-if="credit_state === 'ADD_CREDITS'" class="addCredits">
+                                                <div>
+                                                    <label>مقدار اعتبار<i
+                                                            class="fas fa-star-of-life"></i></label>
+                                                    <input ng-model="new_credit_data.total_credit" type="text"
+                                                           aria-label="Last name"
+                                                           class="form-control" placeholder="مقدار اعتبار"
+                                                           format>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <label>تاریخ شروع<i class="fas fa-star-of-life"></i></label>
+                                                        <input ng-model="new_credit_data.start_date" type="text"
+                                                               class="form-control" placeholder="تاریخ شروع"
+                                                               id="start_credit_date">
+                                                    </div>
+                                                    <div>
+                                                        <label>ساعت شروع<i class="fas fa-star-of-life"></i></label>
+                                                        <input ng-model="new_credit_data.start_time" type="text"
+                                                               class="form-control" placeholder="ساعت شروع"
+                                                               id="start_credit_time">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <label>تاریخ انقضا<i
+                                                                class="fas fa-star-of-life"></i></label>
+                                                        <input ng-model="new_credit_data.expire_date" type="text"
+                                                               class="form-control" placeholder="تاریخ انقضا"
+                                                               id="expire_credit_date">
+                                                    </div>
+                                                    <div>
+                                                        <label>ساعت انقضا<i class="fas fa-star-of-life"></i></label>
+                                                        <input ng-model="new_credit_data.expire_time" type="text"
+                                                               class="form-control" placeholder="ساعت انقضا"
+                                                               id="expire_credit_time">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                                        <select class="form-control"
+                                                                ng-model="new_credit_data.credit_category">
+                                                            <option value="">دسته‌بندی اعتبار را انتخاب کنید
+                                                            </option>
+                                                            <option ng-repeat="credit_category in credit_categories"
+                                                                    ng-value="credit_category.key">{{ credit_category.name }}</option>
+                                                        </select>
+                                                    </div>
+                                                    <button class="mainButton greenButton">ذخیره
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </nav>
