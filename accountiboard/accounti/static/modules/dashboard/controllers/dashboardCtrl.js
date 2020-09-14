@@ -50,28 +50,28 @@ angular.module("dashboard")
 
                 $window.onkeyup = function (event) {
                     if (event.ctrlKey && event.keyCode === 49) {
-                        $state.go('quickAccess');
+                        $state.go('dashboard.quickAccess');
                     }
                     if (event.ctrlKey && event.keyCode === 50) {
-                        $state.go('cash_manager.salon');
+                        $state.go('dashboard.cash_manager.salon');
                     }
                     if (event.ctrlKey && event.keyCode === 51) {
-                        $state.go('reservation');
+                        $state.go('dashboard.reservation');
                     }
                     if (event.ctrlKey && event.keyCode === 52) {
-                        $state.go('member_manager.member');
+                        $state.go('dashboard.member_manager.member');
                     }
                     if (event.ctrlKey && event.keyCode === 54) {
 
                     }
                     if (event.ctrlKey && event.keyCode === 55) {
-                        $state.go('account_manager.buy');
+                        $state.go('dashboard.account_manager.buy');
                     }
                     if (event.ctrlKey && event.keyCode === 56) {
 
                     }
                     if (event.ctrlKey && event.keyCode === 57) {
-                        $state.go('manager.addEmployee');
+                        $state.go('dashboard.manager.addEmployee');
                     }
                 }
             };
@@ -87,7 +87,7 @@ angular.module("dashboard")
                 })(jQuery);
             };
 
-            $scope.isActive = function (path) {
+            $rootScope.isActive = function (path) {
                 return ($location.path().substr(0, path.length) === path);
             };
 
@@ -313,7 +313,7 @@ angular.module("dashboard")
                 $rootScope.selected_branch = selected_branch;
                 $scope.$root.selected_branch = selected_branch;
                 $scope.branch_name = selected_branch.name;
-                $state.go("cash_manager.salon", {}, {reload: true});
+                $state.go("dashboard.cash_manager.salon", {}, {reload: true});
             };
 
             $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {

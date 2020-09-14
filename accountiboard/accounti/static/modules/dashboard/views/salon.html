@@ -239,10 +239,111 @@
                                 </nav>
 
                                 <nav ng-show="current_menu_nav === 'MEMBER'" class="nav flex-column cafeMenuNav">
-                                    <button ng-disabled="disable_print_after_save_all_buttons"
-                                            ng-click="perform_credit()"
-                                            class="mainButton grayButton">اعمال اعتبار
-                                    </button>
+                                    <div ng-if="!new_invoice_data.member_id" class="notMemberState">
+                                        <div class="searchMember">
+                                            <div>
+                                                <label>جستجوی مشتری</label>
+                                                <input class="form-control autoHeight" type="text"
+                                                       ng-model="search_member_data"
+                                                       ng-enter="get_member_data(search_member_data)"
+                                                       placeholder="شماره عضویت / شماره موبایل"
+                                                       select-on-click>
+                                            </div>
+                                            <button class="mainButton greenButton">تایید</button>
+                                        </div>
+                                        <div class="addNewMember">
+                                            <div>
+                                                <div>
+                                                    <label>نام</label>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                </div>
+                                                <div>
+                                                    <label>نام خانوادگی</label>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                </div>
+                                                <div>
+                                                    <label>شماره موبایل</label>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <label>تاریخ تولد</label>
+                                                        <input class="form-control autoHeight" type="text"
+                                                               placeholder=""
+                                                               select-on-click>
+                                                    </div>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                </div>
+                                                <div>
+                                                    <label>نحوه آشنایی</label>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <label>شماره مشتری</label>
+                                                    <input class="form-control autoHeight" type="text"
+                                                           placeholder=""
+                                                           select-on-click>
+                                                </div>
+                                                <button class="mainButton greenButton">ذخیره</button>
+                                            </div>
+                                        </div>
+                                        <div class="staticNameGuest">
+                                            <div>
+                                                <label>نام استاتیک برای مشتری</label>
+                                                <input class="form-control autoHeight" type="text"
+                                                       placeholder=""
+                                                       select-on-click>
+                                            </div>
+                                            <button class="mainButton greenButton">ذخیره</button>
+                                            <small>
+                                                نام استاتیک فقط برای این فاکتور استفاده خواهد شد و در سیستم به عنوان
+                                                مشتری ثبت نمی‌گردد. از این فیلد در صورتی استفاده کنید که نمی‌خواهید
+                                                مشتری در سیستم ثبت شود، اما می‌خواهید فاکتور او نام داشته باشد.
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div ng-if="new_invoice_data.member_id" class="isMemberState">
+                                        <div class="memberName">
+                                            <div>
+                                                <label>مشتری</label>
+                                                <p ng-bind="new_invoice_data.member_name"></p>
+                                            </div>
+                                        </div>
+                                        <div class="creditsMenu">
+                                            <div ng-click="change_credit_menu_state('SHOW_CREDITS')"
+                                                 ng-class="{'active' : credit_state === 'SHOW_CREDITS'}">
+                                                <span>لیست اعتبارها</span>
+                                            </div>
+                                            <div ng-click="change_credit_menu_state('ADD_CREDITS')"
+                                                 ng-class="{'active' : credit_state === 'ADD_CREDITS'}">
+                                                <span>افزودن اعتبار</span>
+                                            </div>
+                                        </div>
+                                        <div class="credits">
+                                            <div ng-if="credit_state === 'SHOW_CREDITS'" class="showCredits">
+                                                <button ng-disabled="disable_print_after_save_all_buttons"
+                                                        ng-click="perform_credit()"
+                                                        class="mainButton grayButton">اعمال اعتبار
+                                                </button>
+                                            </div>
+                                            <div ng-if="credit_state === 'ADD_CREDITS'" class="addCredits"></div>
+                                        </div>
+                                    </div>
                                 </nav>
 
                                 <nav ng-show="current_menu_nav === 'GAME'" class="nav flex-column cafeMenuNav">
@@ -277,7 +378,42 @@
 
 
                                         </div>
-                                        <div class="gameDataTable"></div>
+                                        <div class="gameDataTable">
+                                            <table class="invoiceTable invoiceItem newInvoiceSaleTable">
+                                                <tbody>
+                                                <tr>
+                                                    <th class="second">تعداد بازیکن</th>
+                                                    <th class="third">شروع</th>
+                                                    <th class="forth">پایان</th>
+                                                    <th class="fifth">مدت</th>
+                                                    <th class="sixth"></th>
+                                                </tr>
+
+                                                <tr ng-repeat="game in new_invoice_data.games">
+                                                    <td class="personField" ng-bind="game.numbers | persianNumber"></td>
+                                                    <td ng-bind="game.start_time | persianNumber"></td>
+                                                    <td ng-bind="game.end_time | persianNumber"></td>
+                                                    <td style="direction: ltr"
+                                                        ng-bind="game.points | persianNumber"></td>
+                                                    <td class="priceField"
+                                                        ng-bind="game.total | number| persianNumber"></td>
+                                                </tr>
+                                                <tr ng-if="new_invoice_data.current_game">
+                                                    <td class="personField"
+                                                        ng-bind="new_invoice_data.current_game.numbers | persianNumber"></td>
+                                                    <td ng-bind="new_invoice_data.current_game.start_time | persianNumber"></td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>
+                                                        <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
+                                                                class="mainButton okrButton mediumButton fullWidthButton">
+                                                            پایان زمان بازی
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <div class="gameDataInfo"></div>
                                     </div>
                                 </nav>
@@ -392,17 +528,18 @@
                                         <div ng-if="new_invoice_data.current_game.start_time" class="gameCardInfo">
                                             <div>
                                                 <label>تعداد</label>
-                                                <p ng-bind="new_invoice_data.current_game.numbers"></p>
+                                                <p ng-bind="new_invoice_data.current_game.numbers | persianNumber"></p>
                                             </div>
                                             <div>
                                                 <label>از ساعت</label>
-                                                <p ng-bind="new_invoice_data.current_game.start_time"></p>
+                                                <p ng-bind="new_invoice_data.current_game.start_time | persianNumber"></p>
                                             </div>
                                             <div>
                                                 <label>مدت</label>
-                                                <p>۲۳ دقیقه</p>
+                                                <p>- دقیقه</p>
                                             </div>
-                                            <button class="mainButton okrButton">
+                                            <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
+                                                    class="mainButton mediumButton okrButton">
                                                 پایان زمان بازی
                                             </button>
                                         </div>
@@ -443,9 +580,6 @@
                             </aside>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>

@@ -87,25 +87,25 @@ angular.module("dashboard")
 
                     }
                     if (event.ctrlKey && event.keyCode === 50) {
-                        $state.go('cash_manager.salon');
+                        $state.go('dashboard.cash_manager.salon');
                     }
                     if (event.ctrlKey && event.keyCode === 51) {
-                        $state.go('reservation');
+                        $state.go('dashboard.reservation');
                     }
                     if (event.ctrlKey && event.keyCode === 52) {
-                        $state.go('member');
+                        $state.go('dashboard.member');
                     }
                     if (event.ctrlKey && event.keyCode === 54) {
 
                     }
                     if (event.ctrlKey && event.keyCode === 55) {
-                        $state.go('account_manager.buy');
+                        $state.go('dashboard.account_manager.buy');
                     }
                     if (event.ctrlKey && event.keyCode === 56) {
 
                     }
                     if (event.ctrlKey && event.keyCode === 57) {
-                        $state.go('manager.addEmployee');
+                        $state.go('dashboard.manager.addEmployee');
                     }
                 };
                 $timeout(function () {

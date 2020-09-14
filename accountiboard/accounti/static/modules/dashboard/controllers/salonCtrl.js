@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth) {
         var initialize = function () {
+            $scope.search_member_data = "";
             $scope.is_in_edit_mode = false;
             $scope.deleting_invoice_id = 0;
             $scope.current_menu_nav = "MENU";
@@ -9,6 +10,7 @@ angular.module("dashboard")
             $scope.is_in_edit_mode_invoice = false;
             $scope.first_time_edit_payment_init = true;
             $scope.price_per_hour_person = 100000;
+            $scope.credit_state = "SHOW_CREDITS";
             $scope.deleting_item = {
                 type: "",
                 id: 0
@@ -102,32 +104,36 @@ angular.module("dashboard")
 
                 }
                 if (event.ctrlKey && event.keyCode === 50) {
-                    $state.go('cash_manager.salon');
+                    $state.go('dashboard.cash_manager.salon');
                 }
                 if (event.ctrlKey && event.keyCode === 51) {
-                    $state.go('reservation');
+                    $state.go('dashboard.reservation');
                 }
                 if (event.ctrlKey && event.keyCode === 52) {
-                    $state.go('member');
+                    $state.go('dashboard.member');
                 }
                 if (event.ctrlKey && event.keyCode === 54) {
 
                 }
                 if (event.ctrlKey && event.keyCode === 55) {
-                    $state.go('account_manager.buy');
+                    $state.go('dashboard.account_manager.buy');
                 }
                 if (event.ctrlKey && event.keyCode === 56) {
 
                 }
                 if (event.ctrlKey && event.keyCode === 57) {
-                    $state.go('manager.addEmployee');
+                    $state.go('dashboard.manager.addEmployee');
                 }
             }
         };
 
+        $scope.change_credit_menu_state = function (state_name) {
+            $scope.credit_state = state_name;
+        };
+
         $scope.show_today_invoices = function () {
             $scope.current_selected_table_name = "";
-            $state.go('cash_manager.salon', {table_name: ""}, {
+            $state.go('dashboard.cash_manager.salon', {table_name: ""}, {
                 notify: false,
                 reload: false,
                 location: 'replace',
@@ -168,7 +174,6 @@ angular.module("dashboard")
                         }
                         else if (data['error_mode'] === "OLD_CASH") {
                             $rootScope.cash_state = "OLD_CASH";
-                            $scope.get_status_data();
                             $scope.get_today_cash();
                         }
                         else if (data['error_mode'] === "OLD_CASH_WITH_UNSETTLED_INVOICES") {
@@ -256,7 +261,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.open_cash_offline(data['new_cash_id']);
                         $scope.get_today_cash();
-                        $state.go("cash_manager.salon", {}, {reload: true});
+                        $state.go("dashboard.cash_manager.salon", {}, {reload: true});
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_message'];
@@ -349,6 +354,9 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
                         $scope.new_invoice_data.cash_id = data['cash_id'];
+                        if ($rootScope.cash_state) {
+                            $scope.get_status_data();
+                        }
                         $scope.getAllTodayInvoices();
                     }
                     else if (data['response_code'] === 3) {

@@ -5,7 +5,7 @@
             <div class="buttonGroup">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a ui-sref="account_manager.suppliers">تامین کنندگان</a></li>
+                        <li class="breadcrumb-item"><a ui-sref="dashboard.account_manager.suppliers">تامین کنندگان</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ supplier_name }}</li>
                     </ol>
                 </nav>
@@ -47,28 +47,28 @@
                             <th scope="row">خرید</th>
                             <td>{{ purchase_count | persianNumber }}</td>
                             <td class="redText">{{ sum_purchase | number | persianNumber }} ریال</td>
-                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'buy' })"
+                            <td><a ui-sref="dashboard.account_manager.detail({ supplier: supplier_id, detailState: 'buy' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         <tr>
                             <th scope="row">هزینه</th>
                             <td>{{ expense_count | persianNumber }}</td>
                             <td class="redText">{{ sum_expense | number | persianNumber }} ریال</td>
-                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'expense' })"
+                            <td><a ui-sref="dashboard.account_manager.detail({ supplier: supplier_id, detailState: 'expense' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         <tr>
                             <th scope="row">پرداختی</th>
                             <td>{{ pay_count | persianNumber }}</td>
                             <td class="greenText">{{ sum_settlement | number | persianNumber }} ریال</td>
-                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'pay' })"
+                            <td><a ui-sref="dashboard.account_manager.detail({ supplier: supplier_id, detailState: 'pay' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         <tr>
                             <th scope="row">مرجوعی</th>
                             <td>{{ return_count | persianNumber }}</td>
                             <td class="greenText">{{ sum_return | number | persianNumber }} ریال</td>
-                            <td><a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'return' })"
+                            <td><a ui-sref="dashboard.account_manager.detail({ supplier: supplier_id, detailState: 'return' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
 
@@ -77,7 +77,7 @@
                             <td>{{ amani_sales_count | persianNumber }}</td>
                             <td class="greenText">{{ sum_amani_sales | number | persianNumber }} ریال</td>
                             <td>
-                                <a ui-sref="account_manager.detail({ supplier: supplier_id, detailState: 'amani_sales' })"
+                                <a ui-sref="dashboard.account_manager.detail({ supplier: supplier_id, detailState: 'amani_sales' })"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>

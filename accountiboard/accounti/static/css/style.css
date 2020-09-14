@@ -1110,6 +1110,11 @@ table.cashTable tbody tr td.mainValue span {
     padding: 5px 10px !important;
 }
 
+.mediumButton {
+    font-size: 1em !important;
+    padding: 5px 10px !important;
+}
+
 .tableWrapper .tableName {
     width: 100%;
     margin: 0;
@@ -2494,6 +2499,10 @@ aside.leftAside {
     content: ' ﷼ ';
 }
 
+.personField::after {
+    content: ' نفر ';
+}
+
 .tableWithBorderTopTR tr:last-child {
     border-top: 1px solid var(--grayButtonBorder);
 }
@@ -2759,6 +2768,8 @@ a.newGrayButton:hover {
 
 .gameSectionWrapper {
     padding: 15px;
+    display: grid;
+    grid-gap: 20px 0;
 }
 
 .startGameInputs {
@@ -2799,7 +2810,7 @@ a.newGrayButton:hover {
 .gameCardInfo {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.4fr 1fr;
+    grid-template-rows: 0.4fr 0.6fr;
     align-items: start;
     padding: 10px;
     border: 1px solid #C6CACF;
@@ -2846,6 +2857,112 @@ table.newInvoiceSaleTable tbody tr .first a {
     font-size: 13px;
 }
 
-table.newInvoiceSaleTable tbody tr .first {
+.searchMember > div label {
+    font-size: 11px;
+}
 
+.searchMember {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    padding: 10px 20px 25px 20px;
+    grid-gap: 0 10px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.autoHeight {
+    height: auto !important;
+}
+
+.staticNameGuest {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    padding: 10px 20px 25px 20px;
+    grid-gap: 0 10px;
+}
+
+.staticNameGuest > div label {
+    font-size: 11px;
+}
+
+.staticNameGuest small {
+    color: #767A80;
+    text-align: justify;
+    margin-top: 10px;
+}
+
+.addNewMember {
+    padding: 10px 20px 25px 20px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.addNewMember > div:first-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px 10px;
+}
+
+.addNewMember > div:first-child > div:nth-child(4) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+    grid-column: 1 / 3;
+    grid-gap: 0 10px;
+}
+
+.addNewMember label {
+    font-size: 11px;
+}
+
+.addNewMember > div:nth-child(2) {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    margin-top: 10px;
+    grid-gap: 0 10px;
+}
+
+.memberName > div {
+    padding: 10px 80px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.memberName > div > p {
+    background: #4FCAD5;
+    border-radius: 5px;
+    text-align: center;
+    color: var(--white);
+    font-size: 13px;
+    padding: 10px;
+}
+
+.creditsMenu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.creditsMenu > div:first-child {
+    border-left: 1px solid #C6CACF;
+}
+
+.creditsMenu > div {
+    padding: 10px 0;
+}
+
+.creditsMenu > div.active {
+    background-color: var(--white);
+}
+
+.creditsMenu > div:hover {
+    cursor: pointer;
+    background-color: #C6CACF;
+}
+
+.creditsMenu > div.active:hover {
+    background-color: var(--white);
+    cursor: default;
 }

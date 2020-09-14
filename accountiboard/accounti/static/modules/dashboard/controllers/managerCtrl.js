@@ -6,15 +6,10 @@ angular.module("dashboard")
                 $state.go('manager.tables');
             }
             if ($location.path() === '/account_manager') {
-                $state.go('account_manager.buy');
+                $state.go('dashboard.account_manager.buy');
             }
             $scope.get_today_cash();
         };
-
-        $scope.isActive = function (path) {
-            return ($location.path().substr(0, path.length) === path);
-        };
-
 
         $scope.get_today_cash = function () {
             dashboardHttpRequest.getTodayCash($rootScope.user_data)

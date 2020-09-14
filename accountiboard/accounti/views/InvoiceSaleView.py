@@ -909,9 +909,6 @@ class GetTodayStatusView(View):
 
         yesterday = date.today() - timedelta(1)
 
-        if not branch_id or not cash_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
         cash_start_date = cash_obj.created_date_time.date()
         cash_end_date = cash_obj.ended_date_time.date() if cash_obj.ended_date_time else None
 
