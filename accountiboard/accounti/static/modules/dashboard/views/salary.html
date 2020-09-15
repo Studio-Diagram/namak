@@ -288,7 +288,7 @@
         <div class="row userPageContent">
             <main class="col-sm-12 ">
 
-                <div class="tableWrapper">
+                <!-- <div class="tableWrapper">
                     <table class="table">
                         <thead>
                         <tr>
@@ -318,7 +318,10 @@
                         </tbody>
                     </table>
 
-                </div>
+                </div> -->
+                <table-directive ng-if="salaries" headers="headers['INVOICE_SALARY']"
+                config="invoice_type_configs['INVOICE_SALARY']"
+                rows="salaries" detail-callback="showInvoiceSalary(item_id)"></table-directive>
 
             </main>
 

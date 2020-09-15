@@ -39,6 +39,42 @@ angular.module("dashboard")
                 });
             })(jQuery);
 
+            $scope.headers = {
+
+                INVOICE_SALARY: [
+                    {
+                        name: "شماره فیش",
+                        key: "factor_number"
+                    },
+                    {
+                        name: "نام کارمند",
+                        key: "employee_name"
+                    },
+                    {
+                        name: "خالص پرداختی",
+                        key: "total_price"
+                    },
+                    {
+                        name: "نوع پرداخت",
+                        key: "settle_type"
+                    },
+                    {
+                        name: "بانکداری",
+                        key: "banking"
+                    },
+                    {
+                        name: "تاریخ پرداخت ",
+                        key: "invoice_date"
+                    },
+                ]
+            };
+            $scope.invoice_type_configs = {
+
+                INVOICE_SALARY: {
+                    price_fields: ["price"],
+                    has_detail_button: true
+                }
+            };
 
 
         };
