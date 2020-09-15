@@ -318,7 +318,6 @@ angular.module("dashboard")
             };
 
             $rootScope.open_modal = function (modal_id, modal_has_to_fade_out) {
-                if (modal_id == 'mainErrorModal') $scope.last_modal = modal_has_to_fade_out;
                 jQuery.noConflict();
                 (function ($) {
                     $('#' + modal_id).modal('show');
@@ -341,7 +340,6 @@ angular.module("dashboard")
             };
 
             $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {
-                if (modal_id == 'mainErrorModal') modal_has_to_fade_in = $scope.last_modal;
                 jQuery.noConflict();
                 (function ($) {
                     $('#' + modal_id).modal('hide');
@@ -350,6 +348,34 @@ angular.module("dashboard")
                     jQuery.noConflict();
                     (function ($) {
                         $('#' + modal_has_to_fade_in).css('z-index', "");
+                    })(jQuery);
+                }
+            };
+
+
+
+            $rootScope.open_modalv2 = function (modal_id, modal_has_to_fade_out) {
+                $scope.last_modal = modal_has_to_fade_out;
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_id).modal('show');
+                })(jQuery);
+                if (modal_has_to_fade_out) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('#' + modal_has_to_fade_out).css('z-index', 1000);
+                    })(jQuery);
+                }
+            };
+            $rootScope.close_modalv2 = function (modal_id) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_id).modal('hide');
+                })(jQuery);
+                if ($scope.last_modal) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('#' + $scope.last_modal).css('z-index', "");
                     })(jQuery);
                 }
             };

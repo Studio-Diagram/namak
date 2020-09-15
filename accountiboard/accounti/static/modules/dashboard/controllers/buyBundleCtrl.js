@@ -84,7 +84,7 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $rootScope.error_message = error.data.error_msg;
                     $scope.disable_buy_button = false;
-                    $rootScope.open_modal('mainErrorModal', 'buyBundleModal');
+                    $rootScope.open_modalv2('mainErrorModalv2', 'buyBundleModal');
                 });
         };
 

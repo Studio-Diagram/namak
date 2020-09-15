@@ -17,7 +17,7 @@ angular.module("dashboard")
                 }, function (error) {
                     $rootScope.is_page_loading = false;
                     $rootScope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('mainErrorModal');
+                    $rootScope.open_modalv2('mainErrorModalv2');
                 });
         };
 
