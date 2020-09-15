@@ -26,9 +26,7 @@ angular.module("dashboard")
                 
             };
 
-            $interval(function(){
-                console.log($scope.new_salary_data)
-            },10000);
+
             $scope.get_banking_data();
             $scope.get_employees_data($rootScope.user_data);
             $scope.getInvoiceSalaries();
@@ -36,7 +34,7 @@ angular.module("dashboard")
             (function ($) {
                 $(document).ready(function () {
 
-                    $("#datepicker1").datepicker();
+                    $("#datepicker").datepicker();
                     
                 });
             })(jQuery);
@@ -280,7 +278,7 @@ angular.module("dashboard")
         $scope.editSalary= function (){
             jQuery.noConflict();
             (function ($) {
-                $scope.new_salary_data.invoice_date = $("#datepicker1").val();
+                $scope.new_salary_data.invoice_date = $("#datepicker").val();
             })(jQuery);
             dashboardHttpRequest.editInvoiceSalary($scope.new_salary_data,$scope.new_salary_data.id)
                 .then(function (data) {
