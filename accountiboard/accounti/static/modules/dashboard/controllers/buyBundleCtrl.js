@@ -51,10 +51,11 @@ angular.module("dashboard")
 
 
         $scope.buy_bundle = function () {
+            $scope.disable_buy_button = true;
             var data = {
-                "bundle": $scope.chosen_bundle_plus_days
+                "bundle": $scope.chosen_bundle_plus_days,
+                "discount_code": $scope.entered_discount
             };
-            if ($scope.entered_discount) data.discount_code = $scope.entered_discount;
 
             dashboardHttpRequest.buyBundle(data)
                 .then(function (data) {

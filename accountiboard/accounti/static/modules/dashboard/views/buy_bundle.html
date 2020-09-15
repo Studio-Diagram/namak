@@ -136,7 +136,10 @@
                         </div>
 
                         <center>
-                            <button ng-click="buy_bundle()" class="mainButton greenButton">پرداخت</button>
+                            <button 
+                                ng-click="buy_bundle()" 
+                                ng-disabled="disable_buy_button" 
+                                class="mainButton greenButton">پرداخت</button>
                         </center>
 
                     </div>
