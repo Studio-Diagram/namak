@@ -78,10 +78,12 @@ angular.module("dashboard")
           
 
         };
+
         $scope.change_total_price = function () {
             $scope.new_salary_data.total_price = 0;
             $scope.new_salary_data.total_price = Number($scope.new_salary_data.base_salary) + Number($scope.new_salary_data.over_time_pay) + Number($scope.new_salary_data.benefits) + Number($scope.new_salary_data.bonuses) - Number($scope.new_salary_data.reduction) - Number($scope.new_salary_data.insurance) - Number($scope.new_salary_data.tax);
         };
+
         $scope.get_employees_data = function (data) {
             dashboardHttpRequest.getEmployees(data)
                 .then(function (data) {
@@ -99,6 +101,7 @@ angular.module("dashboard")
                     $scope.openErrorModal();
                 });
         };
+        
         $scope.set_today_for_invoice = function () {
             jQuery.noConflict();
             (function ($) {
@@ -224,23 +227,6 @@ angular.module("dashboard")
                 });
         };
 
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
-        };
-
         $scope.delete_invoice_salary = function (invoice_id) {
 
             dashboardHttpRequest.deleteInvoiceSalary(invoice_id)
@@ -265,7 +251,6 @@ angular.module("dashboard")
             $rootScope.close_modal("deleteInvoicePermissionModal")
             $scope.resetFrom()
         };
-
 
         $scope.showInvoiceSalary = function (invoice_id) {
 
@@ -330,6 +315,7 @@ angular.module("dashboard")
                     $rootScope.open_modal('errorModal', 'addModal');
                 });
         };
+
         initialize();
 
 
