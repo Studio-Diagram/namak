@@ -5,66 +5,59 @@ angular.module("dashboard")
             $scope.discount_amount = 0;
 
             $scope.AVAILABLE_BUNDLES = {
-                "STANDARDNORMAL_30" :  100_000,
-                "STANDARDNORMAL_90" :  300_000,
-                "STANDARDNORMAL_365" : 1_000_000,
-
-                "STANDARDBG_30" :  100_000,
-                "STANDARDBG_90" :  300_000,
-                "STANDARDBG_365" : 1_000_000,
-
-                "ENTERPRISE_30" :  200_000,
-                "ENTERPRISE_90" :  500_000,
-                "ENTERPRISE_365" : 2_000_000,
+                "STANDARDNORMAL": {
+                    30: {
+                        "name": "یک ماهه حرفه ای",
+                        "price": 100_000,
+                    },
+                    90: {
+                        "name": "سه ماهه حرفه ای",
+                        "price": 300_000,
+                    },
+                    365: {
+                        "name": "یک ساله حرفه ای",
+                        "price": 1_000_000,
+                    },
+                },
+                "STANDARDBG": {
+                    30: {
+                        "name": "یک ماهه کافه بازی",
+                        "price": 200_000,
+                    },
+                    90: {
+                        "name": "سه ماهه کافه بازی",
+                        "price": 600_000,
+                    },
+                    365: {
+                        "name": "یک ساله کافه بازی",
+                        "price": 2_000_000,
+                    },
+                },
             };
 
-            $scope.STATE = {
-                "one_month_state" :  {
-                    "one_month": true,
-                    "three_month": false,
-                    "twelve_month": false,
-                },  
-                "three_month_state" :  {
-                    "one_month": false,
-                    "three_month": true,
-                    "twelve_month": false,
-                },
-                "twelve_month_state" : {
-                    "one_month": false,
-                    "three_month": false,
-                    "twelve_month": true,
-                },
-            };
 
         };
 
 
         $scope.openBuyBundleModal = function (plan_type) {
-            $scope.current_state = $scope.STATE.one_month_state;
+            $scope.current_days_selection = 30;
             $scope.entered_discount = "";
             $scope.discount_checked = false;
             $scope.discount_applied = false;
             $scope.discount_amount = 0;
 
             switch (plan_type) {
-                case 'standard_normal':
-                    $scope.plan_type = 'standard_normal';
-                    $scope.chosen_bundle = "STANDARDNORMAL_";
-                    $scope.chosen_bundle_plus_days = "STANDARDNORMAL_30";
-                    $scope.one_month_price = $scope.AVAILABLE_BUNDLES.STANDARDNORMAL_30;
-                    $scope.three_month_price = $scope.AVAILABLE_BUNDLES.STANDARDNORMAL_90;
-                    $scope.twelve_month_price = $scope.AVAILABLE_BUNDLES.STANDARDNORMAL_365;
+                case 'STANDARDNORMAL':
+                    $scope.plan_type = 'STANDARDNORMAL';
+                    $scope.current_bundle_selection = $scope.AVAILABLE_BUNDLES['STANDARDNORMAL'][30]
                     break;
-                case 'standard_bg':
-                    $scope.plan_type = 'standard_bg';
-                    $scope.chosen_bundle = "STANDARDBG_";
-                    $scope.chosen_bundle_plus_days = "STANDARDBG_30";
-                    $scope.one_month_price = $scope.AVAILABLE_BUNDLES.STANDARDBG_30;
-                    $scope.three_month_price = $scope.AVAILABLE_BUNDLES.STANDARDBG_90;
-                    $scope.twelve_month_price = $scope.AVAILABLE_BUNDLES.STANDARDBG_365;
+                case 'STANDARDBG':
+                    $scope.plan_type = 'STANDARDBG';
+                    $scope.current_bundle_selection = $scope.AVAILABLE_BUNDLES['STANDARDBG'][30]
                     break;
             }
 
+            $scope.chosen_bundle_plus_days = $scope.plan_type + "_" + $scope.current_days_selection;
             $rootScope.open_modal('buyBundleModal');
 
         };
@@ -84,6 +77,7 @@ angular.module("dashboard")
                 }, function (error) {
                     $rootScope.is_page_loading = false;
                     $rootScope.error_message = error.data.error_msg;
+                    $scope.disable_buy_button = false;
                     $rootScope.open_modal('mainErrorModal', 'buyBundleModal');
                 });
         };
@@ -105,17 +99,13 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.add_days_to_bundle = function (days) {
+        $scope.select_bundle = function (days, bundle_data) {
             $scope.discount_checked = false;
             $scope.discount_applied = false;
             $scope.discount_amount = 0;
-
-            if (days == 30) $scope.current_state = $scope.STATE.one_month_state;
-            if (days == 90) $scope.current_state = $scope.STATE.three_month_state;
-            if (days == 365) $scope.current_state = $scope.STATE.twelve_month_state;
-
-            $scope.chosen_bundle_plus_days = $scope.chosen_bundle + days;
-
+            $scope.current_days_selection = days;
+            $scope.current_bundle_selection = bundle_data;
+            $scope.chosen_bundle_plus_days = $scope.plan_type + "_" + days;
         };
 
 
