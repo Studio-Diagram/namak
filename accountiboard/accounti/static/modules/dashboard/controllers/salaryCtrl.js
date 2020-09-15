@@ -3,6 +3,7 @@ angular.module("dashboard")
         var initialize = function () {
             $scope.set_today_for_invoice();
             $scope.error_message = '';
+            $scope.edit_mode = false;
             $scope.new_salary_data = {
                 'id': 0,
                 'factor_number': 0,
@@ -161,7 +162,7 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSalary($scope.new_salary_data,'0')
                 .then(function (data) {
                         $scope.getInvoiceSalaries();
-                        console.log("I'm here")
+                       
                         $scope.resetFrom();
                         $scope.close_modal('addModal');
                     
@@ -233,6 +234,7 @@ angular.module("dashboard")
 
 
         $scope.showInvoiceSalary = function (invoice_id) {
+
             
             dashboardHttpRequest.getInvoiceSalary(invoice_id)
                 .then(function (data) {
@@ -264,8 +266,9 @@ angular.module("dashboard")
                             
                             
                         };
-                        $scope.open_modal('detailModal');
-                        console.log(data['invoice']['settle_type'])
+                        $scope.edit_mode = true;
+                        $scope.open_modal('addModal');
+                        
                 
                 }, function (error) {
                     
@@ -284,12 +287,13 @@ angular.module("dashboard")
                         $scope.getInvoiceSalaries();
                         
                         $scope.resetFrom();
-                        $scope.close_modal('detailModal');
+                        $scope.edit_mode = false;
+                        $scope.close_modal('addModal');
                     
                 }, function (error) {
                     
                     $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal', 'detailModal');
+                    $rootScope.open_modal('errorModal', 'addModal');
                 });
         };
         initialize();
