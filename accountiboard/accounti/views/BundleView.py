@@ -56,7 +56,7 @@ class BundleView(View):
         branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
-
+        pri
         current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
 
         active_bundle = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True)
