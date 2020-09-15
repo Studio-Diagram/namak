@@ -2,7 +2,6 @@ angular.module("dashboard")
     .controller("transactionsCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.get_all_transactions();
-            $rootScope.is_page_loading = false;
         };
 
 
