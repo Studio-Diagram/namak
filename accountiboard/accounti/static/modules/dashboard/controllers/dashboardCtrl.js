@@ -318,6 +318,7 @@ angular.module("dashboard")
             };
 
             $rootScope.open_modal = function (modal_id, modal_has_to_fade_out) {
+                if (modal_id == 'mainErrorModal') $scope.last_modal = modal_has_to_fade_out;
                 jQuery.noConflict();
                 (function ($) {
                     $('#' + modal_id).modal('show');
@@ -340,6 +341,7 @@ angular.module("dashboard")
             };
 
             $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {
+                if (modal_id == 'mainErrorModal') modal_has_to_fade_in = $scope.last_modal;
                 jQuery.noConflict();
                 (function ($) {
                     $('#' + modal_id).modal('hide');
