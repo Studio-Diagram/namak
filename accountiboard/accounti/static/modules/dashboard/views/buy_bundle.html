@@ -101,6 +101,7 @@
                                     </td>
                                     <td ng-show="discount_checked && discount_applied">
                                         <span>کد تخفیف صحیح است. مقدار تخفیف: {{ discount_amount | number | persianNumber }} ریال</span>
+                                        <button ng-click="clear_discount()" class="mainButton redButton">حذف</button>
                                     </td>
 
 

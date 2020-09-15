@@ -108,6 +108,12 @@ angular.module("dashboard")
             $scope.chosen_bundle_plus_days = $scope.plan_type + "_" + days;
         };
 
+        $scope.clear_discount = function () {
+            $scope.discount_checked = false;
+            $scope.discount_applied = false;
+            $scope.discount_amount = 0;
+        }
+
 
         initialize();
     });
