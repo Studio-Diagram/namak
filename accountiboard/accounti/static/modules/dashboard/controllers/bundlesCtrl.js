@@ -2,7 +2,6 @@ angular.module("dashboard")
     .controller("bundlesCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
             $scope.get_bundles();
-            $rootScope.is_page_loading = false;
         };
 
 
