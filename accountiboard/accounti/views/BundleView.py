@@ -51,13 +51,14 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
 
 class BundleView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_ROLES['CAFE_OWNER']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
 
-        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
 
         active_bundle = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True)
         reserved_bundles = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_reserved=True)
@@ -116,7 +117,7 @@ class BundleView(View):
         }, status=200)
 
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_ROLES['CAFE_OWNER']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
     def post(self, request, *args, **kwargs):
@@ -238,7 +239,7 @@ class BundleView(View):
 
 class PayirVerifyGenNewTokenView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_ROLES['CAFE_OWNER']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
     def post(self, request, *args, **kwargs):
@@ -358,7 +359,7 @@ class PayirVerifyGenNewTokenView(View):
 
 class CheckSubscriptionDiscountView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_ROLES['CAFE_OWNER']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
     def post(self, request, *args, **kwargs):
@@ -366,9 +367,10 @@ class CheckSubscriptionDiscountView(View):
         code = rec_data.get('discount_code')
         bundle = rec_data.get('bundle')
         amount = AVAILABLE_BUNDLES[bundle]
-
         payload = request.payload
-        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
 
         discount_applied = False
         discount_msg = 'No discount code was applied.'
@@ -406,13 +408,14 @@ class CheckSubscriptionDiscountView(View):
 
 class TransactionsView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        {USER_ROLES['CAFE_OWNER']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
 
-        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
 
         all_transactions = Transaction.objects.filter(cafe_owner=current_cafe_owner)
 
