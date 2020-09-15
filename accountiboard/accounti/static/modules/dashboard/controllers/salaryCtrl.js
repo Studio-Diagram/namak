@@ -101,7 +101,7 @@ angular.module("dashboard")
                     $scope.openErrorModal();
                 });
         };
-        
+
         $scope.set_today_for_invoice = function () {
             jQuery.noConflict();
             (function ($) {

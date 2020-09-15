@@ -362,7 +362,8 @@ myApp.directive('tableDirective', function () {
             headers: '=',
             rows: '=',
             config: '=',
-            detailCallback: '&'
+            detailCallback: '&',
+            deleteCallback: '&'
         },
         templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
     }

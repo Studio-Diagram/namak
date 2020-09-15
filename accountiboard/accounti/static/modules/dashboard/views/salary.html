@@ -288,40 +288,10 @@
         <div class="row userPageContent">
             <main class="col-sm-12 ">
 
-                <!-- <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">شماره فیش</th>
-                            <th scope="col">نام کارمند</th>
-                            <th scope="col">خالص پرداختی</th>
-                            <th scope="col">نوع پرداخت</th>
-                            <th scope="col">بانکداری</th>
-                            <th scope="col">تاریخ پرداخت</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="salary in salaries">
-                            <td>{{ salary.factor_number | persianNumber }}</td>
-                            <td>{{ salary.employee_name }}</td>
-                            <td class="redText">{{ salary.total_price | number | persianNumber }} ریال</td>
-                            <td>{{ salary.settle_type }}</td>
-                            <td ng-bind="salary.banking ? salary.banking : '-'"></td>
-                            <td>{{ salary.invoice_date | persianNumber }}</td>
-                            <td><a ng-click="showInvoiceSalary(salary.id)" href=""
-                                class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                            <td><a ng-click="openDeletePermissionModal(salary.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div> -->
                 <table-directive ng-if="salaries" headers="headers"
                 config="table_config"
-                rows="salaries" detail-callback="showInvoiceSalary(item_id)" delete-callback="openDeletePermissionModal(item_id)"></table-directive>
+                rows="salaries" detail-callback="showInvoiceSalary(item_id)" 
+                delete-callback="openDeletePermissionModal(item_id)"></table-directive>
 
             </main>
 
