@@ -361,7 +361,7 @@ class CheckSubscriptionDiscountView(View):
         branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        code = rec_data.get('code')
+        code = rec_data.get('discount_code')
         bundle = rec_data.get('bundle')
         amount = AVAILABLE_BUNDLES[bundle]
 

@@ -1,10 +1,7 @@
 angular.module("dashboard")
     .controller("buyBundleCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest) {
         var initialize = function () {
-
             $rootScope.is_page_loading = false;
-
-            $scope.one_month = true;
             $scope.discount_amount = 0;
 
             $scope.AVAILABLE_BUNDLES = {
@@ -19,12 +16,34 @@ angular.module("dashboard")
                 "ENTERPRISE_30" :  200_000,
                 "ENTERPRISE_90" :  500_000,
                 "ENTERPRISE_365" : 2_000_000,
-            }
+            };
+
+            $scope.STATE = {
+                "one_month_state" :  {
+                    "one_month": true,
+                    "three_month": false,
+                    "twelve_month": false,
+                },  
+                "three_month_state" :  {
+                    "one_month": false,
+                    "three_month": true,
+                    "twelve_month": false,
+                },
+                "twelve_month_state" : {
+                    "one_month": false,
+                    "three_month": false,
+                    "twelve_month": true,
+                },
+            };
 
         };
 
 
         $scope.openBuyBundleModal = function (plan_type) {
+            $scope.current_state = $scope.STATE.one_month_state;
+            $scope.entered_discount = "";
+            $scope.discount_checked = false;
+            $scope.discount_applied = false;
 
             switch (plan_type) {
                 case 'standard_normal':
@@ -72,7 +91,7 @@ angular.module("dashboard")
         $scope.check_discount = function () {
             var data = {
                 "bundle": $scope.chosen_bundle_plus_days,
-                "code": $scope.entered_discount
+                "discount_code": $scope.entered_discount
             };
             dashboardHttpRequest.checkBundleDiscount(data)
                 .then(function (data) {
@@ -86,24 +105,11 @@ angular.module("dashboard")
         };
 
         $scope.add_days_to_bundle = function (days) {
-            if (days == 30) {
-                $scope.chosen_bundle_plus_days = $scope.chosen_bundle + "30";
-                $scope.one_month = true;
-                $scope.three_month = false;
-                $scope.twelve_month = false;
-            }
-            if (days == 90) {
-                $scope.chosen_bundle_plus_days = $scope.chosen_bundle + "90";
-                $scope.one_month = false;
-                $scope.three_month = true;
-                $scope.twelve_month = false;
-            }
-            if (days == 365) {
-                $scope.chosen_bundle_plus_days = $scope.chosen_bundle + "365";
-                $scope.one_month = false;
-                $scope.three_month = false;
-                $scope.twelve_month = true;
-            }
+            if (days == 30) $scope.current_state = $scope.STATE.one_month_state;
+            if (days == 90) $scope.current_state = $scope.STATE.three_month_state;
+            if (days == 365) $scope.current_state = $scope.STATE.twelve_month_state;
+
+            $scope.chosen_bundle_plus_days = $scope.chosen_bundle + days;
 
         };
 

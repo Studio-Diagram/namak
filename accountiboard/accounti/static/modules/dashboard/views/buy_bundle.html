@@ -69,21 +69,21 @@
                             ng-click="add_days_to_bundle(30)">
                             <h2>یک ماهه</h2>
                             <h3>{{one_month_price | number | persianNumber}} ریال</h3>
-                            <i ng-show="one_month" class="fas fa-check-circle"></i>
+                            <i ng-show="current_state.one_month" class="fas fa-check-circle"></i>
                         </div>
 
                         <div class="plan-month-holder" 
                             ng-click="add_days_to_bundle(90)">
                             <h2>سه ماهه</h2>
                             <h3>{{three_month_price | number | persianNumber}} ریال</h3>
-                            <i ng-show="three_month" class="fas fa-check-circle"></i>
+                            <i ng-show="current_state.three_month" class="fas fa-check-circle"></i>
                         </div>
 
                         <div class="plan-month-holder"
                             ng-click="add_days_to_bundle(365)">
                             <h2>یک ساله</h2>
                             <h3>{{twelve_month_price | number | persianNumber}} ریال</h3>
-                            <i ng-show="twelve_month" class="fas fa-check-circle"></i>
+                            <i ng-show="current_state.twelve_month" class="fas fa-check-circle"></i>
                         </div>
 
                         <div class="tableWrapper" style="margin-right: 55px">
@@ -92,9 +92,9 @@
                                 <tr>
                                     <th>اشتراک</th>
                                     <td>
-                                        <span ng-show="one_month">یک ماهه </span>
-                                        <span ng-show="three_month">سه ماهه </span>
-                                        <span ng-show="twelve_month">یک ساله </span>
+                                        <span ng-show="current_state.one_month">یک ماهه </span>
+                                        <span ng-show="current_state.three_month">سه ماهه </span>
+                                        <span ng-show="current_state.twelve_month">یک ساله </span>
 
                                         <span ng-show="plan_type == 'standard_normal'">حرفه ای</span>
                                         <span ng-show="plan_type == 'standard_bg'">بازی</span>
@@ -111,15 +111,15 @@
 
                                         <button ng-click="check_discount()" class="mainButton greenButton">بررسی کد تخفیف</button>
 
-                                        <div ng-show="discount_checked" style="margin-right: 2em;">
-                                            <span ng-show="!discount_applied">کد تخفیف اشتباه است</span>
-                                        </div>
-
-                                        <td ng-show="discount_checked && discount_applied">
-                                            <span>کد تخفیف صحیح است. مقدار تخفیف: {{ discount_amount | number | persianNumber }} ریال</span>
-                                        </td>
+                                        <span ng-show="discount_checked && !discount_applied" style="margin-right: 2em;">
+                                            کد تخفیف اشتباه است
+                                        </span>
 
                                     </td>
+                                    <td ng-show="discount_checked && discount_applied">
+                                        <span>کد تخفیف صحیح است. مقدار تخفیف: {{ discount_amount | number | persianNumber }} ریال</span>
+                                    </td>
+
 
                                 </tr>
                                 <tr>
