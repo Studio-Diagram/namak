@@ -100,6 +100,11 @@ SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED = "حذف کردن این تا�
 NOT_ENOUGH_IN_SUPPLIER = "از این محصول به تعداد کافی برای این تامین کننده وجود ندارد."
 MENU_CATEGORY_NOT_FOUND = "دسته‌بندی منو یافت نشد"
 
+ALREADY_HAVE_ACTIVE_AND_RESERVE_BUNDLE = "در حال حاضر شما یک اشتراک فعال و رزرو شده دارید. خرید اشتراک بیشتر مقدور نیست"
+DOWNGRADING_BUNDLES_NOT_POSSIBLE = "کاهش اشتراک فعلی مقدور نمی باشد"
+TRANSACTION_ALREADY_VERIFIED = "این تراکنش قبلا پرداخت شده است"
+TRANSACTION_VERIFICATION_FAILED = "متاسفانه تراکنش شما با خطا مواجه شد. اشتراک انتخاب شده فعال نشد."
+
 USER_TYPE = {
     "cafe_owner": 1,
     "employee": 2
@@ -145,9 +150,9 @@ AVAILABLE_BUNDLES = {
     "STANDARDNORMAL_90" :  300_000,
     "STANDARDNORMAL_365" : 1_000_000,
 
-    "STANDARDBG_30" :  100_000,
-    "STANDARDBG_90" :  300_000,
-    "STANDARDBG_365" : 1_000_000,
+    "STANDARDBG_30" :  200_000,
+    "STANDARDBG_90" :  600_000,
+    "STANDARDBG_365" : 2_000_000,
 
     "ENTERPRISE_30" :  200_000,
     "ENTERPRISE_90" :  500_000,

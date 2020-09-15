@@ -1,0 +1,39 @@
+<div ng-controller="namakCtrl">
+
+    <main class="pageContent container-fluid">
+        <div class="row saloonPageContent">
+            <main class="col-4 col-xl-3 tableNavigation">
+                <div class="row">
+                    <div style="padding: 0 0 0 15px;" class="col-12 mb-3">
+                        <button class="mainButton fullWidthButton"
+                                ng-class="isActive('/cafe/namak/bundles') ? 'oilBlueButton' : 'grayButton'"
+                                ui-sref="cafe_management.namak.bundles">
+                            اشتراک من
+                        </button>
+                    </div>
+					<div style="padding: 0 0 0 15px;" class="col-12 mb-3">
+                        <button class="mainButton fullWidthButton"
+                                ng-class="isActive('/cafe/namak/buy-bundle') ? 'oilBlueButton' : 'grayButton'"
+                                ui-sref="cafe_management.namak.buy_bundle">
+                            خرید اشتراک
+                        </button>
+                    </div>
+					<div style="padding: 0 0 0 15px;" class="col-12 mb-3">
+                        <button class="mainButton fullWidthButton oilBlueButton"
+                                ng-class="isActive('/cafe/namak/transactions') ? 'oilBlueButton' : 'grayButton'"
+                                ui-sref="cafe_management.namak.transactions">
+                            لیست تراکنش ها
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+
+            <div class="col-8 col-xl-9">
+                <ui-view></ui-view>
+            </div>
+
+
+        </div>
+    </main>
+</div>

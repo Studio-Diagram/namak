@@ -234,6 +234,30 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
 
+    var namak = {
+        name: 'cafe_management.namak',
+        url: '/namak',
+        templateUrl: 'static/modules/dashboard/views/namak.html'
+    };
+
+    var bundles = {
+        name: 'cafe_management.namak.bundles',
+        url: '/bundles',
+        templateUrl: 'static/modules/dashboard/views/bundles.html'
+    };
+
+    var buy_bundle = {
+        name: 'cafe_management.namak.buy_bundle',
+        url: '/buy-bundle',
+        templateUrl: 'static/modules/dashboard/views/buy_bundle.html'
+    };
+
+    var transactions = {
+        name: 'cafe_management.namak.transactions',
+        url: '/transactions',
+        templateUrl: 'static/modules/dashboard/views/transactions.html'
+    };
+
     $stateProvider.state(cafe_management);
     $stateProvider.state(branch_management);
     $stateProvider.state(employee);
@@ -267,6 +291,10 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(quick_access);
     $stateProvider.state(banking);
     $stateProvider.state(stocks);
+    $stateProvider.state(namak);
+    $stateProvider.state(bundles);
+    $stateProvider.state(buy_bundle);
+    $stateProvider.state(transactions);
 });
 
 angular.module("dashboard")

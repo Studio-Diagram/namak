@@ -1,6 +1,29 @@
 angular.module("dashboard")
     .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $auth, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
             var initialize = function () {
+                if ($location.search().status && $location.search().token) {
+                    data = {
+                        "status": $location.search().status,
+                        "token": $location.search().token
+                    };
+                    dashboardHttpRequest.payirVerifyGenToken(data)
+                        .then(function (data) {
+                            $auth.setToken(data['token']);
+                            if (data["bundle_activation_status"] == "activated")
+                                $scope.transaction_successful_activated = true;
+                            else if (data["bundle_activation_status"] == "reserved")
+                                $scope.transaction_successful_reserved = true;
+                            else
+                                $scope.transaction_unsuccessful = true;
+
+                            $rootScope.open_modal('transactionResultModal');
+                        }, function (error) {
+                            $scope.error_message = error.data.error_msg;
+                            $rootScope.open_modal('mainErrorModal');
+                        });
+                    $location.search('status', null);
+                    $location.search('token', null);
+                }
                 $rootScope.is_page_loading = true;
                 $rootScope.is_sub_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
@@ -325,6 +348,34 @@ angular.module("dashboard")
                     jQuery.noConflict();
                     (function ($) {
                         $('#' + modal_has_to_fade_in).css('z-index', "");
+                    })(jQuery);
+                }
+            };
+
+
+
+            $rootScope.open_modalv2 = function (modal_id, modal_has_to_fade_out) {
+                $scope.last_modal = modal_has_to_fade_out;
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_id).modal('show');
+                })(jQuery);
+                if (modal_has_to_fade_out) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('#' + modal_has_to_fade_out).css('z-index', 1000);
+                    })(jQuery);
+                }
+            };
+            $rootScope.close_modalv2 = function (modal_id) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_id).modal('hide');
+                })(jQuery);
+                if ($scope.last_modal) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('#' + $scope.last_modal).css('z-index', "");
                     })(jQuery);
                 }
             };
