@@ -126,7 +126,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
     var reports = {
         name: 'account_manager.reports',
-        url: '/reports?type&start&end&branches&suppliers&s_types',
+        url: '/reports?type&start&end&branches&suppliers&s_types&employees',
         params: {
             "type": {
                 dynamic: true,
