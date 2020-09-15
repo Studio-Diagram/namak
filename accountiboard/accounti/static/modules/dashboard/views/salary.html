@@ -319,9 +319,9 @@
                     </table>
 
                 </div> -->
-                <table-directive ng-if="salaries" headers="headers['INVOICE_SALARY']"
-                config="invoice_type_configs['INVOICE_SALARY']"
-                rows="salaries" detail-callback="showInvoiceSalary(item_id)"></table-directive>
+                <table-directive ng-if="salaries" headers="headers"
+                config="table_config"
+                rows="salaries" detail-callback="showInvoiceSalary(item_id)" delete-callback="openDeletePermissionModal(item_id)"></table-directive>
 
             </main>
 

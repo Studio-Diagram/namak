@@ -39,9 +39,9 @@ angular.module("dashboard")
                 });
             })(jQuery);
 
-            $scope.headers = {
+            $scope.headers = [
 
-                INVOICE_SALARY: [
+                
                     {
                         name: "شماره فیش",
                         key: "factor_number"
@@ -66,16 +66,16 @@ angular.module("dashboard")
                         name: "تاریخ پرداخت ",
                         key: "invoice_date"
                     },
-                ]
-            };
-            $scope.invoice_type_configs = {
+                
+                ];
+            
 
-                INVOICE_SALARY: {
+                $scope.table_config ={
                     price_fields: ["price"],
-                    has_detail_button: true
-                }
-            };
-
+                    has_detail_button: true,
+                    has_delete_button: true,
+                };
+          
 
         };
         $scope.change_total_price = function () {

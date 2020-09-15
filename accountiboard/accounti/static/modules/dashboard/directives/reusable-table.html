@@ -5,6 +5,7 @@
             <th scope="col">#</th>
             <th ng-repeat="header in headers" scope="col" ng-bind="header.name"></th>
             <th scope="col" ng-if="config.has_detail_button"></th>
+            <th scope="col" ng-if="config.has_delete_button"></th>
         </tr>
         </thead>
         <tbody>
@@ -17,6 +18,10 @@
             <td scope="col" ng-if="config.has_detail_button">
                 <a ng-click="detailCallback({item_id: item.id})" href=""
                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+            </td>
+            <td scope="col" ng-if="config.has_delete_button">
+                <a ng-click="deleteCallback({item_id: item.id})" href=""
+                   class="mainButton fullWidthButton smallButton grayButton">حذف</a>
             </td>
         </tr>
         </tbody>
