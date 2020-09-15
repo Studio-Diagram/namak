@@ -10,7 +10,6 @@ angular.module("dashboard")
             dashboardHttpRequest.getBundles()
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    console.log(data);
                     $scope.active_bundle = data.active_bundle;
                     $scope.reserved_bundles = data.reserved_bundles;
                     $scope.expired_bundles = data.expired_bundles;
@@ -18,8 +17,8 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 

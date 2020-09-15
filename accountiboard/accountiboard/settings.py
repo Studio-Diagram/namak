@@ -255,7 +255,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 PAY_IR_API_KEY = "test"
-PAY_IR_REDIRECT_URL = "http%3A%2F%2Flocalhost%3A8000%2Fdashboard%23%21%2F"
+PAY_IR_REDIRECT_URL = config.PAY_IR_REDIRECT_URL
 
 # Endpoint for sending requests to get a transaction id.
 PAY_IR_API_URL_SEND = 'https://pay.ir/pg/send'

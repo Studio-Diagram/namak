@@ -21,8 +21,6 @@ angular.module("dashboard")
                 "ENTERPRISE_365" : 2_000_000,
             }
 
-            // $scope.add_days_to_bundle(30);
-
         };
 
 
@@ -47,17 +45,8 @@ angular.module("dashboard")
                     break;
             }
 
-            jQuery.noConflict();
-            (function ($) {
-                $('#buyBundleModal').modal('show');
-            })(jQuery);
-        };
+            $rootScope.open_modal('buyBundleModal');
 
-        $scope.closeBuyBundleModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#buyBundleModal').modal('hide');
-            })(jQuery);
         };
 
 
