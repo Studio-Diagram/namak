@@ -56,7 +56,7 @@ angular.module("mainpage")
             mainpageHttpRequest.registerCafeOwner($scope.new_user)
                 .then(function (data) {
                     $scope.form_state.is_loading = false;
-                    $state.go("login");
+                    $state.go("main.login");
                 }, function (error) {
                     $scope.form_state.is_error = true;
                     $scope.form_state.is_loading = false;

@@ -16,79 +16,83 @@ myApp.directive('ngEnter', function () {
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Bearer';
+    var dashboard = {
+        name: 'dashboard',
+        url: '/dashboard'
+    };
     var cafe_management = {
-        name: 'cafe_management',
+        name: 'dashboard.cafe_management',
         url: '/cafe',
         templateUrl: 'static/modules/dashboard/views/cafe_management.html'
     };
     var branch_management = {
-        name: 'branch_management',
+        name: 'dashboard.branch_management',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch_management.html'
     };
     var employee = {
-        name: 'cafe_management.employee',
+        name: 'dashboard.cafe_management.employee',
         url: '/employee',
         templateUrl: 'static/modules/dashboard/views/add_employee.html'
     };
     var tables = {
-        name: 'branch_management.tables',
+        name: 'dashboard.branch_management.tables',
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
     var menu_manager = {
-        name: 'branch_management.menu',
+        name: 'dashboard.branch_management.menu',
         url: '/menu',
         templateUrl: 'static/modules/dashboard/views/menu_manager.html'
     };
     var menu_general = {
-        name: 'branch_management.menu.general',
+        name: 'dashboard.branch_management.menu.general',
         url: '/general',
         templateUrl: 'static/modules/dashboard/views/menu.html'
     };
     var menu_printers = {
-        name: 'branch_management.menu.printers',
+        name: 'dashboard.branch_management.menu.printers',
         url: '/printers',
         templateUrl: 'static/modules/dashboard/views/printers.html'
     };
     var branch_details = {
-        name: 'branch_management.details',
+        name: 'dashboard.branch_management.details',
         url: '/details',
         templateUrl: 'static/modules/dashboard/views/branch_details.html'
     };
     var game_branch_details = {
-        name: 'branch_management.game_details',
+        name: 'dashboard.branch_management.game_details',
         url: '/game_details',
         templateUrl: 'static/modules/dashboard/views/game_branch_details.html'
     };
     var member_manager = {
-        name: 'member_manager',
+        name: 'dashboard.member_manager',
         url: '/member_manager',
         templateUrl: 'static/modules/dashboard/views/member_manager.html'
     };
     var member = {
-        name: 'member_manager.member',
+        name: 'dashboard.member_manager.member',
         url: '/member',
         templateUrl: 'static/modules/dashboard/views/member.html'
     };
     var lottery = {
-        name: 'member_manager.lottery',
+        name: 'dashboard.member_manager.lottery',
         url: '/lottery',
         templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
 
     var branch = {
-        name: 'cafe_management.branch',
+        name: 'dashboard.cafe_management.branch',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch.html'
     };
     var cash_manager = {
-        name: 'cash_manager',
+        name: 'dashboard.cash_manager',
         url: '/cash_manager',
         templateUrl: 'static/modules/dashboard/views/cash-manager.html'
     };
     var salon = {
-        name: 'cash_manager.salon',
+        name: 'dashboard.cash_manager.salon',
         url: '/salon/:table_name',
         params: {
             "table_name": {
@@ -99,32 +103,32 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
     var account_manager = {
-        name: 'account_manager',
+        name: 'dashboard.account_manager',
         url: '/account_manager',
         templateUrl: 'static/modules/dashboard/views/account-manager.html'
     };
     var buy = {
-        name: 'account_manager.buy',
+        name: 'dashboard.account_manager.buy',
         url: '/buy',
         templateUrl: 'static/modules/dashboard/views/buy.html'
     };
     var pay = {
-        name: 'account_manager.pay',
+        name: 'dashboard.account_manager.pay',
         url: '/pay',
         templateUrl: 'static/modules/dashboard/views/pays.html'
     };
     var expense = {
-        name: 'account_manager.expense',
+        name: 'dashboard.account_manager.expense',
         url: '/expense',
         templateUrl: 'static/modules/dashboard/views/expense.html'
     };
     var suppliers = {
-        name: 'account_manager.suppliers',
+        name: 'dashboard.account_manager.suppliers',
         url: '/suppliers',
         templateUrl: 'static/modules/dashboard/views/suppliers.html'
     };
     var reports = {
-        name: 'account_manager.reports',
+        name: 'dashboard.account_manager.reports',
         url: '/reports?type&start&end&branches&suppliers&s_types',
         params: {
             "type": {
@@ -155,48 +159,48 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/reports.html'
     };
     var supplier = {
-        name: 'account_manager.supplier',
+        name: 'dashboard.account_manager.supplier',
         url: '/supplier/:supplier',
         templateUrl: 'static/modules/dashboard/views/supplier.html'
     };
     var detail = {
-        name: 'account_manager.detail',
+        name: 'dashboard.account_manager.detail',
         url: '/supplier/:detailState/:supplier',
         templateUrl: 'static/modules/dashboard/views/detail.html'
     };
 
     var invoiceReturn = {
-        name: 'account_manager.return',
+        name: 'dashboard.account_manager.return',
         url: '/return',
         templateUrl: 'static/modules/dashboard/views/return.html'
     };
 
     var expenseCategory = {
-        name: 'manager.expenseCat',
+        name: 'dashboard.manager.expenseCat',
         url: '/expenseCat',
         templateUrl: 'static/modules/dashboard/views/expense_category.html'
     };
 
     var reservation = {
-        name: 'reservation',
+        name: 'dashboard.reservation',
         url: '/reservation',
         templateUrl: 'static/modules/dashboard/views/reservation.html'
     };
 
     var open_close_cash = {
-        name: 'account_manager.manage_cash',
+        name: 'dashboard.account_manager.manage_cash',
         url: '/manage_cash',
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
     var open_close_cash_detail = {
-        name: 'account_manager.manage_cash_detail',
+        name: 'dashboard.account_manager.manage_cash_detail',
         url: '/manage_cash/:cash_id',
         templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
     };
 
     var big_cash_detail_view_in_open_close_cash = {
-        name: 'account_manager.manage_cash_detail_big',
+        name: 'dashboard.account_manager.manage_cash_detail_big',
         url: '/manage_cash/:cash_id/detail',
         template: '<cash-detail-directive></cash-detail-directive>',
         params: {
@@ -207,7 +211,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var cash = {
-        name: 'cash_manager.cash',
+        name: 'dashboard.cash_manager.cash',
         url: '/cash/:cash_id',
         template: '<cash-detail-directive></cash-detail-directive>',
         params: {
@@ -218,46 +222,47 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var quick_access = {
-        name: 'quickAccess',
+        name: 'dashboard.quickAccess',
         url: '/quickAccess',
         templateUrl: 'static/modules/dashboard/views/quick-access.html'
     };
 
     var banking = {
-        name: 'cafe_management.banking',
+        name: 'dashboard.cafe_management.banking',
         url: '/banking',
         templateUrl: 'static/modules/dashboard/views/banking.html'
     };
     var stocks = {
-        name: 'cafe_management.stocks',
+        name: 'dashboard.cafe_management.stocks',
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
 
     var namak = {
-        name: 'cafe_management.namak',
+        name: 'dashboard.cafe_management.namak',
         url: '/namak',
         templateUrl: 'static/modules/dashboard/views/namak.html'
     };
 
     var bundles = {
-        name: 'cafe_management.namak.bundles',
+        name: 'dashboard.cafe_management.namak.bundles',
         url: '/bundles',
         templateUrl: 'static/modules/dashboard/views/bundles.html'
     };
 
     var buy_bundle = {
-        name: 'cafe_management.namak.buy_bundle',
+        name: 'dashboard.cafe_management.namak.buy_bundle',
         url: '/buy-bundle',
         templateUrl: 'static/modules/dashboard/views/buy_bundle.html'
     };
 
     var transactions = {
-        name: 'cafe_management.namak.transactions',
+        name: 'dashboard.cafe_management.namak.transactions',
         url: '/transactions',
         templateUrl: 'static/modules/dashboard/views/transactions.html'
     };
 
+    $stateProvider.state(dashboard);
     $stateProvider.state(cafe_management);
     $stateProvider.state(branch_management);
     $stateProvider.state(employee);
@@ -469,3 +474,7 @@ function configureTemplateFactory($provide) {
 }
 
 myApp.config(['$provide', configureTemplateFactory]);
+
+myApp.config(["$locationProvider", function($locationProvider) {
+  $locationProvider.html5Mode(true);
+}]);

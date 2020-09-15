@@ -1,9 +1,9 @@
 <div ng-controller="managerCtrl" class="pageSubMenu">
     <nav class="nav">
-        <a ui-sref="member_manager.member"
-           ng-class="isActive('/member_manager/member') ? 'nav-link active' : 'nav-link'">عضویت</a>
-        <a ui-sref="member_manager.lottery"
-           ng-class="isActive('/member_manager/lottery') ? 'nav-link active' : 'nav-link'">قرعه کشی</a>
+        <a ui-sref="dashboard.member_manager.member"
+           ng-class="isActive('/dashboard/member_manager/member') ? 'nav-link active' : 'nav-link'">عضویت</a>
+        <a ui-sref="dashboard.member_manager.lottery"
+           ng-class="isActive('/dashboard/member_manager/lottery') ? 'nav-link active' : 'nav-link'">قرعه کشی</a>
     </nav>
 </div>
 <div class="preloader" ng-show="is_page_loading"></div>

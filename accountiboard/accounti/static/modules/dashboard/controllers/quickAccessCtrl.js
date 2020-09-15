@@ -355,7 +355,7 @@ angular.module("dashboard")
                         $scope.get_today_cash();
                     }
                     else if (data['response_code'] === 3) {
-                        $state.go('cash_manager.salon');
+                        $state.go('dashboard.cash_manager.salon');
                     }
                 }, function (error) {
                     $scope.error_message = 500;

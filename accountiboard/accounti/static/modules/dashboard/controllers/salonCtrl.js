@@ -1,13 +1,21 @@
 angular.module("dashboard")
     .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth) {
         var initialize = function () {
+            $scope.search_member_data = "";
             $scope.is_in_edit_mode = false;
+            $scope.deleting_invoice_id = 0;
             $scope.current_menu_nav = "MENU";
             $scope.invoice_delete_description = "";
             $scope.disable_print_after_save_all_buttons = false;
             $scope.is_in_edit_mode_invoice = false;
             $scope.first_time_edit_payment_init = true;
             $scope.price_per_hour_person = 100000;
+            $scope.credit_state = "SHOW_CREDITS";
+            $scope.menu_items_with_categories = [];
+            $scope.deleting_item = {
+                type: "",
+                id: 0
+            };
             $scope.selected_category = {
                 "items": []
             };
@@ -48,9 +56,9 @@ angular.module("dashboard")
                 'tip': 0,
                 'total_credit': 0,
                 'used_credit': 0,
+                'credits_data': [],
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
-                'username': $rootScope.user_data.username
+                'cash_id': $rootScope.cash_data.cash_id
             };
 
             $scope.will_delete_items = {
@@ -59,8 +67,7 @@ angular.module("dashboard")
                 'menu': [],
                 'menu_items_number_id': [],
                 'game': [],
-                "message": '',
-                'username': $rootScope.user_data.username
+                "message": ''
             };
 
             $scope.tables_have_invoice = [];
@@ -71,13 +78,11 @@ angular.module("dashboard")
 
             $scope.search_data_menu_item = {
                 'search_word': '',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
 
             $scope.search_data_shop_products = {
-                'search_word': '',
-                'username': $rootScope.user_data.username
+                'search_word': ''
             };
             $scope.check_cash();
             $scope.get_menu_items_with_categories_data($rootScope.user_data);
@@ -90,40 +95,19 @@ angular.module("dashboard")
                     $scope.closePayModal();
                     $scope.closeDeleteModal();
                     $scope.closeErrorModal();
-                    $scope.closeDeleteInvoiceModal();
                     $rootScope.close_modal("editSettledInvoicePayment", "viewInvoiceModal");
                     $rootScope.close_modal("viewInvoiceModal");
-                }
-                if (event.ctrlKey && event.keyCode === 49) {
-
-                }
-                if (event.ctrlKey && event.keyCode === 50) {
-                    $state.go('cash_manager.salon');
-                }
-                if (event.ctrlKey && event.keyCode === 51) {
-                    $state.go('reservation');
-                }
-                if (event.ctrlKey && event.keyCode === 52) {
-                    $state.go('member');
-                }
-                if (event.ctrlKey && event.keyCode === 54) {
-
-                }
-                if (event.ctrlKey && event.keyCode === 55) {
-                    $state.go('account_manager.buy');
-                }
-                if (event.ctrlKey && event.keyCode === 56) {
-
-                }
-                if (event.ctrlKey && event.keyCode === 57) {
-                    $state.go('manager.addEmployee');
                 }
             }
         };
 
+        $scope.change_credit_menu_state = function (state_name) {
+            $scope.credit_state = state_name;
+        };
+
         $scope.show_today_invoices = function () {
             $scope.current_selected_table_name = "";
-            $state.go('cash_manager.salon', {table_name: ""}, {
+            $state.go('dashboard.cash_manager.salon', {table_name: ""}, {
                 notify: false,
                 reload: false,
                 location: 'replace',
@@ -149,8 +133,7 @@ angular.module("dashboard")
 
         $scope.check_cash = function () {
             var sending_data = {
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.checkCashExist(sending_data)
                 .then(function (data) {
@@ -164,7 +147,6 @@ angular.module("dashboard")
                         }
                         else if (data['error_mode'] === "OLD_CASH") {
                             $rootScope.cash_state = "OLD_CASH";
-                            $scope.get_status_data();
                             $scope.get_today_cash();
                         }
                         else if (data['error_mode'] === "OLD_CASH_WITH_UNSETTLED_INVOICES") {
@@ -183,8 +165,7 @@ angular.module("dashboard")
         $scope.close_cash = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.closeCash(sending_data)
                 .then(function (data) {
@@ -206,8 +187,7 @@ angular.module("dashboard")
         $scope.close_cash_offline = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             offlineAPIHttpRequest.close_cash(sending_data)
                 .then(function (data) {
@@ -252,7 +232,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.open_cash_offline(data['new_cash_id']);
                         $scope.get_today_cash();
-                        $state.go("cash_manager.salon", {}, {reload: true});
+                        $state.go("dashboard.cash_manager.salon", {}, {reload: true});
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_message'];
@@ -266,7 +246,6 @@ angular.module("dashboard")
 
         $scope.open_cash_offline = function (new_cash_id) {
             var sending_data = {
-                "username": $rootScope.user_data.username,
                 "branch": $rootScope.user_data.branch,
                 "cash_server_id": new_cash_id
             };
@@ -287,7 +266,6 @@ angular.module("dashboard")
         $scope.perform_credit = function () {
             $scope.disable_print_after_save_all_buttons = true;
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'invoice_id': $scope.new_invoice_data.invoice_sales_id
             };
             if ($scope.new_invoice_data.total_price > $scope.new_invoice_data.used_credit) {
@@ -319,7 +297,6 @@ angular.module("dashboard")
 
         $scope.edit_settled_invoice_payment = function () {
             var sending_data = {
-                "username": $rootScope.user_data.username,
                 "invoice_data": $scope.editable_invoice
             };
             dashboardHttpRequest.editPaymentInvoiceSale(sending_data)
@@ -345,6 +322,9 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
                         $scope.new_invoice_data.cash_id = data['cash_id'];
+                        if ($rootScope.cash_state) {
+                            $scope.get_status_data();
+                        }
                         $scope.getAllTodayInvoices();
                     }
                     else if (data['response_code'] === 3) {
@@ -362,7 +342,6 @@ angular.module("dashboard")
                 'invoice_id': $scope.new_invoice_data.invoice_sales_id,
                 'cash': $scope.new_invoice_data.cash,
                 'card': $scope.new_invoice_data.card,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.settleInvoiceSale(sending_data)
                 .then(function (data) {
@@ -594,7 +573,7 @@ angular.module("dashboard")
             jQuery.noConflict();
             (function ($) {
                 $('#settle_button').prop("disabled", false);
-                if ($scope.new_invoice_data.current_game.start_time || !$scope.new_invoice_data.invoice_sales_id)
+                if ($scope.new_invoice_data.current_game.start_time)
                     $('#settle_button').prop("disabled", true);
             })(jQuery);
         };
@@ -667,52 +646,36 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.openDeleteModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteItemsModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
+        $scope.openDeleteModal = function (deleting_item_type, deleting_item_id) {
+            $scope.deleting_item = {
+                type: deleting_item_type,
+                id: deleting_item_id
+            };
+            $rootScope.open_modal('deleteItemsModal', 'addInvoiceModal');
         };
 
         $scope.closeDeleteModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteItemsModal').modal('hide');
-                $('#addInvoiceModal').css('z-index', "");
-            })(jQuery);
+            $rootScope.close_modal('deleteItemsModal', 'addInvoiceModal');
             $scope.read_only_mode = false;
         };
 
-        $scope.openDeleteInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteInvoiceModal').modal('show');
-                $('#addInvoiceModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeDeleteInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteInvoiceModal').modal('hide');
-                $('#addInvoiceModal').css('z-index', "");
-            })(jQuery);
+        $scope.openDeleteInvoiceModal = function (invoice_id) {
+            $scope.deleting_invoice_id = invoice_id;
+            $rootScope.open_modal('deleteInvoiceModal');
         };
 
         $scope.delete_invoice = function () {
             var sending_data = {
-                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
-                "description": $scope.invoice_delete_description,
-                "username": $rootScope.user_data.username,
-                "branch_id": $rootScope.user_data.branch
+                "invoice_id": $scope.deleting_invoice_id,
+                "description": $scope.invoice_delete_description
             };
             dashboardHttpRequest.deleteInvoiceSale(sending_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.delete_invoice_offline(sending_data);
                         $scope.invoice_delete_description = "";
-                        $scope.closeDeleteInvoiceModal();
+                        $scope.deleting_invoice_id = 0;
+                        $scope.close_modal('deleteInvoiceModal');
                         $scope.closeAddInvoiceModal();
                         $scope.getAllTodayInvoices();
                         if ($rootScope.cash_state === "OLD_CASH_WITH_UNSETTLED_INVOICES") {
@@ -731,6 +694,12 @@ angular.module("dashboard")
         };
 
         $scope.delete_items = function () {
+            if ($scope.deleting_item.type === "MENU")
+                $scope.will_delete_items.menu.push($scope.deleting_item.id);
+            else if ($scope.deleting_item.type === "SHOP")
+                $scope.will_delete_items.shop.push($scope.deleting_item.id);
+            else if ($scope.deleting_item.type === "GAME")
+                $scope.will_delete_items.game.push($scope.deleting_item.id);
             dashboardHttpRequest.deleteItems($scope.will_delete_items)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -748,44 +717,6 @@ angular.module("dashboard")
                     $scope.openErrorModal();
                 });
             $scope.closeDeleteModal();
-        };
-
-        $scope.will_delete_items_adder = function (deleted_type, p_id, menu_item_number_and_id) {
-            if (deleted_type === 'shop') {
-                var found = $scope.will_delete_items.shop.findIndex(function (element) {
-                    return element === p_id;
-                });
-                if (found !== -1) {
-                    $scope.will_delete_items.shop.splice(found, 1);
-                }
-                else if (found === -1) {
-                    $scope.will_delete_items.shop.push(p_id);
-                }
-            }
-            else if (deleted_type === 'menu') {
-                var found2 = $scope.will_delete_items.menu.findIndex(function (element) {
-                    return element === p_id;
-                });
-                if (found2 !== -1) {
-                    $scope.will_delete_items.menu.splice(found2, 1);
-                    $scope.will_delete_items.menu_items_number_id.splice(menu_item_number_and_id, 1);
-                }
-                else if (found2 === -1) {
-                    $scope.will_delete_items.menu.push(p_id);
-                    $scope.will_delete_items.menu_items_number_id.push(menu_item_number_and_id);
-                }
-            }
-            else if (deleted_type === 'game') {
-                var found3 = $scope.will_delete_items.game.findIndex(function (element) {
-                    return element === p_id;
-                });
-                if (found3 !== -1) {
-                    $scope.will_delete_items.game.splice(found3, 1);
-                }
-                else if (found3 === -1) {
-                    $scope.will_delete_items.game.push(p_id);
-                }
-            }
         };
 
         $scope.get_shop_products = function () {
@@ -890,12 +821,7 @@ angular.module("dashboard")
         };
 
         $scope.changeMenuNav = function (name) {
-            if (name === "MENU") {
-                $scope.current_menu_nav = name;
-            }
-            else if (name === "SHOP") {
-                $scope.current_menu_nav = name;
-            }
+            $scope.current_menu_nav = name;
         };
 
         $scope.changeItemNumber = function (item_index) {
@@ -962,7 +888,6 @@ angular.module("dashboard")
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.getAllTodayInvoices(sending_data)
                 .then(function (data) {
@@ -987,7 +912,6 @@ angular.module("dashboard")
         $scope.getAllInvoiceGames = function (invoice_id) {
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 "invoice_id": parseInt(invoice_id)
             };
             dashboardHttpRequest.getAllInvoiceGames(sending_data)
@@ -1009,7 +933,6 @@ angular.module("dashboard")
             $scope.disable_print_after_save_all_buttons = true;
             var sending_data = {
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 "game_id": parseInt(game_id)
             };
             dashboardHttpRequest.endCurrentGame(sending_data)
@@ -1266,7 +1189,6 @@ angular.module("dashboard")
 
         $scope.get_member_data = function (card_number) {
             var data = {
-                'username': $rootScope.user_data.username,
                 'member_id': 0,
                 'card_number': card_number,
                 'branch': $rootScope.user_data.branch
@@ -1353,7 +1275,6 @@ angular.module("dashboard")
             var sending_data = {
                 "invoice_id": invoice_id,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -1382,9 +1303,9 @@ angular.module("dashboard")
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
                         };
                         $scope.can_settle_invoice();
                         $scope.openAddInvoiceModal();
@@ -1415,7 +1336,6 @@ angular.module("dashboard")
             var sending_data = {
                 "invoice_id": invoice_id,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -1444,11 +1364,11 @@ angular.module("dashboard")
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
-                            'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
+                            'cash_id': $rootScope.cash_data.cash_id
                         };
                     }
                     else if (data['response_code'] === 3) {
@@ -1465,8 +1385,7 @@ angular.module("dashboard")
             $scope.will_delete_items.invoice_id = invoice_id;
             var sending_data = {
                 "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -1495,11 +1414,11 @@ angular.module("dashboard")
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
                             'cash': 0,
                             'card': 0,
                             'branch_id': $rootScope.user_data.branch,
-                            'cash_id': $rootScope.cash_data.cash_id,
-                            'username': $rootScope.user_data.username
+                            'cash_id': $rootScope.cash_data.cash_id
                         };
                         jQuery.noConflict();
                         (function ($) {
@@ -1573,9 +1492,9 @@ angular.module("dashboard")
                 'tip': 0,
                 'total_credit': 0,
                 'used_credit': 0,
+                'credits_data': [],
                 'branch_id': $rootScope.user_data.branch,
-                'cash_id': $rootScope.cash_data.cash_id,
-                'username': $rootScope.user_data.username
+                'cash_id': $rootScope.cash_data.cash_id
             };
             $scope.new_invoice_data.table_id = last_table_id;
             $scope.new_invoice_data.table_name = $scope.current_selected_table_name;
@@ -1584,8 +1503,7 @@ angular.module("dashboard")
         $scope.ready_for_settle = function (invoice_id) {
             var sending_data = {
                 "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.readyForSettle(sending_data)
                 .then(function (data) {
@@ -1611,8 +1529,7 @@ angular.module("dashboard")
                 'menu': [],
                 'menu_items_number_id': [],
                 'game': [],
-                "message": '',
-                'username': $rootScope.user_data.username
+                "message": ''
             };
         };
 
