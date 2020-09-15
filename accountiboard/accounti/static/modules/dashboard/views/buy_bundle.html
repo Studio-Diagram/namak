@@ -68,9 +68,7 @@
                         <div style="margin-right: 55px">
                             <div ng-repeat="(days, bundle_data) in AVAILABLE_BUNDLES[plan_type]" class="plan-month-holder"
                                 ng-click="select_bundle(days, bundle_data)">
-                                <h2 ng-show="days == 30">یک ماهه</h2>
-                                <h2 ng-show="days == 90">سه ماهه</h2>
-                                <h2 ng-show="days == 365">یک ساله</h2>
+                                <h2 ng-bind="days_in_farsi[days]"></h2>
                                 <h3>{{bundle_data['price'] | number | persianNumber}} ریال</h3>
                                 <i ng-show="current_days_selection == days" class="fas fa-check-circle"></i>
                             </div>

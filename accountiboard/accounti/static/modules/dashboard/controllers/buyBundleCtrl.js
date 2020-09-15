@@ -35,6 +35,12 @@ angular.module("dashboard")
                 },
             };
 
+            $scope.days_in_farsi = {
+                30: "یک ماهه",
+                90: "سه ماهه",
+                365: "یک ساله",
+            };
+
 
         };
 
