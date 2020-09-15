@@ -102,6 +102,8 @@ MENU_CATEGORY_NOT_FOUND = "دسته‌بندی منو یافت نشد"
 
 ALREADY_HAVE_ACTIVE_AND_RESERVE_BUNDLE = "در حال حاضر شما یک اشتراک فعال و رزرو شده دارید. خرید اشتراک بیشتر مقدور نیست"
 DOWNGRADING_BUNDLES_NOT_POSSIBLE = "کاهش اشتراک فعلی مقدور نمی باشد"
+TRANSACTION_ALREADY_VERIFIED = "این تراکنش قبلا پرداخت شده است"
+TRANSACTION_VERIFICATION_FAILED = "متاسفانه تراکنش شما با خطا مواجه شد. اشتراک انتخاب شده فعال نشد."
 
 USER_TYPE = {
     "cafe_owner": 1,

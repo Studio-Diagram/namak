@@ -15,13 +15,14 @@ angular.module("dashboard")
                                 $scope.transaction_successful_reserved = true;
                             else
                                 $scope.transaction_unsuccessful = true;
-                            jQuery.noConflict();
-                            (function ($) {
-                                $('#transactionResultModal').modal('show');
-                            })(jQuery);
+                            // jQuery.noConflict();
+                            // (function ($) {
+                            //     $('#transactionResultModal').modal('show');
+                            // })(jQuery);
+                            $rootScope.open_modal('transactionResultModal');
                         }, function (error) {
-                            $scope.error_message = error;
-                            $scope.openErrorModal();
+                            $scope.error_message = error.data.error_msg;
+                            $rootScope.open_modal('mainErrorModal');
                         });
                     $location.search('status', null);
                     $location.search('token', null);

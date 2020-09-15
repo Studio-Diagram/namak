@@ -257,7 +257,8 @@ class PayirVerifyGenNewTokenView(View):
                 response = get_json(requests.post(settings.PAY_IR_API_URL_VERIFY, data=verify_data))
                 if response['status'] != 1:
                     return JsonResponse({
-                        'error_msg': "Could not verify transaction (status error)"
+                        'error_msg': TRANSACTION_VERIFICATION_FAILED,
+                        'bundle_activation_status' : "unsuccessful"
                     }, status=400)
             except Exception as e:
                 raise e
@@ -266,7 +267,8 @@ class PayirVerifyGenNewTokenView(View):
 
             if current_transaction.status == "paid":
                 return JsonResponse({
-                    'error_msg': "Transaction already verified"
+                    'error_msg': TRANSACTION_ALREADY_VERIFIED,
+                    'bundle_activation_status' : "unsuccessful"
                 }, status=400)
 
             current_transaction.trans_id = response["transId"]
@@ -307,7 +309,7 @@ class PayirVerifyGenNewTokenView(View):
 
         else:
             return JsonResponse({
-                'error_msg': "unsuccessful transaction (status not 1 pre)",
+                'error_msg': TRANSACTION_VERIFICATION_FAILED,
                 'bundle_activation_status' : "unsuccessful"
             }, status=400)
 
@@ -340,7 +342,7 @@ class PayirVerifyGenNewTokenView(View):
             organization_object.id,
         )
         return JsonResponse(
-            {"response_code": 2,
+            {
              "user_data": {'branch': branch_object, 'full_name': user_obj.get_full_name(),
                            'branches': user_branches,
                            'user_roles': user_role,
