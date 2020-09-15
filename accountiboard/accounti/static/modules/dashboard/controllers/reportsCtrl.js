@@ -199,27 +199,34 @@ angular.module("dashboard")
             $scope.invoice_type_configs = {
                 INVOICE_SALE: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
+
                 },
                 INVOICE_PURCHASE: {
                     price_fields: ["price"],
-                    has_detail_button: true
+                    has_detail_button: true,
+                    has_delete_button: false,
                 },
                 INVOICE_PAY: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
                 },
                 INVOICE_EXPENSE: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
                 },
                 INVOICE_RETURN: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
                 },
                 INVOICE_SALARY: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
                 }
             };
 
