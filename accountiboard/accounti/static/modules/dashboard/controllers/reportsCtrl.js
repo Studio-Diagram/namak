@@ -379,7 +379,7 @@ angular.module("dashboard")
                     branches: $scope.report_data.branches,
                     suppliers: $scope.report_data.suppliers,
                     s_types: $scope.report_data.settlement_types,
-                    employees: $scope.report_data.employees
+                    employees: $scope.report_data.employees,
                 }, {
                     notify: false,
                     reload: false,

@@ -175,9 +175,6 @@ class ReportView(View):
             if employees:
                 employees = list(map(int, employees.split(',')))
                 invoice_objects = invoice_objects.filter(employee_id__in=employees)
-            # if settlement_types:
-            #     settlement_types = settlement_types.split(',')
-            #     invoice_objects = invoice_objects.filter(settlement_type__in=settlement_types)
 
             total_price_sum = invoice_objects.aggregate(Sum('total_price'))
             total_invoices = invoice_objects.count()
@@ -192,9 +189,9 @@ class ReportView(View):
                 
                 "settlement_type": invoice.get_settle_type_display()
             } for invoice in invoice_objects]
-
+            
             return JsonResponse({"results": reports_data, "total_invoices": total_invoices,
-                                 "total_price": total_price_sum.get('price__sum') if total_price_sum.get(
-                                     'price__sum') else 0})
+                                 "total_price": total_price_sum.get('total_price__sum') if total_price_sum.get(
+                                     'total_price__sum') else 0})
 
         return JsonResponse({"results": reports_data})
