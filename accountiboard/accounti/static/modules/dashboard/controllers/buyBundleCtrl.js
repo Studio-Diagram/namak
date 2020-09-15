@@ -44,6 +44,7 @@ angular.module("dashboard")
             $scope.entered_discount = "";
             $scope.discount_checked = false;
             $scope.discount_applied = false;
+            $scope.discount_amount = 0;
 
             switch (plan_type) {
                 case 'standard_normal':
@@ -107,6 +108,7 @@ angular.module("dashboard")
         $scope.add_days_to_bundle = function (days) {
             $scope.discount_checked = false;
             $scope.discount_applied = false;
+            $scope.discount_amount = 0;
 
             if (days == 30) $scope.current_state = $scope.STATE.one_month_state;
             if (days == 90) $scope.current_state = $scope.STATE.three_month_state;
