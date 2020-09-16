@@ -736,3 +736,34 @@ class KickUnkickEmployeeView(View):
                 return JsonResponse({'error_msg': 'This employee was not found'}, status=403)
         else:
             return JsonResponse({'error_msg': 'This employee works in another branch'}, status=403)
+
+
+
+class GetBranchEmployeesView(View):
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def get(self, request,branch_id,*args, **kwargs):
+        
+        if not branch_id:
+                return JsonResponse({"error_msg": DATA_REQUIRE},status=400)
+
+        branch_object = Branch.objects.get(id=branch_id)
+        branch_employees = EmployeeToBranch.objects.filter(branch=branch_object).values(
+            'employee').distinct()
+        employees = []
+        for employee in branch_employees:
+            employee_object = Employee.objects.get(id=employee.get('employee'))
+            employee_branches = EmployeeToBranch.objects.filter(employee=employee_object)
+            employees.append({
+                "id": employee_object.pk,
+                "full_name": employee_object.user.get_full_name(),
+                "auth_levels": employee_object.employee_roles,
+                "branches": [{
+                    "id": employee_branch.branch.id,
+                    "name": employee_branch.branch.name
+                } for employee_branch in employee_branches],
+            })
+        
+        return JsonResponse({'employees': employees},status=200)

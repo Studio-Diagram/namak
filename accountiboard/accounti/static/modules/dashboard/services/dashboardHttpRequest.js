@@ -1086,6 +1086,14 @@ angular.module('dashboard')
                     
                 })
             },
+            'getBranchEmployees':function(id){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/branchEmployees/"+ id +"/" ,
+                    
+                    
+                })
+            },
 
         };
         return service;

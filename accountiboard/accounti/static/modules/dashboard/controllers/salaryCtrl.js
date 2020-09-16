@@ -29,7 +29,7 @@ angular.module("dashboard")
 
 
             $scope.get_banking_data();
-            $scope.get_employees_data($rootScope.user_data);
+            $scope.get_employees_data();
             $scope.getInvoiceSalaries();
             jQuery.noConflict();
             (function ($) {
@@ -85,21 +85,19 @@ angular.module("dashboard")
             $scope.new_salary_data.total_price = Number($scope.new_salary_data.base_salary) + Number($scope.new_salary_data.over_time_pay) + Number($scope.new_salary_data.benefits) + Number($scope.new_salary_data.bonuses) - Number($scope.new_salary_data.reduction) - Number($scope.new_salary_data.insurance) - Number($scope.new_salary_data.tax);
         };
 
-        $scope.get_employees_data = function (data) {
-            dashboardHttpRequest.getEmployees(data)
+        $scope.get_employees_data = function () {
+            
+            dashboardHttpRequest.getBranchEmployees($rootScope.user_data.branch)
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
-                    if (data['response_code'] === 2) {
-                        $scope.employees = data['employees'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    
+                    $scope.employees = data['employees'];
+                    
+
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $scope.error_message = error.data.error_msg;
+                    $rootScope.open_modal('errorModal');
                 });
         };
 
