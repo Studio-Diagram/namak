@@ -174,7 +174,7 @@ urlpatterns = [
     path('api/stocksByBranch/<str:branch_id>/', StocksView.StockByBranchView.as_view()),
     path('api/salary/<int:invoice_id>/', InvoiceSalaryView.InvoiceSalaryView.as_view()),
     path('api/salaries/<str:branch_id>/', InvoiceSalaryView.InvoiceSalariesView.as_view()),
-
+    path('api/searchSalary/<str:branch_id>/<str:search_word>/', InvoiceSalaryView.InvoiceSalarySearchView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),

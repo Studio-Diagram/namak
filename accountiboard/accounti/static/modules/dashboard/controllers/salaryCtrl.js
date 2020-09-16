@@ -4,6 +4,7 @@ angular.module("dashboard")
             $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.edit_mode = false;
+            $scope.search_word ='';
             $scope.new_salary_data = {
                 'id': 0,
                 'factor_number': 0,
@@ -216,7 +217,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     $scope.salaries = data['invoices'];
-                    console.log($scope.salaries);
+                    
                    
 
                 }, function (error) {
@@ -314,6 +315,25 @@ angular.module("dashboard")
                     $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal', 'addModal');
                 });
+        };
+
+        $scope.searchSalary = function () {
+           
+            if ($scope.search_word === '') {
+                $scope.getInvoiceSalaries();
+            }
+            else {
+                
+                dashboardHttpRequest.searchSalary($scope.search_word, $rootScope.user_data.branch)
+                    .then(function (data) {
+                        $rootScope.is_page_loading = false;
+                        $scope.salaries = data['invoices'];
+
+                    }, function (error) {
+                        $scope.error_message = error.data.error_msg;
+                        $scope.open_modal('errorModal');
+                    });
+            }
         };
 
         initialize();

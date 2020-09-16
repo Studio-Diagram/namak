@@ -1073,7 +1073,15 @@ angular.module('dashboard')
             'getSalaries':function(data){
                 return this.request({
                     'method':"GET",
-                    'url': "/api/salaries/"+data+"/",
+                    'url': "/api/salaries/"+ data +"/",
+                    
+                    
+                })
+            },
+            'searchSalary':function(data,id){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/searchSalary/"+ id +"/" + data +"/",
                     
                     
                 })

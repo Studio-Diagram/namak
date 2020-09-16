@@ -271,4 +271,42 @@ class InvoiceSalariesView(View):
 
 
 
+class InvoiceSalarySearchView(View):
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      {USER_PLANS_CHOICES['FREE']},
+                                      branch_disable=True)
+    def get(self, request,branch_id,search_word, *args, **kwargs):
+
+        if not search_word:
+            return JsonResponse({"error_msg": DATA_REQUIRE},status=400)
+
+        if not branch_id:
+                return JsonResponse({"error_msg": DATA_REQUIRE},status=400)
+
+        branch_obj = Branch.objects.get(pk=branch_id)
+        invoice_objects = InvoiceSalary.objects.filter(branch=branch_obj)
+        invoices = []
+        for invoice in invoice_objects:
+            if search_word in invoice.employee.user.get_full_name():
+                invoice_date = invoice.invoice_date.date()
+                jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
+                                                        year=invoice_date.year)
+
+                invoices.append({
+                    'id': invoice.pk,
+                    'factor_number': invoice.factor_number,
+                    'employee_name': invoice.employee.user.get_full_name(),
+                    'total_price': invoice.total_price,
+                    'settle_type': invoice.get_settle_type_display(),
+                    'backup_code': invoice.backup_code,
+                    'invoice_date': jalali_date.strftime("%Y/%m/%d"),
+                    'banking': invoice.banking.name if invoice.banking else "",
+                })
+
+        return JsonResponse({'invoices': invoices},status=200)
+    
+
+
+
 
