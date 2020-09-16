@@ -39,7 +39,7 @@ class InvoiceSalaryView(View):
             banking_id = rec_data.get('banking_id')
 
 
-            if not branch_id or not employee_id or not factor_number or not invoice_date or not backup_code or not settle_type :
+            if not branch_id or not employee_id or not factor_number or not invoice_date  or not settle_type :
                 return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
             # if not total_price or not tax or not insurance or not reduction or not reduction_description or not bonuses or not bonuses_description or not base_salary or not over_time_pay or not benefits:
             #     return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
@@ -124,7 +124,7 @@ class InvoiceSalaryView(View):
         banking_id = rec_data.get('banking_id')
 
 
-        if not branch_id or not employee_id or not factor_number or not invoice_date or not backup_code or not settle_type :
+        if not branch_id or not employee_id or not factor_number or not invoice_date  or not settle_type :
             return JsonResponse({ "error_msg": DATA_REQUIRE},status=400)
 
         
