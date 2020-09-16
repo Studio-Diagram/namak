@@ -10,6 +10,7 @@ from accountiboard import settings
 from django.views.static import serve
 from accounti.views import BankingView
 from accounti.views import StocksView
+from accounti.views import PermissionTestView
 
 from admin_panel.views import AdminGeneralView, AdminNewsView, AdminBugReportView, AdminBranchView, AdminLoginView
 from django.conf.urls.static import static
@@ -194,6 +195,10 @@ urlpatterns = [
     path('onward/bugreports/', AdminBugReportView.AdminBugReportsView.as_view()),
     path('onward/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
     path('onward/branches/<int:branch_id>/', AdminBranchView.AdminBranchDetailView.as_view()),
+
+    # Test views
+    path('api/test/free-bundle/', PermissionTestView.FreeTestView.as_view()),
+    path('api/test/nonfree-bundle/', PermissionTestView.NonFreeTestView.as_view()),
 
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.EditPaymentInvoiceSaleView.as_view()),
     path('template/night-report', InvoiceSaleView.NightReportTemplateView.as_view()),

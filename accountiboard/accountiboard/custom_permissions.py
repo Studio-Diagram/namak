@@ -1,4 +1,4 @@
-from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR
+from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR, ALL_PLANS_SET
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
@@ -96,13 +96,21 @@ def session_authenticate_admin_panel(request, *args, **kwargs):
 
 
 def token_authenticate(request, permitted_roles, bundles, branch_disable=False, *args, **kwargs):
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    request_branch = get_branch(request, *args, **kwargs)
+    view_bundles = ALL_PLANS_SET - bundles
+    try:
+        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
+    except:
+        return {
+            "state": False,
+            "message": UNAUTHENTICATED
+        }
     if not payload:
         return {
             "state": False,
             "message": UNAUTHENTICATED
         }
+
+    request_branch = get_branch(request, *args, **kwargs)
 
     if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
         for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
@@ -112,14 +120,10 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
                     "message": UNAUTHENTICATED
                 }
 
-    # Adding 'FREE' plan to bundle definition on view decorators and also JWT token:
-    bundles.add('FREE')
-    payload_bundles = {payload['sub_bundle'], 'FREE'}
-
     for role in payload['sub_roles']:
         if role in permitted_roles:
-            if payload_bundles.issubset(bundles):
-                if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
+            if payload['sub_bundle'] in view_bundles:
+                if branch_disable or any(branch['id'] == request_branch for branch in payload['sub_branch_list']):
                     return {
                         "state": True,
                         "message": NO_MESSAGE,

@@ -144,6 +144,13 @@ USER_PLANS_CHOICES = {
     "ENTERPRISE":"ENTERPRISE",
 }
 
+ALL_PLANS_SET = {
+    "FREE",
+    "STANDARDNORMAL",
+    "STANDARDBG",
+    "ENTERPRISE",
+}
+
 # prices in IR RIAL (should be at least 10,000)
 AVAILABLE_BUNDLES = {
     "STANDARDNORMAL_30" :  100_000,
