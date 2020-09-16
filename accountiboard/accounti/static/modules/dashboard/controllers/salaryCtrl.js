@@ -20,6 +20,8 @@ angular.module("dashboard")
                 'backup_code': '',
                 'settle_type': '',
                 'bonuses_description':'',
+                'benefits_description':'',
+                'over_time_pay_description':'',
                 'reduction_description':'',
                 'description':'',
                 'branch_id': $rootScope.user_data.branch,                
@@ -137,6 +139,8 @@ angular.module("dashboard")
                 'backup_code': '',
                 'settle_type': '',
                 'bonuses_description':'',
+                'benefits_description':'',
+                'over_time_pay_description':'',
                 'reduction_description':'',
                 'description':'',
                 'branch_id': $rootScope.user_data.branch,                
@@ -279,6 +283,8 @@ angular.module("dashboard")
                             
     
                             'bonuses_description':data['invoice']['bonuses_description'],
+                            'benefits_description':data['invoice']['benefits_description'],
+                            'over_time_pay_description':data['invoice']['over_time_pay_description'],
                             'reduction_description':data['invoice']['reduction_description'],
                             'description':data['invoice']['description'],
                             

@@ -24,7 +24,9 @@ class InvoiceSalaryView(View):
             base_salary = rec_data['base_salary']
             description = rec_data['description']
             over_time_pay = rec_data['over_time_pay']
+            over_time_pay_description = rec_data['over_time_pay_description']
             benefits = rec_data['benefits']
+            benefits_description = rec_data['benefits_description']
             bonuses = rec_data['bonuses']
             bonuses_description = rec_data['bonuses_description']
             reduction = rec_data['reduction']
@@ -75,7 +77,9 @@ class InvoiceSalaryView(View):
                 description=description,
                 base_salary=base_salary,
                 over_time_pay= over_time_pay,
+                over_time_pay_description=over_time_pay_description,
                 benefits=benefits,
+                benefits_description=benefits_description,
                 bonuses=bonuses,
                 bonuses_description=bonuses_description,
                 reduction=reduction,
@@ -109,7 +113,9 @@ class InvoiceSalaryView(View):
         base_salary = rec_data['base_salary']
         description = rec_data['description']
         over_time_pay = rec_data['over_time_pay']
+        over_time_pay_description = rec_data['over_time_pay_description']
         benefits = rec_data['benefits']
+        benefits_description = rec_data['benefits_description']
         bonuses = rec_data['bonuses']
         bonuses_description = rec_data['bonuses_description']
         reduction = rec_data['reduction']
@@ -149,7 +155,9 @@ class InvoiceSalaryView(View):
         invoice_obj.base_salary = base_salary
         invoice_obj.description = description
         invoice_obj.over_time_pay = over_time_pay
-        invoice_obj.benefits = benefits 
+        invoice_obj.over_time_pay_description = over_time_pay_description
+        invoice_obj.benefits = benefits
+        invoice_obj.benefits_description = benefits_description
         invoice_obj.bonuses = bonuses 
         invoice_obj.bonuses_description = bonuses_description
         invoice_obj.reduction = reduction
@@ -204,6 +212,8 @@ class InvoiceSalaryView(View):
                 'reduction':invoice_obj.reduction,
                 'insurance':invoice_obj.insurance,
                 'tax':invoice_obj.tax,
+                'over_time_pay_description':invoice_obj.over_time_pay_description,
+                'benefits_description': invoice_obj.benefits_description,
                 'bonuses_description':invoice_obj.bonuses_description,
                 'reduction_description':invoice_obj.reduction_description,
                 'description':invoice_obj.description,
