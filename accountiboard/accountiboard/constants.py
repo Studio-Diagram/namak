@@ -151,6 +151,8 @@ ALL_PLANS_SET = {
     "ENTERPRISE",
 }
 
+ALLOW_ALL_PLANS = frozenset()
+
 # prices in IR RIAL (should be at least 10,000)
 AVAILABLE_BUNDLES = {
     "STANDARDNORMAL_30" :  100_000,
