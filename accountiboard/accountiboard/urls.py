@@ -106,7 +106,7 @@ urlpatterns = [
     path('api/deleteInvoicePurchase/<int:item_id>/', InvoicePurchaseView.DeleteInvoicePurchaseView.as_view()),
     path('api/deleteInvoiceExpense/', InvoiceExpenseView.DeleteInvoiceExpenseView.as_view()),
     path('api/deleteInvoiceReturn/', InvoiceReturnView.DeleteInvoicesReturnView.as_view()),
-    path('api/deleteInvoiceSettlement/', InvoiceSettlementView.DeleteInvoiceSettlementView.as_view()),
+    path('api/deleteInvoiceSettlement/<int:item_id>/', InvoiceSettlementView.DeleteInvoiceSettlementView.as_view()),
     path('api/getNextFactorNumber/', GeneralInvoiceView.GetInvoiceNumberView.as_view()),
     path('api/addTableCategory/', TableView.AddTableCategoryView.as_view()),
     path('api/getTableCategory/', TableView.GetTableCategoryView.as_view()),

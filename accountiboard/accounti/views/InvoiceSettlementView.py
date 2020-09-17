@@ -149,15 +149,7 @@ class DeleteInvoiceSettlementView(View):
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_id = rec_data.get('invoice_id')
-
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-        invoice_obj = InvoiceSettlement.objects.get(pk=invoice_id)
-
+    def delete(self, request, item_id, *args, **kwargs):
+        invoice_obj = InvoiceSettlement.objects.get(pk=item_id)
         invoice_obj.delete()
-
-        return JsonResponse({"response_code": 2})
+        return JsonResponse({})

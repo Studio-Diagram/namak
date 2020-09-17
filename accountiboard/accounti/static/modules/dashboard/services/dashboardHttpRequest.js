@@ -720,11 +720,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteInvoiceSettlement': function (data) {
+            'deleteInvoiceSettlement': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoiceSettlement/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoiceSettlement/" + item_id + "/"
                 });
             },
             'getNextFactorNumber': function (data) {
