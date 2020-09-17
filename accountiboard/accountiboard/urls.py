@@ -104,7 +104,7 @@ urlpatterns = [
     path('api/getWorkingTime/', BranchView.GetWorkingTimeForReserveView.as_view()),
     path('api/getTodayForReserve/', ReserveView.GetTodayForReserveView.as_view()),
     path('api/deleteInvoicePurchase/<int:item_id>/', InvoicePurchaseView.DeleteInvoicePurchaseView.as_view()),
-    path('api/deleteInvoiceExpense/', InvoiceExpenseView.DeleteInvoiceExpenseView.as_view()),
+    path('api/deleteInvoiceExpense/<int:item_id>/', InvoiceExpenseView.DeleteInvoiceExpenseView.as_view()),
     path('api/deleteInvoiceReturn/', InvoiceReturnView.DeleteInvoicesReturnView.as_view()),
     path('api/deleteInvoiceSettlement/<int:item_id>/', InvoiceSettlementView.DeleteInvoiceSettlementView.as_view()),
     path('api/getNextFactorNumber/', GeneralInvoiceView.GetInvoiceNumberView.as_view()),

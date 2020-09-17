@@ -706,11 +706,10 @@ angular.module('dashboard')
                     'url': "/api/deleteInvoicePurchase/" + item_id + "/"
                 });
             },
-            'deleteInvoiceExpense': function (data) {
+            'deleteInvoiceExpense': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoiceExpense/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoiceExpense/" + item_id + "/"
                 });
             },
             'deleteInvoiceReturn': function (data) {

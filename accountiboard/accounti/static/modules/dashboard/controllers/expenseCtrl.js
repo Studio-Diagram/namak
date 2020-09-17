@@ -24,8 +24,8 @@ angular.module("dashboard")
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
-                'banking_id':'',
-                'stock_id':''
+                'banking_id': '',
+                'stock_id': ''
             };
             $scope.search_data_expense = {
                 'search_word': '',
@@ -147,40 +147,13 @@ angular.module("dashboard")
         };
 
         $scope.delete_invoice_expense = function (invoice_id) {
-            var sending_data = {
-                'invoice_id': invoice_id,
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.deleteInvoiceExpense(sending_data)
+            dashboardHttpRequest.deleteInvoiceExpense(invoice_id)
                 .then(function (data) {
-                    $scope.closeDeletePermissionModal();
-                    if (data['response_code'] === 2) {
-                        $scope.get_expenses();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.get_expenses();
                 }, function (error) {
-                    $scope.error_message = error;
+                    $scope.error_message = error.data.error_msg;
                     $scope.openErrorModal();
                 });
-        };
-
-        $scope.openDeletePermissionModal = function (invoice_id) {
-            $scope.deleteing_invoice_id = invoice_id;
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteInvoicePermissionModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeDeletePermissionModal = function () {
-            $scope.deleteing_invoice_id = 0;
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteInvoicePermissionModal').modal('hide');
-            })(jQuery);
         };
 
         $scope.searchExpense = function () {
@@ -273,15 +246,15 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.allbanking_names = [];
                     data['bank'].forEach(function (bank) {
-                        $scope.allbanking_names.push({'id':bank.id, 'name':bank.name});
+                        $scope.allbanking_names.push({'id': bank.id, 'name': bank.name});
                     });
 
                     data['tankhah'].forEach(function (tankhah) {
-                        $scope.allbanking_names.push({'id':tankhah.id, 'name':tankhah.name});
+                        $scope.allbanking_names.push({'id': tankhah.id, 'name': tankhah.name});
                     });
 
                     data['cash_register'].forEach(function (cash_register) {
-                        $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
+                        $scope.allbanking_names.push({'id': cash_register.id, 'name': cash_register.name});
                     });
 
                 }, function (error) {
@@ -328,7 +301,7 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username,
                 'banking_id': '',
-                'stock_id':''
+                'stock_id': ''
             };
         };
 
