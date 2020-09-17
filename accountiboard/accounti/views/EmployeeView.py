@@ -493,17 +493,11 @@ class DeleteMenuItemView(View):
         {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
         {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
         branch_disable=True)
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        menu_item_id = rec_data['menu_item_id']
-
-        if not menu_item_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-        old_menu_item = MenuItem.objects.get(pk=menu_item_id)
+    def delete(self, request, item_id, *args, **kwargs):
+        old_menu_item = MenuItem.objects.get(pk=item_id)
         old_menu_item.is_delete = 1
         old_menu_item.save()
-        return JsonResponse({"response_code": 2})
+        return JsonResponse({})
 
 
 class SearchMenuItemView(View):

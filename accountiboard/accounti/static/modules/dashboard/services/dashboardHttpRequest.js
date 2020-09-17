@@ -125,11 +125,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteMenuItem': function (data) {
+            'deleteMenuItem': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteMenuItem/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteMenuItem/" + item_id + "/"
                 });
             },
             'searchMenuItem': function (data) {
@@ -701,11 +700,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteInvoicePurchase': function (data) {
+            'deleteInvoicePurchase': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoicePurchase/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoicePurchase/" + item_id + "/"
                 });
             },
             'deleteInvoiceExpense': function (data) {

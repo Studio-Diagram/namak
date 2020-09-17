@@ -83,22 +83,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteConfirm" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید حذف</h2>
-                    <a ng-click="deleteMenuItem()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closeDeleteConfirmModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ اطلاعات حذفی قابل بازیابی نخواهند
-                        بود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade mainModal" id="addMenuItemModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -149,7 +133,7 @@
     </div>
     <main class="pageContent container-fluid">
         <div class="row userPageContent">
-            <div class="col-md-6">
+            <div class="col-md-7 pr-0">
                 <div class="row">
                     <main class="col-sm-12 ">
                         <div class="tableButtons">
@@ -184,9 +168,18 @@
                                     <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
                                                                       class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                                     </td>
-                                    <td style="text-align: center"><a ng-click="openDeleteConfirmModal(item.id)"
-                                                                      href=""><i
-                                            class="fas fa-trash"></i></a></td>
+                                    <td style="text-align: center">
+                                        <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
+                                           role="button" data-container="body"
+                                           ng-disabled="disable_print_after_save_all_buttons"
+                                           data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                                           question="مطمئن هستید؟"
+                                           text="بعد از پاک شدن آیتم اطلاعات قابل بازیابی نخواهند بود."
+                                           first-button-text="حذف آیتم"
+                                           first-callback="deleteMenuItem(item.id)">
+                                            حدف
+                                        </a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -195,7 +188,7 @@
                     </main>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5 p-0">
                 <div class="row">
                     <main class="col-sm-12 ">
                         <div class="tableButtons">
@@ -220,18 +213,21 @@
                                 <tbody>
                                 <tr ng-repeat="category in menu_categories">
                                     <td class="arrowButton" scope="row">
-                                        <a ng-click="change_order(category.id, 'UP')"><i class="fas fa-arrow-up"></i></a>
+                                        <a ng-click="change_order(category.id, 'UP')"><i
+                                                class="fas fa-arrow-up"></i></a>
                                     </td>
                                     <td class="arrowButton" scope="row">
-                                        <a ng-click="change_order(category.id, 'DOWN')"><i class="fas fa-arrow-down"></i></a>
+                                        <a ng-click="change_order(category.id, 'DOWN')"><i
+                                                class="fas fa-arrow-down"></i></a>
                                     </td>
                                     <td scope="row" class="align-middle">{{ category.name }}</td>
                                     <td class="align-middle" scope="row">
-                                        <span ng-repeat="printer in category.printers" ng-bind="($index + 1 !== category.printers.length) ? printer.name + ' ، ' : printer.name"></span>
+                                        <span ng-repeat="printer in category.printers"
+                                              ng-bind="($index + 1 !== category.printers.length) ? printer.name + ' ، ' : printer.name"></span>
                                     </td>
                                     <td class="align-middle"><a ng-click="editMenuCategory(category.id)"
-                                                                          href=""
-                                                                          class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                                                href=""
+                                                                class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                                     </td>
                                 </tr>
                                 </tbody>

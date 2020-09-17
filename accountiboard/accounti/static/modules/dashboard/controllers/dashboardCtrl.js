@@ -9,9 +9,9 @@ angular.module("dashboard")
                     dashboardHttpRequest.payirVerifyGenToken(data)
                         .then(function (data) {
                             $auth.setToken(data['token']);
-                            if (data["bundle_activation_status"] == "activated")
+                            if (data["bundle_activation_status"] === "activated")
                                 $scope.transaction_successful_activated = true;
-                            else if (data["bundle_activation_status"] == "reserved")
+                            else if (data["bundle_activation_status"] === "reserved")
                                 $scope.transaction_successful_reserved = true;
                             else
                                 $scope.transaction_unsuccessful = true;
@@ -96,7 +96,7 @@ angular.module("dashboard")
                     if (event.ctrlKey && event.keyCode === 57) {
                         $state.go('dashboard.manager.addEmployee');
                     }
-                }
+                };
             };
 
             $rootScope.show_toast = function (message, type) {
@@ -351,7 +351,6 @@ angular.module("dashboard")
                     })(jQuery);
                 }
             };
-
 
 
             $rootScope.open_modalv2 = function (modal_id, modal_has_to_fade_out) {
