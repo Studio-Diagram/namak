@@ -99,7 +99,7 @@ angular.module("dashboard")
 
                     }
                     if (event.ctrlKey && event.keyCode === 55) {
-                        $state.go('dashboard.account_manager.buy');
+                        $state.go('dashboard.accounting.buy');
                     }
                     if (event.ctrlKey && event.keyCode === 56) {
 

@@ -1,20 +1,4 @@
 <div ng-controller="paysCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -23,9 +7,14 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت پرداختی جدید</h2>
-                    <a class="mainButton redButton" ng-click="openPermissionModal()" href="" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom();"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="addPay()">خروج</a>
                     <a ng-click="addPay()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
                     <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
@@ -95,35 +84,11 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <main class="pageContent container-fluid">
+    <main class="pageContent">
         <div class="tableButtons">
             <div class="buttonGroup">
-                <a ng-click="openAddModal();getNextFactorNumber('PAY')" href="" class="mainButton greenButton">پرداختی
+                <a ng-click="open_modal('addModal');set_today_for_invoice();getNextFactorNumber('PAY')" href=""
+                   class="mainButton greenButton">پرداختی
                     جدید</a>
             </div>
             <div class="buttonGroup">
@@ -133,53 +98,7 @@
                 </form>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">شماره پرداختی</th>
-                            <th scope="col">تامین‌کننده</th>
-                            <th scope="col">میزان پرداختی</th>
-                            <th scope="col">نوع پرداخت</th>
-                            <th scope="col">شماره ارجاع</th>
-                            <th scope="col">بانکداری</th>
-                            <th scope="col">تاریخ</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="pay in pays">
-                            <td>{{ pay.factor_number | persianNumber }}</td>
-                            <td>{{ pay.supplier_name }}</td>
-                            <td class="redText">{{ pay.payment_amount | number | persianNumber }} ریال</td>
-                            <td>{{ pay.settle_type }}</td>
-                            <td>{{ pay.backup_code | persianNumber }}</td>
-                            <td ng-bind="pay.banking ? pay.banking : '-'"></td>
-                            <td>{{ pay.created_time | persianNumber }}</td>
-                            <td>
-                                <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
-                                   role="button" data-container="body"
-                                   ng-disabled="disable_print_after_save_all_buttons"
-                                   data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
-                                   question="مطمئن هستید؟"
-                                   text="بعد از پاک شدن آیتم اطلاعات قابل بازیابی نخواهند بود."
-                                   first-button-text="حذف آیتم"
-                                   first-callback="delete_invoice_pay(pay.id)">
-                                    حدف
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
-
-        </div>
+        <table-directive headers="headers" config="table_config" rows="pays"
+                         delete-callback="delete_invoice_pay(item_id)"></table-directive>
     </main>
 </div>

@@ -102,33 +102,38 @@ myApp.config(function ($stateProvider, $authProvider) {
         },
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
-    var account_manager = {
-        name: 'dashboard.account_manager',
-        url: '/account_manager',
+    var accounting = {
+        name: 'dashboard.accounting',
+        url: '/accounting',
         templateUrl: 'static/modules/dashboard/views/account-manager.html'
     };
+    var accounting_documents_manager = {
+        name: 'dashboard.accounting.documents',
+        url: '/documents',
+        templateUrl: 'static/modules/dashboard/views/accounting_documents_manager.html'
+    };
     var buy = {
-        name: 'dashboard.account_manager.buy',
+        name: 'dashboard.accounting.documents.buy',
         url: '/buy',
         templateUrl: 'static/modules/dashboard/views/buy.html'
     };
     var pay = {
-        name: 'dashboard.account_manager.pay',
+        name: 'dashboard.accounting.documents.pay',
         url: '/pay',
         templateUrl: 'static/modules/dashboard/views/pays.html'
     };
     var expense = {
-        name: 'dashboard.account_manager.expense',
+        name: 'dashboard.accounting.documents.expense',
         url: '/expense',
         templateUrl: 'static/modules/dashboard/views/expense.html'
     };
     var suppliers = {
-        name: 'dashboard.account_manager.suppliers',
+        name: 'dashboard.accounting.suppliers',
         url: '/suppliers',
         templateUrl: 'static/modules/dashboard/views/suppliers.html'
     };
     var reports = {
-        name: 'dashboard.account_manager.reports',
+        name: 'dashboard.accounting.reports',
         url: '/reports?type&start&end&branches&suppliers&s_types&employees',
         params: {
             "type": {
@@ -163,18 +168,18 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/reports.html'
     };
     var supplier = {
-        name: 'dashboard.account_manager.supplier',
+        name: 'dashboard.accounting.supplier',
         url: '/supplier/:supplier',
         templateUrl: 'static/modules/dashboard/views/supplier.html'
     };
     var detail = {
-        name: 'dashboard.account_manager.detail',
+        name: 'dashboard.accounting.detail',
         url: '/supplier/:detailState/:supplier',
         templateUrl: 'static/modules/dashboard/views/detail.html'
     };
 
     var invoiceReturn = {
-        name: 'dashboard.account_manager.return',
+        name: 'dashboard.accounting.documents.return',
         url: '/return',
         templateUrl: 'static/modules/dashboard/views/return.html'
     };
@@ -192,19 +197,19 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var open_close_cash = {
-        name: 'dashboard.account_manager.manage_cash',
+        name: 'dashboard.accounting.manage_cash',
         url: '/manage_cash',
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
     var open_close_cash_detail = {
-        name: 'dashboard.account_manager.manage_cash_detail',
+        name: 'dashboard.accounting.manage_cash_detail',
         url: '/manage_cash/:cash_id',
         templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
     };
 
     var big_cash_detail_view_in_open_close_cash = {
-        name: 'dashboard.account_manager.manage_cash_detail_big',
+        name: 'dashboard.accounting.manage_cash_detail_big',
         url: '/manage_cash/:cash_id/detail',
         template: '<cash-detail-directive></cash-detail-directive>',
         params: {
@@ -242,7 +247,7 @@ myApp.config(function ($stateProvider, $authProvider) {
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
     var salary ={
-        name: 'dashboard.account_manager.salary',
+        name: 'dashboard.accounting.documents.salary',
         url:'/salary',
         templateUrl:'static/modules/dashboard/views/salary.html'
 
@@ -286,7 +291,8 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(cash_manager);
     $stateProvider.state(salon);
     $stateProvider.state(cash);
-    $stateProvider.state(account_manager);
+    $stateProvider.state(accounting);
+    $stateProvider.state(accounting_documents_manager);
     $stateProvider.state(buy);
     $stateProvider.state(pay);
     $stateProvider.state(expense);

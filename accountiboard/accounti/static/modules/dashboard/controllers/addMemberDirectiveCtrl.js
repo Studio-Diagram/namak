@@ -29,8 +29,7 @@ angular.module("dashboard")
                     else if (data['response_code'] === 3) {
                         if ($scope.new_member_data.card_number === $scope.new_member_data.phone)
                             $scope.new_member_data.card_number = '';
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     if ($scope.new_member_data.card_number === $scope.new_member_data.phone)
@@ -65,8 +64,7 @@ angular.module("dashboard")
                         $scope.open_modal('addMemberModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $scope.error_message = error;

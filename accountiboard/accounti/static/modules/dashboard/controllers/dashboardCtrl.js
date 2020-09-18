@@ -57,7 +57,6 @@ angular.module("dashboard")
                             image_name: ""
                         };
                         $scope.branch_name = $rootScope.selecetd_branch.name;
-                        $scope.get_today_cash();
                         $scope.get_news();
                     }
                 }
@@ -68,35 +67,9 @@ angular.module("dashboard")
                 $transitions.onBefore({}, function (transition) {
                     if (transition._targetState._identifier !== $state.current.name) {
                         $rootScope.is_page_loading = true;
+                        $rootScope.is_sub_page_loading = true;
                     }
                 });
-
-                $window.onkeyup = function (event) {
-                    if (event.ctrlKey && event.keyCode === 49) {
-                        $state.go('dashboard.quickAccess');
-                    }
-                    if (event.ctrlKey && event.keyCode === 50) {
-                        $state.go('dashboard.cash_manager.salon');
-                    }
-                    if (event.ctrlKey && event.keyCode === 51) {
-                        $state.go('dashboard.reservation');
-                    }
-                    if (event.ctrlKey && event.keyCode === 52) {
-                        $state.go('dashboard.member_manager.member');
-                    }
-                    if (event.ctrlKey && event.keyCode === 54) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 55) {
-                        $state.go('dashboard.account_manager.buy');
-                    }
-                    if (event.ctrlKey && event.keyCode === 56) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 57) {
-                        $state.go('dashboard.manager.addEmployee');
-                    }
-                };
             };
 
             $rootScope.show_toast = function (message, type) {
@@ -121,21 +94,6 @@ angular.module("dashboard")
 
             $scope.isAuthenticated = function () {
                 return $auth.isAuthenticated();
-            };
-
-            $scope.get_today_cash = function () {
-                dashboardHttpRequest.getTodayCash($rootScope.user_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $rootScope.cash_data.cash_id = data['cash_id'];
-                        }
-                        else if (data['response_code'] === 3) {
-                            $rootScope.cash_data.cash_id = 0;
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
             };
 
             $scope.get_today = function () {

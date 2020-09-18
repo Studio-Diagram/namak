@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("paysCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
+            $rootScope.is_page_loading = false;
             $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.new_pay_data = {
@@ -11,13 +12,47 @@ angular.module("dashboard")
                 'backup_code': '',
                 'settle_type': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 'banking_id': '',
                 'stock_id': ''
             };
             $scope.search_data_pay = {
-                'search_word': '',
-                'username': $rootScope.user_data.username
+                'search_word': ''
+            };
+            $scope.headers = [
+                {
+                    name: "شماره پرداختی",
+                    key: "factor_number"
+                },
+                {
+                    name: "تامین‌کننده",
+                    key: "supplier_name"
+                },
+                {
+                    name: "میزان پرداختی",
+                    key: "payment_amount"
+                },
+                {
+                    name: "نوع پرداخت",
+                    key: "settle_type"
+                },
+                {
+                    name: "شماره ارجاع",
+                    key: "backup_code"
+                },
+                {
+                    name: "بانکداری",
+                    key: "banking"
+                },
+                {
+                    name: "تاریخ",
+                    key: "created_time"
+                }
+            ];
+            $scope.table_config = {
+                price_fields: ["payment_amount"],
+                has_detail_button: false,
+                has_delete_button: true,
+                has_row_numbers: false
             };
             $scope.get_pays();
             $scope.get_suppliers();
@@ -41,8 +76,7 @@ angular.module("dashboard")
         $scope.getNextFactorNumber = function (invoice_type) {
             var sending_data = {
                 'invoice_type': invoice_type,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getNextFactorNumber(sending_data)
                 .then(function (data) {
@@ -50,12 +84,10 @@ angular.module("dashboard")
                         $scope.new_pay_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -66,46 +98,11 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
-        };
-
-        $scope.openAddModal = function () {
-            $scope.set_today_for_invoice();
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.addPay = function () {
@@ -118,15 +115,13 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.get_pays();
                         $scope.resetFrom();
-                        $scope.closeAddModal();
+                        $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -141,52 +136,31 @@ angular.module("dashboard")
                             $scope.pays = data['pays'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                     });
             }
         };
 
         $scope.get_pays = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getAllPays(data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.pays = data['invoices']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.is_sub_page_loading = false;
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closePermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.delete_invoice_pay = function (invoice_id) {
@@ -194,15 +168,14 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.get_pays();
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
         $scope.get_banking_data = function () {
             dashboardHttpRequest.getBankingByBranch($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.allbanking_names = [];
                     data['bank'].forEach(function (bank) {
                         $scope.allbanking_names.push({'id': bank.id, 'name': bank.name});
@@ -217,30 +190,29 @@ angular.module("dashboard")
                     });
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.is_sub_page_loading = false;
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
         $scope.get_stocks_data = function () {
             dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     angular.copy($rootScope.user_data.branches, $scope.branches);
                     $scope.stocks = data['stocks'];
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.is_sub_page_loading = false;
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
         $scope.save_and_open_modal = function () {
             $scope.addPay();
             $timeout(function () {
-                $scope.openAddModal();
+                $scope.set_today_for_invoice();
+                $scope.open_modal('addModal');
                 $scope.getNextFactorNumber('PAY');
             }, 1000);
         };
@@ -252,7 +224,6 @@ angular.module("dashboard")
                 'supplier_id': '',
                 'payment_amount': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 'banking_id': '',
                 'stock_id': ''
             };

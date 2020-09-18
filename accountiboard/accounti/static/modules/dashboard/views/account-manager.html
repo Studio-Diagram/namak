@@ -1,19 +1,12 @@
-<div ng-controller="managerCtrl" class="pageSubMenu">
+<div class="pageSubMenu">
     <nav class="nav">
-        <a ui-sref="dashboard.account_manager.buy" ng-class="isActive('/dashboard/account_manager/buy') ? 'nav-link active' : 'nav-link'">خرید</a>
-        <a ui-sref="dashboard.account_manager.pay" ng-class="isActive('/dashboard/account_manager/pay') ? 'nav-link active' : 'nav-link'">پرداخت</a>
-        <a ui-sref="dashboard.account_manager.salary"
-        ng-class="isActive('/dashboard/account_manager/salary') ? 'nav-link active' : 'nav-link'">پرداخت حقوق</a>
-        <a ui-sref="dashboard.account_manager.expense"
-           ng-class="isActive('/dashboard/account_manager/expense') ? 'nav-link active' : 'nav-link'">هزینه</a>
-        <a ui-sref="dashboard.account_manager.return"
-           ng-class="isActive('/dashboard/account_manager/return') ? 'nav-link active' : 'nav-link'">مرجوعی</a>
-        <a ui-sref="dashboard.account_manager.suppliers"
-           ng-class="isActive('/dashboard/account_manager/supplier') ? 'nav-link active' : 'nav-link'">تامین‌کنندگان</a>
-        <a ui-sref="dashboard.account_manager.reports"
-           ng-class="isActive('/dashboard/account_manager/reports') ? 'nav-link active' : 'nav-link'">گزارش گیری</a>
-        <a ui-sref="dashboard.account_manager.manage_cash"
-           ng-class="isActive('/dashboard/account_manager/manage_cash') ? 'nav-link active' : 'nav-link'">مدیریت صندوق روز</a>
+        <a ui-sref="dashboard.accounting.documents.buy" ng-class="isActive('/dashboard/accounting/documents') ? 'nav-link active' : 'nav-link'">اسناد حساب‌داری</a>
+        <a ui-sref="dashboard.accounting.suppliers"
+           ng-class="isActive('/dashboard/accounting/supplier') ? 'nav-link active' : 'nav-link'">تامین‌کنندگان</a>
+        <a ui-sref="dashboard.accounting.reports"
+           ng-class="isActive('/dashboard/accounting/reports') ? 'nav-link active' : 'nav-link'">گزارش گیری</a>
+        <a ui-sref="dashboard.accounting.manage_cash"
+           ng-class="isActive('/dashboard/accounting/manage_cash') ? 'nav-link active' : 'nav-link'">مدیریت صندوق روز</a>
     </nav>
 </div>
 <div class="preloader" ng-show="is_page_loading"></div>

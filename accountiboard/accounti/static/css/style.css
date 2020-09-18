@@ -1759,12 +1759,12 @@ tags-input .tags .tag-item {
     content: '';
     display: block;
     top: 35%;
-    width: 10%;
-    height: 35%;
+    width: 90px;
+    height: 90px;
     background: url(/static/img/namak-main.gif);
-    background-size: 8em 8em;
+    background-size: cover;
     background-repeat: no-repeat;
-    left: 55%;
+    left: 50%;
 }
 
 .page_button {
@@ -2119,22 +2119,25 @@ th.disabled:hover {
 }
 
 .toast {
-    width: 318px;
-    -webkit-border-radius: 0 30px 30px 0;
-    -moz-border-radius: 0 30px 30px 0;
-    border-radius: 0 30px 30px 0;
-    height: 4em;
+    width: 330px;
+    border-radius: 10px 0 0 10px;
+    min-height: 110px;
     display: none;
 }
 
 .toast .toast-body {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.toast .toast-body > p {
+    flex: 1 0 100%;
 }
 
 .toast.toast-success {
-    border-left: 6px solid #80AB51;
+    border-right: 6px solid #80AB51;
 }
 
 .mainButton.toast-button {
@@ -2149,7 +2152,7 @@ th.disabled:hover {
 }
 
 .toast.toast-danger {
-    border-left: 6px solid #DB4E54;
+    border-right: 6px solid #DB4E54;
 }
 
 .toast-danger .toast-button {

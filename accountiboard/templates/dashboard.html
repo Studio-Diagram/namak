@@ -37,7 +37,6 @@
         <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/menuCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
@@ -168,13 +167,13 @@
                     <div class="row">
                         <main class="col-sm-12">
                             <span ng-show="transaction_successful_activated"
-                                class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی جدید فعال شد
+                                  class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی جدید فعال شد
                             </span>
                             <span ng-show="transaction_successful_reserved"
-                                class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی رزرو شد
+                                  class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی رزرو شد
                             </span>
                             <span ng-show="transaction_unsuccessful"
-                                class="alertText">پرداخت با خطا مواجه شد
+                                  class="alertText">پرداخت با خطا مواجه شد
                             </span>
 
                         </main>
@@ -184,7 +183,6 @@
         </div>
     </div>
 </div>
-
 
 
 <div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
@@ -259,15 +257,15 @@
 </div>
 
 
-<div style="position: absolute; top: 5em; left: 0;z-index: 1050;">
+<div style="position: absolute;bottom: 10px;right: 0;;z-index: 1080;">
     <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
          role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
+            <p ng-bind="toast_message"></p>
             <button class="mainButton toast-button ml-1" data-dismiss="toast" aria-label="Close">
                 <i class="fa fa-check"></i>
                 <span>باشه</span>
             </button>
-            <span ng-bind="toast_message"></span>
         </div>
     </div>
 </div>
@@ -372,8 +370,8 @@
                                 class="fas fa-smile-wink"></i>مشتریان</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="dashboard.account_manager.buy" href=""
-                           ng-class="isActive('/dashboard/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        <a ui-sref="dashboard.accounting.documents.buy" href=""
+                           ng-class="isActive('/dashboard/accounting') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-calculator"></i>حسابداری</a>
                     </li>
                     <li class="nav-item">
