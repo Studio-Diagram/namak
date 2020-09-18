@@ -125,11 +125,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteMenuItem': function (data) {
+            'deleteMenuItem': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteMenuItem/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteMenuItem/" + item_id + "/"
                 });
             },
             'searchMenuItem': function (data) {
@@ -701,18 +700,16 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteInvoicePurchase': function (data) {
+            'deleteInvoicePurchase': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoicePurchase/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoicePurchase/" + item_id + "/"
                 });
             },
-            'deleteInvoiceExpense': function (data) {
+            'deleteInvoiceExpense': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoiceExpense/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoiceExpense/" + item_id + "/"
                 });
             },
             'deleteInvoiceReturn': function (data) {
@@ -722,11 +719,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteInvoiceSettlement': function (data) {
+            'deleteInvoiceSettlement': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoiceSettlement/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoiceSettlement/" + item_id + "/"
                 });
             },
             'getNextFactorNumber': function (data) {

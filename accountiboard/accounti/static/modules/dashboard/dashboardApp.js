@@ -475,6 +475,42 @@ function configureTemplateFactory($provide) {
 
 myApp.config(['$provide', configureTemplateFactory]);
 
-myApp.config(["$locationProvider", function($locationProvider) {
-  $locationProvider.html5Mode(true);
+myApp.config(["$locationProvider", function ($locationProvider) {
+    $locationProvider.html5Mode(true);
 }]);
+
+myApp.directive('popover', function ($compile) {
+    return {
+        restrict: 'EA',
+        scope: {
+            question: '@',
+            text: '@',
+            firstButtonText: '@',
+            secondButtonText: '@',
+            firstCallback: '&',
+            secondCallback: '&'
+        },
+        link: function (scope, elem, $scope) {
+            jQuery.noConflict();
+            (function ($) {
+                var content = `<div class="popoverWrapper"><div>
+                    <p><i class="fas fa-exclamation-triangle"></i><span ng-bind="question"></span></p>
+                    <p ng-bind="text"></p>
+                    <a ng-if="firstButtonText" href="" ng-click="firstCallback()" 
+                    class="mainButton redButton smallButton fullWidthButton" 
+                    ng-bind="firstButtonText"></a>
+                    <a ng-if="secondButtonText" href="" ng-click="secondCallback()" ng-bind="secondButtonText"
+                    class="mainButton newGrayButton smallButton fullWidthButton"></a>
+                    </div>
+                    </div>`;
+                var compileContent = $compile(content)(scope);
+                var options = {
+                    content: compileContent[0],
+                    html: true
+                };
+                $(elem).popover(options);
+            })(jQuery);
+
+        }
+    }
+});

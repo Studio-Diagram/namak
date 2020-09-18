@@ -291,8 +291,7 @@ form.generalForm .submitButtonWrapper {
 
 main.pageContent {
     padding: 15px 0 0 15px;
-    margin: 0;
-    margin-left: 15px;
+    margin: 0 0 0 15px;
     overflow: auto;
     width: 100%;
     height: calc(100vh - 118px);
@@ -430,7 +429,7 @@ a.newYellowButton:hover {
 
 a.blueButton {
     background: var(--myBlue);
-    border-color: var(--myBlueBorder);
+    border-color: var(--myBlueBorder) !important;
 }
 
 a.blueButton:hover {
@@ -440,7 +439,7 @@ a.blueButton:hover {
 
 button.blueButton {
     background: var(--myBlue);
-    border-color: var(--myBlueBorder);
+    border-color: var(--myBlueBorder) !important;
 }
 
 button.blueButton:hover {
@@ -733,7 +732,6 @@ tbody {
 
 .mainModal .modal-dialog .modal-content .modal-body nav {
     border-bottom: 1px solid var(--pageBorder);
-    margin-top: 10px;
 }
 
 .mainModal .modal-dialog .modal-content .modal-footer {
@@ -774,6 +772,8 @@ form .row div input {
 
 .mainModal .cafeMenuNav {
     border: none !important;
+    height: calc(100vh - 259px);
+    overflow-y: auto;
 }
 
 .mainModal .cafeMenuNav ul {
@@ -913,15 +913,27 @@ table.invoiceItem td {
 }
 
 table.invoiceItem th.first {
-    width: 2%;
+    width: 3%;
 }
 
 table.invoiceItem th.second {
-    width: 25%;
+    width: 40%;
+}
+
+table.invoiceItem th.third {
+    width: 15%;
+}
+
+table.invoiceItem th.forth {
+    width: 7%;
+}
+
+table.invoiceItem th.fifth {
+    width: 15%;
 }
 
 table.invoiceItem th.sixth {
-    width: 35%;
+    width: 20%;
 }
 
 table.invoiceTable tr.newOrder td, table.invoiceTable tr.newOrder th {
@@ -2544,6 +2556,7 @@ aside.leftAside {
     padding: 0;
     display: grid;
     grid-template-columns: 5fr 7fr;
+    grid-template-rows: 100%;
 }
 
 .invoiceSaleModal .modal-body .rightSideInvoiceSale {
@@ -2621,7 +2634,7 @@ aside.leftAside {
 }
 
 .leftSideInvoiceSale {
-    padding: 15px 15px 26px 15px !important;
+    padding: 15px 15px 10px 15px !important
 }
 
 .leftSideInvoiceSale .newInvoiceSaleTable {
@@ -2704,16 +2717,15 @@ a.newGrayButton:hover {
 .menuCategoriesWrapper {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    z-index: 100;
 }
 
 .menuCategoryCard {
-    padding: 10px;
     border-bottom: 1px solid #C6CACF;
     border-left: 1px solid #C6CACF;
-}
-
-.menuCategoryCard:nth-child(-n+4) {
-    border-top: 1px solid #C6CACF;
 }
 
 .menuCategoryCard:nth-child(4n) {
@@ -2722,7 +2734,6 @@ a.newGrayButton:hover {
 
 .menuCategoryCard:hover {
     cursor: pointer;
-    background-color: #C6CACF;
 }
 
 .menuItemsWrapper {
@@ -2735,6 +2746,7 @@ a.newGrayButton:hover {
 .menuItemCard {
     padding: 45px 28px;
     color: var(--white);
+    font-size: 16px;
     border-left: 1px solid var(--white);
     border-bottom: 1px solid var(--white);
 }
@@ -2745,6 +2757,7 @@ a.newGrayButton:hover {
 
 .menuItemCard:hover {
     cursor: pointer;
+    filter: brightness(110%);
 }
 
 .menuItemCard:nth-child(6n+1) {
@@ -2810,6 +2823,7 @@ a.newGrayButton:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
+    position: relative;
 }
 
 .gameCardInfo {
@@ -3028,3 +3042,101 @@ table.newInvoiceSaleTable tbody tr .first a {
     font-size: 26px;
 }
 
+.totalPriceRow th, .totalPriceRow td {
+    font-weight: 500 !important;
+    font-size: 13px;
+}
+
+#invoiceSaleTable tbody > tr td:last-child {
+    font-size: 10px;
+}
+
+#invoiceSaleTable tbody > tr:first-child th {
+    position: sticky;
+    top: 0;
+}
+
+.menuCategoryCard span {
+    padding: 10px;
+    display: block;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.menuCategoryCard.active span, .menuCategoryCard:hover span {
+    font-weight: 500;
+    background-color: var(--white);
+}
+
+.menuCategoryCard.active {
+    cursor: default;
+    background: none;
+}
+
+.leftSideInvoiceSale > table tbody {
+    max-height: calc(100vh - 520px);
+    display: block;
+    overflow-y: auto;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid var(--mainBody);
+    background: var(--newGrayBorder);
+    margin-right: 5px;
+}
+
+.mainButton.blueButton.dropdown-toggle::after {
+    display: none;
+}
+
+.stateAlert {
+    border-radius: 5px;
+    padding: 1.5em;
+}
+
+.greenState {
+    background-color: #D6E2CD;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+}
+
+.leftSideInvoiceSale .stateAlert {
+    margin: 10px 0;
+}
+
+.popoverWrapper {
+    width: 180px;
+    font-family: IRANSans;
+    font-size: 10px;
+}
+
+.popoverWrapper > div > p:first-child {
+    font-size: 11px;
+    color: var(--myRed);
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    justify-content: center;
+}
+
+.popoverWrapper > div > p:nth-child(2) {
+    line-height: 15px;
+}
+
+.popoverWrapper > div a {
+    font-size: 12px !important;
+    margin: 3px 0;
+}

@@ -28,6 +28,22 @@ angular.module("mainpage")
             };
         };
 
+        $scope.verify_password = function () {
+            if ($scope.user_forget_password_data.password !== $scope.user_forget_password_data.re_password) {
+                $scope.form_state.is_error = true;
+                $scope.form_state.is_loading = false;
+                $scope.form_state.error_msg = "رمز عبور باید با تکرار آن برابر باشد.";
+                return false;
+            }
+            else if ($scope.user_forget_password_data.password.length < 8) {
+                $scope.form_state.is_error = true;
+                $scope.form_state.is_loading = false;
+                $scope.form_state.error_msg = "رمز عبور باید حداقل ۸ کاراکتر باشد.";
+                return false;
+            }
+            return true;
+        };
+
         $scope.start_timer = function () {
             var interval = $interval(function () {
                 if ($scope.minutes_counter !== 0) {
@@ -41,6 +57,9 @@ angular.module("mainpage")
         };
 
         $scope.send_forget_password = function () {
+            if (!$scope.verify_password()){
+                return false
+            }
             $scope.form_state.is_loading = true;
             $scope.form_state.is_error = false;
             mainpageHttpRequest.forgetPassword($scope.user_forget_password_data)

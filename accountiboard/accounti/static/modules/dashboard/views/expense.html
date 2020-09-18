@@ -5,7 +5,8 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">تایید حذف فاکتور</h2>
-                    <a ng-click="delete_invoice_expense(deleteing_invoice_id)" href="" class="mainButton greenButton"> بله</a>
+                    <a ng-click="delete_invoice_expense(deleteing_invoice_id)" href="" class="mainButton greenButton">
+                        بله</a>
                     <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
@@ -82,7 +83,8 @@
                                             <ui-select ng-model="new_invoice_expense_data.supplier_id">
                                                 <ui-select-match placeholder="انتخاب تامین‌کننده">
                                                     {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                <ui-select-choices
+                                                        repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
@@ -105,10 +107,11 @@
                                     <tr>
                                         <td>
                                             <small> تگ‌های هزینه <i class="fa fa-question-circle"
-                                                      title="با زدن اینتر تگ‌های جدید خود را بسازید."
-                                                      data-toggle="tooltip" tooltip></i></small>
+                                                                    title="با زدن اینتر تگ‌های جدید خود را بسازید."
+                                                                    data-toggle="tooltip" tooltip></i></small>
                                             <tags-input ng-model="tags" display-property="name"
-                                                        placeholder="تگ خود را اضافه کنید." replace-spaces-with-dashes="false"
+                                                        placeholder="تگ خود را اضافه کنید."
+                                                        replace-spaces-with-dashes="false"
                                                         add-on-comma="false">
                                                 <auto-complete source="loadTags($query)"
                                                                min-length="0"
@@ -121,14 +124,16 @@
                                         <td ng-hide="true">
                                             <small>حساب بانکی</small>
                                             <select ng-model="new_invoice_expense_data.banking_id"
-                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
+                                                    class="form-control"
+                                                    ng-options="banking.id as banking.name for banking in allbanking_names">
                                             </select>
                                         </td>
 
                                         <td ng-hide="true">
                                             <small>انبار</small>
                                             <select ng-model="new_invoice_expense_data.stock_id"
-                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
+                                                    class="form-control"
+                                                    ng-options="stock.id as stock.name for stock in stocks">
                                             </select>
                                         </td>
 
@@ -167,13 +172,15 @@
                                     <tbody>
                                     <tr>
                                         <th>تخفیف</th>
-                                        <td><input ng-model="new_invoice_expense_data.discount" type="text" class="form-control"
+                                        <td><input ng-model="new_invoice_expense_data.discount" type="text"
+                                                   class="form-control"
                                                    aria-label="" ng-change="change_total_price()" format>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>مالیات</th>
-                                        <td><input ng-model="new_invoice_expense_data.tax" type="text" class="form-control"
+                                        <td><input ng-model="new_invoice_expense_data.tax" type="text"
+                                                   class="form-control"
                                                    aria-label="" ng-change="change_total_price()" format>
                                         </td>
                                     </tr>
@@ -223,11 +230,11 @@
         <div class="tableButtons ">
             <div class="buttonGroup">
                 <a ng-click="openAddModal();getNextFactorNumber('EXPENSE')" href=""
-               class="mainButton greenButton">هزینه جدید</a>
+                   class="mainButton greenButton">هزینه جدید</a>
             </div>
             <div class="buttonGroup">
                 <form><input ng-keyup="searchExpense()" ng-model="search_data_expense.search_word"
-                   class="form-control listFilter" type="search" placeholder="فیلتر کن"></form>
+                             class="form-control listFilter" type="search" placeholder="فیلتر کن"></form>
             </div>
         </div>
         <div class="row userPageContent">
@@ -254,8 +261,18 @@
                             <th scope="row">{{ expense.settlement_type }}</th>
                             <td>{{ expense.total_price | number | persianNumber }} ریال</td>
                             <td>{{ expense.date | persianNumber }}</td>
-                            <td><a ng-click="openDeletePermissionModal(expense.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
+                            <td>
+                                <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
+                                   role="button" data-container="body"
+                                   ng-disabled="disable_print_after_save_all_buttons"
+                                   data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                                   question="مطمئن هستید؟"
+                                   text="بعد از پاک شدن آیتم اطلاعات قابل بازیابی نخواهند بود."
+                                   first-button-text="حذف آیتم"
+                                   first-callback="delete_invoice_expense(expense.id)">
+                                    حدف
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

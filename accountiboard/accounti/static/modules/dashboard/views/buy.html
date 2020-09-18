@@ -29,27 +29,10 @@
                 <div class="modalHeader">
                     <h2 class="modalTitle">تایید خروج از فاکتور</h2>
                     <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
+                    <a ng-click="close_modal('closeInvoicePermissionModal', 'addModal')" href="" class="mainButton redButton"> خیر</a>
                 </div>
                 <div class="modal-body">
                     <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید حذف فاکتور</h2>
-                    <a ng-click="delete_invoice_purchase(deleteing_invoice_id)" href="" class="mainButton greenButton">
-                        بله</a>
-                    <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ تمام اطلاعات فاکتور شما از بین
                         می‌رود.</p>
                 </div>
             </div>
@@ -86,14 +69,14 @@
                                     <a ng-click="changeMenuNav('MAT')" href=""
                                        ng-class="current_menu_nav === 'MAT' ? 'nav-link iconButton active' : 'nav-link iconButton'">
                                         مواد اولیه <i class="fa fa-question-circle"
-                                                     title="برای ایجاد مواد اولیه نام ماده را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
-                                                     data-toggle="tooltip" tooltip></i>
+                                                      title="برای ایجاد مواد اولیه نام ماده را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
+                                                      data-toggle="tooltip" tooltip></i>
                                     </a>
                                     <a ng-click="changeMenuNav('SHOP')" href=""
                                        ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'">
                                         فروشگاهی <i class="fa fa-question-circle"
-                                                     title="برای ایجاد محصولات فروشگاهی نام محصول را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
-                                                     data-toggle="tooltip" tooltip></i>
+                                                    title="برای ایجاد محصولات فروشگاهی نام محصول را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
+                                                    data-toggle="tooltip" tooltip></i>
                                     </a>
                                 </nav>
                                 <nav class=" nav flex-column cafeMenuNav">
@@ -347,8 +330,18 @@
                             <td>{{ invoice.date | persianNumber }}</td>
                             <td><a ng-click="showInvoicePurchase(invoice.id)" href=""
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                            <td><a ng-click="openDeletePermissionModal(invoice.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
+                            <td>
+                                <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
+                                   role="button" data-container="body"
+                                   ng-disabled="disable_print_after_save_all_buttons"
+                                   data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                                   question="مطمئن هستید؟"
+                                   text="بعد از پاک شدن آیتم اطلاعات قابل بازیابی نخواهند بود."
+                                   first-button-text="حذف آیتم"
+                                   first-callback="delete_invoice_purchase(invoice.id)">
+                                    حدف
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

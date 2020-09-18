@@ -137,17 +137,21 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور فروش </h2>
-                    <button ng-click="openPermissionModal()" class="mainButton redButton"
-                            ng-disabled="disable_print_after_save_all_buttons"
-                            aria-label="Close">
-                        <span aria-hidden="true">خروج</span>
-                    </button>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body"
+                       ng-disabled="disable_print_after_save_all_buttons"
+                       data-toggle="popover" data-placement="bottom" popover question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج بدون ذخیره" first-callback="closeAddInvoiceModal()"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="saveAndCloseInvoice()">خروج</a>
                     <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
                             id="settle_button" ng-click="openPayModal()"
                             class="mainButton greenButton">تسویه
                     </button>
 
                     <button type="button" class="mainButton blueButton dropdown-toggle" data-toggle="dropdown">
+                        <i class="fas fa-angle-down"></i>
                         چاپ
                     </button>
                     <div class="dropdown-menu">
@@ -188,6 +192,7 @@
                                 <div class="accordion">
                                     <div class="menuCategoriesWrapper">
                                         <div ng-click="showCollapse($index)"
+                                             ng-class="{'active': selected_category.category_name === category.category_name }"
                                              ng-repeat="category in menu_items_with_categories"
                                              class="menuCategoryCard">
                                             <span ng-bind="category.category_name"></span>
@@ -526,7 +531,8 @@
                                        ng-model="new_invoice_data.invoice_sales_id" disabled>
                             </div>
                         </div>
-                        <table class="invoiceTable invoiceItem newInvoiceSaleTable">
+                        <table ng-if="new_invoice_data.menu_items_old.length || new_invoice_data.shop_items_old.length || new_invoice_data.menu_items_new.length || new_invoice_data.shop_items_new.length || new_invoice_data.games.length"
+                               class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
                             <tbody>
                             <tr>
                                 <th class="first"></th>
@@ -556,9 +562,9 @@
                                     </a>
                                 </td>
                                 <td>{{ old_item.name }}</td>
-                                <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
+                                <td>{{ old_item.price | number | persianNumber }}</td>
                                 <td>{{ old_item.nums | persianNumber }}</td>
-                                <td>{{ old_item.total | persianNumber }}</td>
+                                <td>{{ old_item.total | number | persianNumber }}</td>
                                 <td>{{ old_item.description }}</td>
                             </tr>
                             <tr ng-repeat="game in new_invoice_data.games">
@@ -584,7 +590,7 @@
                                 <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
                                            ng-change="changeItemNumber($index)"></td>
                                 <td>{{ new_item.total | number | persianNumber }}</td>
-                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                <td><input class="form-control" type="text"
                                            ng-model="new_item.description"></td>
                             </tr>
                             <tr ng-repeat="new_item in new_invoice_data.shop_items_new">
@@ -592,16 +598,23 @@
                                                      style="cursor: pointer"><i class="fas fa-trash"></i></a>
                                 </td>
                                 <td>{{ new_item.name }}</td>
-                                <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
+                                <td>{{ new_item.price | number | persianNumber }}</td>
                                 <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
                                            ng-change="changeItemShopNumber($index)"></td>
-                                <td>{{ new_item.total | persianNumber }}</td>
-                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                <td>{{ new_item.total | number | persianNumber }}</td>
+                                <td><input class="form-control" type="text"
                                            ng-model="new_item.description"></td>
                             </tr>
 
                             </tbody>
                         </table>
+                        <div class="stateAlert greenState"
+                             ng-if="!(new_invoice_data.menu_items_old.length || new_invoice_data.shop_items_old.length || new_invoice_data.menu_items_new.length || new_invoice_data.shop_items_new.length || new_invoice_data.games.length)">
+                            <p>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>آیتمی وجود ندارد</span>
+                            </p>
+                        </div>
                         <div class="invoiceSaleFooter">
                             <div>
                                 <div ng-if="new_invoice_data.current_game.start_time" class="gameCardInfo">
@@ -626,20 +639,9 @@
                             <table class="invoiceTable">
                                 <tbody>
                                 <tr>
-                                    <th>اعتبار</th>
-                                    <td>
-                                        {{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
-                                </tr>
-                                <tr>
-                                    <th>اعتبار مصرفی</th>
+                                    <th>اعتبار مصرف شده</th>
                                     <td>
                                         {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
-                                </tr>
-                                <tr>
-                                    <th>انعام</th>
-                                    <td><input ng-model="new_invoice_data.tip" type="text" class="form-control"
-                                               aria-label="" format>
-                                    </td>
                                 </tr>
                                 <tr>
                                     <th>تخفیف</th>
@@ -648,10 +650,16 @@
                                                aria-label="" format>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="totalPriceRow">
                                     <th>جمع کل</th>
                                     <td>
                                         {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <th>انعام</th>
+                                    <td><input ng-model="new_invoice_data.tip" type="text" class="form-control"
+                                               aria-label="" format>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -1002,7 +1010,6 @@
                         </tr>
                         </tbody>
                     </table>
-
                 </div>
 
             </main>

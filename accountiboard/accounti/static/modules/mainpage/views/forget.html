@@ -59,7 +59,7 @@
                 <div class="form-group submitButtonWrapper mt-3">
                     <button ng-click="send_forget_password()" type="button"
                             class="submitButton btn oilBlueButton fullWidthButton"
-                            ng-disabled="!user_forget_password_data.password || !user_forget_password_data.re_password || (user_forget_password_data.password !== user_forget_password_data.re_password) || (user_forget_password_data.password.length < 8) || !user_forget_password_data.sms_verify_token">
+                            ng-disabled="!user_forget_password_data.password || !user_forget_password_data.re_password || !user_forget_password_data.sms_verify_token">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
                         <span ng-hide="form_state.is_loading">تغییر رمز عبور</span>

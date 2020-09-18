@@ -27,11 +27,6 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-            $scope.new_printer_data = {
-                'printer_id': 0,
-                'name': '',
-                'branch': $rootScope.user_data.branch
-            };
             $scope.printers = [];
             $scope.error_message = "";
 
@@ -122,19 +117,9 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.openAddMenuCategoryModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addMenuCategoryModal').modal('show');
-            })(jQuery);
-        };
-
         $scope.closeAddMenuCategoryModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addMenuCategoryModal').modal('hide');
-                $scope.resetFrom();
-            })(jQuery);
+            $rootScope.close_modal('addMenuCategoryModal');
+            $scope.resetFrom();
         };
 
         $scope.addMenuCategory = function () {
@@ -157,9 +142,8 @@ angular.module("dashboard")
 
         $scope.editMenuCategory = function (menu_category_id) {
             var data = {
-                'username': $rootScope.user_data.username,
-                'branch': $rootScope.user_data.branch,
-                'menu_category_id': menu_category_id
+                branch: $rootScope.user_data.branch,
+                menu_category_id: menu_category_id
             };
             dashboardHttpRequest.getMenuCategory(data)
                 .then(function (data) {
@@ -170,10 +154,9 @@ angular.module("dashboard")
                             'name': data['menu_category']['name'],
                             'kind': data['menu_category']['kind'],
                             'printers_id': data['menu_category']['printers_id'],
-                            'branch_id': $rootScope.user_data.branch,
-                            'username': $rootScope.user_data.username
+                            'branch_id': $rootScope.user_data.branch
                         };
-                        $scope.openAddMenuCategoryModal();
+                        $rootScope.open_modal('addMenuCategoryModal');
                     }
                     else if (data['response_code'] === 3) {
                         $scope.error_message = data['error_msg'];
@@ -243,7 +226,6 @@ angular.module("dashboard")
 
         $scope.editMenuItem = function (menu_item_id) {
             var data = {
-                'username': $rootScope.user_data.username,
                 'menu_item_id': menu_item_id
             };
             dashboardHttpRequest.getMenuItem(data)
@@ -254,8 +236,7 @@ angular.module("dashboard")
                             'name': data['menu_item']['name'],
                             'price': data['menu_item']['price'],
                             'menu_category_id': data['menu_item']['menu_category_id'],
-                            'branch_id': $rootScope.user_data.branch,
-                            'username': $rootScope.user_data.username
+                            'branch_id': $rootScope.user_data.branch
                         };
                         $rootScope.open_modal('addMenuItemModal');
                     }
@@ -270,41 +251,14 @@ angular.module("dashboard")
 
         };
 
-        $scope.deleteMenuItem = function () {
-            var data = {
-                'username': $rootScope.user_data.username,
-                'menu_item_id': $scope.menu_item_wants_deleted
-            };
-            dashboardHttpRequest.deleteMenuItem(data)
+        $scope.deleteMenuItem = function (item_id) {
+            dashboardHttpRequest.deleteMenuItem(item_id)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.get_menu_item_data($rootScope.user_data);
-                        $scope.closeDeleteConfirmModal();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.get_menu_item_data($rootScope.user_data);
                 }, function (error) {
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
-        };
-
-        $scope.openDeleteConfirmModal = function (menu_item_id) {
-            $scope.menu_item_wants_deleted = menu_item_id;
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteConfirm').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeDeleteConfirmModal = function () {
-            $scope.menu_item_wants_deleted = 0;
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteConfirm').modal('hide');
-            })(jQuery);
         };
 
         $scope.resetFrom = function () {

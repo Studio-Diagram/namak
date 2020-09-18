@@ -55,32 +55,6 @@ def permission_decorator_class_based_simplified(permission_func):
     return decorator
 
 
-def session_authenticate(request, permitted_roles, branch_disable=False):
-    user_roles = request.session.get('user_role', None)
-    if request.session.get('is_logged_in', None) and user_roles:
-        request_branch = get_branch(request, *args, **kwargs)
-        session_branch = request.session.get('branch_list', None)
-        if not session_branch:
-            return {
-                "state": False,
-                "message": BRANCH_NOT_IN_SESSION_ERROR
-            }
-        for role in user_roles:
-            if role in permitted_roles:
-                if branch_disable or request_branch in session_branch:
-                    return {
-                        "state": True,
-                        "message": NO_MESSAGE
-                    }
-        return {
-            "state": False,
-            "message": ACCESS_DENIED
-        }
-    return {
-        "state": False,
-        "message": UNAUTHENTICATED
-    }
-
 def session_authenticate_admin_panel(request, *args, **kwargs):
     if request.session.get('admin_is_logged_in'):
         return {
