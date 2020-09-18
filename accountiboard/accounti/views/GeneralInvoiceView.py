@@ -45,6 +45,9 @@ class GetInvoiceNumberView(View):
         elif invoice_type == "EXPENSE":
             last_invoice_object = InvoiceExpense.objects.filter(branch=branch_obj).order_by('id').last()
 
+        elif invoice_type == "SALARY":
+            last_invoice_object = InvoiceSalary.objects.filter(branch=branch_obj).order_by('id').last()
+
         else:
             return JsonResponse({"response_code": 3, "error_msg": "ERROR 500"})
 

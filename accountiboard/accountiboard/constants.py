@@ -91,6 +91,8 @@ PASSWORD_CHANGED = "رمز ورود با موفقیت تغییر یافت"
 DATA_REQUIRE_BRANCH = 'حداقل یکی از شعبه ها را باید انتخاب کنید'
 STOCK_NOT_FOUND = "انبار یافت نشد."
 SUPPLIER_NAME_MUST_BE_UNIQUE = "نام تامین کننده باید منحصر به فرد باشد"
+INVOICE_DELETED = "با موفقیت حذف شد"
+INVOICE_EDITED = "تغییرات اعمال با موفقیت اعمال شد"
 
 SUPPLIER_WITH_INVOICE_PURCHASE_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور خرید مرتبط امکان پذیر نیست"
 SUPPLIER_WITH_INVOICE_EXPENSE_CANT_BE_DELETED = "حذف کردن این تامین کننده به دلیل داشتن فاکتور هزینه مرتبط امکان پذیر نیست"

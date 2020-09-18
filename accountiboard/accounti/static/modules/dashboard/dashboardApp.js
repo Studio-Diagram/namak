@@ -129,7 +129,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
     var reports = {
         name: 'dashboard.account_manager.reports',
-        url: '/reports?type&start&end&branches&suppliers&s_types',
+        url: '/reports?type&start&end&branches&suppliers&s_types&employees',
         params: {
             "type": {
                 dynamic: true,
@@ -152,6 +152,10 @@ myApp.config(function ($stateProvider, $authProvider) {
                 value: null
             },
             "s_types": {
+                dynamic: true,
+                value: null
+            },
+            "employees":{
                 dynamic: true,
                 value: null
             }
@@ -237,6 +241,12 @@ myApp.config(function ($stateProvider, $authProvider) {
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
+    var salary ={
+        name: 'dashboard.account_manager.salary',
+        url:'/salary',
+        templateUrl:'static/modules/dashboard/views/salary.html'
+
+    };
 
     var namak = {
         name: 'dashboard.cafe_management.namak',
@@ -300,6 +310,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(bundles);
     $stateProvider.state(buy_bundle);
     $stateProvider.state(transactions);
+    $stateProvider.state(salary);
 });
 
 angular.module("dashboard")
@@ -415,7 +426,8 @@ myApp.directive('tableDirective', function () {
             rows: '=',
             config: '=',
             detailCallback: '&',
-            rightSideDetailCallback: '&'
+            rightSideDetailCallback: '&',
+            deleteCallback: '&'
         },
         templateUrl: '/static/modules/dashboard/directives/reusable-table.html',
         link: function (scope) {

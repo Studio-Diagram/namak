@@ -70,6 +70,7 @@
         <script src="{% static 'modules/dashboard/controllers/transactionsCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/subManagerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/printersCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/salaryCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -166,13 +167,13 @@
                 <div class="container-fluid">
                     <div class="row">
                         <main class="col-sm-12">
-                            <span ng-show="transaction_successful_activated" 
+                            <span ng-show="transaction_successful_activated"
                                 class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی جدید فعال شد
                             </span>
-                            <span ng-show="transaction_successful_reserved" 
+                            <span ng-show="transaction_successful_reserved"
                                 class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی رزرو شد
                             </span>
-                            <span ng-show="transaction_unsuccessful" 
+                            <span ng-show="transaction_unsuccessful"
                                 class="alertText">پرداخت با خطا مواجه شد
                             </span>
 

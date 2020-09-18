@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from accounti.views import EmployeeView, MemberView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
-    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView
+    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView, InvoiceSalaryView
 from accountiboard import settings
 from django.views.static import serve
 from accounti.views import BankingView
@@ -165,7 +165,10 @@ urlpatterns = [
     path('api/stocks/<int:id>/', StocksView.StockDetailView.as_view()),
     path('api/stocks/', StocksView.StocksView.as_view()),
     path('api/stocksByBranch/<str:branch_id>/', StocksView.StockByBranchView.as_view()),
-
+    path('api/salary/<int:invoice_id>/', InvoiceSalaryView.InvoiceSalaryView.as_view()),
+    path('api/salaries/<str:branch_id>/', InvoiceSalaryView.InvoiceSalariesView.as_view()),
+    path('api/searchSalary/<str:branch_id>/<str:search_word>/', InvoiceSalaryView.InvoiceSalarySearchView.as_view()),
+    path('api/branchEmployees/<str:branch_id>/', EmployeeView.GetBranchEmployeesView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),
@@ -210,5 +213,7 @@ urlpatterns = [
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),
     url(r'^mobile', TemplateView.as_view(template_name='mobile.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
+    # salaryInvoices
+
 
 ]

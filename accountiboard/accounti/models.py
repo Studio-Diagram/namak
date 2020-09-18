@@ -726,3 +726,37 @@ class BugReport(models.Model):
     image_name = models.CharField(max_length=500, null=True, default="default.jpg")
     created_time = models.DateTimeField(auto_now_add=True)
 
+
+class InvoiceSalary(models.Model):
+    SETTLE_TYPES = (
+        ('NOT_DEFINED', 'تعریف نشده'),
+        ('CASH', 'نقدی'),
+        ('CARD', 'کارت به کارت'),
+        ('PAYA', 'پایا'),
+        ('CHECK', 'چک'),
+        ('SATNA', 'ساتنا'),
+    )
+    branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE, null=False)
+    employee = models.ForeignKey(Employee, null=False, blank=True, on_delete=models.CASCADE)
+    created_time = models.DateTimeField(default=timezone.now)
+    description = models.TextField(null=True, blank=True)
+    base_salary = models.IntegerField( default=0)
+    over_time_pay = models.IntegerField(default=0)
+    over_time_pay_description = models.TextField(null=True, blank=True)
+    benefits = models.IntegerField( default=0)
+    benefits_description = models.TextField(null=True, blank=True)
+    bonuses = models.IntegerField(default=0)
+    bonuses_description = models.TextField(null=True, blank=True)
+    reduction = models.IntegerField( default=0)
+    reduction_description = models.TextField(null=True, blank=True)
+    insurance = models.IntegerField(default=0)
+    tax = models.IntegerField(default=0)
+    total_price = models.IntegerField( default=0)
+    factor_number = models.IntegerField(default=0)
+    invoice_date = models.DateTimeField(null=False)
+    backup_code = models.CharField(max_length=150, null=False, default=0)
+    settle_type = models.CharField(max_length=50, null=False, choices=SETTLE_TYPES, default="NOT_DEFINED")
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=True, blank=True)   
+
+
+

@@ -18,6 +18,7 @@ class ReportView(View):
         branches = request.GET.get('branches')
         suppliers = request.GET.get('suppliers')
         settlement_types = request.GET.get('s_types')
+        employees = request.GET.get('employees')
         reports_data = []
 
         if not branches or not invoice_type or not start_date or not end_date:
@@ -164,6 +165,31 @@ class ReportView(View):
                 "description": invoice.description
             } for invoice in invoice_objects]
 
+            return JsonResponse({"results": reports_data, "total_invoices": total_invoices,
+                                 "total_price": total_price_sum.get('total_price__sum') if total_price_sum.get(
+                                     'total_price__sum') else 0})
+        elif invoice_type == "INVOICE_SALARY":
+            invoice_objects = InvoiceSalary.objects.filter(created_time__gte=start_date_gregorian,
+                                                            created_time__lte=end_date_gregorian,
+                                                            branch_id__in=branches)
+            if employees:
+                employees = list(map(int, employees.split(',')))
+                invoice_objects = invoice_objects.filter(employee_id__in=employees)
+
+            total_price_sum = invoice_objects.aggregate(Sum('total_price'))
+            total_invoices = invoice_objects.count()
+            reports_data = [{
+                "id": invoice.pk,
+                "price": invoice.total_price,
+                "invoice_date": jdatetime.date.fromgregorian(day=invoice.created_time.day,
+                                                             month=invoice.created_time.month,
+                                                             year=invoice.created_time.year).strftime('%Y/%m/%d'),
+                "branch_name": invoice.branch.name,
+                "employee": invoice.employee.user.get_full_name(),
+                
+                "settlement_type": invoice.get_settle_type_display()
+            } for invoice in invoice_objects]
+            
             return JsonResponse({"results": reports_data, "total_invoices": total_invoices,
                                  "total_price": total_price_sum.get('total_price__sum') if total_price_sum.get(
                                      'total_price__sum') else 0})

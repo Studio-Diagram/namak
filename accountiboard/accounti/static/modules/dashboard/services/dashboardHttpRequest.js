@@ -180,34 +180,6 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addStock': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/addStock/",
-                    'data': data
-                });
-            },
-            'getStocks': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getStocks/",
-                    'data': data
-                });
-            },
-            'searchStock': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/searchStock/",
-                    'data': data
-                });
-            },
-            'getStock': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getStock/",
-                    'data': data
-                });
-            },
             'addBranch': function (data) {
                 return this.request({
                     'method': "POST",
@@ -536,21 +508,21 @@ angular.module('dashboard')
             'getKitchenDetailSales': function (data) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id +
                     "&cash_id=" + data.cash_id + "&category=KITCHEN&menu_category_id=" + data.menu_category_id
                 });
             },
             'getBarDetailSales': function (data) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id +
                     "&cash_id=" + data.cash_id + "&category=BAR&menu_category_id=" + data.menu_category_id
                 });
             },
             'getOtherDetailSales': function (data) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id +
                     "&cash_id=" + data.cash_id + "&category=OTHER&menu_category_id=" + data.menu_category_id
                 });
             },
@@ -1051,8 +1023,59 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'addInvoiceSalary':function(data,id){
+                return this.request({
+                    'method':"POST",
+                    'url': "/api/salary/"+ id +"/",
+                    'data':data
+                })
+            },
+            'deleteInvoiceSalary':function(id){
+                return this.request({
+                    'method':"DELETE",
+                    'url': "/api/salary/"+ id +"/",
+
+                })
+            },
+            'getInvoiceSalary':function(id){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/salary/"+ id +"/",
+
+                })
+            },
+            'editInvoiceSalary':function(data,id){
+                return this.request({
+                    'method':"PUT",
+                    'url': "/api/salary/"+ id +"/",
+                    'data':data
+
+                })
+            },
+            'getSalaries':function(data){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/salaries/"+ data +"/",
 
 
+                })
+            },
+            'searchSalary':function(data,id){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/searchSalary/"+ id +"/" + data +"/",
+
+
+                })
+            },
+            'getBranchEmployees':function(id){
+                return this.request({
+                    'method':"GET",
+                    'url': "/api/branchEmployees/"+ id +"/" ,
+
+
+                })
+            }
         };
         return service;
 
