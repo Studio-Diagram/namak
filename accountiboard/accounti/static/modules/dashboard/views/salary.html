@@ -277,12 +277,9 @@
         </div>
         <div class="row userPageContent">
             <main class="col-sm-12 ">
-
-                <table-directive ng-if="salaries" headers="headers"
-                                 config="table_config"
+                <table-directive headers="headers" config="table_config"
                                  rows="salaries" detail-callback="showInvoiceSalary(item_id)"
                                  delete-callback="delete_invoice_salary(item_id)"></table-directive>
-
             </main>
         </div>
     </main>

@@ -35,6 +35,34 @@ angular.module("dashboard")
             $scope.search_data_shop_products = {
                 'search_word': ''
             };
+            $scope.headers = [
+                {
+                    name: "شماره فاکتور",
+                    key: "factor_number"
+                },
+                {
+                    name: "تامین‌کننده",
+                    key: "supplier_name"
+                },
+                {
+                    name: "مبلغ خرید",
+                    key: "total_price"
+                },
+                {
+                    name: "نوع پرداخت",
+                    key: "kind"
+                },
+                {
+                    name: "تاریخ خرید",
+                    key: "date"
+                }
+            ];
+            $scope.table_config = {
+                price_fields: ["total_price"],
+                has_detail_button: true,
+                has_delete_button: true,
+                has_row_numbers: false
+            };
             $scope.is_in_edit_mode_supplier = false;
             $scope.printers = [];
             $scope.get_all_invoice_purchases();
@@ -65,8 +93,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -79,8 +106,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -105,12 +131,10 @@ angular.module("dashboard")
                         $scope.favourite_shops = data['shop_products'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -151,12 +175,10 @@ angular.module("dashboard")
                         $scope.openAddModal();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -177,12 +199,10 @@ angular.module("dashboard")
                         $scope.closeAddModal();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -197,12 +217,10 @@ angular.module("dashboard")
                         $scope.new_invoice_purchase_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -217,13 +235,11 @@ angular.module("dashboard")
                         $scope.invoice_purchases = data['invoices']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -234,12 +250,10 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -250,12 +264,10 @@ angular.module("dashboard")
                         $scope.shop_products = data['shop_products']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -420,29 +432,11 @@ angular.module("dashboard")
                         $scope.materials = data['materials'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.openAddModal = function () {
@@ -456,7 +450,6 @@ angular.module("dashboard")
         $scope.closeAddModal = function () {
             jQuery.noConflict();
             (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
                 $('#addModal').modal('hide');
                 $('#addModal').css('z-index', "");
             })(jQuery);
@@ -485,12 +478,10 @@ angular.module("dashboard")
                         $scope.get_materials();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -515,12 +506,10 @@ angular.module("dashboard")
                         $scope.get_shop_products();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -529,22 +518,8 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.get_all_invoice_purchases();
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
-        };
-
-        $scope.openPermissionModal = function () {
-            if ($scope.read_only_mode) {
-                $scope.closeAddModal();
-            }
-            else {
-                jQuery.noConflict();
-                (function ($) {
-                    $('#closeInvoicePermissionModal').modal('show');
-                    $('#addModal').css('z-index', 1000);
-                })(jQuery);
-            }
         };
 
         $scope.deleteNewItem = function (type, item_index) {

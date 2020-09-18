@@ -27,7 +27,7 @@
             </td>
             <td scope="row" ng-repeat="header in headers">
                 <span ng-if="config.price_fields.indexOf(header.key) === -1">{{ item[header.key] | persianNumber }}</span>
-                <span ng-if="config.price_fields.indexOf(header.key) !== -1">{{ item[header.key] | number | persianNumber }}</span>
+                <span class="priceField" ng-if="config.price_fields.indexOf(header.key) !== -1">{{ item[header.key] | number | persianNumber }}</span>
             </td>
             <td scope="col" ng-if="config.has_detail_button">
                 <a ng-click="detailCallback({item_id: item.id})" href=""
