@@ -10,8 +10,7 @@ class AddBranchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE'], USER_PLANS_CHOICES['STANDARDNORMAL'],
-                                       USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         correct_mins = ["00", "15", "30", "45"]
@@ -69,8 +68,7 @@ class GetBranchesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -91,8 +89,7 @@ class SearchBranchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -116,8 +113,7 @@ class BranchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def get(self, request, branch_id, *args, **kwargs):
         branch = get_object_or_404(Branch, pk=branch_id)
         branch_data = {
@@ -135,8 +131,7 @@ class BranchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def put(self, request, branch_id, *args, **kwargs):
         branch = get_object_or_404(Branch, pk=branch_id)
         allowed_keys = {'name', 'address', 'start_working_time', 'end_working_time',
@@ -174,8 +169,7 @@ class GetWorkingTimeForReserveView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']

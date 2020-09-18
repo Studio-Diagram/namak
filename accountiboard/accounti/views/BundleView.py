@@ -52,7 +52,7 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
 class BundleView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
@@ -118,7 +118,7 @@ class BundleView(View):
 
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -240,7 +240,7 @@ class BundleView(View):
 class PayirVerifyGenNewTokenView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -360,7 +360,7 @@ class PayirVerifyGenNewTokenView(View):
 class CheckSubscriptionDiscountView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -409,7 +409,7 @@ class CheckSubscriptionDiscountView(View):
 class TransactionsView(View):
     @permission_decorator_class_based(token_authenticate,
         {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload

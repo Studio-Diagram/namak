@@ -27,8 +27,7 @@ class StartInvoiceGameView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch')
@@ -69,8 +68,7 @@ class ChangeGameStateView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -91,8 +89,7 @@ class DoNotWantOrderView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -112,8 +109,7 @@ class GetDashboardQuickAccessInvoicesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         cash_id = rec_data.get('cash_id')
@@ -211,8 +207,7 @@ class SettleInvoiceSaleView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -274,8 +269,7 @@ class GetInvoiceSaleView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -393,8 +387,7 @@ class GetAllTodayInvoiceSalesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch_id')
@@ -516,8 +509,7 @@ class CreateNewInvoiceSaleView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_sales_id = rec_data.get('invoice_sales_id')
@@ -724,8 +716,7 @@ class EndCurrentGameView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         game_id = rec_data.get('game_id')
@@ -788,8 +779,7 @@ class GetAllInvoiceGamesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -830,8 +820,7 @@ class DeleteItemsView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -900,8 +889,7 @@ class GetTodayStatusView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def get(self, request, *args, **kwargs):
         branch_id = request.GET.get('branch_id')
         cash_id = request.GET.get('cash_id')
@@ -1038,8 +1026,7 @@ class GetSaleDetailsByCategoryView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def get(self, request, *args, **kwargs):
         branch_id = request.GET.get('branch_id')
         cash_id = request.GET.get('cash_id')
@@ -1081,8 +1068,7 @@ class PrintAfterSaveView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -1126,8 +1112,7 @@ class PrintCashView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -1175,8 +1160,7 @@ class PrintCashWithTemlateView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request, *args, **kwargs):
         now_time = jdatetime.datetime.now()
@@ -1284,8 +1268,7 @@ class PrintAfterSaveTemlateView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request, *args, **kwargs):
         now_time = jdatetime.datetime.now()
@@ -1325,8 +1308,7 @@ class ReadyForSettleView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']})
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch_id')
@@ -1345,8 +1327,7 @@ class DeleteInvoiceSaleView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -1378,8 +1359,7 @@ class GetAllInvoiceSaleWithDateView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request, *args, **kwargs):
         data_list = []
@@ -1405,8 +1385,7 @@ class EditPaymentInvoiceSaleView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -1426,8 +1405,7 @@ class NightReportTemplateView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'],
-                                       USER_PLANS_CHOICES['ENTERPRISE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request, *args, **kwargs):
         jdatetime.set_locale('fa_IR')
