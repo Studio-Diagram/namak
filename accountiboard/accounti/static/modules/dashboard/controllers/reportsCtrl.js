@@ -368,7 +368,7 @@ angular.module("dashboard")
             }
             else {
                 if ($state.params.employees) {
-                    $scope.report_data.employees.push($state.params.employees);
+                    $scope.report_data.employees.push(parseInt($state.params.employees));
                 }
             }
             if ($scope.report_data.report_category && $scope.report_data.start_date && $scope.report_data.end_date) {
