@@ -1,23 +1,4 @@
 <div ng-controller="salaryCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="close_modal('addModal');close_modal('closeInvoicePermissionModal','addModal');resetFrom();edit_mode=false"
-                       href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -27,10 +8,14 @@
                 <div class="modalHeader">
                     <h2 ng-hide="edit_mode" class="modalTitle">ثبت فیش حقوقی جدید</h2>
                     <h2 ng-show="edit_mode" class="modalTitle">جزئییات فیش حقوقی </h2>
-                    <a class="mainButton redButton" ng-click="open_modal('closeInvoicePermissionModal','addModal')"
-                       href="" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom()"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="addSalary()">خروج</a>
                     <a ng-hide="edit_mode" ng-click="addSalary()" href="" class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
                     <a ng-hide="edit_mode" href="" ng-click="save_and_open_modal();"
@@ -234,33 +219,6 @@
             </div>
         </div>
     </div>
-
-
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="close_modal('errorModal','addModal')" class="mainButton redButton" data-dismiss="modal"
-                       href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <main class="pageContent container-fluid">
         <div class="tableButtons">
             <div class="buttonGroup">
@@ -275,12 +233,8 @@
                 </form>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <table-directive headers="headers" config="table_config"
-                                 rows="salaries" detail-callback="showInvoiceSalary(item_id)"
-                                 delete-callback="delete_invoice_salary(item_id)"></table-directive>
-            </main>
-        </div>
+        <table-directive headers="headers" config="table_config"
+                         rows="salaries" detail-callback="showInvoiceSalary(item_id)"
+                         delete-callback="delete_invoice_salary(item_id)"></table-directive>
     </main>
 </div>

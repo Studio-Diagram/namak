@@ -83,8 +83,7 @@ angular.module("dashboard")
                     $scope.employees = data['employees'];
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal');
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -103,7 +102,8 @@ angular.module("dashboard")
         $scope.save_and_open_modal = function () {
             $scope.addSalary();
             $timeout(function () {
-                $scope.openAddModal();
+                $scope.set_today_for_invoice();
+                $scope.open_modal('addModal');
                 $scope.getNextFactorNumber('SALARY');
             }, 1000);
         };
@@ -152,8 +152,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -168,12 +167,10 @@ angular.module("dashboard")
                         $scope.new_salary_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -189,8 +186,7 @@ angular.module("dashboard")
                     $scope.resetFrom();
                     $scope.close_modal('addModal');
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal', 'addModal');
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -201,9 +197,7 @@ angular.module("dashboard")
                     $scope.salaries = data['invoices'];
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal');
-
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -212,8 +206,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.getInvoiceSalaries();
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal');
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -248,8 +241,7 @@ angular.module("dashboard")
                     $scope.edit_mode = true;
                     $scope.open_modal('addModal');
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal');
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -265,8 +257,7 @@ angular.module("dashboard")
                     $scope.edit_mode = false;
                     $scope.close_modal('addModal');
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal', 'addModal');
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -281,8 +272,7 @@ angular.module("dashboard")
                         $scope.salaries = data['invoices'];
 
                     }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $scope.open_modal('errorModal');
+                        $rootScope.show_toast(error.data.error_msg, 'danger');
                     });
             }
         };
