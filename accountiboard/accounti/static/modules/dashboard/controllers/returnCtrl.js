@@ -18,13 +18,47 @@ angular.module("dashboard")
                 'date': '',
                 'return_type': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 'banking_id':'',
                 'stock_id':''
             };
             $scope.search_data_return = {
-                'search_word': '',
-                'username': $rootScope.user_data.username
+                'search_word': ''
+            };
+            $scope.headers = [
+                {
+                    name: "شماره فاکتور",
+                    key: "factor_number"
+                },
+                {
+                    name: "تامین‌کننده",
+                    key: "supplier_name"
+                },
+                {
+                    name: "نام محصول",
+                    key: "shop_name"
+                },
+                {
+                    name: "تعداد",
+                    key: "numbers"
+                },
+                {
+                    name: "قیمت کل",
+                    key: "total_price"
+                },
+                {
+                    name: "توضیحات",
+                    key: "description"
+                },
+                {
+                    name: "تاریخ",
+                    key: "date"
+                }
+            ];
+            $scope.table_config = {
+                price_fields: ["total_price"],
+                has_detail_button: false,
+                has_delete_button: false,
+                has_row_numbers: false
             };
             $scope.get_returns();
             $scope.get_suppliers();
@@ -65,12 +99,10 @@ angular.module("dashboard")
                         $scope.shops = data['shop_products'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -81,46 +113,11 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
-        };
-
-        $scope.openAddModal = function () {
-            $scope.set_today_for_invoice();
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.addReturn = function () {
@@ -133,15 +130,13 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.get_returns();
                         $scope.resetFrom();
-                        $scope.closeAddModal();
+                        $scope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -156,20 +151,17 @@ angular.module("dashboard")
                             $scope.returns = data['returns'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                     });
             }
         };
 
         $scope.get_returns = function () {
             var data = {
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getAllReturns(data)
                 .then(function (data) {
@@ -178,37 +170,18 @@ angular.module("dashboard")
                         $scope.returns = data['invoices'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closePermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.getNextFactorNumber = function (invoice_type) {
             var sending_data = {
                 'invoice_type': invoice_type,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getNextFactorNumber(sending_data)
                 .then(function (data) {
@@ -216,12 +189,10 @@ angular.module("dashboard")
                         $scope.new_invoice_return_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -244,8 +215,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -258,15 +228,15 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
         $scope.save_and_open_modal = function () {
             $scope.addReturn();
             $timeout(function () {
-                $scope.openAddModal();
+                $scope.set_today_for_invoice();
+                $scope.open_modal('addModal');
                 $scope.getNextFactorNumber('RETURN');
             }, 1000);
         };
@@ -295,7 +265,6 @@ angular.module("dashboard")
                 'date': '',
                 'return_type': '',
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 'banking_id':'',
                 'stock_id':''
             };
