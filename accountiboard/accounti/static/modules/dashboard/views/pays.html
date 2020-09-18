@@ -12,7 +12,7 @@
                        data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
                        question="مطمئن هستید؟"
                        text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
-                       first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal')"
+                       first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom();"
                        second-button-text="خروج و ذخیره"
                        second-callback="addPay()">خروج</a>
                     <a ng-click="addPay()" href="" class="mainButton greenButton"><i

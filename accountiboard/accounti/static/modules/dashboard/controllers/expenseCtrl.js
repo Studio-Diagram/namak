@@ -24,13 +24,43 @@ angular.module("dashboard")
                 'tax': 0,
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 'banking_id': '',
                 'stock_id': ''
             };
             $scope.search_data_expense = {
-                'search_word': '',
-                'username': $rootScope.user_data.username
+                'search_word': ''
+            };
+            $scope.headers = [
+                {
+                    name: "شماره فاکتور",
+                    key: "factor_number"
+                },
+                {
+                    name: "تامین‌کننده",
+                    key: "supplier_name"
+                },
+                {
+                    name: "دسته‌بندی",
+                    key: "expense_category"
+                },
+                {
+                    name: "نوع پرداخت",
+                    key: "settlement_type"
+                },
+                {
+                    name: "مبلغ هزینه",
+                    key: "total_price"
+                },
+                {
+                    name: "تاریخ",
+                    key: "date"
+                }
+            ];
+            $scope.table_config = {
+                price_fields: ["payment_amount"],
+                has_detail_button: false,
+                has_delete_button: true,
+                has_row_numbers: false
             };
             $scope.get_all_expense_tags();
             $scope.get_expenses();
@@ -58,12 +88,10 @@ angular.module("dashboard")
                         $scope.expense_tags = data['tags'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -80,47 +108,11 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
-        };
-
-        $scope.openAddModal = function () {
-            $scope.set_today_for_invoice();
-            jQuery.noConflict();
-            (function ($) {
-                $('#addModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
-            $scope.resetFrom();
         };
 
         $scope.addExpense = function () {
@@ -135,15 +127,13 @@ angular.module("dashboard")
                         $scope.get_expenses();
                         $scope.get_all_expense_tags();
                         $scope.resetFrom();
-                        $scope.closeAddModal();
+                        $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -152,8 +142,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.get_expenses();
                 }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
         };
 
@@ -168,20 +157,17 @@ angular.module("dashboard")
                             $scope.expenses = data['expenses'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                     });
             }
         };
 
         $scope.get_expenses = function () {
             var data = {
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getAllExpenses(data)
                 .then(function (data) {
@@ -190,30 +176,12 @@ angular.module("dashboard")
                         $scope.expenses = data['invoices'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
-        };
-
-        $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closePermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.deleteNewItem = function (item_index) {
@@ -223,8 +191,7 @@ angular.module("dashboard")
         $scope.getNextFactorNumber = function (invoice_type) {
             var sending_data = {
                 'invoice_type': invoice_type,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getNextFactorNumber(sending_data)
                 .then(function (data) {
@@ -232,12 +199,10 @@ angular.module("dashboard")
                         $scope.new_invoice_expense_data.factor_number = data['next_factor_number'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -260,8 +225,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -274,8 +238,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -300,7 +263,6 @@ angular.module("dashboard")
                 'tax': 0,
                 'discount': 0,
                 'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username,
                 'banking_id': '',
                 'stock_id': ''
             };
@@ -326,7 +288,8 @@ angular.module("dashboard")
         $scope.save_and_open_modal = function () {
             $scope.addExpense();
             $timeout(function () {
-                $scope.openAddModal();
+                $scope.set_today_for_invoice();
+                $rootScope.open_modal('addModal');
                 $scope.getNextFactorNumber('EXPENSE');
             }, 1000);
         };
