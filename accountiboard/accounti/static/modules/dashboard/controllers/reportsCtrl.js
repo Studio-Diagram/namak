@@ -379,7 +379,7 @@ angular.module("dashboard")
         $scope.change_url_params = function () {
             jQuery.noConflict();
             (function ($) {
-                $state.go('dashboard.account_manager.reports', {
+                $state.go('dashboard.accounting.reports', {
                     type: $scope.report_data.report_category,
                     start: $scope.report_data.start_date = $("#start_date_picker").val(),
                     end: $scope.report_data.end_date = $("#end_date_picker").val(),

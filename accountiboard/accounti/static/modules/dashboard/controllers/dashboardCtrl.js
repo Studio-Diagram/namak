@@ -67,6 +67,7 @@ angular.module("dashboard")
                 $transitions.onBefore({}, function (transition) {
                     if (transition._targetState._identifier !== $state.current.name) {
                         $rootScope.is_page_loading = true;
+                        $rootScope.is_sub_page_loading = true;
                     }
                 });
             };

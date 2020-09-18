@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("salaryCtrl", function( $scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state){
         var initialize = function () {
+            $rootScope.is_page_loading = false;
             $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.edit_mode = false;
@@ -91,13 +92,13 @@ angular.module("dashboard")
             
             dashboardHttpRequest.getBranchEmployees($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     
                     $scope.employees = data['employees'];
                     
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal');
                 });
@@ -151,7 +152,7 @@ angular.module("dashboard")
         $scope.get_banking_data = function () {
             dashboardHttpRequest.getBankingByBranch($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.allbanking_names = [];
                     data['bank'].forEach(function (bank) {
                         $scope.allbanking_names.push({'id':bank.id, 'name':bank.name});
@@ -166,7 +167,7 @@ angular.module("dashboard")
                     });
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -217,13 +218,13 @@ angular.module("dashboard")
 
             dashboardHttpRequest.getSalaries($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.salaries = data['invoices'];
                     
                    
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal');
                     
@@ -238,7 +239,7 @@ angular.module("dashboard")
                     $scope.getInvoiceSalaries();
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal');
                 });
@@ -330,7 +331,7 @@ angular.module("dashboard")
                 
                 dashboardHttpRequest.searchSalary($scope.search_word, $rootScope.user_data.branch)
                     .then(function (data) {
-                        $rootScope.is_page_loading = false;
+                        $rootScope.is_sub_page_loading = false;
                         $scope.salaries = data['invoices'];
 
                     }, function (error) {

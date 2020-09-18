@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("paysCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
+            $rootScope.is_page_loading = false;
             $scope.set_today_for_invoice();
             $scope.error_message = '';
             $scope.new_pay_data = {
@@ -158,7 +159,7 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getAllPays(data)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     if (data['response_code'] === 2) {
                         $scope.pays = data['invoices']
                     }
@@ -167,7 +168,7 @@ angular.module("dashboard")
                         $scope.openErrorModal();
                     }
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -202,7 +203,7 @@ angular.module("dashboard")
         $scope.get_banking_data = function () {
             dashboardHttpRequest.getBankingByBranch($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.allbanking_names = [];
                     data['bank'].forEach(function (bank) {
                         $scope.allbanking_names.push({'id': bank.id, 'name': bank.name});
@@ -217,7 +218,7 @@ angular.module("dashboard")
                     });
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -226,12 +227,12 @@ angular.module("dashboard")
         $scope.get_stocks_data = function () {
             dashboardHttpRequest.getStockByBranch($rootScope.user_data.branch)
                 .then(function (data) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     angular.copy($rootScope.user_data.branches, $scope.branches);
                     $scope.stocks = data['stocks'];
 
                 }, function (error) {
-                    $rootScope.is_page_loading = false;
+                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });

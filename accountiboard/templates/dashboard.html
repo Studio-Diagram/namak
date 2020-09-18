@@ -37,7 +37,6 @@
         <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/menuCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
@@ -371,8 +370,8 @@
                                 class="fas fa-smile-wink"></i>مشتریان</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="dashboard.account_manager.buy" href=""
-                           ng-class="isActive('/dashboard/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        <a ui-sref="dashboard.accounting.documents.buy" href=""
+                           ng-class="isActive('/dashboard/accounting') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-calculator"></i>حسابداری</a>
                     </li>
                     <li class="nav-item">

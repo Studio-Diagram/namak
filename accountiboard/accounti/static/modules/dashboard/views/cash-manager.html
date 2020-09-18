@@ -1,8 +1,8 @@
-<div ng-controller="managerCtrl" class="pageSubMenu">
+<div class="pageSubMenu">
     <nav class="nav">
         <a ui-sref="dashboard.cash_manager.salon"
            ng-class="isActive('/dashboard/cash_manager/salon') ? 'nav-link active' : 'nav-link'">سالن</a>
-        <a ui-sref="dashboard.cash_manager.cash({ cash_id: cash_id })" class="nav-link"
+        <a ui-sref="dashboard.cash_manager.cash({ cash_id: cash_data.cash_id })" class="nav-link"
            ng-class="{active: isActive('/dashboard/cash_manager/cash'), disabled: cash_state === 'NO_CASH'}">صندوق
             روزانه</a>
     </nav>

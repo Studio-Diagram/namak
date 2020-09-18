@@ -1759,12 +1759,12 @@ tags-input .tags .tag-item {
     content: '';
     display: block;
     top: 35%;
-    width: 10%;
-    height: 35%;
+    width: 90px;
+    height: 90px;
     background: url(/static/img/namak-main.gif);
-    background-size: 8em 8em;
+    background-size: cover;
     background-repeat: no-repeat;
-    left: 55%;
+    left: 50%;
 }
 
 .page_button {
