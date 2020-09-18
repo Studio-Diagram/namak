@@ -47,7 +47,7 @@ angular.module("dashboard")
 
                 
                     {
-                        name: "شماره فیش",
+                        name: "شماره فاکتور",
                         key: "factor_number"
                     },
                     {
@@ -69,8 +69,7 @@ angular.module("dashboard")
                     {
                         name: "تاریخ پرداخت ",
                         key: "invoice_date"
-                    },
-                
+                    }
                 ];
             
 
@@ -78,6 +77,7 @@ angular.module("dashboard")
                     price_fields: ["price"],
                     has_detail_button: true,
                     has_delete_button: true,
+                    has_row_numbers: false
                 };
           
 
@@ -145,7 +145,7 @@ angular.module("dashboard")
                 'reduction_description':'',
                 'description':'',
                 'branch_id': $rootScope.user_data.branch,                
-                'banking_id':'',
+                'banking_id':''
             };
         };
 
@@ -176,8 +176,7 @@ angular.module("dashboard")
         $scope.getNextFactorNumber = function (invoice_type) {
             var sending_data = {
                 'invoice_type': invoice_type,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getNextFactorNumber(sending_data)
                 .then(function (data) {
@@ -208,7 +207,6 @@ angular.module("dashboard")
                         $scope.close_modal('addModal');
                     
                 }, function (error) {
-                    console.log("fhhthtu")
                     $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal', 'addModal');
                 });
@@ -232,36 +230,18 @@ angular.module("dashboard")
         };
 
         $scope.delete_invoice_salary = function (invoice_id) {
-
             dashboardHttpRequest.deleteInvoiceSalary(invoice_id)
                 .then(function (data) {
-                    $scope.closeDeletePermissionModal();
                     $scope.getInvoiceSalaries();
-
                 }, function (error) {
-                    $rootScope.is_sub_page_loading = false;
                     $scope.error_message = error.data.error_msg;
                     $rootScope.open_modal('errorModal');
                 });
         };
 
-        $scope.openDeletePermissionModal = function (invoice_id) {
-            $scope.deleteing_invoice_id = invoice_id;
-            $rootScope.open_modal("deleteInvoicePermissionModal")
-        };
-
-        $scope.closeDeletePermissionModal = function () {
-            $scope.deleteing_invoice_id = 0;
-            $rootScope.close_modal("deleteInvoicePermissionModal")
-            $scope.resetFrom()
-        };
-
         $scope.showInvoiceSalary = function (invoice_id) {
-
-            
             dashboardHttpRequest.getInvoiceSalary(invoice_id)
                 .then(function (data) {
-                        console.log(data)
                         $scope.new_salary_data = {
                             'id': data['invoice']['id'],
                             'factor_number': data['invoice']['factor_number'],
@@ -323,12 +303,10 @@ angular.module("dashboard")
         };
 
         $scope.searchSalary = function () {
-           
             if ($scope.search_word === '') {
                 $scope.getInvoiceSalaries();
             }
             else {
-                
                 dashboardHttpRequest.searchSalary($scope.search_word, $rootScope.user_data.branch)
                     .then(function (data) {
                         $rootScope.is_sub_page_loading = false;

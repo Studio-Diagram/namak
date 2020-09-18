@@ -2,8 +2,11 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">
-                <span ng-if="config.has_row_numbers">#</span>
+            <th ng-if="config.has_row_numbers" scope="col">
+                <span>#</span>
+            </th>
+            <th ng-if="config.has_second_button_on_right_side" scope="col">
+                <span></span>
             </th>
             <th ng-repeat="header in headers" scope="col" ng-bind="header.name"></th>
             <th scope="col" ng-if="config.has_detail_button"></th>
@@ -12,9 +15,12 @@
         </thead>
         <tbody>
         <tr ng-repeat="item in rows">
-            <td scope="row">
-                <span ng-if="config.has_row_numbers" ng-bind="$index + 1 | persianNumber"></span>
-                <a ng-if="config.has_second_button_on_right_side" ng-click="rightSideDetailCallback({item_id: item.id})" href=""
+            <td ng-if="config.has_row_numbers" scope="row">
+                <span ng-bind="$index + 1 | persianNumber"></span>
+            </td>
+            <td ng-if="config.has_second_button_on_right_side">
+                <a ng-click="rightSideDetailCallback({item_id: item.id})"
+                   href=""
                    class="mainButton fullWidthButton smallButton grayButton">
                     <span ng-bind="config.right_side_button_text"></span>
                 </a>
@@ -28,8 +34,16 @@
                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
             </td>
             <td scope="col" ng-if="config.has_delete_button">
-                <a ng-click="deleteCallback({item_id: item.id})" href=""
-                   class="mainButton fullWidthButton smallButton grayButton">حذف</a>
+                <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
+                   role="button" data-container="body"
+                   ng-disabled="disable_print_after_save_all_buttons"
+                   data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                   question="مطمئن هستید؟"
+                   text="بعد از پاک شدن آیتم اطلاعات قابل بازیابی نخواهند بود."
+                   first-button-text="حذف آیتم"
+                   first-callback="deleteCallback({item_id: item.id})">
+                    حدف
+                </a>
             </td>
         </tr>
         </tbody>

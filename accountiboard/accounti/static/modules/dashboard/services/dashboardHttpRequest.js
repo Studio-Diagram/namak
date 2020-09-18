@@ -1030,17 +1030,17 @@ angular.module('dashboard')
                     'data':data
                 })
             },
-            'deleteInvoiceSalary':function(id){
+            'deleteInvoiceSalary':function(item_id){
                 return this.request({
                     'method':"DELETE",
-                    'url': "/api/salary/"+ id +"/",
+                    'url': "/api/salary/"+ item_id +"/"
 
                 })
             },
             'getInvoiceSalary':function(id){
                 return this.request({
                     'method':"GET",
-                    'url': "/api/salary/"+ id +"/",
+                    'url': "/api/salary/"+ id +"/"
 
                 })
             },
