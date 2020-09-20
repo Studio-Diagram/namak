@@ -9,32 +9,45 @@ angular.module("dashboard")
                 'phone': '',
                 'salesman_name': '',
                 'salesman_phone': '',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             $scope.search_data_supplier = {
                 'search_word': '',
-                'username': $rootScope.user_data.username,
                 'branch': $rootScope.user_data.branch
+            };
+            $scope.headers = [
+                {
+                    name: "عنوان",
+                    key: "name"
+                },
+                {
+                    name: "مسول فروش",
+                    key: "salesman_name"
+                },
+                {
+                    name: "شماره تماس",
+                    key: "salesman_phone"
+                },
+                {
+                    name: "مانده حساب",
+                    key: "remainder"
+                }
+            ];
+            $scope.table_config = {
+                price_fields: ["remainder"],
+                has_detail_button: true,
+                has_second_button_on_right_side: true,
+                has_delete_button: true,
+                has_row_numbers: false,
+                right_side_button_text: "ویرایش",
+                price_with_tags: true
             };
             $scope.is_in_edit_mode_supplier = false;
             $scope.get_suppliers();
         };
 
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
+        $scope.go_to_supplier_detail = function (supplier_id) {
+            $state.go('dashboard.accounting.supplier', {supplier: supplier_id})
         };
 
         $scope.openAddModal = function () {
@@ -45,27 +58,10 @@ angular.module("dashboard")
         };
 
         $scope.closeAddModal = function () {
-            $scope.closePermissionModal();
             jQuery.noConflict();
             (function ($) {
                 $('#addModal').modal('hide');
                 $scope.resetFrom();
-            })(jQuery);
-        };
-
-        $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closePermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').css('z-index', "");
             })(jQuery);
         };
 
@@ -80,12 +76,8 @@ angular.module("dashboard")
                             $scope.closeAddModal();
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
                     });
             }
             else {
@@ -97,12 +89,8 @@ angular.module("dashboard")
                             $scope.closeAddModal();
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
                     });
             }
         };
@@ -118,12 +106,8 @@ angular.module("dashboard")
                             $scope.suppliers = data['suppliers'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
                     });
             }
         };
@@ -136,44 +120,34 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
                 });
         };
 
         $scope.editSupplier = function (supplier_id) {
-            $scope.is_in_edit_mode_supplier = true;            
+            $scope.is_in_edit_mode_supplier = true;
             dashboardHttpRequest.getSupplier(supplier_id)
                 .then(function (data) {
                     $scope.new_supplier_data = {
-                            'id': data['supplier']['id'],
-                            'name': data['supplier']['name'],
-                            'phone': data['supplier']['phone'],
-                            'salesman_name': data['supplier']['salesman_name'],
-                            'salesman_phone': data['supplier']['salesman_phone'],
-                            'branch_id': $rootScope.user_data.branch,
-                            'username': $rootScope.user_data.username
-                        };
-                        $scope.openAddModal();
-                }, function (error) {
-                    $scope.error_message = data['error_msg'];
-                    $scope.openErrorModal();
+                        'id': data['supplier']['id'],
+                        'name': data['supplier']['name'],
+                        'phone': data['supplier']['phone'],
+                        'salesman_name': data['supplier']['salesman_name'],
+                        'salesman_phone': data['supplier']['salesman_phone'],
+                        'branch_id': $rootScope.user_data.branch
+                    };
+                    $scope.openAddModal();
                 });
 
         };
 
-        $scope.deleteSupplier = function () {
-            dashboardHttpRequest.deleteSupplier($scope.deleteing_supplier_id)
+        $scope.deleteSupplier = function (item_id) {
+            dashboardHttpRequest.deleteSupplier(item_id)
                 .then(function (data) {
                     $scope.get_suppliers();
-                }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $scope.openErrorModal();
                 });
         };
 
@@ -184,25 +158,8 @@ angular.module("dashboard")
                 'phone': '',
                 'salesman_name': '',
                 'salesman_phone': '',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
-        };
-
-        $scope.openDeletePermissionModal = function (supplier_id) {
-            $scope.deleteing_supplier_id = supplier_id;
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteSupplierPermissionModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeDeletePermissionModal = function () {
-            $scope.deleteing_supplier_id = 0;
-            jQuery.noConflict();
-            (function ($) {
-                $('#deleteSupplierPermissionModal').modal('hide');
-            })(jQuery);
         };
 
         initialize();

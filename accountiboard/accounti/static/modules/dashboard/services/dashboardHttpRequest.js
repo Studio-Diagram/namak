@@ -26,14 +26,18 @@ angular.module('dashboard')
                     params: params,
                     data: data
                 }).then(angular.bind(this, function (data, status, headers, config) {
-                        deferred.resolve(data['data'], status);
-                    }), angular.bind(this, function (data, status, headers, config) {
-                        // There is a timeout or connection error in server
-                        if (data.status === -1){
-                            $window.location.href = "http://127.0.0.1:8001/dashboard#!/?user=" + $rootScope.user_data.username ;
-                        }
-                        deferred.reject(data, status, headers, config);
-                    }));
+                    deferred.resolve(data['data'], status);
+                }), angular.bind(this, function (data, status, headers, config) {
+                    if (data.status === 404) $rootScope.show_toast("آیتم یافت نشد.", 'danger');
+                    if (data.status === 400) $rootScope.show_toast(data.data.error_msg, 'danger');
+                    else if (data.status === 500) $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
+                    // There is a timeout or connection error in server
+                    if (data.status === -1) {
+                        $window.location.href = "http://127.0.0.1:8001/dashboard#!/?user=" + $rootScope.user_data.username;
+                    }
+                    deferred.resolve(data, status);
+                    // deferred.reject(data, status, headers, config);
+                }));
                 return deferred.promise;
             },
             'getEmployees': function (data) {
@@ -1023,55 +1027,55 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'addInvoiceSalary':function(data,id){
+            'addInvoiceSalary': function (data, id) {
                 return this.request({
-                    'method':"POST",
-                    'url': "/api/salary/"+ id +"/",
-                    'data':data
+                    'method': "POST",
+                    'url': "/api/salary/" + id + "/",
+                    'data': data
                 })
             },
-            'deleteInvoiceSalary':function(item_id){
+            'deleteInvoiceSalary': function (item_id) {
                 return this.request({
-                    'method':"DELETE",
-                    'url': "/api/salary/"+ item_id +"/"
+                    'method': "DELETE",
+                    'url': "/api/salary/" + item_id + "/"
 
                 })
             },
-            'getInvoiceSalary':function(id){
+            'getInvoiceSalary': function (id) {
                 return this.request({
-                    'method':"GET",
-                    'url': "/api/salary/"+ id +"/"
+                    'method': "GET",
+                    'url': "/api/salary/" + id + "/"
 
                 })
             },
-            'editInvoiceSalary':function(data,id){
+            'editInvoiceSalary': function (data, id) {
                 return this.request({
-                    'method':"PUT",
-                    'url': "/api/salary/"+ id +"/",
-                    'data':data
+                    'method': "PUT",
+                    'url': "/api/salary/" + id + "/",
+                    'data': data
 
                 })
             },
-            'getSalaries':function(data){
+            'getSalaries': function (data) {
                 return this.request({
-                    'method':"GET",
-                    'url': "/api/salaries/"+ data +"/",
-
-
-                })
-            },
-            'searchSalary':function(data,id){
-                return this.request({
-                    'method':"GET",
-                    'url': "/api/searchSalary/"+ id +"/" + data +"/",
+                    'method': "GET",
+                    'url': "/api/salaries/" + data + "/",
 
 
                 })
             },
-            'getBranchEmployees':function(id){
+            'searchSalary': function (data, id) {
                 return this.request({
-                    'method':"GET",
-                    'url': "/api/branchEmployees/"+ id +"/" ,
+                    'method': "GET",
+                    'url': "/api/searchSalary/" + id + "/" + data + "/",
+
+
+                })
+            },
+            'getBranchEmployees': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/branchEmployees/" + id + "/",
 
 
                 })

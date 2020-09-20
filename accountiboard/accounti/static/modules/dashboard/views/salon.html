@@ -111,23 +111,6 @@
 
     <settled-invoice-modal-directive>
     </settled-invoice-modal-directive>
-
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddInvoiceModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addInvoiceModal"
          tabindex="-1"
          role="dialog"
@@ -140,7 +123,8 @@
                     <a tabindex="0" class="mainButton redButton" role="button"
                        data-container="body"
                        ng-disabled="disable_print_after_save_all_buttons"
-                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover question="مطمئن هستید؟"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
                        text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
                        first-button-text="خروج بدون ذخیره" first-callback="closeAddInvoiceModal()"
                        second-button-text="خروج و ذخیره"
@@ -242,77 +226,108 @@
                         </nav>
 
                         <nav ng-show="current_menu_nav === 'MEMBER'" class="nav flex-column cafeMenuNav">
-                            <div ng-if="!new_invoice_data.member_id" class="notMemberState">
+                            <div ng-if="!new_invoice_data.member_id && !new_invoice_data.static_guest_name"
+                                 class="notMemberState">
                                 <div class="searchMember">
                                     <div>
                                         <label>جستجوی مشتری</label>
-                                        <input class="form-control autoHeight" type="text"
+                                        <input id="searchMemberInput" class="form-control autoHeight" type="text"
                                                ng-model="search_member_data"
                                                ng-enter="get_member_data(search_member_data)"
                                                placeholder="شماره عضویت / شماره موبایل"
                                                select-on-click>
                                     </div>
-                                    <button class="mainButton greenButton">تایید</button>
+                                    <button ng-click="get_member_data(search_member_data)"
+                                            class="mainButton greenButton">تایید
+                                    </button>
                                 </div>
                                 <div class="addNewMember">
                                     <div>
                                         <div>
                                             <label>نام</label>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
+                                                   placeholder="" ng-model="new_member_data.first_name"
                                                    select-on-click>
                                         </div>
                                         <div>
                                             <label>نام خانوادگی</label>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
+                                                   placeholder="" ng-model="new_member_data.last_name"
                                                    select-on-click>
                                         </div>
                                         <div>
                                             <label>شماره موبایل</label>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
+                                                   placeholder="" ng-model="new_member_data.phone"
                                                    select-on-click>
                                         </div>
                                         <div>
                                             <div>
                                                 <label>تاریخ تولد</label>
                                                 <input class="form-control autoHeight" type="text"
-                                                       placeholder=""
+                                                       placeholder="روز" ng-model="new_member_data.day_of_birth"
                                                        select-on-click>
                                             </div>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
+                                                   placeholder="ماه" ng-model="new_member_data.month_of_birth"
                                                    select-on-click>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
+                                                   placeholder="سال" ng-model="new_member_data.year_of_birth"
                                                    select-on-click>
                                         </div>
                                         <div>
                                             <label>نحوه آشنایی</label>
-                                            <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
-                                                   select-on-click>
+                                            <select ng-model="new_member_data.intro"
+                                                    class="form-control customDropdown">
+                                                <option ng-selected="new_member_data.intro === null" value="">نحوه
+                                                    آشنایی با کافه
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
+                                                    معرفی دوستان
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'friends'" value="HEAVY">
+                                                    جست‌وجوی اینترنت
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'instagram'"
+                                                        value="ABSTRACT">
+                                                    اینستاگرام
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'roomiz'" value="FAMILY">
+                                                    سایت رومیز
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'events'" value="FAMILY">
+                                                    شرکت در رویدادها
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'other'" value="FAMILY">
+                                                    سایر
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div>
                                         <div>
                                             <label>شماره مشتری</label>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder=""
+                                                   placeholder="" ng-model="new_member_data.card_number"
                                                    select-on-click>
                                         </div>
-                                        <button class="mainButton greenButton">ذخیره</button>
+                                        <button ng-click="add_member_and_add_to_invoice()"
+                                                class="mainButton greenButton">
+                                            ذخیره
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="staticNameGuest">
                                     <div>
                                         <label>نام استاتیک برای مشتری</label>
                                         <input class="form-control autoHeight" type="text"
-                                               placeholder=""
+                                               ng-enter="setStaticGuestName(static_guest_name)"
+                                               placeholder="" ng-model="static_guest_name"
                                                select-on-click>
                                     </div>
-                                    <button class="mainButton greenButton">ذخیره</button>
+                                    <button ng-click="setStaticGuestName(static_guest_name)"
+                                            class="mainButton greenButton">تایید
+                                    </button>
                                     <small>
                                         نام استاتیک فقط برای این فاکتور استفاده خواهد شد و در سیستم به عنوان
                                         مشتری ثبت نمی‌گردد. از این فیلد در صورتی استفاده کنید که نمی‌خواهید
@@ -320,14 +335,21 @@
                                     </small>
                                 </div>
                             </div>
-                            <div ng-if="new_invoice_data.member_id" class="isMemberState">
+                            <div ng-if="new_invoice_data.member_id || new_invoice_data.static_guest_name"
+                                 class="isMemberState">
                                 <div class="memberName">
                                     <div>
                                         <label>مشتری</label>
-                                        <p ng-bind="new_invoice_data.member_name"></p>
+                                        <p ng-if="new_invoice_data.member_id"
+                                           ng-bind="new_invoice_data.member_name"></p>
+                                        <p ng-if="!new_invoice_data.member_id && new_invoice_data.static_guest_name">
+                                            <span ng-bind="new_invoice_data.static_guest_name"></span>
+                                            <span ng-click="setStaticGuestName('')" class="closeIcon"><i
+                                                    class="fas fa-times-circle"></i></span>
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="creditsMenu">
+                                <div ng-if="new_invoice_data.member_id" class="creditsMenu">
                                     <div ng-click="change_credit_menu_state('SHOW_CREDITS')"
                                          ng-class="{'active' : credit_state === 'SHOW_CREDITS'}">
                                         <span>لیست اعتبارها</span>
@@ -337,14 +359,14 @@
                                         <span>افزودن اعتبار</span>
                                     </div>
                                 </div>
-                                <div class="credits">
+                                <div ng-if="new_invoice_data.member_id" class="credits">
                                     <div ng-if="credit_state === 'SHOW_CREDITS'" class="showCredits">
                                         <table class="invoiceTable invoiceItem newInvoiceSaleTable">
                                             <tbody>
                                             <tr>
-                                                <th class="second">عنوان</th>
-                                                <th class="third">میزان اعتبار</th>
-                                                <th class="forth">استفاده شده</th>
+                                                <th>عنوان</th>
+                                                <th>میزان اعتبار</th>
+                                                <th>استفاده شده</th>
                                             </tr>
 
                                             <tr ng-repeat="credit_type in new_invoice_data.credits_data">
@@ -356,8 +378,7 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <button ng-disabled="disable_print_after_save_all_buttons"
-                                                ng-click="perform_credit()"
+                                        <button ng-click="perform_credit()"
                                                 class="mainButton greenButton">اعمال اعتبار
                                         </button>
                                         <div class="creditInfo">
@@ -422,7 +443,7 @@
                                                             ng-value="credit_category.key">{{ credit_category.name }}</option>
                                                 </select>
                                             </div>
-                                            <button class="mainButton greenButton">ذخیره
+                                            <button ng-click="create_credit()" class="mainButton greenButton">ذخیره
                                             </button>
                                         </div>
                                     </div>
@@ -466,11 +487,11 @@
                                     <table class="invoiceTable invoiceItem newInvoiceSaleTable">
                                         <tbody>
                                         <tr>
-                                            <th class="second">تعداد بازیکن</th>
-                                            <th class="third">شروع</th>
-                                            <th class="forth">پایان</th>
-                                            <th class="fifth">مدت</th>
-                                            <th class="sixth"></th>
+                                            <th>تعداد بازیکن</th>
+                                            <th>شروع</th>
+                                            <th>پایان</th>
+                                            <th>مدت</th>
+                                            <th></th>
                                         </tr>
 
                                         <tr ng-repeat="game in new_invoice_data.games">
@@ -498,7 +519,18 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="gameDataInfo"></div>
+                                <div class="gameDataInfo">
+                                    <div>
+                                        <span>مجموع زمان بازی‌ها</span>
+                                        <span class="hoursMinutesField"
+                                              ng-bind="convert_total_seconds_to_hours_minutes() | persianNumber"></span>
+                                    </div>
+                                    <div>
+                                        <span>مجموع هزینه بازی‌ها</span>
+                                        <span ng-class="{'priceField' : new_invoice_data.sum_all_games.total_price }"
+                                              ng-bind="new_invoice_data.sum_all_games.total_price | number | persianNumber"></span>
+                                    </div>
+                                </div>
                             </div>
                         </nav>
 
@@ -515,9 +547,9 @@
                             </div>
                             <div>
                                 <label>مشتری</label>
-                                <input class="form-control" type="text"
-                                       ng-model="new_invoice_data.member_data"
-                                       ng-enter="get_member_data(new_invoice_data.member_data)"
+                                <input class="form-control customReadonly" type="text"
+                                       ng-click="clickOnMemberInput()"
+                                       ng-model="new_invoice_data.member_data" readonly
                                        select-on-click>
                             </div>
                             <div>
@@ -665,30 +697,6 @@
                             </table>
                         </div>
                     </aside>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         style="z-index: 1060"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

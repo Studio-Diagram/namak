@@ -441,6 +441,8 @@ myApp.directive('tableDirective', function () {
                 scope.config.has_second_button_on_right_side = false;
             if (scope.config.has_row_numbers === undefined)
                 scope.config.has_row_numbers = true;
+            if (scope.config.price_with_tags === undefined)
+                scope.config.price_with_tags = false;
         }
     }
 

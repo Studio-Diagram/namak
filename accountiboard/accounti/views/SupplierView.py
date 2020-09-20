@@ -192,13 +192,13 @@ class SupplierView(View):
             return JsonResponse({"error_msg": ACCESS_DENIED}, status=403)
 
         if InvoicePurchase.objects.filter(supplier=current_supplier).count():
-            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_PURCHASE_CANT_BE_DELETED}, status=403)
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_PURCHASE_CANT_BE_DELETED}, status=400)
         elif InvoiceExpense.objects.filter(supplier=current_supplier).count():
-            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_EXPENSE_CANT_BE_DELETED}, status=403)
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_EXPENSE_CANT_BE_DELETED}, status=400)
         elif InvoiceReturn.objects.filter(supplier=current_supplier).count():
-            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_RETURN_CANT_BE_DELETED}, status=403)
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_RETURN_CANT_BE_DELETED}, status=400)
         elif InvoiceSettlement.objects.filter(supplier=current_supplier).count():
-            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED}, status=403)
+            return JsonResponse({"error_msg": SUPPLIER_WITH_INVOICE_SETTLEMENT_CANT_BE_DELETED}, status=400)
 
         current_supplier.delete()
 

@@ -17,8 +17,6 @@ angular.module("dashboard")
         };
 
         $scope.addMember = function () {
-            if (!$scope.new_member_data.card_number)
-                $scope.new_member_data.card_number = $scope.new_member_data.phone;
             dashboardHttpRequest.addMember($scope.new_member_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
@@ -27,13 +25,9 @@ angular.module("dashboard")
                         $scope.close_modal('addMemberModal');
                     }
                     else if (data['response_code'] === 3) {
-                        if ($scope.new_member_data.card_number === $scope.new_member_data.phone)
-                            $scope.new_member_data.card_number = '';
                         $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    if ($scope.new_member_data.card_number === $scope.new_member_data.phone)
-                        $scope.new_member_data.card_number = '';
                     $scope.error_message = error;
                     $scope.openErrorModal();
                 });
@@ -41,7 +35,6 @@ angular.module("dashboard")
 
         $scope.editMember = function (member_id) {
             var data = {
-                'username': $rootScope.user_data.username,
                 'branch': $rootScope.user_data.branch,
                 'member_id': member_id
             };
@@ -58,8 +51,7 @@ angular.module("dashboard")
                             'day_of_birth': data['member']['day_of_birth'],
                             'phone': data['member']['phone'],
                             'intro': data['member']['intro'],
-                            'branch': $rootScope.user_data.branch,
-                            'username': $rootScope.user_data.username
+                            'branch': $rootScope.user_data.branch
                         };
                         $scope.open_modal('addMemberModal');
                     }
@@ -80,8 +72,7 @@ angular.module("dashboard")
                     "card_number": online_server_response['card_number'],
                     "method": online_server_response['method'],
                     "member_primary_key": online_server_response['member_primary_key']
-                },
-                'username': $rootScope.user_data.username
+                }
             };
             offlineAPIHttpRequest.create_member(sending_data)
                 .then(function (data) {

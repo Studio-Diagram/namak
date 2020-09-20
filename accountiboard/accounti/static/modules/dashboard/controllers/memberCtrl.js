@@ -25,8 +25,7 @@ angular.module("dashboard")
 
             $scope.gift_code_data = {
                 "gift_code": "",
-                "member_id": "",
-                "username": $rootScope.user_data.username
+                "member_id": ""
             };
             jQuery.noConflict();
             (function ($) {
@@ -44,13 +43,11 @@ angular.module("dashboard")
                 'expire_time': '00:00',
                 'start_date': '',
                 'start_time': '00:00',
-                'credit_category': '',
-                'username': $rootScope.user_data.username
+                'credit_category': ''
             };
             $scope.serach_data_member = {
                 'search_word': '',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch': $rootScope.user_data.branch
             };
             $scope.credit_categories = [
                 {key: "BAR", name: "آیتم‌های بار"},
@@ -110,8 +107,7 @@ angular.module("dashboard")
             $scope.new_credit_data.member_id = member_id;
             $scope.gift_code_data.member_id = member_id;
             var sending_data = {
-                "member_id": member_id,
-                "username": $rootScope.user_data.username
+                "member_id": member_id
             };
             dashboardHttpRequest.memberCredits(sending_data)
                 .then(function (data) {
@@ -225,8 +221,7 @@ angular.module("dashboard")
                 'expire_time': '00:00',
                 'start_date': '',
                 'start_time': '00:00',
-                'credit_category': '',
-                'username': $rootScope.user_data.username
+                'credit_category': ''
             };
         };
 

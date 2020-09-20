@@ -1,37 +1,4 @@
 <div ng-controller="accountManagerCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteSupplierPermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید حذف فاکتور</h2>
-                    <a ng-click="deleteSupplier()" href="" class="mainButton greenButton">
-                        بله</a>
-                    <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ تمام اطلاعات فاکتور شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
          tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -40,7 +7,7 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">ثبت تامین‌کننده جدید</h2>
-                    <a class="mainButton redButton" ng-click="openPermissionModal()" href="" aria-label="Close">
+                    <a class="mainButton redButton" ng-click="closeAddModal()" href="" aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <a ng-click="addSupplier()" href="" class="mainButton greenButton"><i
@@ -118,48 +85,10 @@
                 </form>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">عنوان</th>
-                            <th scope="col">مسول فروش</th>
-                            <th scope="col">شماره تماس</th>
-                            <th scope="col">مانده حساب</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="supplier in suppliers">
-                            <td><a ng-click="editSupplier(supplier.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">ویرایش</a></td>
-                            <th scope="row">{{ supplier.name }}</th>
-                            <td>{{ supplier.salesman_name }}</td>
-                            <td>{{ supplier.salesman_phone }}</td>
-                            <td><span
-                                    ng-class="supplier.remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ supplier.remainder | number | persianNumber }} ریال</span>
-                            </td>
-                            <td><a ui-sref="dashboard.accounting.supplier({ supplier: supplier.id })"
-                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
-
-                            <td><a ng-click="openDeletePermissionModal(supplier.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
-
-        </div>
+        <table-directive headers="headers"
+                         config="table_config"
+                         rows="suppliers" detail-callback="go_to_supplier_detail(item_id)"
+                         right-side-detail-callback="editSupplier(item_id)"
+                         delete-callback="deleteSupplier(item_id)"></table-directive>
     </main>
 </div>

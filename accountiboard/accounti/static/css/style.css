@@ -3022,14 +3022,14 @@ table.newInvoiceSaleTable tbody tr .first a {
     padding: 30px;
 }
 
-.showCredits .creditInfo {
+.showCredits .creditInfo, .gameDataInfo {
     display: grid;
     grid-template-columns: 1fr 1fr;
     text-align: center;
     grid-gap: 0 25px;
 }
 
-.creditInfo > div {
+.creditInfo > div, .gameDataInfo > div {
     border: 1px solid #C6CACF;
     border-radius: 5px;
     padding: 20px 0;
@@ -3037,11 +3037,11 @@ table.newInvoiceSaleTable tbody tr .first a {
     grid-gap: 15px 0;
 }
 
-.creditInfo > div span:first-child {
+.creditInfo > div span:first-child, .gameDataInfo > div span:first-child {
     font-size: 11px;
 }
 
-.creditInfo > div span:last-child {
+.creditInfo > div span:last-child, .gameDataInfo > div span:last-child {
     font-size: 26px;
 }
 
@@ -3142,4 +3142,21 @@ table.newInvoiceSaleTable tbody tr .first a {
 .popoverWrapper > div a {
     font-size: 12px !important;
     margin: 3px 0;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.form-control.customReadonly[readonly] {
+    background-color: var(--white);
+}
+
+.form-control.customDropdown {
+    font-size: 13px;
+    height: 40px;
+}
+
+.hoursMinutesField::before {
+    content: "'";
 }

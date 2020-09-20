@@ -297,18 +297,31 @@ class GetInvoiceSaleView(View):
             'menu_items_old': [],
             'shop_items_old': [],
             'games': [],
+            'sum_all_games': {
+                'total_minutes': 0,
+                'total_hours': 0,
+                'total_price': 0
+            },
             'used_credit': 0,
             'total_credit': 0,
             'credits_data': [],
+            'static_guest_name': invoice_object.static_guest_name,
             'cash_amount': invoice_object.cash,
             "pos_amount": invoice_object.pos
         }
         invoice_games = InvoicesSalesToGame.objects.filter(invoice_sales=invoice_object)
+        all_hours = 0
+        all_minutes = 0
         for game in invoice_games:
             if str(game.game.end_time) != "00:00:00":
                 game_total_secs = getting_delta_time_to_seconds(game.game.start_time, game.game.end_time)
                 hour_points = int(game_total_secs / ONE_HOUR_SECONDS)
                 min_points = int((game_total_secs / 60) % 60)
+                all_hours += hour_points
+                all_minutes += min_points
+                invoice_data['sum_all_games']['total_hours'] += hour_points
+                invoice_data['sum_all_games']['total_minutes'] += min_points
+                invoice_data['sum_all_games']['total_price'] += game.game.points * invoice_object.branch.min_paid_price
                 if len(str(hour_points)) == 1:
                     hour_points_string = "0" + str(hour_points)
                 else:
@@ -431,7 +444,8 @@ class GetAllTodayInvoiceSalesView(View):
                 "is_settled": invoice.is_settled,
                 "game_status": {"status": invoice.game_state, "text": invoice.get_game_state_display()},
                 "invoice_status": invoice_status,
-                'used_credit': sum_all_used_credit_on_this_invoice['used_price__sum']
+                'used_credit': sum_all_used_credit_on_this_invoice['used_price__sum'],
+                'static_guest_name': invoice.static_guest_name
             })
 
         return JsonResponse({"response_code": 2, "all_today_invoices": all_invoices_list})
@@ -522,6 +536,7 @@ class CreateNewInvoiceSaleView(View):
         shop_items_new = rec_data.get('shop_items_new')
         branch_id = rec_data.get('branch_id')
         cash_id = rec_data.get('cash_id')
+        static_guest_name = rec_data.get('static_guest_name')
         discount = rec_data.get('discount') if rec_data.get('discount') else 0
         tip = rec_data.get('tip') if rec_data.get('tip') else 0
 
@@ -556,7 +571,8 @@ class CreateNewInvoiceSaleView(View):
                 cash_desk=cash_obj,
                 discount=discount,
                 tip=tip,
-                member=member_obj
+                member=member_obj,
+                static_guest_name=static_guest_name
             )
 
             new_invoice.save()
@@ -622,6 +638,7 @@ class CreateNewInvoiceSaleView(View):
             old_invoice.table = table_obj
             old_invoice.guest_numbers = guest_numbers
             old_invoice.member = member_obj
+            old_invoice.static_guest_name = static_guest_name
 
             if current_game['id'] == 0 and current_game['start_time']:
                 new_game = Game(
