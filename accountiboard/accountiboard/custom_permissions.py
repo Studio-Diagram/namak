@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 import json
 import jwt
 from accountiboard.settings import JWT_SECRET
-from datetime import datetime
+from datetime import datetime, timedelta
 from accounti.models import TokenBlacklist
 
 
@@ -84,10 +84,10 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
         }
 
     request_branch = get_branch(request, *args, **kwargs)
-
-    if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
-        for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
-            if datetime.utcfromtimestamp(payload['iat']) < blacklist_obj.created_time:
+    token_black_list_objects = TokenBlacklist.objects.filter(user=payload['sub_id'])
+    if token_black_list_objects.count() > 0:
+        for blacklist_obj in token_black_list_objects:
+            if datetime.fromtimestamp(payload['iat']) + timedelta(seconds=30) < blacklist_obj.created_time:
                 return {
                     "state": False,
                     "message": UNAUTHENTICATED
