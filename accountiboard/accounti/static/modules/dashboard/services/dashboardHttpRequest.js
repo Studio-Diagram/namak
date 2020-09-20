@@ -35,8 +35,7 @@ angular.module('dashboard')
                     if (data.status === -1) {
                         $window.location.href = "http://127.0.0.1:8001/dashboard#!/?user=" + $rootScope.user_data.username;
                     }
-                    deferred.resolve(data, status);
-                    // deferred.reject(data, status, headers, config);
+                    deferred.reject(data, status, headers, config);
                 }));
                 return deferred.promise;
             },

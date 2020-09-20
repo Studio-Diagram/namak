@@ -148,7 +148,7 @@ angular.module("dashboard")
             dashboardHttpRequest.deleteSupplier(item_id)
                 .then(function (data) {
                     $scope.get_suppliers();
-                });
+                }, function (error) {});
         };
 
         $scope.resetFrom = function () {
