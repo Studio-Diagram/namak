@@ -181,8 +181,10 @@ class SearchExpenseView(View):
                                                        year=invoice_date.year)
             expenses.append({
                 'id': expense.pk,
+                'factor_number': expense.factor_number,
                 'supplier_name': expense.supplier.name,
-                'expense_category': expense.expense_category.name,
+                'expense_category': expense.get_expense_kind_display(),
+                'settlement_type': expense.get_settlement_type_display(),
                 'total_price': expense.price,
                 'date': jalali_date.strftime("%Y/%m/%d")
             })

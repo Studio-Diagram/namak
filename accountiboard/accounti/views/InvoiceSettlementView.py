@@ -139,6 +139,7 @@ class SearchPaysView(View):
                 'payment_amount': pay.payment_amount,
                 'settle_type': pay.get_settle_type_display(),
                 'backup_code': pay.backup_code,
+                'banking': pay.banking.name if pay.banking else "",
                 'created_time': jalali_date.strftime("%Y/%m/%d")
             })
         return JsonResponse({"response_code": 2, 'pays': pays})

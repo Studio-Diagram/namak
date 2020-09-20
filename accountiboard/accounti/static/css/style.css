@@ -2511,7 +2511,7 @@ aside.leftAside {
 }
 
 .priceField::after {
-    content: ' ﷼ ';
+    content: ' ریال ';
 }
 
 .personField::after {

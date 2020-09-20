@@ -301,6 +301,7 @@ class SearchInvoicesReturnView(View):
                                                        year=invoice_date.year)
             returns.append({
                 'id': invoice_return.pk,
+                'factor_number': invoice_return.factor_number,
                 'supplier_name': invoice_return.supplier.name,
                 'shop_name': invoice_return.shop_product.name,
                 'numbers': invoice_return.numbers,
