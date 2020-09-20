@@ -43,7 +43,7 @@ class LoginView(View):
         if not check_password(password, user_obj.password):
             return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS}, status=400)
 
-        user_obj.last_login = datetime.datetime.utcnow()
+        user_obj.last_login = datetime.utcnow()
         user_obj.save()
         if user_obj.get_user_type_display() == "cafe_owner":
             cafe_owner_object = CafeOwner.objects.get(user=user_obj)
