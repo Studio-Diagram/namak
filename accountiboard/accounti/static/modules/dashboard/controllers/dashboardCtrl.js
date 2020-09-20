@@ -1,6 +1,29 @@
 angular.module("dashboard")
     .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $auth, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
             var initialize = function () {
+                if ($location.search().status && $location.search().token) {
+                    data = {
+                        "status": $location.search().status,
+                        "token": $location.search().token
+                    };
+                    dashboardHttpRequest.payirVerifyGenToken(data)
+                        .then(function (data) {
+                            $auth.setToken(data['token']);
+                            if (data["bundle_activation_status"] === "activated")
+                                $scope.transaction_successful_activated = true;
+                            else if (data["bundle_activation_status"] === "reserved")
+                                $scope.transaction_successful_reserved = true;
+                            else
+                                $scope.transaction_unsuccessful = true;
+
+                            $rootScope.open_modal('transactionResultModal');
+                        }, function (error) {
+                            $scope.error_message = error.data.error_msg;
+                            $rootScope.open_modal('mainErrorModal');
+                        });
+                    $location.search('status', null);
+                    $location.search('token', null);
+                }
                 $rootScope.is_page_loading = true;
                 $rootScope.is_sub_page_loading = true;
                 $rootScope.get_today_var = $scope.get_today();
@@ -34,7 +57,6 @@ angular.module("dashboard")
                             image_name: ""
                         };
                         $scope.branch_name = $rootScope.selecetd_branch.name;
-                        $scope.get_today_cash();
                         $scope.get_news();
                     }
                 }
@@ -45,35 +67,9 @@ angular.module("dashboard")
                 $transitions.onBefore({}, function (transition) {
                     if (transition._targetState._identifier !== $state.current.name) {
                         $rootScope.is_page_loading = true;
+                        $rootScope.is_sub_page_loading = true;
                     }
                 });
-
-                $window.onkeyup = function (event) {
-                    if (event.ctrlKey && event.keyCode === 49) {
-                        $state.go('quickAccess');
-                    }
-                    if (event.ctrlKey && event.keyCode === 50) {
-                        $state.go('cash_manager.salon');
-                    }
-                    if (event.ctrlKey && event.keyCode === 51) {
-                        $state.go('reservation');
-                    }
-                    if (event.ctrlKey && event.keyCode === 52) {
-                        $state.go('member_manager.member');
-                    }
-                    if (event.ctrlKey && event.keyCode === 54) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 55) {
-                        $state.go('account_manager.buy');
-                    }
-                    if (event.ctrlKey && event.keyCode === 56) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 57) {
-                        $state.go('manager.addEmployee');
-                    }
-                }
             };
 
             $rootScope.show_toast = function (message, type) {
@@ -87,7 +83,7 @@ angular.module("dashboard")
                 })(jQuery);
             };
 
-            $scope.isActive = function (path) {
+            $rootScope.isActive = function (path) {
                 return ($location.path().substr(0, path.length) === path);
             };
 
@@ -98,21 +94,6 @@ angular.module("dashboard")
 
             $scope.isAuthenticated = function () {
                 return $auth.isAuthenticated();
-            };
-
-            $scope.get_today_cash = function () {
-                dashboardHttpRequest.getTodayCash($rootScope.user_data)
-                    .then(function (data) {
-                        if (data['response_code'] === 2) {
-                            $rootScope.cash_data.cash_id = data['cash_id'];
-                        }
-                        else if (data['response_code'] === 3) {
-                            $rootScope.cash_data.cash_id = 0;
-                        }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
             };
 
             $scope.get_today = function () {
@@ -313,7 +294,7 @@ angular.module("dashboard")
                 $rootScope.selected_branch = selected_branch;
                 $scope.$root.selected_branch = selected_branch;
                 $scope.branch_name = selected_branch.name;
-                $state.go("cash_manager.salon", {}, {reload: true});
+                $state.go("dashboard.cash_manager.salon", {}, {reload: true});
             };
 
             $rootScope.close_modal = function (modal_id, modal_has_to_fade_in) {
@@ -325,6 +306,33 @@ angular.module("dashboard")
                     jQuery.noConflict();
                     (function ($) {
                         $('#' + modal_has_to_fade_in).css('z-index', "");
+                    })(jQuery);
+                }
+            };
+
+
+            $rootScope.open_modalv2 = function (modal_id, modal_has_to_fade_out) {
+                $scope.last_modal = modal_has_to_fade_out;
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_id).modal('show');
+                })(jQuery);
+                if (modal_has_to_fade_out) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('#' + modal_has_to_fade_out).css('z-index', 1000);
+                    })(jQuery);
+                }
+            };
+            $rootScope.close_modalv2 = function (modal_id) {
+                jQuery.noConflict();
+                (function ($) {
+                    $('#' + modal_id).modal('hide');
+                })(jQuery);
+                if ($scope.last_modal) {
+                    jQuery.noConflict();
+                    (function ($) {
+                        $('#' + $scope.last_modal).css('z-index', "");
                     })(jQuery);
                 }
             };

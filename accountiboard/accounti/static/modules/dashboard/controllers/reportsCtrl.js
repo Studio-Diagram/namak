@@ -8,7 +8,8 @@ angular.module("dashboard")
                 end_date: "",
                 branches: [],
                 suppliers: [],
-                settlement_types: []
+                settlement_types: [],
+                employees: []
             };
             $scope.headers = {
                 INVOICE_SALE: [
@@ -152,6 +153,32 @@ angular.module("dashboard")
                         name: "شعبه",
                         key: "branch_name"
                     }
+                ],
+                INVOICE_SALARY: [
+                    {
+                        name: "شماره فاکتور",
+                        key: "id"
+                    },
+                    {
+                        name: "کارمند",
+                        key: "employee"
+                    },
+                    {
+                        name: "مبلغ کل",
+                        key: "price"
+                    },
+                    {
+                        name: "تاریخ پرداخت ",
+                        key: "invoice_date"
+                    },
+                    {
+                        name: "نوع پرداخت",
+                        key: "settlement_type"
+                    },
+                    {
+                        name: "شعبه",
+                        key: "branch_name"
+                    }
                 ]
             };
             $scope.settlement_types = [
@@ -172,23 +199,34 @@ angular.module("dashboard")
             $scope.invoice_type_configs = {
                 INVOICE_SALE: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
+
                 },
                 INVOICE_PURCHASE: {
                     price_fields: ["price"],
-                    has_detail_button: true
+                    has_detail_button: true,
+                    has_delete_button: false,
                 },
                 INVOICE_PAY: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
                 },
                 INVOICE_EXPENSE: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
                 },
                 INVOICE_RETURN: {
                     price_fields: ["price"],
-                    has_detail_button: false
+                    has_detail_button: false,
+                    has_delete_button: false,
+                },
+                INVOICE_SALARY: {
+                    price_fields: ["price"],
+                    has_detail_button: false,
+                    has_delete_button: false,
                 }
             };
 
@@ -212,11 +250,16 @@ angular.module("dashboard")
                 {
                     id: "INVOICE_RETURN",
                     name: "فاکتور مرجوعی"
+                },
+                {
+                    id: "INVOICE_SALARY",
+                    name: "فاکتور پرداخت حقوق"
                 }
             ];
             $rootScope.is_page_loading = false;
             $scope.get_suppliers();
             $scope.check_url_parameters();
+            $scope.get_employees_data($rootScope.user_data);
         };
 
         $scope.get_suppliers = function () {
@@ -281,7 +324,8 @@ angular.module("dashboard")
                 '&end=' + $scope.ending_date +
                 '&branches=' + $scope.report_data.branches +
                 '&suppliers=' + $scope.report_data.suppliers +
-                '&s_types=' + $scope.report_data.settlement_types)
+                '&s_types=' + $scope.report_data.settlement_types+
+                '&employees='+ $scope.report_data.employees)
                 .then(function (data) {
                     $scope.selected_table_report_category = $scope.report_data.report_category;
                     $scope.reports_result = data;
@@ -319,6 +363,14 @@ angular.module("dashboard")
                     $scope.report_data.settlement_types.push($state.params.s_types);
                 }
             }
+            if (Array.isArray($state.params.employees)) {
+                $scope.report_data.employees = $state.params.employees
+            }
+            else {
+                if ($state.params.employees) {
+                    $scope.report_data.employees.push(parseInt($state.params.employees));
+                }
+            }
             if ($scope.report_data.report_category && $scope.report_data.start_date && $scope.report_data.end_date) {
                 $scope.get_report();
             }
@@ -327,13 +379,14 @@ angular.module("dashboard")
         $scope.change_url_params = function () {
             jQuery.noConflict();
             (function ($) {
-                $state.go('account_manager.reports', {
+                $state.go('dashboard.accounting.reports', {
                     type: $scope.report_data.report_category,
                     start: $scope.report_data.start_date = $("#start_date_picker").val(),
                     end: $scope.report_data.end_date = $("#end_date_picker").val(),
                     branches: $scope.report_data.branches,
                     suppliers: $scope.report_data.suppliers,
-                    s_types: $scope.report_data.settlement_types
+                    s_types: $scope.report_data.settlement_types,
+                    employees: $scope.report_data.employees,
                 }, {
                     notify: false,
                     reload: false,
@@ -366,6 +419,23 @@ angular.module("dashboard")
 
         $scope.display_float_to_int = function (price) {
             return Math.round(price);
+        };
+        $scope.get_employees_data = function (data) {
+            dashboardHttpRequest.getEmployees(data)
+                .then(function (data) {
+                    $rootScope.is_page_loading = false;
+                    if (data['response_code'] === 2) {
+                        $scope.employees = data['employees'];
+                    }
+                    else if (data['response_code'] === 3) {
+                        $scope.error_message = data['error_msg'];
+                        $scope.openErrorModal();
+                    }
+                }, function (error) {
+                    $rootScope.is_page_loading = false;
+                    $scope.error_message = error;
+                    $scope.openErrorModal();
+                });
         };
 
         initialize();

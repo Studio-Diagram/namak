@@ -1,0 +1,78 @@
+<div ng-controller="bundlesCtrl">
+
+
+            
+    <div ng-show="active_bundle.length == 0" class="cashStateAlert noCashState">
+        <p>
+            <i class="fas fa-cube"></i>
+            <span>هنوز طرح اشتراکی فعال نشده است.</span>
+        </p>
+        <p>
+            برای خرید طرح اشتراکی جدید اینجا را کلیک کنید:
+        </p>
+        <button ui-sref="dashboard.cafe_management.namak.buy_bundle" class="mainButton greenButton">خرید اشتراک</button>
+    </div>
+
+
+    <div ng-show="active_bundle.length != 0" class="tableWrapper">
+        <table class="table">
+            <h3 class="tableName">طرح اشتراک فعال</h3>
+            <tbody>
+            <tr>
+                <th>نام</th>
+                <th>رده</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+            </tr>
+            <tr ng-repeat="bundle in active_bundle">
+                <td>{{bundle.bundle_plan}}</td>
+                <td></td>
+                <td>{{bundle.starting_datetime_plan | persianNumber }}</td>
+                <td>{{bundle.expiry_datetime_plan | persianNumber }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+    <div ng-show="reserved_bundles.length == 0 && active_bundle.length != 0" class="cashStateAlert noCashState">
+        <p>
+            <i class="fas fa-cube"></i>
+            <span>طرح اشتراکی رزرو وجود ندارد</span>
+        </p>
+        <p>
+            برای خرید طرح اشتراکی رزرو که به صورت خودکار پس از پایان طرح فعلی فعال می شود اینجا را کلیک کنید
+        </p>
+        <button ui-sref="dashboard.cafe_management.namak.buy_bundle" class="mainButton greenButton">خرید اشتراک</button>
+    </div>
+
+
+    <div ng-show="reserved_bundles.length != 0" class="tableWrapper">
+        <table class="table">
+            <h3 class="tableName">طرح اشتراک رزرو</h3>
+            <tbody>
+            <tr>
+                <th>نام</th>
+                <th>رده</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+            </tr>
+            <tr ng-repeat="bundle in reserved_bundles">
+                <td>{{bundle.bundle_plan}}</td>
+                <td></td>
+                <td>{{bundle.starting_datetime_plan | persianNumber }}</td>
+                <td>{{bundle.expiry_datetime_plan | persianNumber }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+
+
+
+</div>

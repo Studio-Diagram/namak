@@ -5,11 +5,12 @@ from django.views.generic import TemplateView
 from accounti.views import EmployeeView, MemberView, BranchView, InvoiceSaleView, \
     SupplierView, InvoicePurchaseView, InvoiceSettlementView, InvoiceExpenseView, InvoiceReturnView, \
     ReserveView, CashView, TableView, GeneralInvoiceView, MenuCategoryView, ShopProductView, LotteryView, CreditView, \
-    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView
+    OfflineAPIs, UserView, ReportView, BundleView, BugReportView, LatestNewsView, InvoiceSalaryView
 from accountiboard import settings
 from django.views.static import serve
 from accounti.views import BankingView
 from accounti.views import StocksView
+from accounti.views import PermissionTestView
 
 from admin_panel.views import AdminGeneralView, AdminNewsView, AdminBugReportView, AdminBranchView, AdminLoginView
 from django.conf.urls.static import static
@@ -28,7 +29,7 @@ urlpatterns = [
     path('api/getMenuItem/', EmployeeView.GetMenuItemView.as_view()),
     path('api/getMenuItems/', EmployeeView.GetMenuItemsView.as_view()),
     path('api/addMenuItem/', EmployeeView.AddMenuItemView.as_view()),
-    path('api/deleteMenuItem/', EmployeeView.DeleteMenuItemView.as_view()),
+    path('api/deleteMenuItem/<int:item_id>/', EmployeeView.DeleteMenuItemView.as_view()),
     path('api/searchMenuItem/', EmployeeView.SearchMenuItemView.as_view()),
     path('api/addMember/', MemberView.AddMemberView.as_view()),
     path('api/getMembers/', MemberView.GetMembersView.as_view()),
@@ -103,10 +104,10 @@ urlpatterns = [
     path('api/invoiceSalesByCash/<int:cash_id>/', CashView.InvoiceSalesByCashView.as_view()),
     path('api/getWorkingTime/', BranchView.GetWorkingTimeForReserveView.as_view()),
     path('api/getTodayForReserve/', ReserveView.GetTodayForReserveView.as_view()),
-    path('api/deleteInvoicePurchase/', InvoicePurchaseView.DeleteInvoicePurchaseView.as_view()),
-    path('api/deleteInvoiceExpense/', InvoiceExpenseView.DeleteInvoiceExpenseView.as_view()),
+    path('api/deleteInvoicePurchase/<int:item_id>/', InvoicePurchaseView.DeleteInvoicePurchaseView.as_view()),
+    path('api/deleteInvoiceExpense/<int:item_id>/', InvoiceExpenseView.DeleteInvoiceExpenseView.as_view()),
     path('api/deleteInvoiceReturn/', InvoiceReturnView.DeleteInvoicesReturnView.as_view()),
-    path('api/deleteInvoiceSettlement/', InvoiceSettlementView.DeleteInvoiceSettlementView.as_view()),
+    path('api/deleteInvoiceSettlement/<int:item_id>/', InvoiceSettlementView.DeleteInvoiceSettlementView.as_view()),
     path('api/getNextFactorNumber/', GeneralInvoiceView.GetInvoiceNumberView.as_view()),
     path('api/addTableCategory/', TableView.AddTableCategoryView.as_view()),
     path('api/getTableCategory/', TableView.GetTableCategoryView.as_view()),
@@ -143,8 +144,10 @@ urlpatterns = [
     path('api/report/', ReportView.ReportView.as_view()),
 
     path('api/bundles/', BundleView.BundleView.as_view()),
-    path('api/payir/callback/', BundleView.PayirCallbackView.as_view()),
+
     path('api/check-subscription-discount/', BundleView.CheckSubscriptionDiscountView.as_view()),
+    path('api/transactions/', BundleView.TransactionsView.as_view()),
+    path('api/payirverify-gentoken/', BundleView.PayirVerifyGenNewTokenView.as_view()),
 
     path('api/kick_unkick_employee/', EmployeeView.KickUnkickEmployeeView.as_view()),
 
@@ -162,7 +165,10 @@ urlpatterns = [
     path('api/stocks/<int:id>/', StocksView.StockDetailView.as_view()),
     path('api/stocks/', StocksView.StocksView.as_view()),
     path('api/stocksByBranch/<str:branch_id>/', StocksView.StockByBranchView.as_view()),
-
+    path('api/salary/<int:invoice_id>/', InvoiceSalaryView.InvoiceSalaryView.as_view()),
+    path('api/salaries/<str:branch_id>/', InvoiceSalaryView.InvoiceSalariesView.as_view()),
+    path('api/searchSalary/<str:branch_id>/<str:search_word>/', InvoiceSalaryView.InvoiceSalarySearchView.as_view()),
+    path('api/branchEmployees/<str:branch_id>/', EmployeeView.GetBranchEmployeesView.as_view()),
     # Offline APIs URLs
     path('api/offline/status/', OfflineAPIs.status_of_server),
     path('api/offline/list/member/<int:last_uuid>/<str:branch>/', OfflineAPIs.sync_member_list),
@@ -193,6 +199,10 @@ urlpatterns = [
     path('onward/bugreports/<int:bugreport_id>/', AdminBugReportView.AdminBugReportsDetailView.as_view()),
     path('onward/branches/<int:branch_id>/', AdminBranchView.AdminBranchDetailView.as_view()),
 
+    # Test views
+    path('api/test/free-bundle/', PermissionTestView.FreeTestView.as_view()),
+    path('api/test/nonfree-bundle/', PermissionTestView.NonFreeTestView.as_view()),
+
     path('api/editPaymentInvoiceSale/', InvoiceSaleView.EditPaymentInvoiceSaleView.as_view()),
     path('template/night-report', InvoiceSaleView.NightReportTemplateView.as_view()),
     path('template/invoice-cash', InvoiceSaleView.PrintCashWithTemlateView.as_view()),
@@ -203,5 +213,7 @@ urlpatterns = [
     url(r'^dashboard', TemplateView.as_view(template_name='dashboard.html')),
     url(r'^mobile', TemplateView.as_view(template_name='mobile.html')),
     url(r'^', TemplateView.as_view(template_name='index.html')),
+    # salaryInvoices
+
 
 ]

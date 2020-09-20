@@ -19,6 +19,9 @@
     --mainBody: #eaeff5;
     --white: #fff;
     --okr: #c7af2a;
+    --okrBoarder: #B29E2D;
+    --newGray: #E2E7ED;
+    --newGrayBorder: #C6CACF;
     --grayButtonBorder: #D8D8D8;
     --navBarLineHover: #3DA7B1;
     --oilBlueBorder: #4AA5AD;
@@ -288,8 +291,7 @@ form.generalForm .submitButtonWrapper {
 
 main.pageContent {
     padding: 15px 0 0 15px;
-    margin: 0;
-    margin-left: 15px;
+    margin: 0 0 0 15px;
     overflow: auto;
     width: 100%;
     height: calc(100vh - 118px);
@@ -400,6 +402,17 @@ button.yellowButton:hover {
     cursor: pointer;
 }
 
+button.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+button.okrButton:hover {
+    background: var(--okrBoarder);
+    color: white;
+    cursor: pointer;
+}
+
 a.newYellowButton {
     background: var(--newYellow);
     border-color: var(--newYellowBorder);
@@ -416,7 +429,7 @@ a.newYellowButton:hover {
 
 a.blueButton {
     background: var(--myBlue);
-    border-color: var(--myBlueBorder);
+    border-color: var(--myBlueBorder) !important;
 }
 
 a.blueButton:hover {
@@ -426,7 +439,7 @@ a.blueButton:hover {
 
 button.blueButton {
     background: var(--myBlue);
-    border-color: var(--myBlueBorder);
+    border-color: var(--myBlueBorder) !important;
 }
 
 button.blueButton:hover {
@@ -719,7 +732,6 @@ tbody {
 
 .mainModal .modal-dialog .modal-content .modal-body nav {
     border-bottom: 1px solid var(--pageBorder);
-    margin-top: 10px;
 }
 
 .mainModal .modal-dialog .modal-content .modal-footer {
@@ -760,6 +772,8 @@ form .row div input {
 
 .mainModal .cafeMenuNav {
     border: none !important;
+    height: calc(100vh - 259px);
+    overflow-y: auto;
 }
 
 .mainModal .cafeMenuNav ul {
@@ -899,15 +913,27 @@ table.invoiceItem td {
 }
 
 table.invoiceItem th.first {
-    width: 2%;
+    width: 3%;
 }
 
 table.invoiceItem th.second {
-    width: 25%;
+    width: 40%;
+}
+
+table.invoiceItem th.third {
+    width: 15%;
+}
+
+table.invoiceItem th.forth {
+    width: 7%;
+}
+
+table.invoiceItem th.fifth {
+    width: 15%;
 }
 
 table.invoiceItem th.sixth {
-    width: 35%;
+    width: 20%;
 }
 
 table.invoiceTable tr.newOrder td, table.invoiceTable tr.newOrder th {
@@ -982,16 +1008,12 @@ button.mainButton {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    border: 1px solid;
+    border: 1px solid var(--myRedBorder);
 }
 
 button.mainButton:disabled {
     cursor: no-drop;
     color: lightgray;
-}
-
-button.mainButton:hover {
-
 }
 
 button.mainButton i {
@@ -1097,6 +1119,11 @@ table.cashTable tbody tr td.mainValue span {
 
 .smallButton {
     font-size: .8em !important;
+    padding: 5px 10px !important;
+}
+
+.mediumButton {
+    font-size: 1em !important;
     padding: 5px 10px !important;
 }
 
@@ -1610,15 +1637,27 @@ span.badge.badge-pill.badge-warning {
 }
 
 .tableWrapper span.badge.badge-danger.ng-binding {
-    font-size: 0.85em;
-    padding: 0.8em;
-    background-color: var(--myRed);
+    padding: 8px;
+    background-color: #F2E4E7;
+    color: #DB4E54;
+    font-size: 12px;
+    border: 1px solid #CE4249;
+    font-weight: 400;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .tableWrapper span.badge.badge-success.ng-binding {
-    font-size: 0.85em;
-    padding: 0.8em;
-    background-color: var(--myGreen);
+    font-size: 12px;
+    padding: 8px;
+    background-color: #D6E2CD;
+    font-weight: 400;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .tableWrapper span.badge.badge-warning.ng-binding {
@@ -1720,12 +1759,12 @@ tags-input .tags .tag-item {
     content: '';
     display: block;
     top: 35%;
-    width: 10%;
-    height: 35%;
+    width: 90px;
+    height: 90px;
     background: url(/static/img/namak-main.gif);
-    background-size: 8em 8em;
+    background-size: cover;
     background-repeat: no-repeat;
-    left: 55%;
+    left: 50%;
 }
 
 .page_button {
@@ -2080,22 +2119,25 @@ th.disabled:hover {
 }
 
 .toast {
-    width: 318px;
-    -webkit-border-radius: 0 30px 30px 0;
-    -moz-border-radius: 0 30px 30px 0;
-    border-radius: 0 30px 30px 0;
-    height: 4em;
+    width: 330px;
+    border-radius: 10px 0 0 10px;
+    min-height: 110px;
     display: none;
 }
 
 .toast .toast-body {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.toast .toast-body > p {
+    flex: 1 0 100%;
 }
 
 .toast.toast-success {
-    border-left: 6px solid #80AB51;
+    border-right: 6px solid #80AB51;
 }
 
 .mainButton.toast-button {
@@ -2110,7 +2152,7 @@ th.disabled:hover {
 }
 
 .toast.toast-danger {
-    border-left: 6px solid #DB4E54;
+    border-right: 6px solid #DB4E54;
 }
 
 .toast-danger .toast-button {
@@ -2472,6 +2514,10 @@ aside.leftAside {
     content: ' ﷼ ';
 }
 
+.personField::after {
+    content: ' نفر ';
+}
+
 .tableWithBorderTopTR tr:last-child {
     border-top: 1px solid var(--grayButtonBorder);
 }
@@ -2488,4 +2534,629 @@ aside.leftAside {
 .cashTable.cashDate td span {
     font-size: 1.2em;
     font-weight: 400;
+}
+
+.invoiceSaleModal {
+    top: 75px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+    background: transparent;
+    border: none;
+}
+
+.invoiceSaleModal .modal-content {
+    background: transparent !important;
+}
+
+.invoiceSaleModal .modal-dialog {
+    background: transparent;
+}
+
+.invoiceSaleModal .modal-body {
+    background-color: var(--mainBody);
+    border: 10px solid var(--myBlack) !important;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    grid-template-rows: 100%;
+}
+
+.invoiceSaleModal .modal-body .rightSideInvoiceSale {
+    padding-left: 0 !important;
+}
+
+.invoiceSaleModal .modalTitle {
+    font-size: 20px !important;
+    border: none !important;
+    font-weight: 900;
+    color: var(--white);
+}
+
+.invoiceSaleModal .modalHeader {
+    border: none !important;
+}
+
+.modal-backdrop.show {
+    opacity: .75 !important;
+}
+
+.generalInfoInvoiceSale label {
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+.nav-group {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.nav-group button {
+    border-radius: 0;
+    border-left: none;
+    background-color: var(--white);
+    border-color: black;
+    width: 25%;
+    color: var(--myBlack);
+}
+
+.nav-group button.active {
+    color: var(--white);
+    background-color: var(--myBlack);
+}
+
+.nav-group > button:first-child {
+    border-right: 1px solid var(--myBlack);
+    -webkit-border-radius: 0 5px 5px 0;
+    -moz-border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.nav-group > button:last-child {
+    border-left: 1px solid var(--myBlack);
+    -webkit-border-radius: 5px 0 0 5px;
+    -moz-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+.nav-group button:hover {
+    cursor: pointer;
+}
+
+.rightSideInvoiceSale {
+    border-left: 1px solid #C6CACF;
+}
+
+.rightSideInvoiceSale .nav-group {
+    background: var(--white);
+    padding: 14px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.leftSideInvoiceSale {
+    padding: 15px 15px 10px 15px !important
+}
+
+.leftSideInvoiceSale .newInvoiceSaleTable {
+    margin-top: 20px;
+    margin-bottom: 20px !important;
+}
+
+.tableButtonWrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.tableButtonWrapper a {
+    font-size: 12px !important;
+}
+
+a.newGrayButton {
+    background: var(--newGray);
+    color: var(--myBlack);
+    border-color: var(--newGrayBorder) !important;
+}
+
+a.newGrayButton:hover {
+    background: var(--newGrayBorder);
+    color: var(--myBlack);
+    cursor: pointer;
+}
+
+.searchProductWrapper {
+    padding: 10px 71px 30px 71px;
+}
+
+.searchProductWrapper label {
+    margin-bottom: 5px;
+    font-size: 11px;
+}
+
+.productCard {
+    display: grid;
+    background: var(--white);
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+    padding: 12px;
+    min-height: 70px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 8px 0;
+}
+
+.productCard span:first-child {
+    grid-column: 1 / 4;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.productCard span:nth-last-child(-n + 2) {
+    font-size: 13px;
+    color: #767A80;
+
+}
+
+.productCard:hover {
+    cursor: pointer;
+    background-color: #C6CACF;
+}
+
+.productsWrapper {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.productCard:nth-child(-n+2) {
+    border-top: 1px solid #C6CACF;
+}
+
+.productCard:nth-child(2n) {
+    border-left: none;
+}
+
+.menuCategoriesWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    z-index: 100;
+}
+
+.menuCategoryCard {
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+}
+
+.menuCategoryCard:nth-child(4n) {
+    border-left: none;
+}
+
+.menuCategoryCard:hover {
+    cursor: pointer;
+}
+
+.menuItemsWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.menuItemCard {
+    padding: 45px 28px;
+    color: var(--white);
+    font-size: 16px;
+    border-left: 1px solid var(--white);
+    border-bottom: 1px solid var(--white);
+}
+
+.menuItemCard:nth-child(3n) {
+    border-left: none;
+}
+
+.menuItemCard:hover {
+    cursor: pointer;
+    filter: brightness(110%);
+}
+
+.menuItemCard:nth-child(6n+1) {
+    background-color: #FAA328;
+}
+
+.menuItemCard:nth-child(6n+2) {
+    background-color: #E65F5C;
+}
+
+.menuItemCard:nth-child(6n+3) {
+    background-color: #83B692;
+}
+
+.menuItemCard:nth-child(6n+4) {
+    background-color: #E3B528;
+}
+
+.menuItemCard:nth-child(6n+5) {
+    background-color: #C99EA4;
+}
+
+.menuItemCard:nth-child(6n) {
+    background-color: #45425A;
+}
+
+.gameSectionWrapper {
+    padding: 15px;
+    display: grid;
+    grid-gap: 20px 0;
+}
+
+.startGameInputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    grid-gap: 0 10px;
+}
+
+.startGameInputs .gameStartTime {
+    border: 1px solid #C6CACF;
+    padding: 9px 83px;
+    font-size: 13px;
+    font-weight: 400;
+    text-align: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 0;
+    height: 39.5px;
+}
+
+.startGameInputs button {
+    align-self: last baseline;
+}
+
+.generalInfoInvoiceSale {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 0 11px;
+}
+
+.invoiceSaleFooter {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    position: relative;
+}
+
+.gameCardInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0.4fr 0.6fr;
+    align-items: start;
+    padding: 10px;
+    border: 1px solid #C6CACF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.gameCardInfo button {
+    grid-column: 1 / 4;
+}
+
+table.newInvoiceSaleTable tbody tr th {
+    background: #EAEFF5 !important;
+}
+
+table.newInvoiceSaleTable tr:first-child td:last-child, table.newInvoiceSaleTable tr:first-child th:last-child {
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    border-top-left-radius: 10px;
+}
+
+table.newInvoiceSaleTable tr:first-child td:first-child, table.newInvoiceSaleTable tr:first-child th:first-child {
+
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+table.newInvoiceSaleTable tr td, table.newInvoiceSaleTable tr th {
+    border-left: 1px dotted var(--pageBorder) !important;
+}
+
+table.newInvoiceSaleTable tbody tr .first a {
+    color: #C6CACF;
+    background: #EAEFF5;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.searchMember > div label {
+    font-size: 11px;
+}
+
+.searchMember {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    padding: 10px 20px 25px 20px;
+    grid-gap: 0 10px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.autoHeight {
+    height: auto !important;
+}
+
+.staticNameGuest {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    padding: 10px 20px 25px 20px;
+    grid-gap: 0 10px;
+}
+
+.staticNameGuest > div label {
+    font-size: 11px;
+}
+
+.staticNameGuest small {
+    color: #767A80;
+    text-align: justify;
+    margin-top: 10px;
+}
+
+.addNewMember {
+    padding: 10px 20px 25px 20px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.addNewMember > div:first-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px 10px;
+}
+
+.addNewMember > div:first-child > div:nth-child(4) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+    grid-column: 1 / 3;
+    grid-gap: 0 10px;
+}
+
+.addNewMember label {
+    font-size: 11px;
+}
+
+.addNewMember > div:nth-child(2) {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    margin-top: 10px;
+    grid-gap: 0 10px;
+}
+
+.memberName > div {
+    padding: 10px 80px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.memberName > div > p {
+    background: #4FCAD5;
+    border-radius: 5px;
+    text-align: center;
+    color: var(--white);
+    font-size: 13px;
+    padding: 10px;
+}
+
+.creditsMenu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.creditsMenu > div:first-child {
+    border-left: 1px solid #C6CACF;
+}
+
+.creditsMenu > div {
+    padding: 10px 0;
+}
+
+.creditsMenu > div.active {
+    background-color: var(--white);
+}
+
+.creditsMenu > div:hover {
+    cursor: pointer;
+    background-color: #C6CACF;
+}
+
+.creditsMenu > div.active:hover {
+    background-color: var(--white);
+    cursor: default;
+}
+
+.addCredits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 20px;
+    grid-gap: 25px 30px;
+}
+
+.addCredits > div:first-child {
+    grid-column: 1 / 3;
+}
+
+.addCredits > div:nth-child(4) {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr 0.2fr;
+    align-items: end;
+    grid-gap: 0 10px;
+}
+
+.addCredits > div:nth-child(2), .addCredits > div:nth-child(3) {
+    border: 1px solid #C6CACF;
+    padding: 15px;
+    border-radius: 5px;
+    display: grid;
+    grid-row-gap: 15px;
+}
+
+.addCredits label {
+    font-size: 11px;
+}
+
+.showCredits {
+    display: grid;
+    grid-gap: 20px 0;
+    padding: 30px;
+}
+
+.showCredits .creditInfo, .gameDataInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    grid-gap: 0 25px;
+}
+
+.creditInfo > div, .gameDataInfo > div {
+    border: 1px solid #C6CACF;
+    border-radius: 5px;
+    padding: 20px 0;
+    display: grid;
+    grid-gap: 15px 0;
+}
+
+.creditInfo > div span:first-child, .gameDataInfo > div span:first-child {
+    font-size: 11px;
+}
+
+.creditInfo > div span:last-child, .gameDataInfo > div span:last-child {
+    font-size: 26px;
+}
+
+.totalPriceRow th, .totalPriceRow td {
+    font-weight: 500 !important;
+    font-size: 13px;
+}
+
+#invoiceSaleTable tbody > tr td:last-child {
+    font-size: 10px;
+}
+
+#invoiceSaleTable tbody > tr:first-child th {
+    position: sticky;
+    top: 0;
+}
+
+.menuCategoryCard span {
+    padding: 10px;
+    display: block;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.menuCategoryCard.active span, .menuCategoryCard:hover span {
+    font-weight: 500;
+    background-color: var(--white);
+}
+
+.menuCategoryCard.active {
+    cursor: default;
+    background: none;
+}
+
+.leftSideInvoiceSale > table tbody {
+    max-height: calc(100vh - 520px);
+    display: block;
+    overflow-y: auto;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid var(--mainBody);
+    background: var(--newGrayBorder);
+    margin-right: 5px;
+}
+
+.mainButton.blueButton.dropdown-toggle::after {
+    display: none;
+}
+
+.stateAlert {
+    border-radius: 5px;
+    padding: 1.5em;
+}
+
+.greenState {
+    background-color: #D6E2CD;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+}
+
+.leftSideInvoiceSale .stateAlert {
+    margin: 10px 0;
+}
+
+.popoverWrapper {
+    width: 180px;
+    font-family: IRANSans;
+    font-size: 10px;
+}
+
+.popoverWrapper > div > p:first-child {
+    font-size: 11px;
+    color: var(--myRed);
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    justify-content: center;
+}
+
+.popoverWrapper > div > p:nth-child(2) {
+    line-height: 15px;
+}
+
+.popoverWrapper > div a {
+    font-size: 12px !important;
+    margin: 3px 0;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.form-control.customReadonly[readonly] {
+    background-color: var(--white);
+}
+
+.form-control.customDropdown {
+    font-size: 13px;
+    height: 40px;
+}
+
+.hoursMinutesField::before {
+    content: "'";
 }

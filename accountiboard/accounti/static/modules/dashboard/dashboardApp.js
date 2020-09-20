@@ -16,79 +16,83 @@ myApp.directive('ngEnter', function () {
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Bearer';
+    var dashboard = {
+        name: 'dashboard',
+        url: '/dashboard'
+    };
     var cafe_management = {
-        name: 'cafe_management',
+        name: 'dashboard.cafe_management',
         url: '/cafe',
         templateUrl: 'static/modules/dashboard/views/cafe_management.html'
     };
     var branch_management = {
-        name: 'branch_management',
+        name: 'dashboard.branch_management',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch_management.html'
     };
     var employee = {
-        name: 'cafe_management.employee',
+        name: 'dashboard.cafe_management.employee',
         url: '/employee',
         templateUrl: 'static/modules/dashboard/views/add_employee.html'
     };
     var tables = {
-        name: 'branch_management.tables',
+        name: 'dashboard.branch_management.tables',
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
     var menu_manager = {
-        name: 'branch_management.menu',
+        name: 'dashboard.branch_management.menu',
         url: '/menu',
         templateUrl: 'static/modules/dashboard/views/menu_manager.html'
     };
     var menu_general = {
-        name: 'branch_management.menu.general',
+        name: 'dashboard.branch_management.menu.general',
         url: '/general',
         templateUrl: 'static/modules/dashboard/views/menu.html'
     };
     var menu_printers = {
-        name: 'branch_management.menu.printers',
+        name: 'dashboard.branch_management.menu.printers',
         url: '/printers',
         templateUrl: 'static/modules/dashboard/views/printers.html'
     };
     var branch_details = {
-        name: 'branch_management.details',
+        name: 'dashboard.branch_management.details',
         url: '/details',
         templateUrl: 'static/modules/dashboard/views/branch_details.html'
     };
     var game_branch_details = {
-        name: 'branch_management.game_details',
+        name: 'dashboard.branch_management.game_details',
         url: '/game_details',
         templateUrl: 'static/modules/dashboard/views/game_branch_details.html'
     };
     var member_manager = {
-        name: 'member_manager',
+        name: 'dashboard.member_manager',
         url: '/member_manager',
         templateUrl: 'static/modules/dashboard/views/member_manager.html'
     };
     var member = {
-        name: 'member_manager.member',
+        name: 'dashboard.member_manager.member',
         url: '/member',
         templateUrl: 'static/modules/dashboard/views/member.html'
     };
     var lottery = {
-        name: 'member_manager.lottery',
+        name: 'dashboard.member_manager.lottery',
         url: '/lottery',
         templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
 
     var branch = {
-        name: 'cafe_management.branch',
+        name: 'dashboard.cafe_management.branch',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch.html'
     };
     var cash_manager = {
-        name: 'cash_manager',
+        name: 'dashboard.cash_manager',
         url: '/cash_manager',
         templateUrl: 'static/modules/dashboard/views/cash-manager.html'
     };
     var salon = {
-        name: 'cash_manager.salon',
+        name: 'dashboard.cash_manager.salon',
         url: '/salon/:table_name',
         params: {
             "table_name": {
@@ -98,34 +102,39 @@ myApp.config(function ($stateProvider, $authProvider) {
         },
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
-    var account_manager = {
-        name: 'account_manager',
-        url: '/account_manager',
+    var accounting = {
+        name: 'dashboard.accounting',
+        url: '/accounting',
         templateUrl: 'static/modules/dashboard/views/account-manager.html'
     };
+    var accounting_documents_manager = {
+        name: 'dashboard.accounting.documents',
+        url: '/documents',
+        templateUrl: 'static/modules/dashboard/views/accounting_documents_manager.html'
+    };
     var buy = {
-        name: 'account_manager.buy',
+        name: 'dashboard.accounting.documents.buy',
         url: '/buy',
         templateUrl: 'static/modules/dashboard/views/buy.html'
     };
     var pay = {
-        name: 'account_manager.pay',
+        name: 'dashboard.accounting.documents.pay',
         url: '/pay',
         templateUrl: 'static/modules/dashboard/views/pays.html'
     };
     var expense = {
-        name: 'account_manager.expense',
+        name: 'dashboard.accounting.documents.expense',
         url: '/expense',
         templateUrl: 'static/modules/dashboard/views/expense.html'
     };
     var suppliers = {
-        name: 'account_manager.suppliers',
+        name: 'dashboard.accounting.suppliers',
         url: '/suppliers',
         templateUrl: 'static/modules/dashboard/views/suppliers.html'
     };
     var reports = {
-        name: 'account_manager.reports',
-        url: '/reports?type&start&end&branches&suppliers&s_types',
+        name: 'dashboard.accounting.reports',
+        url: '/reports?type&start&end&branches&suppliers&s_types&employees',
         params: {
             "type": {
                 dynamic: true,
@@ -150,53 +159,57 @@ myApp.config(function ($stateProvider, $authProvider) {
             "s_types": {
                 dynamic: true,
                 value: null
+            },
+            "employees":{
+                dynamic: true,
+                value: null
             }
         },
         templateUrl: 'static/modules/dashboard/views/reports.html'
     };
     var supplier = {
-        name: 'account_manager.supplier',
+        name: 'dashboard.accounting.supplier',
         url: '/supplier/:supplier',
         templateUrl: 'static/modules/dashboard/views/supplier.html'
     };
     var detail = {
-        name: 'account_manager.detail',
+        name: 'dashboard.accounting.detail',
         url: '/supplier/:detailState/:supplier',
         templateUrl: 'static/modules/dashboard/views/detail.html'
     };
 
     var invoiceReturn = {
-        name: 'account_manager.return',
+        name: 'dashboard.accounting.documents.return',
         url: '/return',
         templateUrl: 'static/modules/dashboard/views/return.html'
     };
 
     var expenseCategory = {
-        name: 'manager.expenseCat',
+        name: 'dashboard.manager.expenseCat',
         url: '/expenseCat',
         templateUrl: 'static/modules/dashboard/views/expense_category.html'
     };
 
     var reservation = {
-        name: 'reservation',
+        name: 'dashboard.reservation',
         url: '/reservation',
         templateUrl: 'static/modules/dashboard/views/reservation.html'
     };
 
     var open_close_cash = {
-        name: 'account_manager.manage_cash',
+        name: 'dashboard.accounting.manage_cash',
         url: '/manage_cash',
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
     var open_close_cash_detail = {
-        name: 'account_manager.manage_cash_detail',
+        name: 'dashboard.accounting.manage_cash_detail',
         url: '/manage_cash/:cash_id',
         templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
     };
 
     var big_cash_detail_view_in_open_close_cash = {
-        name: 'account_manager.manage_cash_detail_big',
+        name: 'dashboard.accounting.manage_cash_detail_big',
         url: '/manage_cash/:cash_id/detail',
         template: '<cash-detail-directive></cash-detail-directive>',
         params: {
@@ -207,7 +220,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var cash = {
-        name: 'cash_manager.cash',
+        name: 'dashboard.cash_manager.cash',
         url: '/cash/:cash_id',
         template: '<cash-detail-directive></cash-detail-directive>',
         params: {
@@ -218,22 +231,53 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
 
     var quick_access = {
-        name: 'quickAccess',
+        name: 'dashboard.quickAccess',
         url: '/quickAccess',
         templateUrl: 'static/modules/dashboard/views/quick-access.html'
     };
 
     var banking = {
-        name: 'cafe_management.banking',
+        name: 'dashboard.cafe_management.banking',
         url: '/banking',
         templateUrl: 'static/modules/dashboard/views/banking.html'
     };
     var stocks = {
-        name: 'cafe_management.stocks',
+        name: 'dashboard.cafe_management.stocks',
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
+    var salary ={
+        name: 'dashboard.accounting.documents.salary',
+        url:'/salary',
+        templateUrl:'static/modules/dashboard/views/salary.html'
 
+    };
+
+    var namak = {
+        name: 'dashboard.cafe_management.namak',
+        url: '/namak',
+        templateUrl: 'static/modules/dashboard/views/namak.html'
+    };
+
+    var bundles = {
+        name: 'dashboard.cafe_management.namak.bundles',
+        url: '/bundles',
+        templateUrl: 'static/modules/dashboard/views/bundles.html'
+    };
+
+    var buy_bundle = {
+        name: 'dashboard.cafe_management.namak.buy_bundle',
+        url: '/buy-bundle',
+        templateUrl: 'static/modules/dashboard/views/buy_bundle.html'
+    };
+
+    var transactions = {
+        name: 'dashboard.cafe_management.namak.transactions',
+        url: '/transactions',
+        templateUrl: 'static/modules/dashboard/views/transactions.html'
+    };
+
+    $stateProvider.state(dashboard);
     $stateProvider.state(cafe_management);
     $stateProvider.state(branch_management);
     $stateProvider.state(employee);
@@ -247,7 +291,8 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(cash_manager);
     $stateProvider.state(salon);
     $stateProvider.state(cash);
-    $stateProvider.state(account_manager);
+    $stateProvider.state(accounting);
+    $stateProvider.state(accounting_documents_manager);
     $stateProvider.state(buy);
     $stateProvider.state(pay);
     $stateProvider.state(expense);
@@ -267,6 +312,11 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(quick_access);
     $stateProvider.state(banking);
     $stateProvider.state(stocks);
+    $stateProvider.state(namak);
+    $stateProvider.state(bundles);
+    $stateProvider.state(buy_bundle);
+    $stateProvider.state(transactions);
+    $stateProvider.state(salary);
 });
 
 angular.module("dashboard")
@@ -382,7 +432,8 @@ myApp.directive('tableDirective', function () {
             rows: '=',
             config: '=',
             detailCallback: '&',
-            rightSideDetailCallback: '&'
+            rightSideDetailCallback: '&',
+            deleteCallback: '&'
         },
         templateUrl: '/static/modules/dashboard/directives/reusable-table.html',
         link: function (scope) {
@@ -390,6 +441,8 @@ myApp.directive('tableDirective', function () {
                 scope.config.has_second_button_on_right_side = false;
             if (scope.config.has_row_numbers === undefined)
                 scope.config.has_row_numbers = true;
+            if (scope.config.price_with_tags === undefined)
+                scope.config.price_with_tags = false;
         }
     }
 
@@ -441,3 +494,43 @@ function configureTemplateFactory($provide) {
 }
 
 myApp.config(['$provide', configureTemplateFactory]);
+
+myApp.config(["$locationProvider", function ($locationProvider) {
+    $locationProvider.html5Mode(true);
+}]);
+
+myApp.directive('popover', function ($compile) {
+    return {
+        restrict: 'EA',
+        scope: {
+            question: '@',
+            text: '@',
+            firstButtonText: '@',
+            secondButtonText: '@',
+            firstCallback: '&',
+            secondCallback: '&'
+        },
+        link: function (scope, elem, $scope) {
+            jQuery.noConflict();
+            (function ($) {
+                var content = `<div class="popoverWrapper"><div>
+                    <p><i class="fas fa-exclamation-triangle"></i><span ng-bind="question"></span></p>
+                    <p ng-bind="text"></p>
+                    <a ng-if="firstButtonText" href="" ng-click="firstCallback()" 
+                    class="mainButton redButton smallButton fullWidthButton" 
+                    ng-bind="firstButtonText"></a>
+                    <a ng-if="secondButtonText" href="" ng-click="secondCallback()" ng-bind="secondButtonText"
+                    class="mainButton newGrayButton smallButton fullWidthButton"></a>
+                    </div>
+                    </div>`;
+                var compileContent = $compile(content)(scope);
+                var options = {
+                    content: compileContent[0],
+                    html: true
+                };
+                $(elem).popover(options);
+            })(jQuery);
+
+        }
+    }
+});

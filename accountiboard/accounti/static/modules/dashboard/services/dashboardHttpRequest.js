@@ -26,14 +26,17 @@ angular.module('dashboard')
                     params: params,
                     data: data
                 }).then(angular.bind(this, function (data, status, headers, config) {
-                        deferred.resolve(data['data'], status);
-                    }), angular.bind(this, function (data, status, headers, config) {
-                        // There is a timeout or connection error in server
-                        if (data.status === -1){
-                            $window.location.href = "http://127.0.0.1:8001/dashboard#!/?user=" + $rootScope.user_data.username ;
-                        }
-                        deferred.reject(data, status, headers, config);
-                    }));
+                    deferred.resolve(data['data'], status);
+                }), angular.bind(this, function (data, status, headers, config) {
+                    if (data.status === 404) $rootScope.show_toast("آیتم یافت نشد.", 'danger');
+                    if (data.status === 400) $rootScope.show_toast(data.data.error_msg, 'danger');
+                    else if (data.status === 500) $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
+                    // There is a timeout or connection error in server
+                    if (data.status === -1) {
+                        $window.location.href = "http://127.0.0.1:8001/dashboard#!/?user=" + $rootScope.user_data.username;
+                    }
+                    deferred.reject(data, status, headers, config);
+                }));
                 return deferred.promise;
             },
             'getEmployees': function (data) {
@@ -125,11 +128,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteMenuItem': function (data) {
+            'deleteMenuItem': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteMenuItem/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteMenuItem/" + item_id + "/"
                 });
             },
             'searchMenuItem': function (data) {
@@ -178,34 +180,6 @@ angular.module('dashboard')
                 return this.request({
                     'method': "POST",
                     'url': "/api/getMember/",
-                    'data': data
-                });
-            },
-            'addStock': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/addStock/",
-                    'data': data
-                });
-            },
-            'getStocks': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getStocks/",
-                    'data': data
-                });
-            },
-            'searchStock': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/searchStock/",
-                    'data': data
-                });
-            },
-            'getStock': function (data) {
-                return this.request({
-                    'method': "POST",
-                    'url': "/api/getStock/",
                     'data': data
                 });
             },
@@ -537,21 +511,21 @@ angular.module('dashboard')
             'getKitchenDetailSales': function (data) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id +
                     "&cash_id=" + data.cash_id + "&category=KITCHEN&menu_category_id=" + data.menu_category_id
                 });
             },
             'getBarDetailSales': function (data) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id +
                     "&cash_id=" + data.cash_id + "&category=BAR&menu_category_id=" + data.menu_category_id
                 });
             },
             'getOtherDetailSales': function (data) {
                 return this.request({
                     'method': "GET",
-                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id + 
+                    'url': "/api/getSaleDetailsByCategory/?branch_id=" + data.branch_id +
                     "&cash_id=" + data.cash_id + "&category=OTHER&menu_category_id=" + data.menu_category_id
                 });
             },
@@ -701,18 +675,16 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteInvoicePurchase': function (data) {
+            'deleteInvoicePurchase': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoicePurchase/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoicePurchase/" + item_id + "/"
                 });
             },
-            'deleteInvoiceExpense': function (data) {
+            'deleteInvoiceExpense': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoiceExpense/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoiceExpense/" + item_id + "/"
                 });
             },
             'deleteInvoiceReturn': function (data) {
@@ -722,11 +694,10 @@ angular.module('dashboard')
                     'data': data
                 });
             },
-            'deleteInvoiceSettlement': function (data) {
+            'deleteInvoiceSettlement': function (item_id) {
                 return this.request({
-                    'method': "POST",
-                    'url': "/api/deleteInvoiceSettlement/",
-                    'data': data
+                    'method': "DELETE",
+                    'url': "/api/deleteInvoiceSettlement/" + item_id + "/"
                 });
             },
             'getNextFactorNumber': function (data) {
@@ -1022,7 +993,92 @@ angular.module('dashboard')
                     'data': data
                 });
             },
+            'getBundles': function (data) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/bundles/"
+                });
+            },
+            'buyBundle': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/bundles/",
+                    'data': data
+                });
+            },
+            'getAllTransactions': function (data) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/transactions/"
+                });
+            },
+            'payirVerifyGenToken': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/payirverify-gentoken/",
+                    'data': data
+                });
+            },
+            'checkBundleDiscount': function (data) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/check-subscription-discount/",
+                    'data': data
+                });
+            },
+            'addInvoiceSalary': function (data, id) {
+                return this.request({
+                    'method': "POST",
+                    'url': "/api/salary/" + id + "/",
+                    'data': data
+                })
+            },
+            'deleteInvoiceSalary': function (item_id) {
+                return this.request({
+                    'method': "DELETE",
+                    'url': "/api/salary/" + item_id + "/"
 
+                })
+            },
+            'getInvoiceSalary': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/salary/" + id + "/"
+
+                })
+            },
+            'editInvoiceSalary': function (data, id) {
+                return this.request({
+                    'method': "PUT",
+                    'url': "/api/salary/" + id + "/",
+                    'data': data
+
+                })
+            },
+            'getSalaries': function (data) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/salaries/" + data + "/",
+
+
+                })
+            },
+            'searchSalary': function (data, id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/searchSalary/" + id + "/" + data + "/",
+
+
+                })
+            },
+            'getBranchEmployees': function (id) {
+                return this.request({
+                    'method': "GET",
+                    'url': "/api/branchEmployees/" + id + "/",
+
+
+                })
+            }
         };
         return service;
 

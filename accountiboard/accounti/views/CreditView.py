@@ -11,9 +11,10 @@ from django.views import View
 
 class GetAllCreditsDataFromUserView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         member_id = rec_data['member_id']
@@ -29,7 +30,8 @@ class GetAllCreditsDataFromUserView(View):
         all_credit_data = []
         all_credits_from_user = Credit.objects.filter(member=member_object)
         for credit in all_credits_from_user:
-            expire_jalali_date = jdatetime.date.fromgregorian(day=credit.expire_time.day, month=credit.expire_time.month,
+            expire_jalali_date = jdatetime.date.fromgregorian(day=credit.expire_time.day,
+                                                              month=credit.expire_time.month,
                                                               year=credit.expire_time.year)
             start_jalali_date = jdatetime.date.fromgregorian(day=credit.start_time.day, month=credit.start_time.month,
                                                              year=credit.start_time.year)
@@ -49,9 +51,10 @@ class GetAllCreditsDataFromUserView(View):
 
 class CreateCreditView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         member_id = rec_data['member_id']
@@ -90,9 +93,10 @@ class CreateCreditView(View):
 
 class PerformCreditOnInvoiceSaleView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_id = rec_data['invoice_id']
@@ -114,7 +118,7 @@ class PerformCreditOnInvoiceSaleView(View):
         credit_used_in_invoice = 0
         for credit in all_member_credits:
             if maximum_credit <= 0:
-                break 
+                break
             if credit.total_price == credit.used_price:
                 continue
 
@@ -132,8 +136,20 @@ class PerformCreditOnInvoiceSaleView(View):
                 maximum_credit -= used_credit_price
                 credit_used_in_invoice += used_credit_price
 
-        return JsonResponse({"response_code": 2, 'used_credit': credit_used_in_invoice})
+        credits_data = []
+        all_credit_types = Credit.CATEGORIES
+        for credit_type in all_credit_types:
+            all_credits_from_type = all_member_credits.filter(credit_categories__exact=[credit_type[0]])
+            sum_all_credit_from_type = all_credits_from_type.aggregate(Sum('total_price')).get('total_price__sum')
+            sum_used_credit_from_type = all_credits_from_type.aggregate(Sum('used_price')).get('used_price__sum')
+            credits_data.append({
+                'type': credit_type[0],
+                'name': credit_type[1],
+                'total_price': sum_all_credit_from_type if sum_all_credit_from_type else 0,
+                'used_price': sum_used_credit_from_type if sum_used_credit_from_type else 0
+            })
 
+        return JsonResponse({"response_code": 2, 'used_credit': credit_used_in_invoice, 'credits_data': credits_data})
 
 
 def credit_handler(credit_object, invoice_object, used_credits):
@@ -163,7 +179,8 @@ def credit_handler(credit_object, invoice_object, used_credits):
 
 
 def used_credit_computer(kind, used_credit_to_invoices):
-    sum_used_credit = used_credit_to_invoices.filter(credit__credit_categories__exact=[kind]).aggregate(Sum('used_price'))
+    sum_used_credit = used_credit_to_invoices.filter(credit__credit_categories__exact=[kind]).aggregate(
+        Sum('used_price'))
     return sum_used_credit.get('used_price__sum') if sum_used_credit.get('used_price__sum') else 0
 
 
@@ -218,9 +235,10 @@ def game_credit_handler(invoice_object):
 
 class CheckGiftCodeView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         gift_code = rec_data['gift_code']
@@ -258,9 +276,10 @@ class CheckGiftCodeView(View):
 
 class CreateGiftCodeManualView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         s = "abcdefghijklmnopqrstuvwxyz0123456789"
         gift_len = 5

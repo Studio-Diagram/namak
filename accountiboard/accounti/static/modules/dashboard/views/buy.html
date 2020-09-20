@@ -22,39 +22,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید حذف فاکتور</h2>
-                    <a ng-click="delete_invoice_purchase(deleteing_invoice_id)" href="" class="mainButton greenButton">
-                        بله</a>
-                    <a ng-click="closeDeletePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به حذف دارید؟ تمام اطلاعات فاکتور شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade mainModal" id="addModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -63,10 +30,13 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور خرید </h2>
-                    <a ng-click="openPermissionModal()" class="mainButton redButton" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج بدون ذخیره" first-callback="closeAddModal()"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="addInvoicePurchase()">خروج</a>
                     <a ng-hide="read_only_mode" href="" ng-click="addInvoicePurchase()"
                        class="mainButton greenButton"><i
                             class="fas fa-save"></i> ثبت</a>
@@ -86,14 +56,14 @@
                                     <a ng-click="changeMenuNav('MAT')" href=""
                                        ng-class="current_menu_nav === 'MAT' ? 'nav-link iconButton active' : 'nav-link iconButton'">
                                         مواد اولیه <i class="fa fa-question-circle"
-                                                     title="برای ایجاد مواد اولیه نام ماده را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
-                                                     data-toggle="tooltip" tooltip></i>
+                                                      title="برای ایجاد مواد اولیه نام ماده را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
+                                                      data-toggle="tooltip" tooltip></i>
                                     </a>
                                     <a ng-click="changeMenuNav('SHOP')" href=""
                                        ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'">
                                         فروشگاهی <i class="fa fa-question-circle"
-                                                     title="برای ایجاد محصولات فروشگاهی نام محصول را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
-                                                     data-toggle="tooltip" tooltip></i>
+                                                    title="برای ایجاد محصولات فروشگاهی نام محصول را در باکس زیر بنویسید و سپس روی علامت اضافه کلیک کنید."
+                                                    data-toggle="tooltip" tooltip></i>
                                     </a>
                                 </nav>
                                 <nav class=" nav flex-column cafeMenuNav">
@@ -309,55 +279,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-
-                </div>
             </div>
         </div>
     </div>
-    <main class="pageContent container-fluid">
+    <main class="pageContent">
         <div class="tableButtons">
             <div class="buttonGroup">
                 <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">فاکتور
                     خرید جدید</a>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">شماره فاکتور</th>
-                            <th scope="col">نام تامین‌کننده</th>
-                            <th scope="col">مبلغ خرید</th>
-                            <th scope="col">نوع فاکتور</th>
-                            <th scope="col">تاریخ خرید</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="invoice in invoice_purchases">
-                            <th scope="row">{{ invoice.factor_number | persianNumber }}</th>
-                            <td>{{ invoice.supplier_name }}</td>
-                            <td class="redText">{{ invoice.total_price | number | persianNumber }} ریال</td>
-                            <td>{{ invoice.kind }}</td>
-                            <td>{{ invoice.date | persianNumber }}</td>
-                            <td><a ng-click="showInvoicePurchase(invoice.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                            <td><a ng-click="openDeletePermissionModal(invoice.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">حذف</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
-
-        </div>
+        <table-directive headers="headers" config="table_config"
+                         rows="invoice_purchases" detail-callback="showInvoicePurchase(item_id)"
+                         delete-callback="delete_invoice_purchase(item_id)"></table-directive>
     </main>
 </div>

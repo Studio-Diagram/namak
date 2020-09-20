@@ -25,8 +25,7 @@ angular.module("dashboard")
 
             $scope.gift_code_data = {
                 "gift_code": "",
-                "member_id": "",
-                "username": $rootScope.user_data.username
+                "member_id": ""
             };
             jQuery.noConflict();
             (function ($) {
@@ -44,13 +43,11 @@ angular.module("dashboard")
                 'expire_time': '00:00',
                 'start_date': '',
                 'start_time': '00:00',
-                'credit_category': '',
-                'username': $rootScope.user_data.username
+                'credit_category': ''
             };
             $scope.serach_data_member = {
                 'search_word': '',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch': $rootScope.user_data.branch
             };
             $scope.credit_categories = [
                 {key: "BAR", name: "آیتم‌های بار"},
@@ -110,8 +107,7 @@ angular.module("dashboard")
             $scope.new_credit_data.member_id = member_id;
             $scope.gift_code_data.member_id = member_id;
             var sending_data = {
-                "member_id": member_id,
-                "username": $rootScope.user_data.username
+                "member_id": member_id
             };
             dashboardHttpRequest.memberCredits(sending_data)
                 .then(function (data) {
@@ -119,12 +115,10 @@ angular.module("dashboard")
                         $scope.member_credit_data = data['all_credits'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
             $rootScope.open_modal("showMemberProfileModal");
         };
@@ -137,12 +131,10 @@ angular.module("dashboard")
                         $scope.gift_code_data.gift_code = "";
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -161,12 +153,10 @@ angular.module("dashboard")
                         $rootScope.close_modal("showMemberProfileModal");
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -178,13 +168,11 @@ angular.module("dashboard")
                         $scope.members = data['members'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
 
@@ -199,12 +187,10 @@ angular.module("dashboard")
                             $scope.members = data['members'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
                     }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
+                        $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                     });
             }
         };
@@ -235,8 +221,7 @@ angular.module("dashboard")
                 'expire_time': '00:00',
                 'start_date': '',
                 'start_time': '00:00',
-                'credit_category': '',
-                'username': $rootScope.user_data.username
+                'credit_category': ''
             };
         };
 

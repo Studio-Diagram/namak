@@ -19,7 +19,7 @@ angular.module("dashboard")
                     key: "branches_names"
                 }
             ];
-            $scope.table_config = {has_detail_button: true, price_fields: [],};
+            $scope.table_config = {has_detail_button: true, price_fields: [],has_delete_button: false,};
         };
 
         $scope.get_stocks_data = function () {

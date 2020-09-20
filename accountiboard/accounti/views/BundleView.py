@@ -3,13 +3,14 @@ from accountiboard.constants import *
 from accountiboard.custom_permissions import *
 from accountiboard.utils import *
 from django.views import View
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 import jdatetime
 from django.db.models import Sum
 from django.conf import settings
 from datetime import datetime, timedelta
 import requests
 import re
+import jdatetime
 
 RE_DURATION = re.compile(r"[\d]+", flags=re.ASCII)
 
@@ -50,13 +51,14 @@ def calculate_discount(amount, discount, bundle, cafe_owner):
 
 class BundleView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        {USER_ROLES['CAFE_OWNER']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
 
-        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
 
         active_bundle = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_active=True)
         reserved_bundles = Bundle.objects.filter(cafe_owner=current_cafe_owner, is_reserved=True)
@@ -67,8 +69,10 @@ class BundleView(View):
                     'active_bundle': [{
                     "bundle_plan": bundle.bundle_plan,
                     "bundle_duration": bundle.bundle_duration,
-                    "starting_datetime_plan": bundle.starting_datetime_plan,
-                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "starting_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.starting_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.starting_datetime_plan else '',
+                    "expiry_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.expiry_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.expiry_datetime_plan else '',
                     "is_active": bundle.is_active,
                     "is_reserved": bundle.is_reserved,
                     "is_expired": bundle.is_expired,
@@ -77,8 +81,10 @@ class BundleView(View):
                     'reserved_bundles': [{
                     "bundle_plan": bundle.bundle_plan,
                     "bundle_duration": bundle.bundle_duration,
-                    "starting_datetime_plan": bundle.starting_datetime_plan,
-                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "starting_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.starting_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.starting_datetime_plan else '',
+                    "expiry_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.expiry_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.expiry_datetime_plan else '',
                     "is_active": bundle.is_active,
                     "is_reserved": bundle.is_reserved,
                     "is_expired": bundle.is_expired,
@@ -87,8 +93,10 @@ class BundleView(View):
                     'expired_bundles': [{
                     "bundle_plan": bundle.bundle_plan,
                     "bundle_duration": bundle.bundle_duration,
-                    "starting_datetime_plan": bundle.starting_datetime_plan,
-                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "starting_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.starting_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.starting_datetime_plan else '',
+                    "expiry_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.expiry_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.expiry_datetime_plan else '',
                     "is_active": bundle.is_active,
                     "is_reserved": bundle.is_reserved,
                     "is_expired": bundle.is_expired,
@@ -97,8 +105,10 @@ class BundleView(View):
                     'not_successfully_paid_bundles': [{
                     "bundle_plan": bundle.bundle_plan,
                     "bundle_duration": bundle.bundle_duration,
-                    "starting_datetime_plan": bundle.starting_datetime_plan,
-                    "expiry_datetime_plan": bundle.expiry_datetime_plan,
+                    "starting_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.starting_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.starting_datetime_plan else '',
+                    "expiry_datetime_plan": jdatetime.datetime.fromgregorian(datetime=bundle.expiry_datetime_plan).strftime("%H:%M %Y/%m/%d") if
+                        bundle.expiry_datetime_plan else '',
                     "is_active": bundle.is_active,
                     "is_reserved": bundle.is_reserved,
                     "is_expired": bundle.is_expired,
@@ -107,8 +117,8 @@ class BundleView(View):
         }, status=200)
 
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        {USER_ROLES['CAFE_OWNER']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -141,7 +151,7 @@ class BundleView(View):
 
         if active_bundle_count > 0 and reserved_bundle_count > 0:
             return JsonResponse({
-                'error_msg': "You already have one active and one reserved bundle. Buying more bundles is not possible."
+                'error_msg': ALREADY_HAVE_ACTIVE_AND_RESERVE_BUNDLE
             }, status=403)
 
         if active_bundle_count > 0:
@@ -149,7 +159,7 @@ class BundleView(View):
             current_active_bundle = Bundle.objects.get(cafe_owner=current_cafe_owner, is_active=True)
             if BUNDLE_WEIGHTS[bundle_type] < BUNDLE_WEIGHTS[current_active_bundle.bundle_plan]:
                 return JsonResponse({
-                    'error_msg': "Sorry, downgrading plans is not possible."
+                    'error_msg': DOWNGRADING_BUNDLES_NOT_POSSIBLE
                 }, status=403)
             bundle_start_time = current_active_bundle.expiry_datetime_plan
         else:
@@ -227,10 +237,15 @@ class BundleView(View):
         }, status=200)
 
 
-class PayirCallbackView(View):
-    def get(self, request, *args, **kwargs):
-        status = self.request.GET.get('status')
-        token = self.request.GET.get('token')
+class PayirVerifyGenNewTokenView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
+        rec_data = json.loads(request.read().decode('utf-8'))
+        status = rec_data.get('status')
+        token = rec_data.get('token')
 
         if status == "1":
 
@@ -243,12 +258,20 @@ class PayirCallbackView(View):
                 response = get_json(requests.post(settings.PAY_IR_API_URL_VERIFY, data=verify_data))
                 if response['status'] != 1:
                     return JsonResponse({
-                        'error_msg': "Could not verify transaction (status error)"
+                        'error_msg': TRANSACTION_VERIFICATION_FAILED,
+                        'bundle_activation_status' : "unsuccessful"
                     }, status=400)
             except Exception as e:
                 raise e
 
             current_transaction = Transaction.objects.get(token=token)
+
+            if current_transaction.status == "paid":
+                return JsonResponse({
+                    'error_msg': TRANSACTION_ALREADY_VERIFIED,
+                    'bundle_activation_status' : "unsuccessful"
+                }, status=400)
+
             current_transaction.trans_id = response["transId"]
             current_transaction.card_number = response["cardNumber"]
             current_transaction.status = "paid"
@@ -281,34 +304,73 @@ class PayirCallbackView(View):
                     for employee in all_employees:
                         TokenBlacklist.objects.create(user=employee.employee.user)
 
-                return JsonResponse({
-                    'msg': "Bundle created and activated"
-                }, status=200)
+                bundle_activation_status = "activated"
             elif current_bundle.is_reserved:
-                return JsonResponse({
-                    'msg': "Bundle created and reserved."
-                }, status=200)
-
+                bundle_activation_status = "reserved"
 
         else:
             return JsonResponse({
-                'error_msg': "Transaction status not 1"
-            }, status=403)
+                'error_msg': TRANSACTION_VERIFICATION_FAILED,
+                'bundle_activation_status' : "unsuccessful"
+            }, status=400)
+
+
+        try:
+            user_obj = User.objects.get(phone=request.payload['sub_phone'])
+        except ObjectDoesNotExist:
+            return JsonResponse({"error_msg": WRONG_USERNAME_OR_PASS}, status=401)
+
+        cafe_owner_object = CafeOwner.objects.get(user=user_obj)
+        organization_object = cafe_owner_object.organization
+        organization_name = organization_object.name
+        branch_object = Branch.objects.filter(organization=organization_object).first().id
+        user_branch_objects = Branch.objects.filter(organization=organization_object)
+        user_branches = [{
+            "id": cafe_owner_to_branch.id,
+            "name": cafe_owner_to_branch.name
+        } for cafe_owner_to_branch in user_branch_objects]
+        user_role = [USER_ROLES['CAFE_OWNER']]
+        try:
+            bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
+        except:
+            bundle = USER_PLANS_CHOICES['FREE']
+        jwt_token = make_new_JWT_token(
+            user_obj.id,
+            user_obj.phone,
+            user_role,
+            bundle,
+            user_branches,
+            organization_object.id,
+        )
+        return JsonResponse(
+            {
+             "user_data": {'branch': branch_object, 'full_name': user_obj.get_full_name(),
+                           'branches': user_branches,
+                           'user_roles': user_role,
+                           'bundle': bundle,
+                           'organization_name': organization_name
+                           },
+             "bundle_activation_status" : bundle_activation_status,
+             "token": jwt_token.decode("utf-8")
+             }
+        )
+
 
 
 class CheckSubscriptionDiscountView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        {USER_PLANS_CHOICES['STANDARDNORMAL'], USER_PLANS_CHOICES['STANDARDBG'], USER_PLANS_CHOICES['ENTERPRISE']},
+        {USER_ROLES['CAFE_OWNER']},
+        ALLOW_ALL_PLANS,
         branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        code = rec_data.get('code')
+        code = rec_data.get('discount_code')
         bundle = rec_data.get('bundle')
         amount = AVAILABLE_BUNDLES[bundle]
-
         payload = request.payload
-        current_cafe_owner = CafeOwner.objects.get(pk=payload['sub_id'])
+
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
 
         discount_applied = False
         discount_msg = 'No discount code was applied.'
@@ -325,7 +387,7 @@ class CheckSubscriptionDiscountView(View):
         if discount_result[1]:
             discount_applied = True
         discount_msg = discount_result[2]
-        amount = discount_result[0]
+        amount_after_discount = discount_result[0]
 
         if not discount_applied:
             return JsonResponse({
@@ -340,4 +402,35 @@ class CheckSubscriptionDiscountView(View):
                         'bundle': bundle,
                         'discount_applied': discount_applied,
                         'discount_msg': discount_msg,
+                        'amount': amount - amount_after_discount
             }, status=200)
+
+
+class TransactionsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
+    def get(self, request, *args, **kwargs):
+        payload = request.payload
+
+        current_user = User.objects.get(pk=payload['sub_id'])
+        current_cafe_owner = CafeOwner.objects.get(user=current_user)
+
+        all_transactions = Transaction.objects.filter(cafe_owner=current_cafe_owner)
+
+        return JsonResponse({
+                    'all_transactions': [{
+                    "status": transaction.status,
+                    "token": transaction.token,
+                    "amount": transaction.amount,
+                    "mobile": transaction.mobile,
+                    "factor_number": transaction.factor_number,
+                    "description": transaction.description,
+                    "redirect": transaction.redirect,
+                    "card_number": transaction.card_number,
+                    "trans_id": transaction.trans_id,
+                    "message": transaction.message,
+                    } for transaction in all_transactions]
+
+        }, status=200)

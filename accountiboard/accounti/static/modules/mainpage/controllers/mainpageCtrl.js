@@ -12,7 +12,7 @@ angular.module("mainpage")
                     }
                 })(jQuery);
             }, 100);
-            $state.go('login');
+            $state.go('main.login');
         };
 
         initialize();

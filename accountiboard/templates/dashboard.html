@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
+    <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,7 +37,6 @@
         <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/menuCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
@@ -63,8 +63,13 @@
         <script src="{% static 'modules/dashboard/controllers/addMemberDirectiveCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchDetailCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/gameBranchDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/namakCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/bundlesCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/buyBundleCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/transactionsCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/subManagerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/printersCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/salaryCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -119,6 +124,67 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade mainModal alertModal redAlertModal" id="mainErrorModalv2" data-backdrop="static"
+     data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">خطا</h2>
+                <a ng-click="close_modalv2('mainErrorModalv2')" class="mainButton redButton" href=""
+                   aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <main class="col-sm-12">
+                            <span class="alertText" ng-bind="error_message"></span>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade mainModal alertModal redAlertModal" id="transactionResultModal" data-backdrop="static"
+     data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modalHeader">
+                <h2 class="modalTitle">نتیجه پرداخت</h2>
+                <a ng-click="closeDeleteModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                   aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                </a>
+
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <main class="col-sm-12">
+                            <span ng-show="transaction_successful_activated"
+                                  class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی جدید فعال شد
+                            </span>
+                            <span ng-show="transaction_successful_reserved"
+                                  class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی رزرو شد
+                            </span>
+                            <span ng-show="transaction_unsuccessful"
+                                  class="alertText">پرداخت با خطا مواجه شد
+                            </span>
+
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -191,15 +257,15 @@
 </div>
 
 
-<div style="position: absolute; top: 5em; left: 0;z-index: 1050;">
+<div style="position: absolute;bottom: 10px;right: 0;;z-index: 1080;">
     <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
          role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
+            <p ng-bind="toast_message"></p>
             <button class="mainButton toast-button ml-1" data-dismiss="toast" aria-label="Close">
                 <i class="fa fa-check"></i>
                 <span>باشه</span>
             </button>
-            <span ng-bind="toast_message"></span>
         </div>
     </div>
 </div>
@@ -283,39 +349,39 @@
             <nav class=" nav flex-column myNav">
                 <ul>
                     <li class="nav-item">
-                        <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
+                        <a ng-class="isActive('/dashboard/quickAccess') ? 'nav-link active' : 'nav-link'"
+                           ui-sref="dashboard.quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager.salon"
+                        <a ng-class="isActive('/dashboard/cash_manager') ? 'nav-link active' : 'nav-link'"
+                           ui-sref="dashboard.cash_manager.salon"
                            href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="reservation"
-                           ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
+                        <a ui-sref="dashboard.reservation"
+                           ng-class="isActive('/dashboard/reservation') ? 'nav-link active' : 'nav-link'"
                            class="nav-link"><i class="fas fa-phone"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="member_manager.member" href=""
-                           ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
+                        <a ui-sref="dashboard.member_manager.member" href=""
+                           ng-class="isActive('/dashboard/member_manager') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-smile-wink"></i>مشتریان</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="account_manager.buy" href=""
-                           ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
+                        <a ui-sref="dashboard.accounting.documents.buy" href=""
+                           ng-class="isActive('/dashboard/accounting') ? 'nav-link active' : 'nav-link'"><i class="fas
                            fa-calculator"></i>حسابداری</a>
                     </li>
-                    <li class="nav-item" class="nav-link">
-                        <a ui-sref="branch_management.details"
-                           ng-class="isActive('/branch') ? 'nav-link active' : 'nav-link'"><i
+                    <li class="nav-item">
+                        <a ui-sref="dashboard.branch_management.details"
+                           ng-class="isActive('/dashboard/branch') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-code-branch"></i>مدیریت شعبه</a>
                     </li>
-                    <li class="nav-item" class="nav-link">
-                        <a ui-sref="cafe_management.employee"
-                           ng-class="isActive('/cafe') ? 'nav-link active' : 'nav-link'"><i
+                    <li class="nav-item">
+                        <a ui-sref="dashboard.cafe_management.employee"
+                           ng-class="isActive('/dashboard/cafe') ? 'nav-link active' : 'nav-link'"><i
                                 class="fas fa-store"></i>مدیریت کافه</a>
                     </li>
                 </ul>

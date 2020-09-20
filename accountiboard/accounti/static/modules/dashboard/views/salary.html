@@ -1,0 +1,240 @@
+<div ng-controller="salaryCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
+         tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modalHeader">
+                    <h2 ng-hide="edit_mode" class="modalTitle">ثبت فیش حقوقی جدید</h2>
+                    <h2 ng-show="edit_mode" class="modalTitle">جزئییات فیش حقوقی </h2>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom()"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="addSalary()">خروج</a>
+                    <a ng-hide="edit_mode" ng-click="addSalary()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-hide="edit_mode" href="" ng-click="save_and_open_modal();"
+                       class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت و جدید</a>
+                    <a ng-show="edit_mode" ng-click="editSalary()" href="" class="mainButton greenButton"><i
+                            class="fas fa-save"></i> ثبت تغییرات</a>
+
+
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h3> اطلاعات فیش حقوقی</h3>
+
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <main class="col-sm-12">
+                                        <table class="invoiceTable">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <small>شماره فاکتور</small>
+                                                    <a href=""
+                                                       class="">{{ new_salary_data.factor_number | persianNumber }}</a>
+                                                </td>
+                                                <td>
+                                                    <small>کارمند</small>
+                                                    <ui-select ng-model="new_salary_data.employee_id">
+                                                        <ui-select-match placeholder="انتخاب کارمند">
+                                                            {{$select.selected.full_name}}</ui-select-match>
+                                                        <ui-select-choices
+                                                                repeat="employee.id as employee in employees | filter: $select.search">
+                                                            <div ng-bind="employee.full_name"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </td>
+                                                <td>
+                                                    <small>تاریخ فاکتور</small>
+                                                    <input ng-model="new_salary_data.invoice_date" id="datepicker"
+                                                           class="form-control listFilter tableLefty"
+                                                           placeholder="تاریخ"
+                                                           type="text">
+                                                </td>
+                                                <td>
+                                                    <small>نوع پرداخت</small>
+                                                    <select ng-model="new_salary_data.settle_type"
+                                                            class="form-control">
+
+                                                        <option value="CARD">کارت به کارت</option>
+                                                        <option value="CASH">نقدی</option>
+                                                        <option value="PAYA">پایا</option>
+                                                        <option value="CHECK">چک</option>
+                                                        <option value="SATNA">ساتنا</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <label>شماره ارجاع</label>
+                                                    <input style="font-family: 'B Yekan'"
+                                                           ng-model="new_salary_data.backup_code" type="text"
+                                                           class="form-control" placeholder="شماره ارجاع">
+                                                </td>
+                                                <td>
+                                                    <label> حساب <i class="fa fa-question-circle"
+                                                                    title="می‌توانید حساب‌های بانکی خود را در بخش مدیریت ببینید و ویرایش کنید."
+                                                                    data-toggle="tooltip" tooltip></i></label>
+                                                    <select ng-model="new_salary_data.banking_id"
+                                                            class="form-control"
+                                                            ng-options="banking.id as banking.name for banking in allbanking_names">
+                                                    </select>
+                                                </td>
+
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="invoiceTable">
+                                            <tbody>
+                                            <tr>
+
+
+                                                <td ng-hide="true">
+                                                    <small>حساب بانکی</small>
+                                                    <select ng-model="new_invoice_expense_data.banking_id"
+                                                            class="form-control"
+                                                            ng-options="banking.id as banking.name for banking in allbanking_names">
+                                                    </select>
+                                                </td>
+
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="invoiceTable invoiceItem">
+                                            <tbody>
+                                            <tr>
+
+                                                <th class="first">#</th>
+                                                <th style="width: 30%" class="second">عنوان</th>
+                                                <th class="fifth">قیمت کل</th>
+                                                <th style="width: 25%;" class="sixth">توضیحات</th>
+                                            </tr>
+                                            <tr>
+
+                                                <td>{{ 1 | persianNumber }}</td>
+                                                <td>حقوق پایه</td>
+                                                <td><input ng-change="change_total_price()"
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.base_salary" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                           ng-model="new_salary_data.description"></td>
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>{{ 2| persianNumber }}</td>
+                                                <td>اضافه کار</td>
+                                                <td><input ng-change="change_total_price()"
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.over_time_pay" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                           ng-model="new_salary_data.over_time_pay_description"></td>
+
+                                            </tr>
+                                            <tr>
+
+                                                <td>{{ 3 | persianNumber }}</td>
+                                                <td>پاداش</td>
+                                                <td><input ng-change="change_total_price()"
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.bonuses" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                           ng-model="new_salary_data.bonuses_description"></td>
+
+                                            </tr>
+                                            <tr>
+
+                                                <td>{{ 4 | persianNumber }}</td>
+                                                <td>مزایا</td>
+                                                <td><input ng-change="change_total_price()"
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.benefits" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                           ng-model="new_salary_data.benefits_description"></td>
+                                            </tr>
+                                            <tr>
+
+                                                <td>{{ 5 | persianNumber }}</td>
+                                                <td>کسری</td>
+                                                <td><input ng-change="change_total_price()" n
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.reduction" format></td>
+                                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                                           ng-model="new_salary_data.reduction_description"></td>
+                                            </tr>
+
+
+                                            </tbody>
+                                        </table>
+
+                                        <table class="invoiceTable invoiceTotal">
+                                            <tbody>
+
+                                            <tr>
+                                                <th>مالیات</th>
+                                                <td><input ng-change="change_total_price()"
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.tax" format></td>
+                                            </tr>
+                                            <tr>
+                                                <th>بیمه</th>
+                                                <td><input ng-change="change_total_price()"
+                                                           style="font-family: 'B Yekan'"
+                                                           class="form-control" type="text"
+                                                           ng-model="new_salary_data.insurance" format></td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>خالص پرداختی</th>
+                                                <td>
+                                                    {{ new_salary_data.total_price | number:fractionSize | persianNumber }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </main>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent container-fluid">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a ng-click="open_modal('addModal');getNextFactorNumber('SALARY')" href=""
+                   class="mainButton greenButton"> حقوق
+                    جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <form>
+                    <input ng-keyup="searchSalary()" ng-model="search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                </form>
+            </div>
+        </div>
+        <table-directive headers="headers" config="table_config"
+                         rows="salaries" detail-callback="showInvoiceSalary(item_id)"
+                         delete-callback="delete_invoice_salary(item_id)"></table-directive>
+    </main>
+</div>

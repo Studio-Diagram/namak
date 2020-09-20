@@ -1,12 +1,11 @@
-from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR
+from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, ALL_PLANS_SET
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.http import JsonResponse, HttpResponseRedirect
 import json
 import jwt
 from accountiboard.settings import JWT_SECRET
-# from accountiboard.utils import *
-import datetime
+from datetime import datetime
 from accounti.models import TokenBlacklist
 
 
@@ -55,32 +54,6 @@ def permission_decorator_class_based_simplified(permission_func):
     return decorator
 
 
-def session_authenticate(request, permitted_roles, branch_disable=False):
-    user_roles = request.session.get('user_role', None)
-    if request.session.get('is_logged_in', None) and user_roles:
-        request_branch = get_branch(request, *args, **kwargs)
-        session_branch = request.session.get('branch_list', None)
-        if not session_branch:
-            return {
-                "state": False,
-                "message": BRANCH_NOT_IN_SESSION_ERROR
-            }
-        for role in user_roles:
-            if role in permitted_roles:
-                if branch_disable or request_branch in session_branch:
-                    return {
-                        "state": True,
-                        "message": NO_MESSAGE
-                    }
-        return {
-            "state": False,
-            "message": ACCESS_DENIED
-        }
-    return {
-        "state": False,
-        "message": UNAUTHENTICATED
-    }
-
 def session_authenticate_admin_panel(request, *args, **kwargs):
     if request.session.get('admin_is_logged_in'):
         return {
@@ -96,30 +69,34 @@ def session_authenticate_admin_panel(request, *args, **kwargs):
 
 
 def token_authenticate(request, permitted_roles, bundles, branch_disable=False, *args, **kwargs):
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    request_branch = get_branch(request, *args, **kwargs)
+    view_bundles = ALL_PLANS_SET - bundles
+    try:
+        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
+    except:
+        return {
+            "state": False,
+            "message": UNAUTHENTICATED
+        }
     if not payload:
         return {
             "state": False,
             "message": UNAUTHENTICATED
         }
 
+    request_branch = get_branch(request, *args, **kwargs)
+
     if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
         for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
-            if datetime.datetime.utcfromtimestamp(payload['iat']) < blacklist_obj.created_time:
+            if datetime.utcfromtimestamp(payload['iat']) < blacklist_obj.created_time:
                 return {
                     "state": False,
                     "message": UNAUTHENTICATED
                 }
 
-    # Adding 'FREE' plan to bundle definition on view decorators and also JWT token:
-    bundles.add('FREE')
-    payload_bundles = {payload['sub_bundle'], 'FREE'}
-
     for role in payload['sub_roles']:
         if role in permitted_roles:
-            if payload_bundles.issubset(bundles):
-                if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
+            if payload['sub_bundle'] in view_bundles:
+                if branch_disable or any(branch['id'] == request_branch for branch in payload['sub_branch_list']):
                     return {
                         "state": True,
                         "message": NO_MESSAGE,
