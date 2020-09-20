@@ -52,7 +52,9 @@ angular.module("dashboard")
                 'games': [],
                 'sum_all_games': {
                     total_seconds: 0,
-                    total_price: 0
+                    total_price: 0,
+                    total_hours: 0,
+                    total_minutes: 0
                 },
                 'total_price': 0,
                 'cash': 0,
@@ -1548,7 +1550,9 @@ angular.module("dashboard")
                 'games': [],
                 'sum_all_games': {
                     total_seconds: 0,
-                    total_price: 0
+                    total_price: 0,
+                    total_hours: 0,
+                    total_minutes: 0
                 },
                 'total_price': 0,
                 'cash': 0,
