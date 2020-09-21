@@ -78,7 +78,7 @@ class AddSupplierView(View):
         salesman_phone = rec_data.get('salesman_phone')
         branch_id = rec_data.get('branch_id')
 
-        if not name or not phone or not salesman_name or not salesman_phone or not branch_id:
+        if not name or not phone or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         organization_object = Branch.objects.get(id=branch_id).organization

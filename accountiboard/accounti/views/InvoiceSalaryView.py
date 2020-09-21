@@ -11,7 +11,7 @@ from accountiboard.custom_permissions import *
 class InvoiceSalaryView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def post(self, request, invoice_id, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -102,7 +102,7 @@ class InvoiceSalaryView(View):
 
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def put(self, request, invoice_id, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -179,7 +179,7 @@ class InvoiceSalaryView(View):
 
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request, invoice_id, *args, **kwargs):
         if not invoice_id:
@@ -229,7 +229,7 @@ class InvoiceSalaryView(View):
 
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def delete(self, request, invoice_id, *args, **kwargs):
         if not invoice_id:
@@ -248,7 +248,7 @@ class InvoiceSalaryView(View):
 class InvoiceSalariesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request,branch_id, *args, **kwargs):
 
@@ -284,7 +284,7 @@ class InvoiceSalariesView(View):
 class InvoiceSalarySearchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request,branch_id,search_word, *args, **kwargs):
 

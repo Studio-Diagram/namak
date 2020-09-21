@@ -9,8 +9,7 @@
                 <span></span>
             </th>
             <th ng-repeat="header in headers" scope="col" ng-bind="header.name"></th>
-            <th scope="col" ng-if="config.has_detail_button"></th>
-            <th scope="col" ng-if="config.has_delete_button"></th>
+            <th scope="col" ng-if="config.has_detail_button || config.has_delete_button"></th>
         </tr>
         </thead>
         <tbody>
@@ -33,12 +32,11 @@
                       ng-class="item[header.key] >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'"
                       ng-if="config.price_fields.indexOf(header.key) !== -1 && config.price_with_tags">{{ item[header.key] | number | persianNumber }}</span>
             </td>
-            <td scope="col" ng-if="config.has_detail_button">
-                <a ng-click="detailCallback({item_id: item.id})" href=""
+            <td class="tableButtonWrapper" scope="col" ng-if="config.has_detail_button || config.has_delete_button">
+                <a ng-click="detailCallback({item_id: item.id})" href="" ng-if="config.has_detail_button"
                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-            </td>
-            <td scope="col" ng-if="config.has_delete_button">
-                <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
+                <a tabindex="0" class="mainButton redButton fullWidthButton smallButton"
+                   ng-if="config.has_delete_button"
                    role="button" data-container="body"
                    ng-disabled="disable_print_after_save_all_buttons"
                    data-toggle="popover" data-trigger="focus" data-placement="bottom" popover

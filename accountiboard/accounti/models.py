@@ -329,8 +329,8 @@ class InvoicesSalesToGame(models.Model):
 class Supplier(models.Model):
     name = models.CharField(max_length=50, null=False)
     phone = models.CharField(max_length=30, null=False)
-    salesman_name = models.CharField(max_length=50, null=False)
-    salesman_phone = models.CharField(max_length=50, null=False)
+    salesman_name = models.CharField(max_length=255, null=True, blank=True)
+    salesman_phone = models.CharField(max_length=50, null=True, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -278,6 +278,9 @@ class GetInvoiceSaleView(View):
         if not invoice_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
         invoice_object = InvoiceSales.objects.get(pk=invoice_id)
+        invoice_customer_name = invoice_object.static_guest_name if invoice_object.static_guest_name else GUEST_LAST_NAME
+        if invoice_object.member:
+            invoice_customer_name = invoice_object.member.get_full_name()
         invoice_data = {
             'invoice_sales_id': invoice_object.pk,
             'table_id': invoice_object.table.pk,
@@ -285,7 +288,7 @@ class GetInvoiceSaleView(View):
             'member_id': invoice_object.member.pk if invoice_object.member else 0,
             'guest_numbers': invoice_object.guest_numbers,
             'member_name': invoice_object.member.get_full_name() if invoice_object.member else GUEST_LAST_NAME,
-            'member_data': invoice_object.member.get_full_name() if invoice_object.member else GUEST_LAST_NAME,
+            'member_data': invoice_customer_name,
             'current_game': {
                 'id': 0,
                 'numbers': 0,
@@ -343,7 +346,7 @@ class GetInvoiceSaleView(View):
             elif str(game.game.end_time) == "00:00:00":
                 invoice_data['current_game']['id'] = game.game.pk
                 invoice_data['current_game']['numbers'] = game.game.numbers
-                invoice_data['current_game']['start_time'] = game.game.start_time
+                invoice_data['current_game']['start_time'] = game.game.start_time.strftime('%H:%M')
 
         invoice_items = InvoicesSalesToMenuItem.objects.filter(invoice_sales=invoice_object)
         for item in invoice_items:
@@ -431,10 +434,12 @@ class GetAllTodayInvoiceSalesView(View):
             sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(
                 invoice_sale=invoice).aggregate(
                 Sum('used_price'))
-
+            invoice_customer_name = invoice.static_guest_name if invoice.static_guest_name else GUEST_LAST_NAME
+            if invoice.member:
+                invoice_customer_name = invoice.member.get_full_name()
             all_invoices_list.append({
                 "invoice_id": invoice.pk,
-                "guest_name": invoice.member.get_full_name() if invoice.member else GUEST_LAST_NAME,
+                "guest_name": invoice_customer_name,
                 "table_name": invoice.table.name,
                 "guest_nums": invoice.guest_numbers,
                 "total_price": invoice.total_price,

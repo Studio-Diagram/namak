@@ -195,6 +195,7 @@ angular.module("dashboard")
 
         $scope.setStaticGuestName = function (guest_name) {
             $scope.new_invoice_data.static_guest_name = guest_name;
+            $scope.new_invoice_data.member_data = guest_name;
         };
 
         $scope.clickOnMemberInput = function () {
@@ -274,6 +275,7 @@ angular.module("dashboard")
 
         $scope.show_today_invoices = function () {
             $scope.current_selected_table_name = "";
+            $scope.new_invoice_data.table_id = 0;
             $state.go('dashboard.cash_manager.salon', {table_name: ""}, {
                 notify: false,
                 reload: false,
@@ -1033,6 +1035,7 @@ angular.module("dashboard")
                         };
                         $scope.can_settle_invoice();
                         $scope.refreshInvoice($scope.new_invoice_data.invoice_sales_id);
+                        $rootScope.show_toast("بازی با موفقیت پایان یافت.", 'success');
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');

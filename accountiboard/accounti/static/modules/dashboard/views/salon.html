@@ -35,14 +35,14 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">حذف فاکتور</h2>
+                    <h2 class="modalTitle">حذف</h2>
                     <a ng-click="close_modal('deleteInvoiceModal')" class="mainButton redButton" data-dismiss="modal"
                        href=""
                        aria-label="Close">
                         <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                     </a>
                     <a ng-click="delete_invoice()" href="" class="mainButton greenButton"><i class="fas fa-save"></i>
-                        حذف فاکتور</a>
+                        حذف</a>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -139,11 +139,11 @@
                         چاپ
                     </button>
                     <div class="dropdown-menu">
-                        <a ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
-                           ng-click="print_cash()" class="dropdown-item" href="">چاپ مشتری</a>
                         <a ng-disabled="disable_print_after_save_all_buttons"
                            ng-click="print_after_save(new_invoice_data.invoice_sales_id)" class="dropdown-item"
                            href="">چاپ سفارش</a>
+                        <a ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                           ng-click="print_cash()" class="dropdown-item" href="">چاپ مشتری</a>
                     </div>
 
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()"
@@ -207,6 +207,7 @@
                                     </div>
                                     <div class="productsWrapper">
                                         <div class="productCard" ng-repeat="shop in shop_products"
+                                             ng-class="{'disabled': shop.real_numbers === 0}"
                                              ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.real_numbers)">
                                             <span ng-bind="shop.name"></span>
                                             <span>
@@ -217,7 +218,8 @@
                                             <span>
                                                         <i class="fas fa-boxes"></i>
                                                         <span>&nbsp;</span>
-                                                        <span ng-bind="shop.real_numbers | persianNumber"></span>
+                                                        <span ng-if="shop.real_numbers" ng-bind="shop.real_numbers | persianNumber"></span>
+                                                        <span ng-if="!shop.real_numbers">ناموجود</span>
                                                     </span>
                                         </div>
                                     </div>
@@ -279,8 +281,8 @@
                                             <label>نحوه آشنایی</label>
                                             <select ng-model="new_member_data.intro"
                                                     class="form-control customDropdown">
-                                                <option ng-selected="new_member_data.intro === null" value="">نحوه
-                                                    آشنایی با کافه
+                                                <option ng-selected="new_member_data.intro === null" value="">
+                                                    انتخاب کنید
                                                 </option>
                                                 <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
                                                     معرفی دوستان
@@ -308,7 +310,8 @@
                                         <div>
                                             <label>شماره مشتری</label>
                                             <input class="form-control autoHeight" type="text"
-                                                   placeholder="" ng-model="new_member_data.card_number"
+                                                   placeholder="اگر چیزی ننویسید شماره موبایل به عنوان شماره مشتری ثبت می‌شود"
+                                                   ng-model="new_member_data.card_number"
                                                    select-on-click>
                                         </div>
                                         <button ng-click="add_member_and_add_to_invoice()"
@@ -361,6 +364,21 @@
                                 </div>
                                 <div ng-if="new_invoice_data.member_id" class="credits">
                                     <div ng-if="credit_state === 'SHOW_CREDITS'" class="showCredits">
+                                        <div class="creditInfo">
+                                            <div>
+                                                <span>جمع اعتبار مانده</span>
+                                                <span ng-class="{'priceField' : new_invoice_data.total_credit }"
+                                                      ng-bind="new_invoice_data.total_credit | number | persianNumber"></span>
+                                            </div>
+                                            <div>
+                                                <span>جمع اعتبار مصرف شده در فاکتور</span>
+                                                <span ng-class="{'priceField' : new_invoice_data.used_credit }"
+                                                      ng-bind="new_invoice_data.used_credit | number | persianNumber"></span>
+                                            </div>
+                                        </div>
+                                        <button ng-click="perform_credit()"
+                                                class="mainButton greenButton">اعمال اعتبار
+                                        </button>
                                         <table class="invoiceTable invoiceItem newInvoiceSaleTable">
                                             <tbody>
                                             <tr>
@@ -378,21 +396,6 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <button ng-click="perform_credit()"
-                                                class="mainButton greenButton">اعمال اعتبار
-                                        </button>
-                                        <div class="creditInfo">
-                                            <div>
-                                                <span>جمع اعتبار مانده</span>
-                                                <span ng-class="{'priceField' : new_invoice_data.total_credit }"
-                                                      ng-bind="new_invoice_data.total_credit | number | persianNumber"></span>
-                                            </div>
-                                            <div>
-                                                <span>جمع اعتبار مصرف شده در فاکتور</span>
-                                                <span ng-class="{'priceField' : new_invoice_data.used_credit }"
-                                                      ng-bind="new_invoice_data.used_credit | number | persianNumber"></span>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div ng-if="credit_state === 'ADD_CREDITS'" class="addCredits">
                                         <div>
@@ -464,15 +467,9 @@
                                     </div>
 
                                     <button ng-click="start_game()"
-                                            ng-disabled="new_invoice_data.current_game.numbers === 0"
-                                            ng-show="!new_invoice_data.current_game.start_time" href=""
+                                            ng-disabled="new_invoice_data.current_game.numbers === 0 || new_invoice_data.current_game.start_time"
+                                            href=""
                                             class="mainButton grayButton">شروع زمان بازی
-                                    </button>
-
-                                    <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
-                                            ng-disabled="disable_print_after_save_all_buttons"
-                                            ng-if="new_invoice_data.current_game.start_time !== ''"
-                                            class="mainButton grayButton">اتمام زمان بازی
                                     </button>
 
                                     <div>
@@ -644,7 +641,7 @@
                              ng-if="!(new_invoice_data.menu_items_old.length || new_invoice_data.shop_items_old.length || new_invoice_data.menu_items_new.length || new_invoice_data.shop_items_new.length || new_invoice_data.games.length)">
                             <p>
                                 <i class="fas fa-exclamation-triangle"></i>
-                                <span>آیتمی وجود ندارد</span>
+                                <span>هنوز در این فاکتور آیتمی وجود ندارد، از بخش سمت راست برای اضافه کردن آیتم‌های منو و یا محصولات فروشگاهی استفاده کنید.</span>
                             </p>
                         </div>
                         <div class="invoiceSaleFooter">
@@ -668,7 +665,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <table class="invoiceTable">
+                            <table class="invoiceTable invoiceSaleFooterTable">
                                 <tbody>
                                 <tr>
                                     <th>اعتبار مصرف شده</th>
@@ -684,7 +681,7 @@
                                 </tr>
                                 <tr class="totalPriceRow">
                                     <th>جمع کل</th>
-                                    <td>
+                                    <td class="priceField">
                                         {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
                                 </tr>
                                 <tr>
@@ -873,11 +870,9 @@
             <tr>
                 <th scope="col">نام مهمان</th>
                 <th scope="col">میز</th>
-                <th>وضعیت سفارش</th>
-                <th>وضعیت بازی</th>
+                <th>وضعیت</th>
                 <th scope="col">مبلغ فاکتور</th>
                 <th scope="col">تعداد مهمانان</th>
-                <th scope="col">ساعت تسویه</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -885,10 +880,10 @@
             <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
                 <th scope="row">{{ invoice.guest_name }}</th>
                 <td>{{ invoice.table_name }}</td>
-                <td><span ng-hide="invoice.is_settled"
+                <td>
+                    <span ng-hide="invoice.is_settled"
                           ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span>
-                </td>
-                <td><span ng-hide="invoice.is_settled"
+                    <span ng-hide="invoice.is_settled"
                           ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
                 </td>
                 <td>
@@ -896,7 +891,6 @@
                     ریال
                 </td>
                 <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
-                <td>{{ invoice.settle_time | persianNumber }}</td>
                 <td class="tableButtonWrapper">
                     <a href="" ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"
                        class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
@@ -904,7 +898,7 @@
                        ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)"
                        class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                     <a href="" ng-hide="invoice.is_settled" ng-click="openDeleteInvoiceModal(invoice.invoice_id)"
-                       class="mainButton redButton smallButton fullWidthButton">حذف فاکتور</a>
+                       class="mainButton redButton smallButton fullWidthButton">حذف</a>
                 </td>
             </tr>
             </tbody>
@@ -952,35 +946,35 @@
                         <tr>
                             <th scope="col">نام مهمان</th>
                             <th scope="col">میز</th>
-                            <th>وضعیت سفارش</th>
-                            <th>وضعیت بازی</th>
+                            <th scope="col">وضعیت</th>
                             <th scope="col">مبلغ فاکتور</th>
                             <th scope="col">تعداد مهمانان</th>
-                            <th scope="col">ساعت تسویه</th>
                             <th scope="col"></th>
                         </tr>
                         <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
                             <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.table_name }}</td>
-                            <td><span ng-hide="invoice.is_settled"
-                                      ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span>
-                            </td>
-                            <td><span ng-hide="invoice.is_settled"
-                                      ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
-                            </td>
                             <td>
-                                {{ invoice.total_price - invoice.discount - invoice.used_credit | number:fractionSize | persianNumber }}
-                                ریال
+                                <span ng-hide="invoice.is_settled"
+                                      ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span>
+                                <span ng-hide="invoice.is_settled"
+                                      ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
+                                <span ng-show="invoice.is_settled"
+                                      class="badge badge-pill badge-gray">تسویه شده</span>
+                            </td>
+                            <td class="priceField">
+                                {{ invoice.total_price - invoice.discount - invoice.used_credit | number | persianNumber }}
                             </td>
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
-                            <td>{{ invoice.settle_time | persianNumber }}</td>
-                            <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href=""
-                                                                                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
-                            <td ng-show="invoice.is_settled"
-                                ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)">
-                                <a href=""
+                            <td class="tableButtonWrapper">
+                                <a href="" ng-show="invoice.is_settled"
+                                   ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                <a href="" ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                <a href="" ng-hide="invoice.is_settled"
+                                   ng-click="openDeleteInvoiceModal(invoice.invoice_id)"
+                                   class="mainButton redButton smallButton fullWidthButton">حذف</a>
                             </td>
                         </tr>
                         </tbody>
@@ -993,18 +987,17 @@
                         <tbody>
                         <tr>
                             <th>نام مهمان</th>
-                            <th>وضعیت سفارش</th>
-                            <th>وضعیت بازی</th>
+                            <th>وضعیت</th>
                             <th>مبلغ فاکتور</th>
                             <th></th>
                         </tr>
                         <tr ng-repeat="s_invoice in selected_table_data">
                             <th scope="row">{{ s_invoice.guest_name }}</th>
-                            <td><span
-                                    ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span>
-                            </td>
-                            <td><span
-                                    ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span>
+                            <td>
+                                <span
+                                        ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span>
+                                <span
+                                        ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span>
                             </td>
                             <td>
                                 <span class="priceField"
@@ -1014,7 +1007,8 @@
                                 <a href="" ng-click="editInvoice(s_invoice.invoice_id)"
                                    class="mainButton newGrayButton smallButton fullWidthButton">جزییات</a>
                                 <a href="" ng-click="openDeleteInvoiceModal(s_invoice.invoice_id)"
-                                   class="mainButton redButton smallButton fullWidthButton">حذف فاکتور</a>
+                                   class="mainButton redButton smallButton fullWidthButton">حذف</a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

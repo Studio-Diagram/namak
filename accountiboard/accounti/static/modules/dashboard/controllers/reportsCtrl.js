@@ -270,13 +270,10 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
                 });
         };
 
@@ -303,13 +300,9 @@ angular.module("dashboard")
                         $scope.suppliers = data['suppliers']
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
+                }, function (error) {});
         };
 
         $scope.get_report = function () {
@@ -318,7 +311,7 @@ angular.module("dashboard")
                 $scope.starting_date = $("#start_date_picker").val() ? $("#start_date_picker").val() : $state.params.start;
                 $scope.ending_date = $("#end_date_picker").val() ? $("#end_date_picker").val() : $state.params.end;
             })(jQuery);
-
+            if (!$scope.report_data.report_category) $scope.report_data.report_category = "";
             dashboardHttpRequest.getReport('?type=' + $scope.report_data.report_category +
                 '&start=' + $scope.starting_date +
                 '&end=' + $scope.ending_date +
@@ -331,7 +324,6 @@ angular.module("dashboard")
                     $scope.reports_result = data;
                 }, function (error) {
                     $scope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('errorModal');
                 });
         };
 
@@ -408,13 +400,9 @@ angular.module("dashboard")
                         $rootScope.open_modal('show_invoice_purchase');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
+                }, function (error) {});
         };
 
         $scope.display_float_to_int = function (price) {
@@ -428,13 +416,10 @@ angular.module("dashboard")
                         $scope.employees = data['employees'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
                 });
         };
 
