@@ -132,7 +132,7 @@ class InvoiceSalaryView(View):
 
         
         employee_obj = Employee.objects.get(pk=employee_id)
-        now_time = datetime.datetime.now()
+        now_time = datetime.now()
 
         if banking_id:
             try:
