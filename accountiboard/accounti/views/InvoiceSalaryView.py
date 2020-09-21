@@ -1,8 +1,5 @@
-from django.http import JsonResponse
 from accounti.models import *
-# from datetime import datetime
-import datetime
-import jdatetime, json
+import jdatetime
 from accountiboard.constants import *
 from django.views import View
 from accountiboard.custom_permissions import *
@@ -48,7 +45,7 @@ class InvoiceSalaryView(View):
 
             branch_obj = Branch.objects.get(pk=branch_id)
             employee_obj = Employee.objects.get(pk=employee_id)
-            now_time = datetime.datetime.now()
+            now_time = datetime.now()
 
             if banking_id:
                 try:
