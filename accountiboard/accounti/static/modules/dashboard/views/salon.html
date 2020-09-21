@@ -535,8 +535,8 @@
                     <aside class="leftSideInvoiceSale">
                         <div class="generalInfoInvoiceSale">
                             <div>
-                                <label>میز<i class="fas fa-star-of-life"></i></label>
-                                <select ng-model="new_invoice_data.table_id" class="form-control">
+                                <label>میز</label>
+                                <select ng-model="new_invoice_data.table_id" class="form-control customSelect requiredField">
                                     <option ng-repeat="table in tables"
                                             value="{{ table.table_id }}"
                                             ng-selected="table.table_id == new_invoice_data.table_id">{{ table.table_name }}</option>

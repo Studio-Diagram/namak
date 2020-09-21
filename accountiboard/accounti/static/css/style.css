@@ -3197,3 +3197,19 @@ table.newInvoiceSaleTable tbody tr .first a {
 .invoiceTable.invoiceSaleFooterTable tr > th {
     width: 45%;
 }
+
+.customSelect {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, #fff0 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 1px), calc(100% - 15px) calc(1em + 1px), calc(100% - 2.5em) 0.5em;
+    background-size: 5px 6px, 6px 5px, 1px 1.5em;
+    background-repeat: no-repeat;
+}
+
+.requiredField {
+    border: 1px solid var(--myBlack);
+}
