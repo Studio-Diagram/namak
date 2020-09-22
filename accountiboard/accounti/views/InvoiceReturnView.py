@@ -44,10 +44,12 @@ def get_detail_product_number(shop_product_id):
 
     return real_shop_p_num
 
+
 class CreateNewInvoiceReturnView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_return_id = rec_data.get('id')
@@ -183,7 +185,8 @@ class CreateNewInvoiceReturnView(View):
                                 amani_to_purchase[0].invoice_purchase_to_shop_product.save()
                             else:
                                 return JsonResponse(
-                                    {"response_code": 3, "error_msg": THE_INVOICE_PURCHASE_FOR_INVOICE_RETURN_NOT_FOUND})
+                                    {"response_code": 3,
+                                     "error_msg": THE_INVOICE_PURCHASE_FOR_INVOICE_RETURN_NOT_FOUND})
                             break
                         else:
                             amani_sale.return_numbers += real_number_in_amani_sale
@@ -203,7 +206,8 @@ class CreateNewInvoiceReturnView(View):
                                 amani_to_purchase[0].invoice_purchase_to_shop_product.save()
                             else:
                                 return JsonResponse(
-                                    {"response_code": 3, "error_msg": THE_INVOICE_PURCHASE_FOR_INVOICE_RETURN_NOT_FOUND})
+                                    {"response_code": 3,
+                                     "error_msg": THE_INVOICE_PURCHASE_FOR_INVOICE_RETURN_NOT_FOUND})
                             return_number_count -= real_number_in_amani_sale
                             amani_sale.save()
 
@@ -247,8 +251,9 @@ class CreateNewInvoiceReturnView(View):
 
 class GetAllInvoicesReturnView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch_id')
@@ -284,16 +289,19 @@ class GetAllInvoicesReturnView(View):
 
 class SearchInvoicesReturnView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS,
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data.get('search_word')
+        branch_id = rec_data.get('branch_id')
 
-        if not search_word:
+        if not search_word or not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = InvoiceReturn.objects.filter(supplier__name__contains=search_word)
+        items_searched = InvoiceReturn.objects.filter(supplier__name__contains=search_word,
+                                                      branch_id=branch_id).order_by('-id')
         returns = []
         for invoice_return in items_searched:
             invoice_date = invoice_return.created_time.date()
@@ -314,9 +322,10 @@ class SearchInvoicesReturnView(View):
 
 class DeleteInvoicesReturnView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS,
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_id = rec_data['invoice_id']

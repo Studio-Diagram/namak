@@ -3,6 +3,12 @@ angular.module("dashboard")
         var initialize = function () {
             $scope.error_message = '';
             $scope.cash_id = $stateParams.cash_id;
+            $scope.first_time_edit_payment_init = 2;
+            $scope.show_invoice_data = {
+                invoice_sales_id: 0,
+                cash_amount: 10000000000000000000,
+                pos_amount: 0
+            };
         };
 
         $scope.showInvoice = function (invoice_id, showEditPaymentButton, showPrintButton) {
@@ -10,7 +16,7 @@ angular.module("dashboard")
             $scope.settledInvoicePrintButton = showPrintButton;
             var sending_data = {
                 "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {
@@ -34,11 +40,10 @@ angular.module("dashboard")
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit']
                         };
-                        $scope.openViewSettledInvoiceModal();
+                        $scope.open_modal('viewSettledInvoiceModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $scope.error_message = 500;
@@ -46,15 +51,37 @@ angular.module("dashboard")
                 });
         };
 
-
-
-        $scope.openViewSettledInvoiceModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#viewSettledInvoiceModal').modal('show');
-            })(jQuery);
+        $scope.edit_settled_invoice_payment = function () {
+            var sending_data = {
+                "invoice_data": {
+                    invoice_id: $scope.show_invoice_data.invoice_sales_id,
+                    cash: $scope.show_invoice_data.cash_amount,
+                    pos: $scope.show_invoice_data.pos_amount,
+                    total: $scope.show_invoice_data.cash + $scope.show_invoice_data.pos
+                }
+            };
+            dashboardHttpRequest.editPaymentInvoiceSale(sending_data)
+                .then(function (data) {
+                    if (data['response_code'] === 2) {
+                        $rootScope.close_modal('editSettledInvoicePayment', 'viewSettledInvoiceModal');
+                    }
+                    else if (data['response_code'] === 3) {
+                        $rootScope.show_toast(data.error_msg, 'danger');
+                    }
+                }, function (error) {
+                });
         };
 
+        $scope.edit_payment_modal_changer = function () {
+            if ($scope.first_time_edit_payment_init) {
+                $timeout(function () {
+                    $scope.first_time_edit_payment_init -= 1;
+                });
+            }
+            else {
+                $scope.show_invoice_data.pos = $scope.show_invoice_data.total - $scope.show_invoice_data.cash;
+            }
+        };
 
 
         initialize();

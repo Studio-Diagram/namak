@@ -20,13 +20,11 @@ angular.module("dashboard")
                         "price_per_hour": 0
                     }
                 ],
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch': $rootScope.user_data.branch
             };
             $scope.search_data_branch = {
                 'search_word': '',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch': $rootScope.user_data.branch
             };
             $scope.branchSearchWord = '';
             $scope.get_branches_data($rootScope.user_data);

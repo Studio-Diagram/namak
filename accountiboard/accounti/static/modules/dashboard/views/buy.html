@@ -216,7 +216,7 @@
                                                    ng-model="item.nums"
                                                    ng-change="changeItemNumber($index)"></td>
                                         <td>
-                                            {{ display_float_to_int(item.total) | number:fractionSize | persianNumber }}</td>
+                                            {{ display_float_to_int(item.total) | number | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-disabled="read_only_mode"
                                                    ng-model="item.description"></td>
@@ -242,7 +242,7 @@
                                         <td><input class="form-control iranian-number" type="number"
                                                    ng-model="item.nums" ng-disabled="read_only_mode"
                                                    ng-change="changeItemShopNumber($index)"></td>
-                                        <td>{{ item.total | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ item.total | number | persianNumber }}</td>
                                         <td><input class="form-control" type="text" ng-maxlength="60"
                                                    ng-disabled="read_only_mode"
                                                    ng-model="item.description"></td>
@@ -271,7 +271,7 @@
                                     <tr>
                                         <th>جمع کل</th>
                                         <td>
-                                            {{ new_invoice_purchase_data.total_price | number:fractionSize | persianNumber }}</td>
+                                            {{ new_invoice_purchase_data.total_price | number | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

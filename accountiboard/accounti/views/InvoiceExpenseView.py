@@ -9,8 +9,9 @@ from accountiboard.constants import *
 
 class CreateNewInvoiceExpenseView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         invoice_expense_id = rec_data['id']
@@ -133,8 +134,9 @@ class CreateNewInvoiceExpenseView(View):
 
 class GetAllInvoicesExpenseView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch_id')
@@ -164,16 +166,19 @@ class GetAllInvoicesExpenseView(View):
 
 class SearchExpenseView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS,
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data.get('search_word')
+        branch_id = rec_data.get('branch_id')
 
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = InvoiceExpense.objects.filter(supplier__name__contains=search_word)
+        items_searched = InvoiceExpense.objects.filter(supplier__name__contains=search_word,
+                                                       branch_id=branch_id).order_by('-id')
         expenses = []
         for expense in items_searched:
             invoice_date = expense.created_time.date()
@@ -193,9 +198,10 @@ class SearchExpenseView(View):
 
 class DeleteInvoiceExpenseView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS,
-        branch_disable=True)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def delete(self, request, item_id, *args, **kwargs):
         InvoiceExpense.objects.get(pk=item_id).delete()
         return JsonResponse({})
@@ -203,8 +209,9 @@ class DeleteInvoiceExpenseView(View):
 
 class GetAllTagsView(View):
     @permission_decorator_class_based(token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
-        ALLOW_ALL_PLANS)
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch')

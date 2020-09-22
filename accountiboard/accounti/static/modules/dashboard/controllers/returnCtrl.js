@@ -22,7 +22,8 @@ angular.module("dashboard")
                 'stock_id':''
             };
             $scope.search_data_return = {
-                'search_word': ''
+                'search_word': '',
+                'branch_id': $rootScope.user_data.branch,
             };
             $scope.headers = [
                 {

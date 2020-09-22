@@ -218,16 +218,19 @@ class SearchEmployeeView(View):
         employees_from_branch = Employee.objects.filter(user__last_name__contains=search_word)
         employees = []
         for employee in employees_from_branch:
-            employee_branches = EmployeeToBranch.objects.filter(employee=employee)
-            employees.append({
-                "id": employee.pk,
-                "full_name": employee.user.get_full_name(),
-                "auth_levels": employee.employee_roles,
-                "branches": [{
-                    "id": employee_branch.branch.id,
-                    "name": employee_branch.branch.name
-                } for employee_branch in employee_branches]
-            })
+            employee_branches = EmployeeToBranch.objects.filter(employee=employee,
+                                                                branch__organization=request.payload.get(
+                                                                    'sub_organization'))
+            if employee_branches:
+                employees.append({
+                    "id": employee.pk,
+                    "full_name": employee.user.get_full_name(),
+                    "auth_levels": employee.employee_roles,
+                    "branches": [{
+                        "id": employee_branch.branch.id,
+                        "name": employee_branch.branch.name
+                    } for employee_branch in employee_branches]
+                })
         return JsonResponse({"response_code": 2, 'employees': employees})
 
 

@@ -123,10 +123,12 @@ class SearchPaysView(View):
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         search_word = rec_data.get('search_word')
+        branch_id = rec_data.get('branch_id')
 
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = InvoiceSettlement.objects.filter(supplier__name__contains=search_word)
+        items_searched = InvoiceSettlement.objects.filter(supplier__name__contains=search_word, branch_id=branch_id).order_by(
+            '-id')
         pays = []
         for pay in items_searched:
             invoice_date = pay.created_time.date()

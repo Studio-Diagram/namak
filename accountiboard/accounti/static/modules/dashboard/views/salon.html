@@ -63,51 +63,6 @@
             </div>
         </div>
     </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal"
-         id="editSettledInvoicePayment"
-         tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ویرایش نوع پرداخت</h2>
-                    <a ng-click="close_modal('editSettledInvoicePayment', 'viewInvoiceModal')"
-                       class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a href="" ng-click="edit_settled_invoice_payment()" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ویرایش</a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <form>
-                                    <label class="lefty iconic">نقد<i class="fas fa-money-bill-alt"></i></label>
-                                    <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
-                                    <input type="range" class="form-control-range"
-                                           min="0"
-                                           max="{{ editable_invoice.total }}"
-                                           step="5000"
-                                           ng-change="edit_payment_modal_changer()"
-                                           ng-model="editable_invoice.cash">
-                                    <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
-                                           class="form-control paymentMethod righty"
-                                           ng-model="editable_invoice.pos" format>
-                                    <input ng-change="edit_payment_modal_changer()" style="font-family: 'B Yekan'"
-                                           type="text"
-                                           aria-label="cash"
-                                           class="form-control paymentMethod lefty"
-                                           ng-model="editable_invoice.cash" format>
-                                </form>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <settled-invoice-modal-directive>
     </settled-invoice-modal-directive>

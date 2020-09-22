@@ -9,7 +9,6 @@ angular.module("dashboard")
             $scope.invoice_delete_description = "";
             $scope.disable_print_after_save_all_buttons = false;
             $scope.is_in_edit_mode_invoice = false;
-            $scope.first_time_edit_payment_init = true;
             $scope.price_per_hour_person = 100000;
             $scope.credit_state = "SHOW_CREDITS";
             $scope.menu_items_with_categories = [];
@@ -25,12 +24,6 @@ angular.module("dashboard")
                 "outcome_report": 0,
                 "event_tickets": 0,
                 "current_money_in_cash": 0
-            };
-            $scope.editable_invoice = {
-                "invoice_id": 0,
-                "cash": 5000,
-                "pos": 0,
-                "total": 0
             };
             $scope.new_invoice_data = {
                 'invoice_sales_id': 0,
@@ -478,22 +471,6 @@ angular.module("dashboard")
             }
         };
 
-        $scope.edit_settled_invoice_payment = function () {
-            var sending_data = {
-                "invoice_data": $scope.editable_invoice
-            };
-            dashboardHttpRequest.editPaymentInvoiceSale(sending_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $rootScope.close_modal('editSettledInvoicePayment', 'viewInvoiceModal');
-                        $rootScope.close_modal("viewInvoiceModal");
-                    }
-                    else if (data['response_code'] === 3) {
-                        $rootScope.show_toast(data.error_msg, 'danger');
-                    }
-                });
-        };
-
         $scope.get_today_cash = function () {
             dashboardHttpRequest.getTodayCash($rootScope.user_data)
                 .then(function (data) {
@@ -688,23 +665,6 @@ angular.module("dashboard")
 
         $scope.payModalChangeNumber = function () {
             $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.cash) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip) - Number($scope.new_invoice_data.used_credit);
-        };
-
-        $scope.edit_payment_modal_changer = function () {
-            if ($scope.first_time_edit_payment_init) {
-                $scope.editable_invoice = {
-                    "invoice_id": $scope.new_invoice_data.invoice_sales_id,
-                    "cash": $scope.new_invoice_data.cash_amount,
-                    "pos": $scope.new_invoice_data.pos_amount,
-                    "total": $scope.new_invoice_data.cash_amount + $scope.new_invoice_data.pos_amount
-                };
-                $timeout(function () {
-                    $scope.first_time_edit_payment_init = false;
-                }, 2000);
-            }
-            else {
-                $scope.editable_invoice.pos = $scope.editable_invoice.total - $scope.editable_invoice.cash;
-            }
         };
 
         $scope.can_settle_invoice = function () {
@@ -1390,22 +1350,11 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.initiate_edit_payment_invoice_sale = function () {
-            $scope.editable_invoice = {
-                "invoice_id": $scope.new_invoice_data.invoice_sales_id,
-                "cash": $scope.new_invoice_data.cash_amount,
-                "pos": $scope.new_invoice_data.pos_amount,
-                "total": $scope.new_invoice_data.cash_amount + $scope.new_invoice_data.pos_amount
-            };
-            $rootScope.open_modal('editSettledInvoicePayment', 'viewInvoiceModal');
-        };
-
-
         $scope.refreshInvoice = function (invoice_id) {
             $scope.will_delete_items.invoice_id = invoice_id;
             var sending_data = {
                 "invoice_id": invoice_id,
-                'branch_id': $rootScope.user_data.branch,
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.getInvoice(sending_data)
                 .then(function (data) {

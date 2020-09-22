@@ -96,7 +96,7 @@ class SearchBranchView(View):
         search_word = rec_data['search_word']
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = Branch.objects.filter(name__contains=search_word)
+        items_searched = Branch.objects.filter(name__contains=search_word, organization=request.payload.get('sub_organization'))
         branches = []
         for branch in items_searched:
             branches.append({
