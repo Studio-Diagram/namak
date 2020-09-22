@@ -1,21 +1,4 @@
 <div ng-controller="closeOpenCashCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید بستن صندوق</h2>
-                    <a ng-click="close_cash()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به بستن صندوق دارید؟ شما به طور خودکار خارج خواهید
-                        شد.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
          data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -40,53 +23,50 @@
         </div>
     </div>
 
-    <main class="pageContent container-fluid">
+    <main class="pageContent">
         <div class="tableButtons">
+            <div class="buttonGroup"></div>
             <div class="buttonGroup">
-                <a ng-click="openPermissionModal()" href="" class="mainButton redButton">بستن صندوق</a>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">صندوق ها</li>
+                    </ol>
+                </nav>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">شماره</th>
-                            <th scope="col">تاریخ شروع</th>
-                            <th scope="col">زمان شروع</th>
-                            <th scope="col">تاریخ پایان</th>
-                            <th scope="col">زمان پایان</th>
-                            <th scope="col">درآمد کلی ( ریال )</th>
-                            <th scope="col">بسته شده</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="cash in all_cashes">
-                            <th scope="row">{{ cash.id | persianNumber }}</th>
-                            <th>{{ cash.start_date | persianNumber }}</th>
-                            <th>{{ cash.start_time | persianNumber }}</th>
-                            <td>{{ cash.end_date | persianNumber }}</td>
-                            <td>{{ cash.end_time | persianNumber }}</td>
-                            <td>{{ cash.total_income | number | persianNumber }}</td>
-                            <td>
-                                <span ng-show="cash.is_closed === 1">بسته‌شده</span>
-                                <span ng-hide="cash.is_closed === 1">باز</span>
-                            </td>
-                            <td>
-                                <a ui-sref="dashboard.accounting.manage_cash_detail({ cash_id: cash.id })"
-                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
+        <div class="tableWrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">شماره</th>
+                    <th scope="col">تاریخ شروع</th>
+                    <th scope="col">زمان شروع</th>
+                    <th scope="col">تاریخ پایان</th>
+                    <th scope="col">زمان پایان</th>
+                    <th scope="col">درآمد کلی ( ریال )</th>
+                    <th scope="col">بسته شده</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="cash in all_cashes">
+                    <th scope="row">{{ cash.id | persianNumber }}</th>
+                    <th>{{ cash.start_date | persianNumber }}</th>
+                    <th>{{ cash.start_time | persianNumber }}</th>
+                    <td>{{ cash.end_date | persianNumber }}</td>
+                    <td>{{ cash.end_time | persianNumber }}</td>
+                    <td>{{ cash.total_income | number | persianNumber }}</td>
+                    <td>
+                        <span ng-show="cash.is_closed === 1">بسته‌شده</span>
+                        <span ng-hide="cash.is_closed === 1">باز</span>
+                    </td>
+                    <td>
+                        <a ui-sref="dashboard.accounting.manage_cash_detail({ cash_id: cash.id })"
+                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
         </div>
     </main>
