@@ -1,9 +1,4 @@
-import json
-import requests
-from datetime import datetime
-from accounti.models import *
 from django.contrib.auth.hashers import make_password, check_password
-from accountiboard.constants import *
 from accounti.validators.UserValidator import *
 from accountiboard.custom_permissions import *
 from accountiboard.sms import *
@@ -103,11 +98,11 @@ class RegisterCafeOwnerView(View):
             return JsonResponse({'error_msg': PHONE_VALIDATOR_ERROR}, status=401)
 
         try:
-            start_working_time = datetime.datetime.strptime(start_working_time, "%H:%M")
-            end_working_time = datetime.datetime.strptime(end_working_time, "%H:%M")
+            start_working_time = datetime.strptime(start_working_time, "%H:%M")
+            end_working_time = datetime.strptime(end_working_time, "%H:%M")
         except:
-            start_working_time = datetime.datetime.strptime("08:00", "%H:%M")
-            end_working_time = datetime.datetime.strptime("23:00", "%H:%M")
+            start_working_time = datetime.strptime("08:00", "%H:%M")
+            end_working_time = datetime.strptime("23:00", "%H:%M")
 
         if User.objects.filter(phone=phone).count() > 0:
             return JsonResponse({"error_msg": PHONE_ALREADY_EXIST}, status=403)
