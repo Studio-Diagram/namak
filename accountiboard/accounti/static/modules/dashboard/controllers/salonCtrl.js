@@ -131,6 +131,13 @@ angular.module("dashboard")
             };
         };
 
+        $scope.compare_before_exit = function () {
+            // console.log("###############################################");
+            // console.log($scope.first_initial_value_of_invoice_sale, $scope.new_invoice_data);
+            // console.log(JSON.stringify($scope.first_initial_value_of_invoice_sale) === JSON.stringify($scope.new_invoice_data));
+            return JSON.stringify($scope.first_initial_value_of_invoice_sale) === JSON.stringify($scope.new_invoice_data);
+        };
+
         $scope.config_clock = function () {
             jQuery.noConflict();
             (function ($) {
@@ -188,7 +195,8 @@ angular.module("dashboard")
 
         $scope.setStaticGuestName = function (guest_name) {
             $scope.new_invoice_data.static_guest_name = guest_name;
-            $scope.new_invoice_data.member_data = guest_name;
+            if (!guest_name) $scope.new_invoice_data.member_data = "مهمان";
+            else $scope.new_invoice_data.member_data = guest_name;
         };
 
         $scope.clickOnMemberInput = function () {
@@ -478,6 +486,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $rootScope.cash_data.cash_id = data['cash_id'];
                         $scope.new_invoice_data.cash_id = data['cash_id'];
+                        $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
                         if ($rootScope.cash_state) {
                             $scope.get_status_data();
                         }
@@ -921,13 +930,13 @@ angular.module("dashboard")
             var found_table = $filter('filter')($scope.tables, {'table_name': table_name});
             if (found_table.length) {
                 $scope.new_invoice_data.table_id = found_table[0].table_id;
-                $scope.new_invoice_data.table_name = table_name;
                 for (var i = 0; i < $scope.all_today_invoices.length; i++) {
                     if ($scope.all_today_invoices[i].table_name === table_name && $scope.all_today_invoices[i].is_settled === 0) {
                         $scope.selected_table_data.push($scope.all_today_invoices[i]);
                     }
                 }
             }
+            $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
             $rootScope.is_page_loading = false;
         };
 
@@ -1332,6 +1341,8 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'sum_all_games': data['invoice']['sum_all_games'],
                             'total_price': data['invoice']['total_price'],
+                            'cash': data['invoice']['cash_amount'],
+                            'card': data['invoice']['pos_amount'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
@@ -1341,6 +1352,7 @@ angular.module("dashboard")
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id
                         };
+                        $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
                         $scope.can_settle_invoice();
                         $scope.openAddInvoiceModal();
                     }
@@ -1380,17 +1392,18 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'sum_all_games': data['invoice']['sum_all_games'],
                             'total_price': data['invoice']['total_price'],
+                            'cash': data['invoice']['cash_amount'],
+                            'card': data['invoice']['pos_amount'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
                             'credits_data': data['invoice']['credits_data'],
                             'static_guest_name': data['invoice']['static_guest_name'],
-                            'cash': 0,
-                            'card': 0,
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id
                         };
+                        $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -1428,17 +1441,18 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'sum_all_games': data['invoice']['sum_all_games'],
                             'total_price': data['invoice']['total_price'],
+                            'cash': data['invoice']['cash_amount'],
+                            'card': data['invoice']['pos_amount'],
                             'discount': data['invoice']['discount'],
                             'tip': data['invoice']['tip'],
                             'total_credit': data['invoice']['total_credit'],
                             'used_credit': data['invoice']['used_credit'],
                             'credits_data': data['invoice']['credits_data'],
                             'static_guest_name': data['invoice']['static_guest_name'],
-                            'cash': 0,
-                            'card': 0,
                             'branch_id': $rootScope.user_data.branch,
                             'cash_id': $rootScope.cash_data.cash_id
                         };
+                        $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
                         jQuery.noConflict();
                         (function ($) {
                             $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip) - Number($scope.new_invoice_data.used_credit);
@@ -1518,6 +1532,7 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'cash_id': $rootScope.cash_data.cash_id
             };
+            $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
             $scope.new_member_data = {
                 'member_id': 0,
                 'first_name': '',
@@ -1540,7 +1555,6 @@ angular.module("dashboard")
                 'credit_category': ''
             };
             $scope.new_invoice_data.table_id = last_table_id;
-            $scope.new_invoice_data.table_name = $scope.current_selected_table_name;
         };
 
         $scope.ready_for_settle = function (invoice_id) {

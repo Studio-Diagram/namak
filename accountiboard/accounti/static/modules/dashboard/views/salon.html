@@ -75,8 +75,12 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور فروش </h2>
+                    <a class="mainButton redButton" role="button"
+                       ng-if="compare_before_exit()" ng-click="closeAddInvoiceModal()"
+                       ng-disabled="disable_print_after_save_all_buttons">خروج</a>
                     <a tabindex="0" class="mainButton redButton" role="button"
-                       data-container="body"
+                       data-container="body" ng-if="!compare_before_exit()"
+                       ng-click="compare_before_exit()"
                        ng-disabled="disable_print_after_save_all_buttons"
                        data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
                        question="مطمئن هستید؟"

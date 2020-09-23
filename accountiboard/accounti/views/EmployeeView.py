@@ -703,7 +703,7 @@ class KickUnkickEmployeeView(View):
 class GetBranchEmployeesView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
+                                      ALLOW_ALL_PLANS,
                                       branch_disable=True)
     def get(self, request, branch_id, *args, **kwargs):
 
