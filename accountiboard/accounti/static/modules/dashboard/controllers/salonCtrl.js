@@ -132,9 +132,6 @@ angular.module("dashboard")
         };
 
         $scope.compare_before_exit = function () {
-            // console.log("###############################################");
-            // console.log($scope.first_initial_value_of_invoice_sale, $scope.new_invoice_data);
-            // console.log(JSON.stringify($scope.first_initial_value_of_invoice_sale) === JSON.stringify($scope.new_invoice_data));
             return JSON.stringify($scope.first_initial_value_of_invoice_sale) === JSON.stringify($scope.new_invoice_data);
         };
 
