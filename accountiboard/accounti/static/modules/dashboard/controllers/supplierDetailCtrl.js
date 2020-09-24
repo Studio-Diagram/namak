@@ -21,25 +21,25 @@ angular.module("dashboard")
                 };
             }
             $scope.get_supplier();
-            if ($scope.detailState === "buy") {
+            if ($scope.detailState === "PURCHASE") {
                 $scope.state_word = 'خرید';
                 $scope.get_detail_invoice_purchases();
             }
-            else if ($scope.detailState === "pay") {
+            else if ($scope.detailState === "PAY") {
                 $scope.state_word = 'پرداختی';
                 $scope.get_detail_invoice_settlements();
             }
-            else if ($scope.detailState === "expense") {
+            else if ($scope.detailState === "EXPENSE") {
                 $scope.state_word = 'هزینه';
                 $scope.get_detail_invoice_expenses();
             }
-            else if ($scope.detailState === "return") {
+            else if ($scope.detailState === "RETURN") {
                 $scope.state_word = 'مرجوعی';
                 $scope.is_return = true;
                 $scope.get_detail_invoice_returns();
             }
-            else if ($scope.detailState === "amani_sales") {
-                $scope.state_word = 'فروش امانی';
+            else if ($scope.detailState === "AMANI_SALE") {
+                $scope.state_word = 'فروش فروشگاهی';
                 $scope.get_detail_invoice_amani_sales();
             }
         };
@@ -50,8 +50,7 @@ angular.module("dashboard")
 
         $scope.showInvoicePurchase = function (invoice_id) {
             var sending_data = {
-                'invoice_id': invoice_id,
-                'username': $rootScope.user_data.username
+                'invoice_id': invoice_id
             };
             dashboardHttpRequest.getInvoicePurchase(sending_data)
                 .then(function (data) {
@@ -70,7 +69,7 @@ angular.module("dashboard")
         };
 
         $scope.show_invoice_detail = function (invoice_id) {
-            if ($scope.detailState === "buy"){
+            if ($scope.detailState === "PURCHASE"){
                 $scope.showInvoicePurchase(invoice_id);
             }
         };
@@ -124,7 +123,6 @@ angular.module("dashboard")
 
         $scope.get_detail_invoice_purchases = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $scope.search_data_supplier.from_time,
                 'to_time': $scope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id
@@ -149,7 +147,6 @@ angular.module("dashboard")
 
         $scope.get_detail_invoice_settlements = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $scope.search_data_supplier.from_time,
                 'to_time': $scope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id
@@ -174,7 +171,6 @@ angular.module("dashboard")
 
         $scope.get_detail_invoice_expenses = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $scope.search_data_supplier.from_time,
                 'to_time': $scope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id

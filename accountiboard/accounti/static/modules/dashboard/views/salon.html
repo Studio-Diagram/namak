@@ -177,7 +177,8 @@
                                             <span>
                                                         <i class="fas fa-boxes"></i>
                                                         <span>&nbsp;</span>
-                                                        <span ng-if="shop.real_numbers" ng-bind="shop.real_numbers | persianNumber"></span>
+                                                        <span ng-if="shop.real_numbers"
+                                                              ng-bind="shop.real_numbers | persianNumber"></span>
                                                         <span ng-if="!shop.real_numbers">ناموجود</span>
                                                     </span>
                                         </div>
@@ -495,7 +496,8 @@
                         <div class="generalInfoInvoiceSale">
                             <div>
                                 <label>میز</label>
-                                <select ng-model="new_invoice_data.table_id" class="form-control customSelect requiredField">
+                                <select ng-model="new_invoice_data.table_id"
+                                        class="form-control customSelect requiredField">
                                     <option ng-repeat="table in tables"
                                             value="{{ table.table_id }}"
                                             ng-selected="table.table_id == new_invoice_data.table_id">{{ table.table_name }}</option>
@@ -884,12 +886,13 @@
                         </button>
                     </div>
                 </div>
-                <div class="row">
-                    <div ng-repeat="table_category in categorized_tables_data" class="col-md-6 table_category">
+                <div ng-repeat="table_category in categorized_tables_data" class="table_category_wrapper">
+                    <p ng-bind="table_category.table_category_name"></p>
+                    <div class="table_category">
                         <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)"
                            ng-class="set_class_name(table.table_name)"><span
                                 ng-hide="table_factor_counts(table.table_name) === 0"
-                                class="badge badge-pill badge-warning"
+                                class="badge badge-pill badge-white"
                                 ng-bind="table_factor_counts(table.table_name)"></span>{{ table.table_name }}</a>
                     </div>
                 </div>
@@ -948,6 +951,7 @@
                             <th>نام مهمان</th>
                             <th>وضعیت</th>
                             <th>مبلغ فاکتور</th>
+                            <th>تعداد مهمانان</th>
                             <th></th>
                         </tr>
                         <tr ng-repeat="s_invoice in selected_table_data">
@@ -962,6 +966,7 @@
                                 <span class="priceField"
                                       ng-bind="s_invoice.total_price - s_invoice.discount - s_invoice.used_credit | number | persianNumber"></span>
                             </td>
+                            <td>{{ s_invoice.guest_nums | persianNumber }} نفر</td>
                             <td class="tableButtonWrapper">
                                 <a href="" ng-click="editInvoice(s_invoice.invoice_id)"
                                    class="mainButton newGrayButton smallButton fullWidthButton">جزییات</a>

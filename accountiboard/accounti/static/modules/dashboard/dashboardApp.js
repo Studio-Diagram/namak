@@ -437,12 +437,10 @@ myApp.directive('tableDirective', function () {
         },
         templateUrl: '/static/modules/dashboard/directives/reusable-table.html',
         link: function (scope) {
-            if (scope.config.has_second_button_on_right_side === undefined)
-                scope.config.has_second_button_on_right_side = false;
-            if (scope.config.has_row_numbers === undefined)
-                scope.config.has_row_numbers = true;
-            if (scope.config.price_with_tags === undefined)
-                scope.config.price_with_tags = false;
+            if (scope.config.has_second_button_on_right_side === undefined) scope.config.has_second_button_on_right_side = false;
+            if (scope.config.has_row_numbers === undefined) scope.config.has_row_numbers = true;
+            if (scope.config.price_with_tags === undefined) scope.config.price_with_tags = false;
+            if (scope.config.has_delete_button === undefined) scope.config.has_delete_button = false;
         }
     }
 
@@ -533,4 +531,10 @@ myApp.directive('popover', function ($compile) {
 
         }
     }
+});
+
+
+myApp.constant('SUCCESS_MESSAGES', {
+    save_invoice_sale: "فاکتور با موفقیت ذخیره شد.",
+    print_after_save_invoice_sale: "فاکتور با موفقیت ذخیره و چاپ شد."
 });

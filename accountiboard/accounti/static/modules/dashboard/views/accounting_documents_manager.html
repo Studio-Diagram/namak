@@ -1,17 +1,18 @@
-<div class="row">
-    <main ng-controller="subManagerCtrl" class="col-2 col-xl-2 tableNavigation">
+<div class="nestedMenuWrapper">
+    <main ng-controller="subManagerCtrl" class="tableNavigation">
         <a class="mainButton fullWidthButton mt-3" ui-sref="dashboard.accounting.documents.buy"
            ng-class="isActive('/dashboard/accounting/documents/buy') ? 'oilBlueButton' : 'grayButton'">خرید</a>
         <a class="mainButton fullWidthButton mt-3" ui-sref="dashboard.accounting.documents.pay"
            ng-class="isActive('/dashboard/accounting/documents/pay') ? 'oilBlueButton' : 'grayButton'">پرداخت</a>
         <a class="mainButton fullWidthButton mt-3" ui-sref="dashboard.accounting.documents.salary"
-           ng-class="isActive('/dashboard/accounting/documents/salary') ? 'oilBlueButton' : 'grayButton'">پرداخت حقوق</a>
+           ng-class="isActive('/dashboard/accounting/documents/salary') ? 'oilBlueButton' : 'grayButton'">پرداخت
+            حقوق</a>
         <a class="mainButton fullWidthButton mt-3" ui-sref="dashboard.accounting.documents.expense"
            ng-class="isActive('/dashboard/accounting/documents/expense') ? 'oilBlueButton' : 'grayButton'">هزینه</a>
         <a class="mainButton fullWidthButton mt-3" ui-sref="dashboard.accounting.documents.return"
            ng-class="isActive('/dashboard/accounting/documents/return') ? 'oilBlueButton' : 'grayButton'">مرجوعی</a>
     </main>
-    <main class="col-10 col-xl-10">
+    <main class="nestedPageWrapper">
         <div class="preloader" ng-show="is_sub_page_loading"></div>
         <div ng-hide="is_sub_page_loading">
             <ui-view></ui-view>

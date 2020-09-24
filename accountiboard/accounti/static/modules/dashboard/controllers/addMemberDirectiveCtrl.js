@@ -40,28 +40,20 @@ angular.module("dashboard")
             };
             dashboardHttpRequest.getMember(data)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.new_member_data = {
-                            'member_id': data['member']['id'],
-                            'first_name': data['member']['first_name'],
-                            'last_name': data['member']['last_name'],
-                            'card_number': data['member']['card_number'],
-                            'year_of_birth': data['member']['year_of_birth'],
-                            'month_of_birth': data['member']['month_of_birth'],
-                            'day_of_birth': data['member']['day_of_birth'],
-                            'phone': data['member']['phone'],
-                            'intro': data['member']['intro'],
-                            'branch': $rootScope.user_data.branch
-                        };
-                        $scope.open_modal('addMemberModal');
-                    }
-                    else if (data['response_code'] === 3) {
-                        $rootScope.show_toast(data.error_msg, 'danger');
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
+                    $scope.new_member_data = {
+                        'member_id': data['member']['id'],
+                        'first_name': data['member']['first_name'],
+                        'last_name': data['member']['last_name'],
+                        'card_number': data['member']['card_number'],
+                        'year_of_birth': data['member']['year_of_birth'],
+                        'month_of_birth': data['member']['month_of_birth'],
+                        'day_of_birth': data['member']['day_of_birth'],
+                        'phone': data['member']['phone'],
+                        'intro': data['member']['intro'],
+                        'branch': $rootScope.user_data.branch
+                    };
+                    $rootScope.open_modal('addMemberModal');
+                }, function (error) {});
 
         };
 

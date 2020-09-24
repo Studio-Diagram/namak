@@ -4,10 +4,10 @@ angular.module("dashboard")
             $scope.member_table_headers = [
                 {
                     name: "نام مشتری",
-                    key: "last_name"
+                    key: "full_name"
                 },
                 {
-                    name: "شماره تلفن",
+                    name: "شماره موبایل",
                     key: "phone"
                 },
                 {

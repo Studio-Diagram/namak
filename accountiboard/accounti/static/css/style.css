@@ -372,12 +372,12 @@ button.redButton:hover {
 
 a.whiteButton {
     background: white;
-    color: var(--myGreen);
-    border-color: var(--myGreenBorder);
+    color: var(--myBlue);
+    border-color: var(--myBlueBorder);
 }
 
 a.whiteButton:hover {
-    background: var(--myGreenBorder);
+    background: var(--myBlueBorder);
     color: white;
 }
 
@@ -547,7 +547,6 @@ a.iconButton.active i {
 
 main.pageContent .listFilter {
     width: 200px;
-    margin: 0 0 15px 0;
     float: right;
 }
 
@@ -1161,7 +1160,7 @@ table.cashTable tbody tr td.mainValue span {
     flex-flow: row-reverse;
     justify-content: space-between;
     height: 40px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 main.pageContent .tableButtons nav {
@@ -1609,15 +1608,19 @@ span.btn.btn-default.form-control.ui-select-toggle {
     padding-top: 6px;
 }
 
-span.badge.badge-pill.badge-warning {
+span.badge.badge-pill.badge-white {
     position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 20px;
-    padding: 5px;
-    background: white;
-    color: var(--myGreen);
-    border: 1px solid var(--myGreen);
+    top: 7px;
+    left: 7px;
+    width: 22px;
+    background: var(--myBlue);
+    color: white;
+    font-size: 13px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    height: 22px;
+    line-height: 16px;
 }
 
 .tableNavigation a {
@@ -1633,7 +1636,9 @@ span.badge.badge-pill.badge-warning {
 .tableWrapper span.badge.badge-info {
     font-size: 0.85em;
     padding: 0.8em;
-    background-color: var(--myBlue);
+    background-color: #E5F7F9;
+    border: 1px solid var(--oilBlueBorder);
+    color: var(--oilBlueBorder);
 }
 
 .tableWrapper span.badge.badge-danger {
@@ -1675,8 +1680,9 @@ span.badge.badge-pill.badge-warning {
 .tableWrapper span.badge.badge-warning {
     font-size: 0.85em;
     padding: 0.8em;
-    color: white;
-    background-color: var(--myYellow);
+    color: var(--okr);
+    background-color: #FBF5E1;
+    border: 1px solid var(--okr);
 }
 
 .ui-widget-content {
@@ -1844,17 +1850,21 @@ tags-input .tags .tag-item {
     background-color: var(--pageBorder);
 }
 
-.table_category {
-    border-bottom: 1px dotted var(--pageBorder);
-    margin-bottom: 1em;
-    padding: 0 0 0 15px;
-}
-
-.table_category:nth-last-child(-n+2) {
-    border-bottom: none;
+.table_category_wrapper {
+    border-bottom: 1px solid var(--pageBorder);
     margin-bottom: 1em;
     padding: 0;
-    padding-left: 15px;
+    margin-left: 15px;
+}
+
+.table_category {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0 10px;
+}
+
+.table_category_wrapper:last-child {
+    border-bottom: none;
 }
 
 .red-cell {
@@ -2131,17 +2141,17 @@ th.disabled:hover {
 }
 
 .toast {
-    width: 330px;
-    border-radius: 10px 0 0 10px;
-    min-height: 110px;
+    width: 500px;
+    max-width: 500px;
+    border-radius: 20px !important;
     display: none;
 }
 
 .toast .toast-body {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
     justify-content: flex-end;
+    padding: 20px;
 }
 
 .toast .toast-body > p {
@@ -2149,7 +2159,8 @@ th.disabled:hover {
 }
 
 .toast.toast-success {
-    border-right: 6px solid #80AB51;
+    background-color: var(--myGreen);
+    color: white;
 }
 
 .mainButton.toast-button {
@@ -2159,17 +2170,20 @@ th.disabled:hover {
 }
 
 .toast-success .toast-button {
-    background-color: #80AB51;
+    background-color: white;
     border-color: transparent;
+    color: var(--myGreen);
 }
 
 .toast.toast-danger {
-    border-right: 6px solid #DB4E54;
+    background-color: var(--myRed);
+    color: white;
 }
 
 .toast-danger .toast-button {
-    background-color: #DB4E54;
+    background-color: var(--white);
     border-color: transparent;
+    color: var(--myRed);
 }
 
 .mainButton.fullWidthButton.transparentButton:hover {
@@ -2649,11 +2663,11 @@ aside.leftAside {
 }
 
 .leftSideInvoiceSale {
-    padding: 15px 15px 10px 15px !important
+    padding: 0 15px 10px 15px !important;
+    overflow-y: auto;
 }
 
 .leftSideInvoiceSale .newInvoiceSaleTable {
-    margin-top: 20px;
     margin-bottom: 20px !important;
 }
 
@@ -2841,6 +2855,11 @@ a.newGrayButton:hover {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 0 11px;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    padding-bottom: 20px;
+    padding-top: 15px;
 }
 
 .invoiceSaleFooter {
@@ -2848,6 +2867,7 @@ a.newGrayButton:hover {
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
     position: relative;
+    margin-bottom: 20px;
 }
 
 .gameCardInfo {
@@ -3089,7 +3109,7 @@ table.newInvoiceSaleTable tbody tr .first a {
 
 #invoiceSaleTable tbody > tr:first-child th {
     position: sticky;
-    top: 0;
+    top: 95px;
 }
 
 .menuCategoryCard span {
@@ -3107,12 +3127,6 @@ table.newInvoiceSaleTable tbody tr .first a {
 .menuCategoryCard.active {
     cursor: default;
     background: none;
-}
-
-.leftSideInvoiceSale > table tbody {
-    max-height: calc(100vh - 520px);
-    display: block;
-    overflow-y: auto;
 }
 
 .leftSideInvoiceSale > table tbody::-webkit-scrollbar {
@@ -3213,4 +3227,21 @@ table.newInvoiceSaleTable tbody tr .first a {
 
 .requiredField {
     border: 1px solid var(--myBlack);
+}
+
+table .badge {
+    margin-left: 5px;
+}
+
+.nestedMenuWrapper {
+    display: flex;
+}
+
+.nestedMenuWrapper .tableNavigation {
+    flex: 0 0 150px;
+    margin-left: 15px;
+}
+
+.nestedMenuWrapper .nestedPageWrapper {
+    flex: 1 1 100%;
 }

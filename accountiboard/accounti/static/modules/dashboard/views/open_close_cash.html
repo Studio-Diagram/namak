@@ -40,25 +40,21 @@
                 <tr>
                     <th scope="col">شماره</th>
                     <th scope="col">تاریخ شروع</th>
-                    <th scope="col">زمان شروع</th>
                     <th scope="col">تاریخ پایان</th>
-                    <th scope="col">زمان پایان</th>
                     <th scope="col">درآمد کلی ( ریال )</th>
-                    <th scope="col">بسته شده</th>
+                    <th scope="col">وضعیت</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="cash in all_cashes">
                     <th scope="row">{{ cash.id | persianNumber }}</th>
-                    <th>{{ cash.start_date | persianNumber }}</th>
-                    <th>{{ cash.start_time | persianNumber }}</th>
-                    <td>{{ cash.end_date | persianNumber }}</td>
-                    <td>{{ cash.end_time | persianNumber }}</td>
-                    <td>{{ cash.total_income | number | persianNumber }}</td>
+                    <td>{{ cash.start_date + " ساعت " + cash.start_time | persianNumber }}</td>
+                    <td ng-bind="(cash.end_date ? (cash.end_date +  ' ساعت ' + cash.end_time) : '') | persianNumber"></td>
+                    <td class="priceField">{{ cash.total_income | number | persianNumber }}</td>
                     <td>
-                        <span ng-show="cash.is_closed === 1">بسته‌شده</span>
-                        <span ng-hide="cash.is_closed === 1">باز</span>
+                        <span class="badge badge-gray" ng-show="cash.is_closed === 1">بسته‌شده</span>
+                        <span class="badge badge-warning" ng-show="cash.is_closed === 0">باز است</span>
                     </td>
                     <td>
                         <a ui-sref="dashboard.accounting.manage_cash_detail({ cash_id: cash.id })"

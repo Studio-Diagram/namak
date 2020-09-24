@@ -953,7 +953,7 @@ class CreateAllSupplierExcelView(View):
                 jalali_date = jdatetime.date.fromgregorian(day=invoice_date.day, month=invoice_date.month,
                                                            year=invoice_date.year)
                 jalali_date = jalali_date.strftime("%Y/%m/%d")
-                invoice_data.append("فروش امانی")
+                invoice_data.append("فروش فروشگاهی")
                 invoice_data.append(amani_sale.id)
                 invoice_data.append(jalali_date)
                 invoice_data.append(amani_sale.supplier.name)

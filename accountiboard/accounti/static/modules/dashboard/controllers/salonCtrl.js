@@ -1,5 +1,5 @@
 angular.module("dashboard")
-    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth) {
+    .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth, SUCCESS_MESSAGES) {
         var initialize = function () {
             $scope.static_guest_name = "";
             $scope.search_member_data = "";
@@ -120,19 +120,10 @@ angular.module("dashboard")
             $scope.get_tables_data($rootScope.user_data);
             $scope.get_shop_products();
             $scope.get_menu_item_data($rootScope.user_data);
-            $window.onkeyup = function (event) {
-                if (event.keyCode === 27) {
-                    $scope.closeAddInvoiceModal();
-                    $scope.closePayModal();
-                    $scope.closeDeleteModal();
-                    $rootScope.close_modal("editSettledInvoicePayment", "viewInvoiceModal");
-                    $rootScope.close_modal("viewInvoiceModal");
-                }
-            };
         };
 
         $scope.compare_before_exit = function () {
-            return JSON.stringify($scope.first_initial_value_of_invoice_sale) === JSON.stringify($scope.new_invoice_data);
+            return angular.toJson($scope.first_initial_value_of_invoice_sale) === angular.toJson($scope.new_invoice_data);
         };
 
         $scope.config_clock = function () {
@@ -554,6 +545,7 @@ angular.module("dashboard")
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(function successCallback(response) {
                     $scope.disable_print_after_save_all_buttons = false;
+                    $rootScope.show_toast(SUCCESS_MESSAGES.print_after_save_invoice_sale, 'success');
                 }, function errorCallback(response) {
                     $scope.disable_print_after_save_all_buttons = false;
                     $rootScope.show_toast("اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید", 'danger');
@@ -581,6 +573,8 @@ angular.module("dashboard")
                             if (data['response_code'] === 2) {
                                 $scope.print_after_save_offline(sending_data_2);
                                 $scope.disable_print_after_save_all_buttons = false;
+                                $rootScope.show_toast(SUCCESS_MESSAGES.print_after_save_invoice_sale, 'success');
+                                $scope.closeAddInvoiceModal();
                             }
                             else if (data['response_code'] === 3) {
                                 $scope.disable_print_after_save_all_buttons = false;
@@ -1076,6 +1070,7 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $rootScope.show_toast(SUCCESS_MESSAGES.save_invoice_sale, 'success');
                         $scope.new_invoice_data['invoice_sales_current_created_game_server_primary_key'] = data['new_game_id'];
                         $scope.new_invoice_data['invoice_sales_server_primary_key'] = data['new_invoice_id'];
                         $scope.create_invoice_sale_offline($scope.new_invoice_data);
@@ -1293,6 +1288,7 @@ angular.module("dashboard")
             dashboardHttpRequest.addInvoiceSales($scope.new_invoice_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
+                        $rootScope.show_toast(SUCCESS_MESSAGES.save_invoice_sale, 'success');
                         $scope.new_invoice_data['invoice_sales_current_created_game_server_primary_key'] = data['new_game_id'];
                         $scope.new_invoice_data['invoice_sales_server_primary_key'] = data['new_invoice_id'];
                         $scope.create_invoice_sale_offline($scope.new_invoice_data);
@@ -1466,7 +1462,7 @@ angular.module("dashboard")
 
         $scope.set_class_name = function (table_name) {
             if ($scope.current_selected_table_name === table_name && $scope.tables_have_invoice.indexOf(table_name) !== -1) {
-                return 'mainButton greenButton fullWidthButton';
+                return 'mainButton oilBlueButton fullWidthButton';
             }
             else if ($scope.current_selected_table_name === table_name && $scope.tables_have_invoice.indexOf(table_name) === -1) {
                 return 'mainButton oilBlueButton fullWidthButton';

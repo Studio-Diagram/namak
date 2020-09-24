@@ -257,13 +257,12 @@
 </div>
 
 
-<div style="position: absolute;bottom: 10px;right: 0;;z-index: 1080;">
+<div style="position: absolute;bottom: 20px;right: 20px;;z-index: 1080;">
     <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
          role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
             <p ng-bind="toast_message"></p>
             <button class="mainButton toast-button ml-1" data-dismiss="toast" aria-label="Close">
-                <i class="fa fa-check"></i>
                 <span>باشه</span>
             </button>
         </div>
