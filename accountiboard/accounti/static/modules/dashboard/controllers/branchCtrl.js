@@ -82,13 +82,11 @@ angular.module("dashboard")
                         $scope.branches = data['branches'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -120,12 +118,10 @@ angular.module("dashboard")
                         $scope.closeAddBranchModal();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -140,13 +136,9 @@ angular.module("dashboard")
                             $scope.branches = data['branches'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
         };
 
@@ -165,10 +157,7 @@ angular.module("dashboard")
                             'guest_pricing': data['branch']['guest_pricing']
                         };
                         $scope.openAddBranchModal();
-                }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                    $scope.openErrorModal();
-                });
+                }, function (error) {});
 
         };
 
@@ -199,22 +188,6 @@ angular.module("dashboard")
         $scope.closeForm = function () {
             $scope.resetFrom();
             $scope.closeAddBranchModal();
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addBranchModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addBranchModal').css('z-index', "");
-            })(jQuery);
         };
 
         initialize();

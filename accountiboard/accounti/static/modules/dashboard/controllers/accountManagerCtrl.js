@@ -2,7 +2,6 @@ angular.module("dashboard")
     .controller("accountManagerCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
             $scope.is_in_edit_mode_supplier = false;
-            $scope.error_message = '';
             $scope.new_supplier_data = {
                 'id': 0,
                 'name': '',

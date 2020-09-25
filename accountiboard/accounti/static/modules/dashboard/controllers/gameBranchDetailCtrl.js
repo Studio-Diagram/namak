@@ -26,8 +26,6 @@ angular.module("dashboard")
                     $scope.show_game_branch_data = data.branch;
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.open_modal('errorModal', 'editGameDetailsModal');
                 });
         };
 
@@ -37,10 +35,7 @@ angular.module("dashboard")
                     $scope.setDefaultData(data.branch);
                     $scope.show_game_branch_data = data.branch;
                     $scope.close_modal('editGameDetailsModal');
-                }, function (error) {
-                    $scope.error_message = error;
-                    $rootScope.open_modal('errorModal', 'editGameDetailsModal');
-                });
+                }, function (error) {});
         };
 
         $scope.setDefaultData = function (data) {

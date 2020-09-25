@@ -1,24 +1,7 @@
 angular.module("dashboard")
     .controller("closeOpenCashCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, offlineAPIHttpRequest) {
         var initialize = function () {
-            $scope.error_message = '';
             $scope.get_all_cashes();
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.log_out = function () {
@@ -39,8 +22,7 @@ angular.module("dashboard")
                         };
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -57,12 +39,10 @@ angular.module("dashboard")
                         $scope.log_out();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -80,10 +60,7 @@ angular.module("dashboard")
                     else if (data['response_code'] === 3) {
 
                     }
-                }, function (error) {
-                    // $scope.error_message = error;
-                    // $scope.openErrorModal();
-                });
+                }, function (error) {});
         };
 
         $scope.get_all_cashes = function () {
@@ -98,13 +75,11 @@ angular.module("dashboard")
                         $scope.all_cashes = data['all_cashes'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 

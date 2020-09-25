@@ -1,7 +1,6 @@
 angular.module("dashboard")
     .controller("settledInvoiceModalCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $stateParams) {
         var initialize = function () {
-            $scope.error_message = '';
             $scope.cash_id = $stateParams.cash_id;
             $scope.first_time_edit_payment_init = 2;
             $scope.show_invoice_data = {
@@ -46,8 +45,7 @@ angular.module("dashboard")
                         $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 

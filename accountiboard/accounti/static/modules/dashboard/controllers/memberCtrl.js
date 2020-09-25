@@ -195,24 +195,6 @@ angular.module("dashboard")
             }
         };
 
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addMemberModal').css('z-index', 1000);
-                $('#showMemberProfileModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addMemberModal').css('z-index', "");
-                $('#showMemberProfileModal').css('z-index', "");
-            })(jQuery);
-        };
-
         $scope.resetForm = function () {
             $scope.new_credit_data = {
                 'member_id': 0,

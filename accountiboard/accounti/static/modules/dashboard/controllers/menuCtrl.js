@@ -28,8 +28,6 @@ angular.module("dashboard")
                 'username': $rootScope.user_data.username
             };
             $scope.printers = [];
-            $scope.error_message = "";
-
             $scope.get_menu_item_data($rootScope.user_data);
             $scope.get_menu_category_data();
             $scope.get_printers_data();
@@ -43,13 +41,11 @@ angular.module("dashboard")
                         $scope.printers = data['printers'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -71,13 +67,11 @@ angular.module("dashboard")
                         $scope.menu_categories = data['menu_categories'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -89,32 +83,12 @@ angular.module("dashboard")
                         $scope.menu_items = data['menu_items'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addMenuCategoryModal').css('z-index', 1000);
-                $('#addMenuItemModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addMenuCategoryModal').css('z-index', "");
-                $('#addMenuItemModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.closeAddMenuCategoryModal = function () {
@@ -131,12 +105,10 @@ angular.module("dashboard")
                         $scope.closeAddMenuCategoryModal();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -159,12 +131,10 @@ angular.module("dashboard")
                         $rootScope.open_modal('addMenuCategoryModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
 
         };
@@ -179,8 +149,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.get_menu_category_data();
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -193,12 +162,10 @@ angular.module("dashboard")
                         $rootScope.close_modal('addMenuItemModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -213,13 +180,9 @@ angular.module("dashboard")
                             $scope.menu_items = data['menu_items'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
         };
 
@@ -241,12 +204,10 @@ angular.module("dashboard")
                         $rootScope.open_modal('addMenuItemModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
 
         };
@@ -256,8 +217,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.get_menu_item_data($rootScope.user_data);
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 

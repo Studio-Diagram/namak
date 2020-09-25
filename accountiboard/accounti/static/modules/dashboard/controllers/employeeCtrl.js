@@ -21,13 +21,11 @@ angular.module("dashboard")
                         $scope.employees = data['employees'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -40,13 +38,11 @@ angular.module("dashboard")
                         $scope.new_employee_data.employee_branches = $scope.branches;
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -75,13 +71,9 @@ angular.module("dashboard")
                             $scope.closeAddEmployeeModal();
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
             else {
                 dashboardHttpRequest.registerEmployee($scope.new_employee_data)
@@ -92,13 +84,9 @@ angular.module("dashboard")
                             $scope.closeAddEmployeeModal();
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
         };
 
@@ -113,13 +101,9 @@ angular.module("dashboard")
                             $scope.employees = data['employees'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
         };
 
@@ -134,12 +118,10 @@ angular.module("dashboard")
                         return data['employee'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -195,12 +177,10 @@ angular.module("dashboard")
                         $scope.openAddEmployeeModal();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
 
         };
@@ -233,22 +213,6 @@ angular.module("dashboard")
                     }
                 }
             });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addUserModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addUserModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.clearEmployeeBranchesCheckboxes = function () {

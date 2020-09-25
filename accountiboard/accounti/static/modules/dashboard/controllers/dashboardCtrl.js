@@ -17,10 +17,7 @@ angular.module("dashboard")
                                 $scope.transaction_unsuccessful = true;
 
                             $rootScope.open_modal('transactionResultModal');
-                        }, function (error) {
-                            $scope.error_message = error.data.error_msg;
-                            $rootScope.open_modal('mainErrorModal');
-                        });
+                        }, function (error) {});
                     $location.search('status', null);
                     $location.search('token', null);
                 }
@@ -341,10 +338,7 @@ angular.module("dashboard")
                 dashboardHttpRequest.getUserProfile()
                     .then(function (data) {
                         $scope.user_profile_data = data['_item'];
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('mainErrorModal', 'userProfileModal');
-                    });
+                    }, function (error) {});
                 $rootScope.open_modal('userProfileModal');
             };
 
@@ -353,10 +347,7 @@ angular.module("dashboard")
                     .then(function (data) {
                         $rootScope.close_modal('userProfileModal');
                         $rootScope.show_toast("با موفقیت انجام شد", 'success');
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('mainErrorModal', 'userProfileModal');
-                    });
+                    }, function (error) {});
             };
 
             $rootScope.collapseLeftSidebar = function () {
@@ -377,10 +368,7 @@ angular.module("dashboard")
                 dashboardHttpRequest.get_news()
                     .then(function (data) {
                         $rootScope.all_news = data['results'];
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             };
 
             $scope.bugReportFileChange = function () {
@@ -423,10 +411,7 @@ angular.module("dashboard")
                     .then(function (data) {
                         $rootScope.close_modal('userProfileModal');
                         $rootScope.show_toast("با موفقیت انجام شد", 'success');
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('mainErrorModal', 'userProfileModal');
-                    });
+                    }, function (error) {});
             };
 
             initialize();

@@ -7,7 +7,6 @@ angular.module("dashboard")
             };
             $scope.set_today_for_invoice();
             $scope.is_in_edit_mode_supplier = false;
-            $scope.error_message = '';
             $scope.current_menu_nav = "MAT";
             $scope.read_only_mode = false;
             $scope.can_add_material = false;

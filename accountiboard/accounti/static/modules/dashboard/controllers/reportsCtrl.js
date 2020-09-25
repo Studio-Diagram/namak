@@ -358,9 +358,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     $scope.selected_table_report_category = $scope.report_data.report_category;
                     $scope.reports_result = data;
-                }, function (error) {
-                    $scope.error_message = error.data.error_msg;
-                });
+                }, function (error) {});
         };
 
         $scope.check_url_parameters = function () {

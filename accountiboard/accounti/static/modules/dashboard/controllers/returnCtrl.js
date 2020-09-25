@@ -2,7 +2,6 @@ angular.module("dashboard")
     .controller("returnCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $location, $state) {
         var initialize = function () {
             $rootScope.is_page_loading = false;
-            $scope.error_message = '';
             $scope.new_invoice_return_data = {
                 'id': 0,
                 'factor_number': 0,

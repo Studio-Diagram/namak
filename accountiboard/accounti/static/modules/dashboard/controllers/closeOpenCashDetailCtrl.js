@@ -1,7 +1,6 @@
 angular.module("dashboard")
     .controller("closeOpenCashDetailCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $stateParams) {
         var initialize = function () {
-            $scope.error_message = '';
             $scope.cash_id = $stateParams.cash_id;
             $scope.get_cash_and_related_invoices();
         };
@@ -13,8 +12,6 @@ angular.module("dashboard")
                     $scope.current_cash = data;
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $rootScope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('mainErrorModal');
                 });
 
         };

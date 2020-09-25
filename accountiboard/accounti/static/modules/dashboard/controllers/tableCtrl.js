@@ -26,13 +26,11 @@ angular.module("dashboard")
                         $scope.tables = data['tables'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -43,12 +41,10 @@ angular.module("dashboard")
                         $scope.table_categories = data['table_categories'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -61,12 +57,10 @@ angular.module("dashboard")
                         $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -78,12 +72,10 @@ angular.module("dashboard")
                         $rootScope.close_modal('addModalTableCategory');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -98,12 +90,10 @@ angular.module("dashboard")
                         return data['table'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -119,12 +109,10 @@ angular.module("dashboard")
                         return data['table_category'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -145,12 +133,10 @@ angular.module("dashboard")
                         $scope.open_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
 
         };
@@ -168,12 +154,10 @@ angular.module("dashboard")
                         $rootScope.open_modal('addModalTableCategory');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
 
         };
@@ -198,24 +182,6 @@ angular.module("dashboard")
             $scope.resetFrom();
             $rootScope.close_modal('addModal');
             $rootScope.close_modal('addModalTableCategory');
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-                $('#addModalTableCategory').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-                $('#addModalTableCategory').css('z-index', "");
-            })(jQuery);
         };
 
         initialize();

@@ -3,7 +3,6 @@ angular.module("dashboard")
         var initialize = function () {
             $rootScope.is_page_loading = false;
             $scope.set_today_for_invoice();
-            $scope.error_message = '';
             $scope.new_pay_data = {
                 'id': 0,
                 'factor_number': 0,

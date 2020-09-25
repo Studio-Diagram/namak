@@ -62,8 +62,6 @@ angular.module("dashboard")
                     $scope.show_branch_data = data.branch;
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.open_modal('errorModal', 'editBranchDetailsModal');
                 });
         };
 
@@ -78,10 +76,7 @@ angular.module("dashboard")
                     $scope.setDefaultData(data.branch);
                     $scope.show_branch_data = data.branch;
                     $scope.close_modal('editBranchDetailsModal');
-                }, function (error) {
-                    $scope.error_message = error;
-                    $rootScope.open_modal('errorModal', 'editBranchDetailsModal');
-                });
+                }, function (error) {});
         };
 
         $scope.setDefaultData = function (data) {

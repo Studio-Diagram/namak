@@ -8,8 +8,6 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch
             };
             $scope.printers = [];
-            $scope.error_message = "";
-
             $scope.get_printers_data();
         };
 
@@ -21,13 +19,10 @@ angular.module("dashboard")
                         $scope.printers = data['printers'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $rootScope.open_modal('errorModal', 'addPrinterModal');
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_sub_page_loading = false;
-                    $scope.error_message = error;
-                    $rootScope.open_modal('errorModal', 'addPrinterModal');
                 });
         };
 
@@ -40,13 +35,9 @@ angular.module("dashboard")
                         $rootScope.close_modal('addPrinterModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $rootScope.open_modal('errorModal', 'addPrinterModal');
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $rootScope.open_modal('errorModal', 'addPrinterModal');
-                });
+                }, function (error) {});
         };
 
         $scope.editPrinter = function (printer_id) {
@@ -57,13 +48,9 @@ angular.module("dashboard")
                         $rootScope.open_modal('addPrinterModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $rootScope.open_modal('errorModal', 'addPrinterModal');
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $rootScope.open_modal('errorModal', 'addPrinterModal');
-                });
+                }, function (error) {});
 
         };
 

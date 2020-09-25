@@ -357,23 +357,6 @@ angular.module("dashboard")
             $window.location.href = '/';
         };
 
-        $scope.print_night_report = function () {
-            var sending_data = {
-                'cash_id': $rootScope.cash_data.cash_id,
-                'location_url': "https://namak.works/"
-            };
-            $http({
-                method: 'POST',
-                url: 'http://127.0.0.1:8000/printNightReport',
-                data: sending_data,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            }).then(function successCallback(response) {
-
-            }, function errorCallback(response) {
-                $rootScope.show_toast("اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید", 'danger');
-            });
-        };
-
         $scope.open_cash = function () {
             dashboardHttpRequest.openCash($rootScope.user_data)
                 .then(function (data) {

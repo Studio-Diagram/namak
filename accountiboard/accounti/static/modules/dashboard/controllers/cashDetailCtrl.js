@@ -32,8 +32,6 @@ angular.module("dashboard")
                     $scope.status = data['all_today_status'];
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $rootScope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('mainErrorModal');
                 });
         };
 
@@ -59,12 +57,10 @@ angular.module("dashboard")
                         $scope.detail_categories = data['categories'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -79,10 +75,7 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.sale_details = data['sale_details'];
                     $scope.open_modal("sale_details");
-                }, function (error) {
-                    $rootScope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('mainErrorModal');
-                });
+                }, function (error) {});
         };
 
         $scope.get_bar_detail_sales = function () {
@@ -96,10 +89,7 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.sale_details = data['sale_details'];
                     $scope.open_modal("sale_details");
-                }, function (error) {
-                    $rootScope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('mainErrorModal');
-                });
+                }, function (error) {});
         };
 
         $scope.get_other_detail_sales = function () {
@@ -113,10 +103,7 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.sale_details = data['sale_details'];
                     $scope.open_modal("sale_details");
-                }, function (error) {
-                    $rootScope.error_message = error.data.error_msg;
-                    $rootScope.open_modal('mainErrorModal');
-                });
+                }, function (error) {});
         };
 
         $scope.get_today_cash = function () {
@@ -130,8 +117,7 @@ angular.module("dashboard")
                         $stateParams.cash_id = 0;
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -157,12 +143,10 @@ angular.module("dashboard")
                         $scope.log_out();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -181,8 +165,6 @@ angular.module("dashboard")
 
                     }
                 }, function (error) {
-                    // $scope.error_message = error;
-                    // $scope.openErrorModal();
                 });
         };
 
@@ -204,25 +186,8 @@ angular.module("dashboard")
             }).then(function successCallback(response) {
 
             }, function errorCallback(response) {
-                $scope.error_message = "اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید";
-                $scope.openErrorModal();
+                $rootScope.show_toast("اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید", 'danger');
             });
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         initialize();

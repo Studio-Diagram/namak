@@ -62,7 +62,6 @@ angular.module("dashboard")
                 has_row_numbers: false,
                 price_with_tags: true
             };
-            $scope.error_message = '';
             $scope.supplier_id = $stateParams.supplier;
             $rootScope.search_data_supplier = {
                 'from_time': '',

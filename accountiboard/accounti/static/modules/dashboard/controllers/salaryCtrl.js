@@ -3,7 +3,6 @@ angular.module("dashboard")
         var initialize = function () {
             $rootScope.is_page_loading = false;
             $scope.set_today_for_invoice();
-            $scope.error_message = '';
             $scope.edit_mode = false;
             $scope.search_word = '';
             $scope.new_salary_data = {

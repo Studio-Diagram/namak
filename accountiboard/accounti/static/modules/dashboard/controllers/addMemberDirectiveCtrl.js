@@ -28,8 +28,7 @@ angular.module("dashboard")
                         $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -74,10 +73,7 @@ angular.module("dashboard")
                     else if (data['response_code'] === 3) {
 
                     }
-                }, function (error) {
-                    // $scope.error_message = error;
-                    // $scope.openErrorModal();
-                });
+                }, function (error) {});
         };
 
         $scope.reset_member_form = function () {

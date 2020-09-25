@@ -39,12 +39,10 @@ angular.module("dashboard")
                         $scope.get_not_come_reserves();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -60,12 +58,10 @@ angular.module("dashboard")
                         $scope.get_not_come_reserves();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -81,12 +77,10 @@ angular.module("dashboard")
                         $scope.get_left_reserves();
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -105,12 +99,10 @@ angular.module("dashboard")
                         $scope.left_reserves = data['reserves'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -127,12 +119,10 @@ angular.module("dashboard")
                         $scope.not_come_reserves = data['reserves'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -146,12 +136,10 @@ angular.module("dashboard")
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.cash_data.cash_id = 0;
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -173,13 +161,11 @@ angular.module("dashboard")
                         $scope.end_game_invoices_data = data['end_game_invoices_data'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -194,30 +180,10 @@ angular.module("dashboard")
                             $scope.members = data['members'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModalQ').modal('show');
-                $('#addMemberModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModalQ').modal('hide');
-                $('#addMemberModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.endCurrentGame = function (game_id) {
@@ -232,12 +198,10 @@ angular.module("dashboard")
                         $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -253,12 +217,10 @@ angular.module("dashboard")
                         $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -275,12 +237,10 @@ angular.module("dashboard")
                         $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -307,12 +267,10 @@ angular.module("dashboard")
                         $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -334,12 +292,10 @@ angular.module("dashboard")
                         $scope.get_all_invoices_state_base($rootScope.cash_data.cash_id);
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -358,8 +314,7 @@ angular.module("dashboard")
                         $state.go('dashboard.cash_manager.salon');
                     }
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
+
                 });
         };
 

@@ -43,23 +43,19 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
         $scope.addStock = function () {
-            if ($scope.new_stocks_data.id == 0) {
+            if ($scope.new_stocks_data.id === 0) {
                 dashboardHttpRequest.addStock($scope.new_stocks_data)
                     .then(function (data) {
                         $scope.get_stocks_data();
                         $scope.resetFrom();
                         $rootScope.close_modal('addStockModal');
                         
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('errorModal', 'addStockModal');
-                    });
+                    }, function (error) {});
             } else {
                 dashboardHttpRequest.updateStockDetail($scope.new_stocks_data.id, $scope.new_stocks_data)
                     .then(function (data) {
@@ -67,10 +63,7 @@ angular.module("dashboard")
                         $scope.resetFrom();
                         $rootScope.close_modal('addStockModal');
                         
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('errorModal', 'addStockModal');
-                    });
+                    }, function (error) {});
             }
 
         };
@@ -100,10 +93,7 @@ angular.module("dashboard")
                     $scope.new_stocks_data.id = data.id;
                     $scope.new_stocks_data.name = data.name;
                     $rootScope.open_modal('addStockModal');
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.open_modal('errorModal', 'addStockModal');
-                });
+                }, function (error) {});
 
         };
 
@@ -138,13 +128,11 @@ angular.module("dashboard")
                         $scope.new_stocks_data.branches = $scope.branches;
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 

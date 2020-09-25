@@ -60,8 +60,7 @@ angular.module("dashboard")
 
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -73,10 +72,7 @@ angular.module("dashboard")
                         $scope.resetFrom();
                         $rootScope.close_modal('addBankingModal');
                         
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('errorModal', 'addBankingModal');
-                    });
+                    }, function (error) {});
             } else {
                 dashboardHttpRequest.updateBankingDetail($scope.new_banking_data.id, $scope.new_banking_data)
                     .then(function (data) {
@@ -84,10 +80,7 @@ angular.module("dashboard")
                         $scope.resetFrom();
                         $rootScope.close_modal('addBankingModal');
                         
-                    }, function (error) {
-                        $scope.error_message = error.data.error_msg;
-                        $rootScope.open_modal('errorModal', 'addBankingModal');
-                    });
+                    }, function (error) {});
             }
         };
 
@@ -127,8 +120,7 @@ angular.module("dashboard")
 
                     $rootScope.open_modal('addBankingModal');
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
 
         };
@@ -164,13 +156,11 @@ angular.module("dashboard")
                         $scope.new_banking_data.branches = $scope.branches;
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
