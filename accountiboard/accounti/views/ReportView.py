@@ -15,17 +15,14 @@ class ReportView(View):
         invoice_type = request.GET.get('type')
         start_date = request.GET.get('start')
         end_date = request.GET.get('end')
-        branches = request.GET.get('branches')
         suppliers = request.GET.get('suppliers')
         settlement_types = request.GET.get('s_types')
         employees = request.GET.get('employees')
+        branch_id = request.GET.get('branch')
         reports_data = []
 
-        if not branches or not invoice_type or not start_date or not end_date:
+        if not branch_id or not invoice_type or not start_date or not end_date:
             return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
-
-        if branches:
-            branches = list(map(int, branches.split(',')))
 
         try:
             start_date_split = start_date.split('/')
@@ -42,7 +39,7 @@ class ReportView(View):
         if invoice_type == "INVOICE_SALE":
             invoice_objects = InvoiceSales.objects.filter(created_time__gte=start_date_gregorian,
                                                           created_time__lte=end_date_gregorian, is_deleted=False,
-                                                          is_settled=True, branch_id__in=branches)
+                                                          is_settled=True, branch_id=branch_id)
             total_price_sum = invoice_objects.aggregate(Sum('total_price'))
             total_invoices = invoice_objects.count()
             reports_data = [{
@@ -61,7 +58,7 @@ class ReportView(View):
         elif invoice_type == "INVOICE_PURCHASE":
             invoice_objects = InvoicePurchase.objects.filter(created_time__gte=start_date_gregorian,
                                                              created_time__lte=end_date_gregorian,
-                                                             branch_id__in=branches)
+                                                             branch_id=branch_id)
             if suppliers:
                 suppliers = list(map(int, suppliers.split(',')))
                 invoice_objects = invoice_objects.filter(supplier_id__in=suppliers)
@@ -89,7 +86,7 @@ class ReportView(View):
         elif invoice_type == "INVOICE_PAY":
             invoice_objects = InvoiceSettlement.objects.filter(created_time__gte=start_date_gregorian,
                                                                created_time__lte=end_date_gregorian,
-                                                               branch_id__in=branches)
+                                                               branch_id=branch_id)
             if suppliers:
                 suppliers = list(map(int, suppliers.split(',')))
                 invoice_objects = invoice_objects.filter(supplier_id__in=suppliers)
@@ -115,7 +112,7 @@ class ReportView(View):
         elif invoice_type == "INVOICE_EXPENSE":
             invoice_objects = InvoiceExpense.objects.filter(created_time__gte=start_date_gregorian,
                                                             created_time__lte=end_date_gregorian,
-                                                            branch_id__in=branches)
+                                                            branch_id=branch_id)
             if suppliers:
                 suppliers = list(map(int, suppliers.split(',')))
                 invoice_objects = invoice_objects.filter(supplier_id__in=suppliers)
@@ -144,7 +141,7 @@ class ReportView(View):
         elif invoice_type == "INVOICE_RETURN":
             invoice_objects = InvoiceReturn.objects.filter(created_time__gte=start_date_gregorian,
                                                            created_time__lte=end_date_gregorian,
-                                                           branch_id__in=branches)
+                                                           branch_id=branch_id)
             if suppliers:
                 suppliers = list(map(int, suppliers.split(',')))
                 invoice_objects = invoice_objects.filter(supplier_id__in=suppliers)
@@ -171,7 +168,7 @@ class ReportView(View):
         elif invoice_type == "INVOICE_SALARY":
             invoice_objects = InvoiceSalary.objects.filter(created_time__gte=start_date_gregorian,
                                                             created_time__lte=end_date_gregorian,
-                                                            branch_id__in=branches)
+                                                            branch_id=branch_id)
             if employees:
                 employees = list(map(int, employees.split(',')))
                 invoice_objects = invoice_objects.filter(employee_id__in=employees)

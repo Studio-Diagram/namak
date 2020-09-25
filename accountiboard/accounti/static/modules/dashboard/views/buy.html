@@ -1,27 +1,4 @@
-<div ng-controller="buyCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<main ng-controller="buyCtrl">
     <div class="modal fade mainModal" id="addModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -32,7 +9,8 @@
                     <h2 class="modalTitle">فاکتور خرید </h2>
                     <a tabindex="0" class="mainButton redButton" role="button"
                        data-container="body"
-                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover question="مطمئن هستید؟"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
                        text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
                        first-button-text="خروج بدون ذخیره" first-callback="closeAddModal()"
                        second-button-text="خروج و ذخیره"
@@ -89,10 +67,11 @@
                                             </li>
 
 
-                                            <ui-select ng-keyup="search_shop_products($select.search, $select.items)"
-                                                       ng-show="current_menu_nav === 'SHOP'"
-                                                       ng-change="add_item_shop_from_search_dropdown($select.selected)"
-                                                       ng-model="selected_material.id">
+                                            <ui-select
+                                                    ng-keyup="search_shop_products($select.search, $select.items)"
+                                                    ng-show="current_menu_nav === 'SHOP'"
+                                                    ng-change="add_item_shop_from_search_dropdown($select.selected)"
+                                                    ng-model="selected_material.id">
                                                 <ui-select-match placeholder="انتخاب محصول">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
@@ -209,7 +188,8 @@
                                         <td>{{ $index + 1 | persianNumber }}</td>
                                         <td>{{ item.name }}</td>
                                         <td><input class="form-control iranian-number" type="text"
-                                                   ng-trim="false" ng-model="item.price" ng-disabled="read_only_mode"
+                                                   ng-trim="false" ng-model="item.price"
+                                                   ng-disabled="read_only_mode"
                                                    ng-change="changeItemPrice($index)" format></td>
                                         <td><input class="form-control iranian-number" type="number"
                                                    ng-disabled="read_only_mode"
@@ -232,7 +212,8 @@
                                         <td>
                                             <label>قیمت خرید</label>
                                             <input class="form-control iranian-number" type="text"
-                                                   ng-trim="false" ng-model="item.price" ng-disabled="read_only_mode"
+                                                   ng-trim="false" ng-model="item.price"
+                                                   ng-disabled="read_only_mode"
                                                    ng-change="changeItemShopPrice($index)" format>
                                             <label>قیمت فروش</label>
                                             <input class="form-control iranian-number" type="text"
@@ -262,7 +243,8 @@
                                     </tr>
                                     <tr>
                                         <th>مالیات</th>
-                                        <td><input ng-disabled="read_only_mode" ng-model="new_invoice_purchase_data.tax"
+                                        <td><input ng-disabled="read_only_mode"
+                                                   ng-model="new_invoice_purchase_data.tax"
                                                    type="text"
                                                    class="form-control"
                                                    aria-label="" ng-change="change_total_price()" format>
@@ -282,15 +264,13 @@
             </div>
         </div>
     </div>
-    <main class="pageContent">
-        <div class="tableButtons">
-            <div class="buttonGroup">
-                <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">فاکتور
-                    خرید جدید</a>
-            </div>
+    <div class="tableButtons">
+        <div class="buttonGroup">
+            <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">فاکتور
+                خرید جدید</a>
         </div>
-        <table-directive headers="headers" config="table_config"
-                         rows="invoice_purchases" detail-callback="showInvoicePurchase(item_id)"
-                         delete-callback="delete_invoice_purchase(item_id)"></table-directive>
-    </main>
-</div>
+    </div>
+    <table-directive headers="headers" config="table_config"
+                     rows="invoice_purchases" detail-callback="showInvoicePurchase(item_id)"
+                     delete-callback="delete_invoice_purchase(item_id)"></table-directive>
+</main>

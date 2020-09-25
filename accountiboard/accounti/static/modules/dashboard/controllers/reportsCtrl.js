@@ -1,15 +1,20 @@
 angular.module("dashboard")
     .controller("reportsCtrl", function ($scope, $rootScope, $state, dashboardHttpRequest) {
         var initialize = function () {
+            $scope.reports_result = {
+                total_invoices: 0,
+                total_price: 0,
+                results: []
+            };
             $scope.config_date_pickers();
             $scope.report_data = {
                 report_category: "",
                 start_date: "",
                 end_date: "",
-                branches: [],
                 suppliers: [],
                 settlement_types: [],
-                employees: []
+                employees: [],
+                branch_id: $rootScope.user_data.branch
             };
             $scope.headers = {
                 INVOICE_SALE: [
@@ -201,65 +206,95 @@ angular.module("dashboard")
                     price_fields: ["price"],
                     has_detail_button: false,
                     has_delete_button: false,
+                    table_title: "فهرست تفکیکی"
 
                 },
                 INVOICE_PURCHASE: {
                     price_fields: ["price"],
                     has_detail_button: true,
                     has_delete_button: false,
+                    table_title: "فهرست تفکیکی"
                 },
                 INVOICE_PAY: {
                     price_fields: ["price"],
                     has_detail_button: false,
                     has_delete_button: false,
+                    table_title: "فهرست تفکیکی"
                 },
                 INVOICE_EXPENSE: {
                     price_fields: ["price"],
                     has_detail_button: false,
                     has_delete_button: false,
+                    table_title: "فهرست تفکیکی"
                 },
                 INVOICE_RETURN: {
                     price_fields: ["price"],
                     has_detail_button: false,
                     has_delete_button: false,
+                    table_title: "فهرست تفکیکی"
                 },
                 INVOICE_SALARY: {
                     price_fields: ["price"],
                     has_detail_button: false,
                     has_delete_button: false,
+                    table_title: "فهرست تفکیکی"
                 }
             };
 
             $scope.invoice_types = [
                 {
                     id: "INVOICE_SALE",
-                    name: "فاکتور فروش"
+                    name: "فروش"
                 },
                 {
                     id: "INVOICE_PURCHASE",
-                    name: "فاکتور خرید"
-                },
-                {
-                    id: "INVOICE_PAY",
-                    name: "فاکتور پرداخت"
+                    name: "خرید"
                 },
                 {
                     id: "INVOICE_EXPENSE",
-                    name: "فاکتور هزینه"
+                    name: "هزینه"
                 },
                 {
-                    id: "INVOICE_RETURN",
-                    name: "فاکتور مرجوعی"
+                    id: "INVOICE_PAY",
+                    name: "پرداخت"
                 },
                 {
                     id: "INVOICE_SALARY",
-                    name: "فاکتور پرداخت حقوق"
+                    name: "پرداخت حقوق"
+                },
+                {
+                    id: "INVOICE_RETURN",
+                    name: "مرجوعی"
                 }
             ];
             $rootScope.is_page_loading = false;
             $scope.get_suppliers();
             $scope.check_url_parameters();
             $scope.get_employees_data($rootScope.user_data);
+        };
+
+        $scope.change_invoice_type_report = function (type) {
+            jQuery.noConflict();
+            (function ($) {
+                $("#start_date_picker").val("");
+                $("#end_date_picker").val("");
+            })(jQuery);
+            $scope.report_data = {
+                report_category: "",
+                start_date: "",
+                end_date: "",
+                suppliers: [],
+                settlement_types: [],
+                employees: [],
+                branch_id: $rootScope.user_data.branch
+            };
+            $scope.reports_result = {
+                total_invoices: 0,
+                total_price: 0,
+                results: []
+            };
+            $scope.report_data.report_category = type;
+            $scope.change_url_params();
         };
 
         $scope.get_suppliers = function () {
@@ -302,7 +337,8 @@ angular.module("dashboard")
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
                     }
-                }, function (error) {});
+                }, function (error) {
+                });
         };
 
         $scope.get_report = function () {
@@ -315,10 +351,10 @@ angular.module("dashboard")
             dashboardHttpRequest.getReport('?type=' + $scope.report_data.report_category +
                 '&start=' + $scope.starting_date +
                 '&end=' + $scope.ending_date +
-                '&branches=' + $scope.report_data.branches +
                 '&suppliers=' + $scope.report_data.suppliers +
-                '&s_types=' + $scope.report_data.settlement_types+
-                '&employees='+ $scope.report_data.employees)
+                '&s_types=' + $scope.report_data.settlement_types +
+                '&employees=' + $scope.report_data.employees +
+                '&branch=' + $scope.report_data.branch_id)
                 .then(function (data) {
                     $scope.selected_table_report_category = $scope.report_data.report_category;
                     $scope.reports_result = data;
@@ -331,14 +367,6 @@ angular.module("dashboard")
             $scope.report_data.report_category = $state.params.type;
             $scope.report_data.start_date = $state.params.start;
             $scope.report_data.end_date = $state.params.end;
-            if (Array.isArray($state.params.branches)) {
-                $scope.report_data.branches = $state.params.branches.map(Number)
-            }
-            else {
-                if ($state.params.branches) {
-                    $scope.report_data.branches.push(parseInt($state.params.branches))
-                }
-            }
             if (Array.isArray($state.params.suppliers)) {
                 $scope.report_data.suppliers = $state.params.suppliers.map(Number)
             }
@@ -375,10 +403,9 @@ angular.module("dashboard")
                     type: $scope.report_data.report_category,
                     start: $scope.report_data.start_date = $("#start_date_picker").val(),
                     end: $scope.report_data.end_date = $("#end_date_picker").val(),
-                    branches: $scope.report_data.branches,
                     suppliers: $scope.report_data.suppliers,
                     s_types: $scope.report_data.settlement_types,
-                    employees: $scope.report_data.employees,
+                    employees: $scope.report_data.employees
                 }, {
                     notify: false,
                     reload: false,
@@ -390,8 +417,7 @@ angular.module("dashboard")
 
         $scope.showInvoicePurchase = function (invoice_id) {
             var sending_data = {
-                'invoice_id': invoice_id,
-                'username': $rootScope.user_data.username
+                'invoice_id': invoice_id
             };
             dashboardHttpRequest.getInvoicePurchase(sending_data)
                 .then(function (data) {
@@ -402,7 +428,8 @@ angular.module("dashboard")
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
                     }
-                }, function (error) {});
+                }, function (error) {
+                });
         };
 
         $scope.display_float_to_int = function (price) {

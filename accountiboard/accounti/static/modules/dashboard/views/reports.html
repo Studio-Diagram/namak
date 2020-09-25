@@ -1,4 +1,4 @@
-<div ng-controller="reportsCtrl">
+<div ng-controller="reportsCtrl" class="nestedMenuWrapper">
     <div class="modal fade mainModal" id="show_invoice_purchase" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -102,44 +102,18 @@
             </div>
         </div>
     </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <main class="tableNavigation">
+        <a ng-repeat="invoice_type in invoice_types" class="mainButton fullWidthButton mt-3" href=""
+           ng-click="change_invoice_type_report(invoice_type.id)"
+           ng-class="(report_data.report_category === invoice_type.id) ? 'oilBlueButton' : 'grayButton'"
+           ng-bind="invoice_type.name"></a>
 
-    <main class="pageContent container-fluid">
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
+    </main>
+    <main class="nestedPageWrapper">
+        <div>
+            <div class="pageContent">
                 <form>
                     <div class="row">
-                        <div class="col">
-                            <select class="form-control" ng-model="report_data.report_category">
-                                <option value="">دسته‌ی گزارش را انتخاب کنید</option>
-                                <option ng-repeat="type in invoice_types"
-                                        ng-value="type.id"
-                                        ng-selected="report_data.report_category === type.id"
-                                        ng-bind="type.name"></option>
-                            </select>
-                        </div>
                         <div class="col">
                             <input ng-model="report_data.start_date" id="start_date_picker"
                                    class="form-control" placeholder="از تاریخ" type="text"
@@ -155,17 +129,6 @@
                                     class="mainButton fullWidthButton greenButton"
                                     type="button">گزارش
                             </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <ui-select multiple ng-model="report_data.branches">
-                                <ui-select-match placeholder="انتخاب شعبه‌ها">{{ $item.name }}</ui-select-match>
-                                <ui-select-choices
-                                        repeat="branch.id as branch in user_data.branches | filter: $select.search">
-                                    <div ng-bind="branch.name"></div>
-                                </ui-select-choices>
-                            </ui-select>
                         </div>
                     </div>
                     <div ng-hide="['INVOICE_SALE','INVOICE_SALARY'].indexOf(report_data.report_category) !== -1"
@@ -205,30 +168,22 @@
                         </div>
                     </div>
                 </form>
-                <div ng-show="reports_result" class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">تعداد کل</th>
-                            <th scope="col">قیمت کل</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">{{ reports_result.total_invoices | persianNumber }}</th>
-                            <td scope="row">{{ reports_result.total_price | number | persianNumber }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                <div ng-if="reports_result.results.length" class="dataBoxWrapper mt-3 mb-3">
+                    <div>
+                        <span>تعداد کل</span>
+                        <span class="numberField" ng-bind="reports_result.total_invoices | persianNumber"></span>
+                    </div>
+                    <div>
+                        <span>ملبغ کل</span>
+                        <span ng-class="{'priceField' : reports_result.total_price }"
+                              ng-bind="reports_result.total_price | number | persianNumber"></span>
+                    </div>
                 </div>
-                <table-directive ng-if="reports_result" headers="headers[selected_table_report_category]"
+                <table-directive ng-if="reports_result.results.length" headers="headers[selected_table_report_category]"
                                  config="invoice_type_configs[selected_table_report_category]"
                                  rows="reports_result.results"
                                  detail-callback="showInvoicePurchase(item_id)"></table-directive>
-            </main>
-
-
+            </div>
         </div>
     </main>
 </div>

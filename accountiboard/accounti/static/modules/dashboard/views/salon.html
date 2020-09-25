@@ -521,8 +521,7 @@
                                        ng-model="new_invoice_data.invoice_sales_id" disabled>
                             </div>
                         </div>
-                        <table ng-if="new_invoice_data.menu_items_old.length || new_invoice_data.shop_items_old.length || new_invoice_data.menu_items_new.length || new_invoice_data.shop_items_new.length || new_invoice_data.games.length"
-                               class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
                             <tbody>
                             <tr>
                                 <th class="first"></th>
@@ -598,13 +597,6 @@
 
                             </tbody>
                         </table>
-                        <div class="stateAlert greenState"
-                             ng-if="!(new_invoice_data.menu_items_old.length || new_invoice_data.shop_items_old.length || new_invoice_data.menu_items_new.length || new_invoice_data.shop_items_new.length || new_invoice_data.games.length)">
-                            <p>
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <span>هنوز در این فاکتور آیتمی وجود ندارد، از بخش سمت راست برای اضافه کردن آیتم‌های منو و یا محصولات فروشگاهی استفاده کنید.</span>
-                            </p>
-                        </div>
                         <div class="invoiceSaleFooter">
                             <div>
                                 <div ng-if="new_invoice_data.current_game.start_time" class="gameCardInfo">

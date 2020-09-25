@@ -3243,5 +3243,38 @@ table .badge {
 }
 
 .nestedMenuWrapper .nestedPageWrapper {
+    flex: 0 0 calc(100% - 165px);
+    padding: 15px 0 0 15px;
+    overflow: auto;
+    height: calc(100vh - 118px);
+}
+
+.dataBoxWrapper {
+    display: flex;
+    gap: 25px;
+}
+
+.dataBoxWrapper > div {
+    border: 1px solid #C6CACF;
+    border-radius: 5px;
+    flex: 1;
+    display: flex;
+    padding: 20px;
+    text-align: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dataBoxWrapper > div span:first-child {
+    font-size: 11px;
     flex: 1 1 100%;
+}
+
+.dataBoxWrapper > div span:last-child {
+    font-size: 26px;
+    flex: 1 1 100%;
+}
+
+.numberField:after {
+    content: " عدد ";
 }

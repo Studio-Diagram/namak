@@ -1,5 +1,6 @@
 <div class="tableWrapper">
     <table class="table">
+        <h3 ng-if="config.table_title" class="tableName" ng-bind="config.table_title"></h3>
         <thead>
         <tr>
             <th ng-if="config.has_row_numbers" scope="col">

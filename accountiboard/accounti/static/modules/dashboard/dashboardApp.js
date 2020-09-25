@@ -134,7 +134,7 @@ myApp.config(function ($stateProvider, $authProvider) {
     };
     var reports = {
         name: 'dashboard.accounting.reports',
-        url: '/reports?type&start&end&branches&suppliers&s_types&employees',
+        url: '/reports?type&start&end&suppliers&s_types&employees',
         params: {
             "type": {
                 dynamic: true,
@@ -145,10 +145,6 @@ myApp.config(function ($stateProvider, $authProvider) {
                 value: null
             },
             "end": {
-                dynamic: true,
-                value: null
-            },
-            "branches": {
                 dynamic: true,
                 value: null
             },
@@ -441,6 +437,7 @@ myApp.directive('tableDirective', function () {
             if (scope.config.has_row_numbers === undefined) scope.config.has_row_numbers = true;
             if (scope.config.price_with_tags === undefined) scope.config.price_with_tags = false;
             if (scope.config.has_delete_button === undefined) scope.config.has_delete_button = false;
+            if (scope.config.table_title === undefined) scope.config.table_title = false;
         }
     }
 
