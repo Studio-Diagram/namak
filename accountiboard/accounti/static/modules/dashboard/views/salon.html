@@ -882,10 +882,10 @@
                     <p ng-bind="table_category.table_category_name"></p>
                     <div class="table_category">
                         <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)"
-                           ng-class="set_class_name(table.table_name)"><span
-                                ng-hide="table_factor_counts(table.table_name) === 0"
-                                class="badge badge-pill badge-white"
-                                ng-bind="table_factor_counts(table.table_name)"></span>{{ table.table_name }}</a>
+                           ng-class="set_class_name(table.table_name)">
+                            <span ng-bind="table.table_name"></span>
+                            <span ng-if="table_factor_counts(table.table_name)" class="badge badge-pill badge-white"
+                                ng-bind="table_factor_counts(table.table_name) | persianNumber"></span></a>
                     </div>
                 </div>
             </main>

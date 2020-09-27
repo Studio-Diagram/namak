@@ -113,7 +113,7 @@ class BranchView(View):
     @permission_decorator_class_based(token_authenticate,
                                       {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
                                        USER_ROLES['ACCOUNTANT']},
-                                      ALLOW_ALL_PLANS)
+                                      ALLOW_ALL_PLANS, branch_disable=True)
     def get(self, request, branch_id, *args, **kwargs):
         branch = get_object_or_404(Branch, pk=branch_id)
         branch_data = {

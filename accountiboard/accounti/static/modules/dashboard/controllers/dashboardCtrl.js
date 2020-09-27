@@ -2,6 +2,7 @@ angular.module("dashboard")
     .controller("dashboardCtrl", function ($scope, $rootScope, $filter, $state, $auth, $interval, $http, $location, $timeout, dashboardHttpRequest, $window, $transitions) {
             var initialize = function () {
                 if ($location.search().status && $location.search().token) {
+                    $rootScope.selected_nav_inside_modal = "";
                     data = {
                         "status": $location.search().status,
                         "token": $location.search().token
@@ -67,6 +68,10 @@ angular.module("dashboard")
                         $rootScope.is_sub_page_loading = true;
                     }
                 });
+            };
+
+            $rootScope.change_nav_inside_modal = function (value) {
+                $rootScope.selected_nav_inside_modal = value;
             };
 
             $rootScope.show_toast = function (message, type) {

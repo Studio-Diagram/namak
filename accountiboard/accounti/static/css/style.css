@@ -372,7 +372,7 @@ button.redButton:hover {
 
 a.whiteButton {
     background: white;
-    color: var(--myBlue);
+    color: var(--myBlack);
     border-color: var(--myBlueBorder);
 }
 
@@ -1007,7 +1007,7 @@ button.mainButton {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    border: 1px solid var(--myRedBorder);
+    border: 1px solid;
 }
 
 button.mainButton:disabled {
@@ -1609,16 +1609,11 @@ span.btn.btn-default.form-control.ui-select-toggle {
 }
 
 span.badge.badge-pill.badge-white {
-    position: absolute;
-    top: 7px;
-    left: 7px;
     width: 22px;
     background: var(--myBlue);
     color: white;
     font-size: 13px;
     text-align: center;
-    display: flex;
-    justify-content: center;
     height: 22px;
     line-height: 16px;
 }
@@ -3277,4 +3272,73 @@ table .badge {
 
 .numberField:after {
     content: " عدد ";
+}
+
+.modalBottomButtonsTopNav {
+    right: 30%;
+    left: 30%;
+    top: 65px;
+    border: none;
+    background: transparent;
+    width: inherit;
+    height: inherit;
+}
+
+.modalBottomButtonsTopNav .modal-content {
+    background: transparent !important;
+}
+
+.modalBottomButtonsTopNav .modal-body {
+    background: var(--pageBG);
+    padding: 25px;
+    border-radius: 5px;
+    max-height: calc(100vh - 300px);
+    overflow-y: scroll;
+}
+
+.modalBottomButtonsTopNav .modal-footer {
+    padding: 0;
+    margin-top: 10px;
+    border: none;
+}
+
+.modalBottomButtonsTopNav .modal-footer .mainButton {
+    margin: 0 10px 0 0;
+}
+
+.modalBottomButtonsTopNav .modal-header {
+    padding: 0;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.modalBottomButtonsTopNav .modal-content {
+    border: none;
+}
+
+.tabGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid var(--white);
+    overflow: hidden;
+}
+
+.tabGroup .mainButton {
+    border-radius: 0;
+    background: transparent;
+    color: var(--white);
+    border: none;
+}
+
+.tabGroup .mainButton.active {
+    background: var(--white);
+    color: var(--myBlack);
+    cursor: default;
+}
+
+.oilBlueButton .badge-white {
+    background: var(--white) !important;
+    color: var(--myBlue) !important;
 }
