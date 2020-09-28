@@ -59,70 +59,66 @@
             </div>
         </div>
     </div>
-    <main class="pageContent container-fluid">
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <div class="row">
-                    <div class="col">
-                        <div class="tableButtons">
-                            <div class="buttonGroup">
-                                <a class="addUser mainButton greenButton"
-                                   ng-click="open_modal('addModal');change_nav_inside_modal('TABLE');"
-                                   data-toggle="modal"><i
-                                        class="fas fa-user-plus"></i> میز جدید</a>
-                            </div>
-                        </div>
-                        <div class="tableWrapper">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">نام میز</th>
-                                    <th scope="col">نام گروه میز</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="table in tables">
-                                    <th scope="row">{{ table.table_name }}</th>
-                                    <th scope="row">{{ table.table_category_name }}</th>
-                                    <td><a ng-click="editTable(table.table_id)" href=""
-                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="tableButtons">
-                            <div class="buttonGroup">
-                                <a style="margin-left: 10px" class="addUser mainButton greenButton"
-                                   ng-click="open_modal('addModal');change_nav_inside_modal('TABLE_CATEGORY');"
-                                   data-toggle="modal"><i
-                                        class="fas fa-user-plus"></i>گروه میز جدید</a>
-                            </div>
-                        </div>
-                        <div class="tableWrapper">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">نام گروه میز</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="table in table_categories">
-                                    <th scope="row">{{ table.name }}</th>
-                                    <td><a ng-click="editTableCategory(table.id)" href=""
-                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
+    <main class="pageContent">
+        <div class="row">
+            <div class="col">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton"
+                           ng-click="open_modal('addModal');change_nav_inside_modal('TABLE');"
+                           data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> میز جدید</a>
                     </div>
                 </div>
-            </main>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام میز</th>
+                            <th scope="col">نام گروه میز</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="table in tables">
+                            <th scope="row">{{ table.table_name }}</th>
+                            <th scope="row">{{ table.table_category_name }}</th>
+                            <td><a ng-click="editTable(table.table_id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a style="margin-left: 10px" class="addUser mainButton greenButton"
+                           ng-click="open_modal('addModal');change_nav_inside_modal('TABLE_CATEGORY');"
+                           data-toggle="modal"><i
+                                class="fas fa-user-plus"></i>گروه میز جدید</a>
+                    </div>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام گروه میز</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="table in table_categories">
+                            <th scope="row">{{ table.name }}</th>
+                            <td><a ng-click="editTableCategory(table.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
         </div>
     </main>
 </div>
