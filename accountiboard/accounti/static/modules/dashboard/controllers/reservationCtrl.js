@@ -36,14 +36,13 @@ angular.module("dashboard")
                     'reserve_date': '',
                     'reserve_state': '',
                     'tables_id': [],
-                    'username': $rootScope.user_data.username,
                     'branch': $rootScope.user_data.branch
                 };
-                $scope.config_clock();
                 $scope.get_today_for_reserve();
                 $scope.get_tables_data_for_main_page($rootScope.user_data);
                 $scope.get_working_time();
 
+                $scope.config_clock();
                 // Avoid Closing Drop down when clicking inside
                 jQuery.noConflict();
                 (function ($) {
@@ -79,32 +78,6 @@ angular.module("dashboard")
                         $scope.new_reserve_data.tables_id = [];
                         $scope.closeAddModal();
                         $scope.closeCompleteReserveModal();
-                        $scope.closeAddWalkedModal();
-                        $scope.closeWaitingListModal();
-                    }
-                    if (event.ctrlKey && event.keyCode === 49) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 50) {
-                        $state.go('dashboard.cash_manager.salon');
-                    }
-                    if (event.ctrlKey && event.keyCode === 51) {
-                        $state.go('dashboard.reservation');
-                    }
-                    if (event.ctrlKey && event.keyCode === 52) {
-                        $state.go('dashboard.member');
-                    }
-                    if (event.ctrlKey && event.keyCode === 54) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 55) {
-                        $state.go('dashboard.accounting.buy');
-                    }
-                    if (event.ctrlKey && event.keyCode === 56) {
-
-                    }
-                    if (event.ctrlKey && event.keyCode === 57) {
-                        $state.go('dashboard.manager.addEmployee');
                     }
                 };
                 $timeout(function () {
@@ -230,7 +203,6 @@ angular.module("dashboard")
 
             $scope.get_working_time = function () {
                 var sending_data = {
-                    'username': $rootScope.user_data.username,
                     'branch': $rootScope.user_data.branch
                 };
                 dashboardHttpRequest.getWorkingTime(sending_data)
@@ -241,7 +213,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
 
@@ -254,8 +227,7 @@ angular.module("dashboard")
                     });
                 })(jQuery);
                 var sending_data = {
-                    'branch': $rootScope.user_data.branch,
-                    'username': $rootScope.user_data.username
+                    'branch': $rootScope.user_data.branch
                 };
                 dashboardHttpRequest.getTodayForReserve(sending_data)
                     .then(function (data) {
@@ -269,7 +241,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
 
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.changeTableCheckBox = function (is_checked, table_id) {
@@ -284,7 +257,6 @@ angular.module("dashboard")
 
             $scope.arrive_reserve = function (reserve_id) {
                 var sending_data = {
-                    'username': $rootScope.user_data.username,
                     'branch': $rootScope.user_data.branch,
                     "reserve_id": reserve_id
                 };
@@ -301,7 +273,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.arrive_reserve_offline = function (payload) {
@@ -313,12 +286,12 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
 
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.delete_reserve = function (reserve_id) {
                 var sending_data = {
-                    'username': $rootScope.user_data.username,
                     'branch': $rootScope.user_data.branch,
                     "reserve_id": reserve_id
                 };
@@ -329,13 +302,13 @@ angular.module("dashboard")
                             $scope.change_date();
                             $scope.closePermissionModal();
                             $scope.closeAddModal();
-                            $scope.closeAddWalkedModal();
                             $scope.get_waiting_list();
                         }
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.delete_reserve_offline = function (payload) {
@@ -347,7 +320,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
 
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.kill_grey_background = function () {
@@ -405,7 +379,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.categorize_tables = function (tables_data) {
@@ -443,7 +418,6 @@ angular.module("dashboard")
 
             $scope.get_reserves_data = function (data, date) {
                 var sending_data = {
-                    "username": data.username,
                     "branch": data.branch,
                     "date": date
                 };
@@ -477,7 +451,6 @@ angular.module("dashboard")
 
             $scope.get_waiting_list = function () {
                 var sending_data = {
-                    "username": $rootScope.user_data.username,
                     "branch": $rootScope.user_data.branch,
                     "date": $scope.today_date
                 };
@@ -489,7 +462,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.add_reserve = function () {
@@ -500,13 +474,13 @@ angular.module("dashboard")
                             $scope.add_reserve_offline($scope.new_reserve_data);
                             $scope.change_date();
                             $scope.closeAddModal();
-                            $scope.closeAddWalkedModal();
                             $scope.closeCompleteReserveModal();
                         }
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.add_reserve_offline = function (payload) {
@@ -518,7 +492,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
 
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.add_waiting_list = function () {
@@ -532,7 +507,8 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.add_waiting_list_offline = function (payload) {
@@ -548,13 +524,13 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
 
                         }
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.edit_reserve = function (reserve_id) {
                 $scope.is_in_edit_mode_reserve = true;
                 var data = {
-                    'username': $rootScope.user_data.username,
                     'reserve_id': reserve_id
                 };
                 dashboardHttpRequest.getReserve(data)
@@ -571,7 +547,6 @@ angular.module("dashboard")
                                 'reserve_date': $scope.fixed_date,
                                 'reserve_state': data['reserve_data']['reserve_state'],
                                 'tables_id': data['reserve_data']['tables_id'],
-                                'username': $rootScope.user_data.username,
                                 'branch': $rootScope.user_data.branch
                             };
                             for (var m = 0; m < $scope.new_reserve_data.tables_id.length; m++) {
@@ -596,63 +571,38 @@ angular.module("dashboard")
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {});
-            };
-
-            $scope.openAddModal = function () {
-                jQuery.noConflict();
-                (function ($) {
-                    $('#addReservationModal').modal('show');
-                })(jQuery);
-                $scope.new_reserve_data.reserve_state = 'waiting';
-            };
-
-            $scope.closeAddModal = function () {
-                jQuery.noConflict();
-                (function ($) {
-                    $('#addReservationModal').modal('hide');
-                    $scope.resetFrom();
-                })(jQuery);
+                    }, function (error) {
+                    });
             };
 
             $scope.openAddWalkedModal = function () {
+                $rootScope.change_nav_inside_modal('NEW_RESERVE');
+                $scope.config_clock();
                 jQuery.noConflict();
                 (function ($) {
-                    $('#addWalkedModal').modal('show');
+                    $('#completeReserveModal').modal('show');
                 })(jQuery);
                 $scope.new_reserve_data.reserve_state = 'walked';
                 $scope.new_reserve_data.customer_name = 'حضوری';
-                $scope.new_reserve_data.phone = "NO_PHONE";
-            };
-
-            $scope.closeAddWalkedModal = function () {
-                jQuery.noConflict();
-                (function ($) {
-                    $('#addWalkedModal').modal('hide');
-                    $scope.resetFrom();
-                })(jQuery);
+                $scope.new_reserve_data.phone = "حضوری";
             };
 
             $scope.openWaitingListModal = function () {
+                $rootScope.change_nav_inside_modal('NEW_WAITING');
+                $scope.config_clock();
                 jQuery.noConflict();
                 (function ($) {
-                    $('#waitingListModal').modal('show');
+                    $('#completeReserveModal').modal('show');
                 })(jQuery);
                 $scope.get_waiting_list();
                 $scope.new_reserve_data.reserve_state = 'call_waiting';
                 $scope.new_reserve_data.new_reserve_data = $scope.today_date;
             };
 
-            $scope.closeWaitingListModal = function () {
-                jQuery.noConflict();
-                (function ($) {
-                    $('#waitingListModal').modal('hide');
-                    $scope.resetFrom();
-                })(jQuery);
-            };
-
             $scope.openCompleteReserveModal = function (reserve_kind) {
                 $scope.new_reserve_data.reserve_state = reserve_kind;
+                $rootScope.change_nav_inside_modal('NEW_RESERVE');
+                $scope.config_clock();
                 jQuery.noConflict();
                 (function ($) {
                     $('#completeReserveModal').modal('show');
@@ -702,7 +652,7 @@ angular.module("dashboard")
                 jQuery.noConflict();
                 (function ($) {
                     var choices = ["00", "15", "30", "45"];
-                    $('#start-time-clock-1').clockpicker({
+                    $('#start-time-clock').clockpicker({
                         donetext: 'تایید',
                         autoclose: true,
                         afterShow: function () {
@@ -711,16 +661,16 @@ angular.module("dashboard")
                             }).remove();
                         },
                         afterDone: function () {
-                            var seleceted_min = $('#start-time-clock-1').val().split(":")[1];
+                            var seleceted_min = $('#start-time-clock').val().split(":")[1];
                             if (!choices.includes(seleceted_min)) {
-                                $('#start-time-clock-1').val("");
+                                $('#start-time-clock').val("");
                             }
                             else {
-                                $scope.new_reserve_data.start_time = $('#start-time-clock-1').val();
+                                $scope.new_reserve_data.start_time = $('#start-time-clock').val();
                             }
                         }
                     });
-                    $('#end-time-clock-1').clockpicker({
+                    $('#end-time-clock').clockpicker({
                         donetext: 'تایید',
                         autoclose: true,
                         afterShow: function () {
@@ -729,84 +679,12 @@ angular.module("dashboard")
                             }).remove();
                         },
                         afterDone: function () {
-                            var seleceted_min = $('#end-time-clock-1').val().split(":")[1];
+                            var seleceted_min = $('#end-time-clock').val().split(":")[1];
                             if (!choices.includes(seleceted_min)) {
-                                $('#end-time-clock-1').val("");
+                                $('#end-time-clock').val("");
                             }
                             else {
-                                $scope.new_reserve_data.end_time = $('#end-time-clock-1').val();
-                            }
-                        }
-                    });
-                    $('#start-time-clock-2').clockpicker({
-                        donetext: 'تایید',
-                        autoclose: true,
-                        afterShow: function () {
-                            $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                                return !($.inArray($(element).text(), choices) != -1)
-                            }).remove();
-                        },
-                        afterDone: function () {
-                            var seleceted_min = $('#start-time-clock-2').val().split(":")[1];
-                            if (!choices.includes(seleceted_min)) {
-                                $('#start-time-clock-2').val("");
-                            }
-                            else {
-                                $scope.new_reserve_data.start_time = $('#start-time-clock-2').val();
-                            }
-                        }
-                    });
-                    $('#end-time-clock-2').clockpicker({
-                        donetext: 'تایید',
-                        autoclose: true,
-                        afterShow: function () {
-                            $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                                return !($.inArray($(element).text(), choices) != -1)
-                            }).remove();
-                        },
-                        afterDone: function () {
-                            var seleceted_min = $('#end-time-clock-2').val().split(":")[1];
-                            if (!choices.includes(seleceted_min)) {
-                                $('#end-time-clock-2').val("");
-                            }
-                            else {
-                                $scope.new_reserve_data.end_time = $('#end-time-clock-2').val();
-                            }
-                        }
-                    });
-                    $('#start-time-clock-3').clockpicker({
-                        donetext: 'تایید',
-                        autoclose: true,
-                        afterShow: function () {
-                            $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                                return !($.inArray($(element).text(), choices) != -1)
-                            }).remove();
-                        },
-                        afterDone: function () {
-                            var seleceted_min = $('#start-time-clock-3').val().split(":")[1];
-                            if (!choices.includes(seleceted_min)) {
-                                $('#start-time-clock-3').val("");
-                            }
-                            else {
-                                $scope.new_reserve_data.start_time = $('#start-time-clock-3').val();
-                            }
-                        }
-                    });
-                    $('#end-time-clock-3').clockpicker({
-                        donetext: 'تایید',
-                        autoclose: true,
-                        afterShow: function () {
-                            $(".clockpicker-minutes").find(".clockpicker-tick").filter(function (index, element) {
-                                return !($.inArray($(element).text(), choices) != -1)
-                            }).remove();
-                        },
-                        afterDone: function () {
-                            var seleceted_min = $('#end-time-clock-3').val().split(":")[1];
-                            if (!choices.includes(seleceted_min)) {
-                                $('#end-time-clock-3').val("");
-                            }
-                            else {
-                                $scope.new_reserve_data.end_time = $('#end-time-clock-3').val();
+                                $scope.new_reserve_data.end_time = $('#end-time-clock').val();
                             }
                         }
                     });
@@ -843,7 +721,6 @@ angular.module("dashboard")
                     'reserve_date': $scope.new_reserve_data.reserve_date,
                     'reserve_state': '',
                     'tables_id': [],
-                    'username': $rootScope.user_data.username,
                     'branch': $rootScope.user_data.branch
                 };
                 jQuery.noConflict();

@@ -24,22 +24,22 @@
                     <form ng-if="selected_nav_inside_modal === 'MENU_ITEM'">
                         <div class="row">
                             <div class="col">
-                                <label>نام آیتم<i class="fas fa-star-of-life"></i></label>
+                                <label>نام<i class="fas fa-star-of-life"></i></label>
                                 <input name="name" ng-model="new_menu_item_data.name" type="text"
                                        class="form-control" placeholder="نام آیتم">
                             </div>
                             <div class="col">
-                                <label>قیمت آیتم ( ریال )<i class="fas fa-star-of-life"></i></label>
+                                <label>قیمت ( ریال )<i class="fas fa-star-of-life"></i></label>
                                 <input name="price" ng-model="new_menu_item_data.price"
                                        type="text"
                                        class="form-control iranian-number" placeholder="قیمت آیتم" format>
                             </div>
                             <div class="col">
-                                <label>دسته‌بندی آیتم<i class="fas fa-star-of-life"></i></label>
-                                <select ng-model="new_menu_item_data.menu_category_id" class="form-control"
+                                <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_menu_item_data.menu_category_id" class="form-control customSelect"
                                         id="sel1"
                                         ng-options="category.id as category.name for category in menu_categories">
-                                    <option value="" selected>دسته‌بندی آیتم</option>
+                                    <option value="">انتخاب کنید</option>
                                 </select>
                             </div>
                         </div>
@@ -67,16 +67,15 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div ng-repeat="printer in printers"
-                                 class="checkbox-unit col">
-                                <label class="checkbox-item">
-                                    <input style="float: left;" ng-checked="printer.is_checked"
-                                           ng-model="printer.is_checked_m"
-                                           type="checkbox"
-                                           ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">پرینتر {{ printer.printer_name }}
-                                </label>
-                            </div>
+                        <div class="checkbox-unit">
+                            <label class="checkbox-unit-title">از کدام پرینتر چاپ شود؟</label>
+                            <label ng-repeat="printer in printers" class="checkbox-item">
+                                <input style="float: left;" ng-checked="printer.is_checked"
+                                       ng-model="printer.is_checked_m"
+                                       type="checkbox"
+                                       ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">
+                                <span class="check-box-effect">پرینتر {{ printer.printer_name }}</span>
+                            </label>
                         </div>
                     </form>
                 </div>
@@ -154,7 +153,7 @@
                            ng-click="open_modal('addModal');change_nav_inside_modal('MENU_CATEGORY');"
                            data-toggle="modal"
                            data-backdrop="static" data-keyboard="false">
-                            <i class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
+                             دسته‌بندی جدید</a>
                     </div>
                 </div>
                 <div class="tableWrapper">

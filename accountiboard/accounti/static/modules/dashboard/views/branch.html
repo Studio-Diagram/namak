@@ -1,22 +1,18 @@
 <div ng-controller="branchCtrl">
-    <div class="modal fade mainModal" id="addBranchModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="addModal" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت شعبه جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="addBranch()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">اطلاعات شعبه</button>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <h3>اطلاعات شعبه</h3>
                         <div class="row">
                             <div class="col">
                                 <label>نام شعبه<i class="fas fa-star-of-life"></i></label>
@@ -45,51 +41,50 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-
+                    <a class="mainButton redButton closeModal"
+                       ng-click="resetFrom();close_modal('addModal');"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-click="addBranch()" href=""
+                       class="mainButton greenButton">ثبت</a>
                 </div>
             </div>
         </div>
     </div>
-    <main class="pageContent container-fluid">
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <div class="tableButtons">
-                    <div class="buttonGroup">
-                        <a class="addUser mainButton greenButton" ng-click="openAddBranchModal()" data-toggle="modal"><i
-                                class="fas fa-user-plus"></i> شعبه جدید</a>
-                    </div>
-                    <div class="buttonGroup">
-                        <form>
-                            <input ng-keyup="searchBranch()" ng-model="search_data_branch.search_word"
-                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                        </form>
-                    </div>
-                </div>
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">نام شعبه</th>
-                            <th scope="col">ساعت شروع کاری</th>
-                            <th scope="col">ساعت پایان کاری</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="branch in branches">
-                            <th scope="row">{{ branch.name }}</th>
-                            <th scope="row">{{ branch.start_time | persianNumber }}</th>
-                            <th scope="row">{{ branch.end_time | persianNumber }}</th>
-                            <td><a ng-click="editBranch(branch.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
+    <main class="pageContent">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a class="addUser mainButton greenButton" ng-click="open_modal('addModal')" data-toggle="modal"><i
+                        class="fas fa-user-plus"></i> شعبه جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <form>
+                    <input ng-keyup="searchBranch()" ng-model="search_data_branch.search_word"
+                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                </form>
+            </div>
+        </div>
+        <div class="tableWrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">نام شعبه</th>
+                    <th scope="col">ساعت شروع کاری</th>
+                    <th scope="col">ساعت پایان کاری</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="branch in branches">
+                    <th scope="row">{{ branch.name }}</th>
+                    <th scope="row">{{ branch.start_time | persianNumber }}</th>
+                    <th scope="row">{{ branch.end_time | persianNumber }}</th>
+                    <td><a ng-click="editBranch(branch.id)" href=""
+                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                </tr>
+                </tbody>
+            </table>
 
         </div>
     </main>

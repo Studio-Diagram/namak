@@ -7,25 +7,21 @@ angular.module("dashboard")
                 'name': '',
                 'kind': '',
                 'printers_id': [],
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             $scope.searach_data_menu_category = {
                 'search_word': '',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             $scope.new_menu_item_data = {
                 'menu_item_id': 0,
                 'name': '',
                 'price': '',
-                'menu_category_id': 0,
-                'username': $rootScope.user_data.username
+                'menu_category_id': 0
             };
             $scope.searach_data_menu_item = {
                 'search_word': '',
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             $scope.printers = [];
             $scope.get_menu_item_data($rootScope.user_data);
@@ -50,6 +46,7 @@ angular.module("dashboard")
         };
 
         $scope.changePrinterCheckBox = function (is_checked, printer_id) {
+            console.log("clicked");
             var index_of_printer_id = $scope.new_menu_category_data.printers_id.indexOf(printer_id);
             if (index_of_printer_id === -1) {
                 $scope.new_menu_category_data.printers_id.push(printer_id);

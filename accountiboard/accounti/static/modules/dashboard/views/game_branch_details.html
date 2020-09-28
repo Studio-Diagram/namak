@@ -28,15 +28,13 @@
                                        placeholder="قیمت به ازای یک ساعت ( ریال )" format>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="checkbox-unit col">
-                                <label>تاثیر عضویت در محاسبه هزینه بازی</label>
-                                <label class="form-check-label checkbox-item">
-                                    <input ng-model="game_branch_data.guest_pricing"
-                                           type="checkbox">
-                                    برای مهمانانی که عضو نیستند، زمان بازی به واحدهای یک ساعته، رند به بالا شود
-                                </label>
-                            </div>
+                        <div class="checkbox-unit">
+                            <label>تاثیر عضویت در محاسبه هزینه بازی</label>
+                            <label class="form-check-label checkbox-item">
+                                <input ng-model="game_branch_data.guest_pricing"
+                                       type="checkbox">
+                                <span class="check-box-effect">برای مهمانانی که عضو نیستند، زمان بازی به واحدهای یک ساعته، رند به بالا شود</span>
+                            </label>
                         </div>
                     </form>
                 </div>

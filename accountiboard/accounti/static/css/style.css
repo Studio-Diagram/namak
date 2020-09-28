@@ -413,6 +413,17 @@ button.okrButton:hover {
     cursor: pointer;
 }
 
+a.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+a.okrButton:hover {
+    background: var(--okrBoarder);
+    color: white;
+    cursor: pointer;
+}
+
 a.newYellowButton {
     background: var(--newYellow);
     border-color: var(--newYellowBorder);
@@ -1540,9 +1551,10 @@ tr.tableTotal .redText {
 }
 
 .fa-star-of-life {
-    font-size: 10px;
-    color: red;
-    margin-right: 6px;
+    font-size: 6px;
+    color: var(--myRed);
+    margin-right: 3px;
+    vertical-align: super;
 }
 
 #open-cash-button {
@@ -1829,20 +1841,55 @@ tags-input .tags .tag-item {
 
 .checkbox-unit {
     margin-bottom: 0 !important;
-    flex-direction: column;
+    flex-direction: row;
     display: flex;
     padding-left: 0 !important;
+    margin-top: 2em;
+    flex-wrap: wrap;
 }
 
-.checkbox-item {
-    margin-bottom: 0;
-    border: 1px dotted var(--pageBorder);
-    padding: 0.7em !important;
+.checkbox-unit .checkbox-unit-title {
+    flex: 0 0 100%;
 }
 
-.checkbox-item:hover {
+input[type="checkbox"] {
+    display: none;
+}
+
+.check-box-effect {
+    border: 1px solid var(--myGrayBorder);
+    display: block;
+    margin: 5px;
+    padding: .7em 1.3em;
+    border-radius: 30px;
     cursor: pointer;
-    background-color: var(--pageBorder);
+
+}
+
+.check-box-effect:before {
+    content: '\f058';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-left: 10px;
+    font-size: 1.5em;
+    vertical-align: middle;
+    color: var(--gray);
+    opacity: .3;
+}
+
+.check-box-effect:hover {
+    background: white;
+}
+
+input[type="checkbox"]:checked + .check-box-effect {
+    background-color: var(--myBlue) !important;
+    border-color: var(--myBlue);
+    color: white;
+}
+
+input[type="checkbox"]:checked + .check-box-effect:before {
+    color: white;
+    opacity: 1;
 }
 
 .table_category_wrapper {
@@ -2599,7 +2646,7 @@ aside.leftAside {
 }
 
 .modal-backdrop.show {
-    opacity: .75 !important;
+    opacity: .85 !important;
 }
 
 .generalInfoInvoiceSale label {
@@ -3316,6 +3363,10 @@ table .badge {
     border: none;
 }
 
+.modalBottomButtonsTopNav .modal-dialog {
+    max-width: 550px;
+}
+
 .tabGroup {
     display: flex;
     width: 100%;
@@ -3330,6 +3381,7 @@ table .badge {
     color: var(--white);
     border: none;
     flex: 1 0 auto;
+    font-size: 16px;
 }
 
 .tabGroup .mainButton.active {
@@ -3341,4 +3393,14 @@ table .badge {
 .oilBlueButton .badge-white {
     background: var(--white) !important;
     color: var(--myBlue) !important;
+}
+
+.requiredFieldStar:after {
+    content: "\f621";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 6px;
+    color: var(--myRed);
+    margin-right: 3px;
+    vertical-align: super;
 }

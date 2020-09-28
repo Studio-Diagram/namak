@@ -90,20 +90,6 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.openAddBranchModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addBranchModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddBranchModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addBranchModal').modal('hide');
-            })(jQuery);
-        };
-
         $scope.addBranch = function () {
             jQuery.noConflict();
             (function ($) {
@@ -115,7 +101,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.get_branches_data($rootScope.user_data);
                         $scope.resetFrom();
-                        $scope.closeAddBranchModal();
+                        $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -156,7 +142,7 @@ angular.module("dashboard")
                             'min_paid_price': data['branch']['min_paid_price'],
                             'guest_pricing': data['branch']['guest_pricing']
                         };
-                        $scope.openAddBranchModal();
+                        $rootScope.open_modal('addModal');
                 }, function (error) {});
 
         };
@@ -183,11 +169,6 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-        };
-
-        $scope.closeForm = function () {
-            $scope.resetFrom();
-            $scope.closeAddBranchModal();
         };
 
         initialize();
