@@ -1,21 +1,19 @@
-<div class="modal fade mainModal littleModal" id="addMemberModal" tabindex="-1" role="dialog"
+<div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+     id="addMemberModal" tabindex="-1"
+     role="dialog"
      aria-labelledby="exampleModalLabel"
-     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modalHeader">
-                <h2 class="modalTitle">ثبت مشتری جدید</h2>
-                <a class="mainButton redButton closeModal" ng-click="reset_member_form();close_modal('addMemberModal')" aria-label="Close">
-                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                </a>
-                <a ng-click="addMember()" href="" class="mainButton greenButton"><i
-                        class="fas fa-save"></i> ثبت</a>
-                <a ng-click="reset_member_form()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                    پاک کردن </a>
+            <div class="modal-header">
+                <div class="tabGroup">
+                    <button class="mainButton active">
+                        اطلاعات مشتری
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <form>
-                    <h3>اطلاعات مشتری</h3>
                     <div class="row">
                         <div class="col">
                             <label>نام<i class="fas fa-star-of-life"></i></label>
@@ -28,35 +26,31 @@
                             <input ng-model="new_member_data.last_name" type="text" aria-label="Last name"
                                    class="form-control" placeholder="نام خانوادگی">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col">
                             <label>شماره تلفن<i class="fas fa-star-of-life"></i></label>
                             <input ng-model="new_member_data.phone" type="text" aria-label="Last name"
                                    class="form-control" placeholder="شماره تلفن">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <label>روز تولد<i class="fas fa-star-of-life"></i></label>
+                    <div class="row align-items-end">
+                        <div class="col-2">
+                            <label class="requiredFieldStar">تاریخ تولد</label>
                             <input ng-model="new_member_data.day_of_birth" type="text" aria-label="Last name"
-                                   class="form-control" placeholder="روز  تولد">
+                                   class="form-control mb-0" placeholder="روز">
                         </div>
-                        <div class="col">
-                            <label>ماه تولد<i class="fas fa-star-of-life"></i></label>
+                        <div class="col-2">
+                            <label></label>
                             <input ng-model="new_member_data.month_of_birth" type="text" aria-label="Last name"
-                                   class="form-control" placeholder="ماه  تولد">
+                                   class="form-control mb-0" placeholder="ماه">
                         </div>
-                        <div class="col">
-                            <label>سال تولد<i class="fas fa-star-of-life"></i></label>
+                        <div class="col-2">
+                            <label></label>
                             <input ng-model="new_member_data.year_of_birth" type="text" aria-label="Last name"
-                                   class="form-control" placeholder="سال  تولد">
+                                   class="form-control mb-0" placeholder="سال">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
+                        <div class="col-6">
                             <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
-                            <select ng-model="new_member_data.intro" class="form-control" id="sel1">
+                            <select ng-model="new_member_data.intro" class="form-control customSelect" id="sel1">
                                 <option ng-selected="new_member_data.intro === null" value="">نحوه آشنایی با کافه
                                 </option>
                                 <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
@@ -91,7 +85,13 @@
                 </form>
             </div>
             <div class="modal-footer">
-
+                <a class="mainButton redButton closeModal"
+                   ng-click="reset_member_form();close_modal('addMemberModal')"
+                   aria-label="Close">
+                    <span aria-hidden="true">خروج</span>
+                </a>
+                <a ng-click="addMember()" href=""
+                   class="mainButton greenButton">ثبت</a>
             </div>
         </div>
     </div>

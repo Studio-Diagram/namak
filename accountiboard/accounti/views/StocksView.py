@@ -42,20 +42,20 @@ class StocksView(View):
         if not branches_in_request or not name:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE
-            }, status=401)
+            }, status=400)
 
         for branch in branches_in_request:
             if branch['id'] not in branch_id_list_jwt:
                 return JsonResponse({
                     'error_msg': ACCESS_DENIED
-                }, status=401)
+                }, status=400)
             elif 'is_checked' in branch and branch['is_checked']:
                 branches_id_list_to_add.append(branch['id'])
 
         if not branches_id_list_to_add:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE_BRANCH
-            }, status=401)
+            }, status=400)
                 
 
         current_stock = Stock.objects.create(
