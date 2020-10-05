@@ -5,7 +5,7 @@ angular.module("dashboard")
             $scope.search_member_data = "";
             $scope.is_in_edit_mode = false;
             $scope.deleting_invoice_id = 0;
-            $scope.current_menu_nav = "MENU";
+            $rootScope.current_menu_nav = "MENU";
             $scope.invoice_delete_description = "";
             $scope.disable_print_after_save_all_buttons = false;
             $scope.is_in_edit_mode_invoice = false;
@@ -169,9 +169,10 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.convert_total_seconds_to_hours_minutes = function () {
-            var hours = String($scope.new_invoice_data.sum_all_games.total_hours);
-            var minutes = String($scope.new_invoice_data.sum_all_games.total_minutes);
+        $scope.convert_total_seconds_to_hours_minutes = function (games_data) {
+            if (!games_data) return "00:00";
+            var hours = String(games_data.total_hours);
+            var minutes = String(games_data.total_minutes);
             if (hours.length === 1) {
                 hours = "0" + hours
             }
@@ -188,7 +189,7 @@ angular.module("dashboard")
         };
 
         $scope.clickOnMemberInput = function () {
-            $scope.current_menu_nav = "MEMBER";
+            $rootScope.current_menu_nav = "MEMBER";
             jQuery.noConflict();
             (function ($) {
                 $timeout(function () {
@@ -333,6 +334,23 @@ angular.module("dashboard")
                         $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 });
+        };
+
+        $scope.print_night_report = function () {
+            var sending_data = {
+                'cash_id': $rootScope.cash_data.cash_id,
+                'location_url': "https://namak.works/"
+            };
+            $http({
+                method: 'POST',
+                url: 'http://127.0.0.1:8000/printNightReport',
+                data: sending_data,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).then(function successCallback(response) {
+
+            }, function errorCallback(response) {
+                $rootScope.show_toast("اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید", 'danger');
+            });
         };
 
         $scope.close_cash_offline = function () {
@@ -651,12 +669,10 @@ angular.module("dashboard")
         };
 
         $scope.can_settle_invoice = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#settle_button').prop("disabled", false);
-                if ($scope.new_invoice_data.current_game.start_time)
-                    $('#settle_button').prop("disabled", true);
-            })(jQuery);
+            $scope.can_settle_invoice_boolean = true;
+            if ($scope.new_invoice_data.current_game.start_time) {
+                $scope.can_settle_invoice_boolean = false;
+            }
         };
 
         $scope.openPayModal = function () {
@@ -857,10 +873,6 @@ angular.module("dashboard")
         $scope.deleteNewItemShop = function (item_index) {
             $scope.new_invoice_data.total_price -= $scope.new_invoice_data.shop_items_new[item_index].price * $scope.new_invoice_data.shop_items_new[item_index].nums;
             $scope.new_invoice_data.shop_items_new.splice(item_index, 1);
-        };
-
-        $scope.changeMenuNav = function (name) {
-            $scope.current_menu_nav = name;
         };
 
         $scope.changeItemNumber = function (item_index) {
@@ -1380,6 +1392,7 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id
                         };
                         $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
+                        $scope.can_settle_invoice();
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -1429,6 +1442,7 @@ angular.module("dashboard")
                             'cash_id': $rootScope.cash_data.cash_id
                         };
                         $scope.first_initial_value_of_invoice_sale = angular.copy($scope.new_invoice_data);
+                        $scope.can_settle_invoice();
                         jQuery.noConflict();
                         (function ($) {
                             $scope.new_invoice_data.card = Number($scope.new_invoice_data.total_price) - Number($scope.new_invoice_data.discount) + Number($scope.new_invoice_data.tip) - Number($scope.new_invoice_data.used_credit);

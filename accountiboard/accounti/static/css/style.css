@@ -1022,7 +1022,7 @@ button.mainButton {
 }
 
 button.mainButton:disabled {
-    cursor: no-drop;
+    cursor: no-drop !important;
     color: lightgray;
 }
 
@@ -2667,7 +2667,7 @@ aside.leftAside {
     border-left: none;
     background-color: var(--white);
     border-color: black;
-    width: 25%;
+    flex: 1 0 auto;
     color: var(--myBlack);
 }
 
@@ -3403,4 +3403,29 @@ table .badge {
     color: var(--myRed);
     margin-right: 3px;
     vertical-align: super;
+}
+
+.cafeMenuNav > form {
+    margin: 22px;
+}
+
+.generalInfoInvoice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.generalInfoInvoice > div {
+    flex: 1 0 auto;
+}
+
+#accountingTable tbody tr > td {
+    position: relative;
+    top: 15px;
+}
+
+#accountingTable tbody > tr:first-child th {
+    position: sticky;
+    top: 95px;
 }

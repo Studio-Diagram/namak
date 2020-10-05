@@ -50,9 +50,9 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <small>تامین کننده</small>
+                                            <small>طرف حساب</small>
                                             <ui-select ng-model="new_invoice_expense_data.supplier_id">
-                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
+                                                <ui-select-match placeholder="انتخاب طرف حساب">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
                                                         repeat="supplier.id as supplier in suppliers | filter: $select.search">
@@ -158,7 +158,7 @@
                                     <tr>
                                         <th>جمع کل</th>
                                         <td>
-                                            {{ new_invoice_expense_data.total_price | number:fractionSize | persianNumber }}</td>
+                                            {{ new_invoice_expense_data.total_price | number | persianNumber }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

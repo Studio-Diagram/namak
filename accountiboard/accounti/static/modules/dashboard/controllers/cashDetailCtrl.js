@@ -36,18 +36,20 @@ angular.module("dashboard")
         };
 
         $scope.change_detail_sale_category = function () {
-            if ($scope.selected_detail_category === "BAR")
+            if ($scope.selected_detail_category === "BAR") {
                 $scope.get_bar_detail_sales();
-            else if ($scope.selected_detail_category === "KITCHEN")
+            }
+            else if ($scope.selected_detail_category === "KITCHEN") {
                 $scope.get_kitchen_detail_sales();
-            else if ($scope.selected_detail_category === "OTHER")
+            }
+            else if ($scope.selected_detail_category === "OTHER") {
                 $scope.get_other_detail_sales();
+            }
         };
 
         $scope.get_menu_categories_base_on_kind = function (kind) {
             $scope.selected_detail_category = kind;
             var sending_data = {
-                'username': $rootScope.user_data.username,
                 'kind': kind,
                 'current_branch': $rootScope.user_data.branch
             };
@@ -55,6 +57,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.detail_categories = data['categories'];
+                        $scope.change_detail_sale_category();
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -75,7 +78,8 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.sale_details = data['sale_details'];
                     $scope.open_modal("sale_details");
-                }, function (error) {});
+                }, function (error) {
+                });
         };
 
         $scope.get_bar_detail_sales = function () {
@@ -89,7 +93,8 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.sale_details = data['sale_details'];
                     $scope.open_modal("sale_details");
-                }, function (error) {});
+                }, function (error) {
+                });
         };
 
         $scope.get_other_detail_sales = function () {
@@ -103,7 +108,8 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
                     $scope.sale_details = data['sale_details'];
                     $scope.open_modal("sale_details");
-                }, function (error) {});
+                }, function (error) {
+                });
         };
 
         $scope.get_today_cash = function () {
@@ -132,8 +138,7 @@ angular.module("dashboard")
         $scope.close_cash = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             dashboardHttpRequest.closeCash(sending_data)
                 .then(function (data) {
@@ -153,8 +158,7 @@ angular.module("dashboard")
         $scope.close_cash_offline = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch_id': $rootScope.user_data.branch
             };
             offlineAPIHttpRequest.close_cash(sending_data)
                 .then(function (data) {
@@ -188,6 +192,10 @@ angular.module("dashboard")
             }, function errorCallback(response) {
                 $rootScope.show_toast("اتصال سرور پرینتر نمک برقرار نیست، مجددا برنامه پرینتر نمک را اجرا کنید", 'danger');
             });
+        };
+
+        $scope.resetForm = function () {
+            $scope.sale_detail_category_filter = "";
         };
 
         initialize();

@@ -94,7 +94,7 @@
                             <td>{{ invoice.branch }}</td>
                             <td>{{ invoice.settle_time | persianNumber }}</td>
                             <td>{{ invoice.total_price | number | persianNumber }} ریال</td>
-                            <td ng-click="showInvoice(invoice.id, showEditPaymentButton=false, showPrintButton=false)">
+                            <td ng-click="showInvoice(invoice.id, showEditPaymentButton=false, showPrintButton=false);changeMenuNav('GAME')">
                                 <a href="" class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
                         </tr>
                         </tbody>

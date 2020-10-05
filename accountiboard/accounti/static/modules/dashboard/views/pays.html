@@ -1,12 +1,13 @@
 <div ng-controller="paysCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
-         tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addModal"
+         tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت پرداختی جدید</h2>
+                    <h2 class="modalTitle">سند حسابداری</h2>
                     <a tabindex="0" class="mainButton redButton" role="button"
                        data-container="body"
                        data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
@@ -15,71 +16,113 @@
                        first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom();"
                        second-button-text="خروج و ذخیره"
                        second-callback="addPay()">خروج</a>
-                    <a ng-click="addPay()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-click="addPay()" href="" class="mainButton greenButton"> ثبت</a>
                     <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
-                       class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت و جدید</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
+                       class="mainButton greenButton"> ثبت و جدید</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton">
                         پاک کردن </a>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <h3>اطلاعات پرداختی</h3>
-                        <div class="row">
-                            <div class="col">
-                                <label>تامین کننده</label>
-                                <select ng-model="new_pay_data.supplier_id"
-                                        class="form-control">
-                                    <option ng-repeat="supplier in suppliers"
-                                            value="{{ supplier.id }}"
-                                            ng-selected="supplier.id == new_pay_data.supplier_id">{{ supplier.name }}</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label>تاریخ فاکتور</label>
+                    <aside class="rightSideInvoiceSale">
+                        <div class="nav-group" role="group">
+                            <button class="mainButton active">
+                                <span>پرداخت</span>
+                            </button>
+                        </div>
+                        <nav class="nav flex-column cafeMenuNav">
+                            <form>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>طرف حساب</label>
+                                        <ui-select ng-model="new_pay_data.supplier_id">
+                                            <ui-select-match placeholder="جستجو">
+                                                {{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices
+                                                    repeat="supplier.id as supplier in suppliers | filter: $select.search">
+                                                <div ng-bind="supplier.name"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="col">
+                                        <label>بابت</label>
+                                        <input ng-model="new_pay_data.description"
+                                               type="text"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>مبلغ</label>
+                                        <input ng-model="new_pay_data.payment_amount"
+                                               type="text"
+                                               class="form-control iranian-number" format>
+                                    </div>
+                                    <div class="col">
+                                        <label> بانکداری <i class="fa fa-question-circle"
+                                                            title="می‌توانید حساب‌های بانکی خود را در بخش مدیریت ببینید و ویرایش کنید."
+                                                            data-toggle="tooltip" tooltip></i></label>
+                                        <select ng-model="new_pay_data.banking_id"
+                                                class="form-control"
+                                                ng-options="banking.id as banking.name for banking in allbanking_names">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label>روش پرداخت</label>
+                                        <select ng-model="new_pay_data.settle_type"
+                                                class="form-control customSelect">
+                                            <option value="">انتخاب کنید</option>
+                                            <option value="CARD">کارت به کارت</option>
+                                            <option value="CASH">نقدی</option>
+                                            <option value="PAYA">پایا</option>
+                                            <option value="CHECK">چک</option>
+                                            <option value="SATNA">ساتنا</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <label>شماره ارجاع</label>
+                                        <input ng-model="new_pay_data.backup_code"
+                                               type="text"
+                                               class="form-control iranian-number">
+                                    </div>
+                                </div>
+                            </form>
+                        </nav>
+                    </aside>
+                    <aside class="leftSideInvoiceSale">
+                        <div class="generalInfoInvoice">
+                            <div>
+                                <label>تاریخ</label>
                                 <input ng-model="new_pay_data.date" id="datepicker"
                                        class="form-control" placeholder="تاریخ" type="text">
                             </div>
-                            <div class="col">
-                                <label>میزان پرداختی</label>
-                                <input style="font-family: 'B Yekan'" ng-model="new_pay_data.payment_amount" type="text"
-                                       aria-label="First name"
-                                       class="form-control" placeholder="میزان پرداختی" format>
+                            <div>
+                                <label>طرف حساب</label>
+                                <input class="form-control customReadonly requiredField" type="text"
+                                       ng-model="new_pay_data.supplier_id" readonly>
+                            </div>
+                            <div>
+                                <label>شماره فاکتور</label>
+                                <input class="form-control iranian-number" type="text"
+                                       ng-model="new_pay_data.factor_number" disabled>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <label>نوع پرداخت</label>
-                                <select ng-model="new_pay_data.settle_type"
-                                        class="form-control">
-                                    <option value="">نوع پرداخت را انتخاب کنید...</option>
-                                    <option value="CARD">کارت به کارت</option>
-                                    <option value="CASH">نقدی</option>
-                                    <option value="PAYA">پایا</option>
-                                    <option value="CHECK">چک</option>
-                                    <option value="SATNA">ساتنا</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label>شماره ارجاع</label>
-                                <input style="font-family: 'B Yekan'" ng-model="new_pay_data.backup_code" type="text"
-                                       class="form-control" placeholder="شماره ارجاع">
-                            </div>
-                            <div class="col">
-                                <label> حساب <i class="fa fa-question-circle"
-                                                title="می‌توانید حساب‌های بانکی خود را در بخش مدیریت ببینید و ویرایش کنید."
-                                                data-toggle="tooltip" tooltip></i></label>
-                                <select ng-model="new_pay_data.banking_id"
-                                        class="form-control"
-                                        ng-options="banking.id as banking.name for banking in allbanking_names">
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="accountingTable">
+                            <tbody>
+                            <tr>
+                                <th>عنوان</th>
+                                <th>مبلغ</th>
+                                <th>توضیحات</th>
+                            </tr>
+                            <tr>
+                                <td>{{ new_pay_data.description }}</td>
+                                <td class="priceField">{{ new_pay_data.payment_amount | number | persianNumber }}</td>
+                                <td>{{ 'شماره ارجاع: ' + new_pay_data.backup_code }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </aside>
                 </div>
             </div>
         </div>

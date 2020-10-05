@@ -1,136 +1,20 @@
 <div ng-controller="memberCtrl">
     <add-member-modal-directive></add-member-modal-directive>
-    <div class="modal fade mainModal" id="showMemberProfileModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">اطلاعات مشتری</h2>
-                    <a class="mainButton redButton closeModal" ng-click="resetForm();close_modal('showMemberProfileModal')"
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="create_credit()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <button ng-hide="true" ng-click="check_gift_code()" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> اعمال کد
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-4 formWrapper">
-                            <div class="row">
-                                <div class="col">
-                                    <h3>افزودن اعتبار</h3>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>مقدار اعتبار<i class="fas fa-star-of-life"></i></label>
-                                    <input ng-model="new_credit_data.total_credit" type="text"
-                                           aria-label="Last name"
-                                           class="form-control" placeholder="مقدار اعتبار" format>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>تاریخ شروع<i class="fas fa-star-of-life"></i></label>
-                                    <input ng-model="new_credit_data.start_date" type="text"
-                                           class="form-control" placeholder="تاریخ شروع" id="start_credit_date">
-                                </div>
-                                <div class="col">
-                                    <label>ساعت شروع<i class="fas fa-star-of-life"></i></label>
-                                    <input ng-model="new_credit_data.start_time" type="text"
-                                           class="form-control" placeholder="ساعت شروع" id="start_credit_time">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <label>تاریخ انقضا<i class="fas fa-star-of-life"></i></label>
-                                    <input ng-model="new_credit_data.expire_date" type="text"
-                                           class="form-control" placeholder="تاریخ انقضا" id="expire_credit_date">
-                                </div>
-                                <div class="col">
-                                    <label>ساعت انقضا<i class="fas fa-star-of-life"></i></label>
-                                    <input ng-model="new_credit_data.expire_time" type="text"
-                                           class="form-control" placeholder="ساعت انقضا" id="expire_credit_time">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
-                                    <select class="form-control" ng-model="new_credit_data.credit_category">
-                                        <option value="">دسته‌بندی اعتبار را انتخاب کنید</option>
-                                        <option ng-repeat="credit_category in credit_categories"
-                                                ng-value="credit_category.key">{{ credit_category.name }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div ng-hide="true" class="row mt-3">
-                                <div class="col">
-                                    <label>کد اعتبار<i class="fas fa-star-of-life"></i></label>
-                                    <input ng-model="gift_code_data.gift_code" type="text" class="form-control"
-                                           placeholder="کد اعتبار">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="tableWrapper">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">تاریخ شروع</th>
-                                        <th scope="col">ساعت شروع</th>
-                                        <th scope="col">تاریخ انقضا</th>
-                                        <th scope="col">ساعت انقضا</th>
-                                        <th scope="col">اعتبار</th>
-                                        <th scope="col">استفاده شده</th>
-                                        <th scope="col">دسته بندی</th>
-                                        <th scope="col">نوع</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="credit in member_credit_data">
-                                        <th scope="row">{{ $index + 1 | persianNumber }}</th>
-                                        <td scope="row">{{ credit.start_date | persianNumber }}</td>
-                                        <td scope="row">{{ credit.start_time | persianNumber }}</td>
-                                        <td scope="row">{{ credit.expire_date | persianNumber }}</td>
-                                        <td scope="row">{{ credit.expire_time | persianNumber }}</td>
-                                        <td scope="row">{{ credit.total_price | number | persianNumber }}</td>
-                                        <td scope="row">{{ credit.used_price | number | persianNumber }}</td>
-                                        <td scope="row">{{ credit.credit_categories }}</td>
-                                        <td scope="row">{{ credit.kind }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <main class="pageContent">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a class="addUser mainButton greenButton" ng-click="open_modal('addMemberModal')" data-toggle="modal"><i
+                        class="fas fa-user-plus"></i> مشتری جدید</a>
+            </div>
+            <div class="buttonGroup">
+                <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
+                       class="form-control listFilter" type="search" placeholder="فیلتر کن">
             </div>
         </div>
-    </div>
-    <main class="pageContent container-fluid">
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <div class="tableButtons">
-                    <div class="buttonGroup">
-                        <a class="addUser mainButton greenButton" ng-click="open_modal('addMemberModal')" data-toggle="modal"><i
-                                class="fas fa-user-plus"></i> مشتری جدید</a>
-                    </div>
-                    <div class="buttonGroup">
-                        <input ng-keyup="searchMember()" ng-model="serach_data_member.search_word"
-                               class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    </div>
-                </div>
-                <table-directive headers="member_table_headers"
-                                 config="member_table_configs"
-                                 rows="members" detail-callback="editMember(item_id)"
-                                 right-side-detail-callback="show_member_profile_data(item_id)"></table-directive>
-            </main>
-        </div>
+        <table-directive headers="member_table_headers"
+                         config="member_table_configs"
+                         rows="members"
+                         detail-callback="editMember(item_id);show_member_profile_data(item_id);change_nav_inside_modal('MEMBER_INFO');"
+        ></table-directive>
     </main>
 </div>

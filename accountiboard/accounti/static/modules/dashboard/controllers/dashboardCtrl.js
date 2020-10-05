@@ -18,7 +18,8 @@ angular.module("dashboard")
                                 $scope.transaction_unsuccessful = true;
 
                             $rootScope.open_modal('transactionResultModal');
-                        }, function (error) {});
+                        }, function (error) {
+                        });
                     $location.search('status', null);
                     $location.search('token', null);
                 }
@@ -343,7 +344,8 @@ angular.module("dashboard")
                 dashboardHttpRequest.getUserProfile()
                     .then(function (data) {
                         $scope.user_profile_data = data['_item'];
-                    }, function (error) {});
+                    }, function (error) {
+                    });
                 $rootScope.open_modal('userProfileModal');
             };
 
@@ -352,7 +354,8 @@ angular.module("dashboard")
                     .then(function (data) {
                         $rootScope.close_modal('userProfileModal');
                         $rootScope.show_toast("با موفقیت انجام شد", 'success');
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $rootScope.collapseLeftSidebar = function () {
@@ -373,7 +376,8 @@ angular.module("dashboard")
                 dashboardHttpRequest.get_news()
                     .then(function (data) {
                         $rootScope.all_news = data['results'];
-                    }, function (error) {});
+                    }, function (error) {
+                    });
             };
 
             $scope.bugReportFileChange = function () {
@@ -416,7 +420,12 @@ angular.module("dashboard")
                     .then(function (data) {
                         $rootScope.close_modal('userProfileModal');
                         $rootScope.show_toast("با موفقیت انجام شد", 'success');
-                    }, function (error) {});
+                    }, function (error) {
+                    });
+            };
+
+            $rootScope.changeMenuNav = function (name) {
+                $rootScope.current_menu_nav = name;
             };
 
             initialize();

@@ -485,7 +485,7 @@ class InvoiceExpenseToService(models.Model):
 class InvoiceReturn(models.Model):
     RETURN_TYPES = (
         ('CUSTOMER_TO_CAFE', 'مشتری به کافه'),
-        ('CAFE_TO_SUPPLIER', 'کافه به تامین‌کننده'),
+        ('CAFE_TO_SUPPLIER', 'کافه به طرف حساب'),
     )
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)

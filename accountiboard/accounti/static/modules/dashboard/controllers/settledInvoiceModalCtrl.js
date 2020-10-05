@@ -33,11 +33,14 @@ angular.module("dashboard")
                             'games': data['invoice']['games'],
                             'total_price': data['invoice']['total_price'],
                             'discount': data['invoice']['discount'],
+                            'sum_all_games': data['invoice']['sum_all_games'],
                             'tip': data['invoice']['tip'],
                             "cash_amount": Number(data['invoice']['cash_amount']),
                             "pos_amount": Number(data['invoice']['pos_amount']),
                             'total_credit': data['invoice']['total_credit'],
-                            'used_credit': data['invoice']['used_credit']
+                            'used_credit': data['invoice']['used_credit'],
+                            'credits_data': data['invoice']['credits_data'],
+                            'static_guest_name': data['invoice']['static_guest_name'],
                         };
                         $scope.open_modal('viewSettledInvoiceModal');
                     }
@@ -79,6 +82,19 @@ angular.module("dashboard")
             else {
                 $scope.show_invoice_data.pos = $scope.show_invoice_data.total - $scope.show_invoice_data.cash;
             }
+        };
+
+        $scope.convert_total_seconds_to_hours_minutes = function (games_data) {
+            if (!games_data) return "00:00";
+            var hours = String(games_data.total_hours);
+            var minutes = String(games_data.total_minutes);
+            if (hours.length === 1) {
+                hours = "0" + hours
+            }
+            if (minutes.length === 1) {
+                minutes = "0" + minutes
+            }
+            return hours + ":" + minutes
         };
 
 

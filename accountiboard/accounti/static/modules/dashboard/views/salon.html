@@ -88,7 +88,7 @@
                        first-button-text="خروج بدون ذخیره" first-callback="closeAddInvoiceModal()"
                        second-button-text="خروج و ذخیره"
                        second-callback="saveAndCloseInvoice()">خروج</a>
-                    <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                    <button ng-disabled="disable_print_after_save_all_buttons || !can_settle_invoice_boolean"
                             id="settle_button" ng-click="openPayModal()"
                             class="mainButton greenButton">تسویه
                     </button>
@@ -480,7 +480,7 @@
                                     <div>
                                         <span>مجموع زمان بازی‌ها</span>
                                         <span class="hoursMinutesField"
-                                              ng-bind="convert_total_seconds_to_hours_minutes() | persianNumber"></span>
+                                              ng-bind="convert_total_seconds_to_hours_minutes(new_invoice_data.sum_all_games) | persianNumber"></span>
                                     </div>
                                     <div>
                                         <span>مجموع هزینه بازی‌ها</span>
@@ -538,7 +538,7 @@
                                     </a>
                                 </td>
                                 <td>{{ old_item.name }}</td>
-                                <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
+                                <td>{{ old_item.price | number | persianNumber }}</td>
                                 <td>{{ old_item.nums | persianNumber }}</td>
                                 <td>{{ old_item.total | number | persianNumber }}</td>
                                 <td>{{ old_item.description }}</td>
@@ -575,7 +575,7 @@
                                 <td class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
                                         class="fas fa-trash"></i></a></td>
                                 <td>{{ new_item.name }}</td>
-                                <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
+                                <td>{{ new_item.price | number | persianNumber }}</td>
                                 <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
                                            ng-change="changeItemNumber($index)"></td>
                                 <td>{{ new_item.total | number | persianNumber }}</td>
@@ -623,7 +623,7 @@
                                 <tr>
                                     <th>اعتبار مصرف شده</th>
                                     <td>
-                                        {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                        {{ new_invoice_data.used_credit | number | persianNumber }}</td>
                                 </tr>
                                 <tr>
                                     <th>تخفیف</th>
@@ -635,7 +635,7 @@
                                 <tr class="totalPriceRow">
                                     <th>جمع کل</th>
                                     <td class="priceField">
-                                        {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
+                                        {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number | persianNumber }}</td>
                                 </tr>
                                 <tr>
                                     <th>انعام</th>
@@ -840,7 +840,7 @@
                           ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
                 </td>
                 <td>
-                    {{ invoice.total_price - invoice.discount - invoice.used_credit | number:fractionSize | persianNumber }}
+                    {{ invoice.total_price - invoice.discount - invoice.used_credit | number | persianNumber }}
                     ریال
                 </td>
                 <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
@@ -848,7 +848,7 @@
                     <a href="" ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"
                        class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                     <a href="" ng-show="invoice.is_settled"
-                       ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)"
+                       ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true);changeMenuNav('GAME');"
                        class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                     <a href="" ng-hide="invoice.is_settled" ng-click="openDeleteInvoiceModal(invoice.invoice_id)"
                        class="mainButton redButton smallButton fullWidthButton">حذف</a>
@@ -885,7 +885,7 @@
                            ng-class="set_class_name(table.table_name)">
                             <span ng-bind="table.table_name"></span>
                             <span ng-if="table_factor_counts(table.table_name)" class="badge badge-pill badge-white"
-                                ng-bind="table_factor_counts(table.table_name) | persianNumber"></span></a>
+                                  ng-bind="table_factor_counts(table.table_name) | persianNumber"></span></a>
                     </div>
                 </div>
             </main>
@@ -922,7 +922,7 @@
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
                             <td class="tableButtonWrapper">
                                 <a href="" ng-show="invoice.is_settled"
-                                   ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true)"
+                                   ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true);changeMenuNav('GAME');"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                                 <a href="" ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"
                                    class="mainButton fullWidthButton smallButton grayButton">جزییات</a>

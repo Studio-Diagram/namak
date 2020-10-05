@@ -38,10 +38,8 @@ class GetAllCreditsDataFromUserView(View):
 
             all_credit_data.append({
                 "credit_categories": str(credit.credit_categories),
-                "expire_date": expire_jalali_date.strftime("%Y/%m/%d"),
-                "expire_time": credit.expire_time.strftime("%H:%M"),
-                "start_date": start_jalali_date.strftime("%Y/%m/%d"),
-                "start_time": credit.start_time.strftime("%H:%M"),
+                "expire_date": f'{expire_jalali_date.strftime("%Y/%m/%d")} {credit.expire_time.strftime("%H:%M")}',
+                "start_date": f'{start_jalali_date.strftime("%Y/%m/%d")} {credit.start_time.strftime("%H:%M")}',
                 "total_price": credit.total_price,
                 "used_price": credit.used_price,
                 "kind": credit.gift_code.gift_code_supplier.name if credit.gift_code else "دستی"

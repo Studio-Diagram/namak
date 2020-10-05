@@ -49,7 +49,7 @@ angular.module("dashboard")
                         key: "created_time"
                     },
                     {
-                        name: "تامین‌کننده",
+                        name: "طرف حساب",
                         key: "supplier"
                     },
                     {
@@ -79,7 +79,7 @@ angular.module("dashboard")
                         key: "created_time"
                     },
                     {
-                        name: "تامین‌کننده",
+                        name: "طرف حساب",
                         key: "supplier"
                     },
                     {
@@ -109,7 +109,7 @@ angular.module("dashboard")
                         key: "created_time"
                     },
                     {
-                        name: "تامین‌کننده",
+                        name: "طرف حساب",
                         key: "supplier"
                     },
                     {
@@ -135,7 +135,7 @@ angular.module("dashboard")
                         key: "created_time"
                     },
                     {
-                        name: "تامین‌کننده",
+                        name: "طرف حساب",
                         key: "supplier"
                     },
                     {

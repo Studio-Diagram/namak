@@ -31,7 +31,7 @@
                                             {{ invoice_purchase_data.settlement_type_name }}
                                         </td>
                                         <td>
-                                            <small>تامین کننده</small>
+                                            <small>طرف حساب</small>
                                             {{ invoice_purchase_data.supplier_name }}
                                         </td>
                                     </tr>
@@ -71,7 +71,7 @@
                                             {{ item.sale_price | number | persianNumber }}
                                         </td>
                                         <td>{{ item.nums | number | persianNumber }}</td>
-                                        <td>{{ item.total | number:fractionSize | persianNumber }}</td>
+                                        <td>{{ item.total | number | persianNumber }}</td>
                                         <td>{{ item.description }}</td>
                                     </tr>
                                     </tbody>
@@ -135,7 +135,7 @@
                          class="row">
                         <div class="col">
                             <ui-select multiple ng-model="report_data.suppliers">
-                                <ui-select-match placeholder="انتخاب تامین‌کننده‌ها">{{ $item.name }}</ui-select-match>
+                                <ui-select-match placeholder="انتخاب طرف حساب‌ها">{{ $item.name }}</ui-select-match>
                                 <ui-select-choices
                                         repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                     <div ng-bind="supplier.name"></div>

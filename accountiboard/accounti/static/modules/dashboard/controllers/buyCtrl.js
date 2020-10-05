@@ -40,7 +40,7 @@ angular.module("dashboard")
                     key: "factor_number"
                 },
                 {
-                    name: "تامین‌کننده",
+                    name: "طرف حساب",
                     key: "supplier_name"
                 },
                 {

@@ -47,14 +47,14 @@
                                                     class="form-control">
                                                 <option value="">نوع مرجوعی را انتخاب کنید...</option>
                                                 <option value="CUSTOMER_TO_CAFE">مشتری به کافه</option>
-                                                <option value="CAFE_TO_SUPPLIER">کافه به تامین‌کننده</option>
+                                                <option value="CAFE_TO_SUPPLIER">کافه به طرف حساب</option>
                                             </select>
                                         </td>
 
                                         <td>
-                                            <small>تامین کننده</small>
+                                            <small>طرف حساب</small>
                                             <ui-select ng-model="new_invoice_return_data.supplier_id">
-                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
+                                                <ui-select-match placeholder="انتخاب طرف حساب">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
                                                         repeat="supplier.id as supplier in suppliers | filter: $select.search">

@@ -12,7 +12,8 @@ angular.module("dashboard")
                 'settle_type': '',
                 'branch_id': $rootScope.user_data.branch,
                 'banking_id': '',
-                'stock_id': ''
+                'stock_id': '',
+                'description': ''
             };
             $scope.search_data_pay = {
                 'search_word': '',
@@ -24,7 +25,7 @@ angular.module("dashboard")
                     key: "factor_number"
                 },
                 {
-                    name: "تامین‌کننده",
+                    name: "طرف حساب",
                     key: "supplier_name"
                 },
                 {
@@ -225,7 +226,8 @@ angular.module("dashboard")
                 'payment_amount': '',
                 'branch_id': $rootScope.user_data.branch,
                 'banking_id': '',
-                'stock_id': ''
+                'stock_id': '',
+                'description': ''
             };
         };
         initialize();
