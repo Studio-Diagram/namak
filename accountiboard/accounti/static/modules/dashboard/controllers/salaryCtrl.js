@@ -71,6 +71,10 @@ angular.module("dashboard")
             };
         };
 
+        $scope.compare_before_exit = function () {
+            return angular.toJson($scope.first_initial_value_of_invoice_salary) === angular.toJson($scope.new_salary_data);
+        };
+
         $scope.change_total_price = function () {
             $scope.new_salary_data.total_price = Number($scope.new_salary_data.base_salary) + Number($scope.new_salary_data.over_time_pay) + Number($scope.new_salary_data.benefits) + Number($scope.new_salary_data.bonuses) - Number($scope.new_salary_data.reduction) - Number($scope.new_salary_data.insurance) - Number($scope.new_salary_data.tax);
         };
@@ -164,6 +168,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.new_salary_data.factor_number = data['next_factor_number'];
+                        $scope.first_initial_value_of_invoice_salary = angular.copy($scope.new_salary_data);
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -237,6 +242,7 @@ angular.module("dashboard")
                         'reduction_description': data['invoice']['reduction_description'],
                         'description': data['invoice']['description'],
                     };
+                    $scope.first_initial_value_of_invoice_salary = angular.copy($scope.new_salary_data);
                     $scope.edit_mode = true;
                     $scope.open_modal('addModal');
                 }, function (error) {

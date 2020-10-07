@@ -8,7 +8,9 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">سند حسابداری</h2>
-                    <a tabindex="0" class="mainButton redButton" role="button"
+                    <a class="mainButton redButton" role="button"
+                       ng-if="compare_before_exit()" ng-click="close_modal('addModal');resetFrom();">خروج</a>
+                    <a tabindex="0" ng-if="!compare_before_exit()" class="mainButton redButton" role="button"
                        data-container="body"
                        data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
                        question="مطمئن هستید؟"
@@ -16,11 +18,11 @@
                        first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom();"
                        second-button-text="خروج و ذخیره"
                        second-callback="addPay()">خروج</a>
-                    <a ng-click="addPay()" href="" class="mainButton greenButton"> ثبت</a>
+                    <a ng-click="addPay()" href="" class="mainButton greenButton"> ذخیره</a>
                     <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
-                       class="mainButton greenButton"> ثبت و جدید</a>
+                       class="mainButton greenButton"> ذخیره و سند جدید</a>
                     <a ng-click="resetFrom()" href="" class="mainButton grayButton">
-                        پاک کردن </a>
+                        پاک کردن صفحه </a>
                 </div>
                 <div class="modal-body">
                     <aside class="rightSideInvoiceSale">

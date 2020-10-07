@@ -1602,11 +1602,15 @@ tr.tableTotal .redText {
 ul.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu.ng-scope {
     display: block;
     text-align: right;
+    margin: 0;
+    border-radius: 0 0 5px 5px;
+    padding-bottom: 0;
 }
 
 .ui-select-match.ng-scope {
     border: thin solid lightgrey;
     border-radius: 7px;
+    background: var(--white);
 }
 
 i.fas.fa-caret-down {
@@ -3205,6 +3209,16 @@ table.newInvoiceSaleTable tbody tr .first a {
     color: #658B3B;
 }
 
+.customStateBox {
+    margin: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.customStateBox p {
+    margin: 0;
+}
+
 .leftSideInvoiceSale .stateAlert {
     margin: 10px 0;
 }
@@ -3409,11 +3423,16 @@ table .badge {
     margin: 22px;
 }
 
+.cafeMenuNav > div > form {
+    margin: 22px;
+}
+
 .generalInfoInvoice {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
     margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .generalInfoInvoice > div {
@@ -3428,4 +3447,94 @@ table .badge {
 #accountingTable tbody > tr:first-child th {
     position: sticky;
     top: 95px;
+}
+
+.invoiceSaleFooter .accountingMoreInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #C6CACF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.flexAuto {
+    flex: 1 0 auto;
+}
+
+.flexFull {
+    flex: 1 0 100%;
+}
+
+.accountingCard {
+    background: var(--white);
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+    padding: 12px;
+}
+
+.accountingCard:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--myBlue);
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span {
+    padding: 7px 20px !important;
+}
+
+.addRowButtonWrapper {
+    background: white;
+    padding: 0.4rem;
+    border: 1px solid var(--pageBorder);
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    margin-bottom: 1rem;
+}
+
+#expenseTable {
+    margin-bottom: 0 !important;
+}
+
+#expenseTable tr:last-child td:last-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#expenseTable tr:last-child td:first-child {
+    border-bottom-right-radius: 0;
+}
+
+.ui-select-container.ui-select-bootstrap.dropdown.disabled > div {
+    background: #eaeff5;
+}
+
+.ui-select-container.ui-select-bootstrap.dropdown.disabled > div > span {
+    background: #eaeff5;
+}
+
+.ui-select-container.ui-select-bootstrap.dropdown.disabled > div > span:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.tagOption {
+    background: var(--myBlue);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: var(--white);
+    margin-left: 5px;
+}
+
+.tagsWrapper {
+    margin: 25px;
+    display: flex;
+}
+
+.tagOption i {
+    cursor: pointer;
+    margin-right: 3px;
+    font-size: 12px;
 }

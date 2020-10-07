@@ -62,6 +62,10 @@ angular.module("dashboard")
 
         };
 
+        $scope.compare_before_exit = function () {
+            return angular.toJson($scope.first_initial_value_of_invoice_pay) === angular.toJson($scope.new_pay_data);
+        };
+
         $scope.set_today_for_invoice = function () {
             jQuery.noConflict();
             (function ($) {
@@ -83,6 +87,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.new_pay_data.factor_number = data['next_factor_number'];
+                        $scope.first_initial_value_of_invoice_pay = angular.copy($scope.new_pay_data);
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');

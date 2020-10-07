@@ -6,23 +6,19 @@ angular.module("dashboard")
                 'id': 0,
                 'factor_number': 0,
                 'supplier_id': 0,
-                'return_products': [
-                    {
-                        'shop_id': '',
-                        'numbers': 0,
-                        'buy_price': 0,
-                        'description': ''
-                    }
-                ],
+                'return_products': [],
                 'date': '',
                 'return_type': '',
                 'branch_id': $rootScope.user_data.branch,
-                'banking_id':'',
-                'stock_id':''
+                'banking_id': '',
+                'stock_id': ''
             };
             $scope.search_data_return = {
                 'search_word': '',
                 'branch_id': $rootScope.user_data.branch,
+            };
+            $scope.search_data_shop_products = {
+                'search_word': ''
             };
             $scope.headers = [
                 {
@@ -67,6 +63,29 @@ angular.module("dashboard")
             $scope.get_stocks_data();
         };
 
+        $scope.add_item_shop = function (shop_product_id, shop_product_name) {
+            var is_added = false;
+            $scope.new_invoice_return_data.return_products.forEach(function (item) {
+                if (item.shop_id === shop_product_id) {
+                    is_added = true;
+                    item.numbers += 1;
+                }
+            });
+            if (!is_added) {
+                $scope.new_invoice_return_data.return_products.push({
+                    shop_id: shop_product_id,
+                    shop_name: shop_product_name,
+                    numbers: 1,
+                    buy_price: 0,
+                    description: ''
+                });
+            }
+        };
+
+        $scope.compare_before_exit = function () {
+            return angular.toJson($scope.first_initial_value_of_invoice_return) === angular.toJson($scope.new_invoice_return_data);
+        };
+
         $scope.delete_product_row = function (product_index) {
             $scope.new_invoice_return_data.return_products.splice(product_index, 1);
         };
@@ -83,6 +102,10 @@ angular.module("dashboard")
             })(jQuery);
         };
 
+        $scope.search_shop_products = function () {
+            $scope.shops = $filter('filter')($scope.shop_products_original, {'name': $scope.search_data_shop_products.search_word});
+        };
+
         $scope.add_new_row_to_return_products = function () {
             $scope.new_invoice_return_data.return_products.push({
                 'shop_id': '',
@@ -97,6 +120,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.shops = data['shop_products'];
+                        $scope.shop_products_original = data['shop_products'];
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -187,6 +211,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.new_invoice_return_data.factor_number = data['next_factor_number'];
+                        $scope.first_initial_value_of_invoice_return = angular.copy($scope.new_invoice_return_data);
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -202,15 +227,15 @@ angular.module("dashboard")
                     $rootScope.is_sub_page_loading = false;
                     $scope.allbanking_names = [];
                     data['bank'].forEach(function (bank) {
-                        $scope.allbanking_names.push({'id':bank.id, 'name':bank.name});
+                        $scope.allbanking_names.push({'id': bank.id, 'name': bank.name});
                     });
 
                     data['tankhah'].forEach(function (tankhah) {
-                        $scope.allbanking_names.push({'id':tankhah.id, 'name':tankhah.name});
+                        $scope.allbanking_names.push({'id': tankhah.id, 'name': tankhah.name});
                     });
 
                     data['cash_register'].forEach(function (cash_register) {
-                        $scope.allbanking_names.push({'id':cash_register.id, 'name':cash_register.name});
+                        $scope.allbanking_names.push({'id': cash_register.id, 'name': cash_register.name});
                     });
 
                 }, function (error) {
@@ -265,8 +290,8 @@ angular.module("dashboard")
                 'date': '',
                 'return_type': '',
                 'branch_id': $rootScope.user_data.branch,
-                'banking_id':'',
-                'stock_id':''
+                'banking_id': '',
+                'stock_id': ''
             };
             $scope.getNextFactorNumber('RETURN');
         };

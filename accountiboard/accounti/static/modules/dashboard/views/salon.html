@@ -93,17 +93,11 @@
                             class="mainButton greenButton">تسویه
                     </button>
 
-                    <button type="button" class="mainButton blueButton dropdown-toggle" data-toggle="dropdown">
-                        <i class="fas fa-angle-down"></i>
-                        چاپ
-                    </button>
-                    <div class="dropdown-menu">
-                        <a ng-disabled="disable_print_after_save_all_buttons"
-                           ng-click="print_after_save(new_invoice_data.invoice_sales_id)" class="dropdown-item"
-                           href="">چاپ سفارش</a>
-                        <a ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
-                           ng-click="print_cash()" class="dropdown-item" href="">چاپ مشتری</a>
-                    </div>
+                    <a ng-disabled="disable_print_after_save_all_buttons"
+                       ng-click="print_after_save(new_invoice_data.invoice_sales_id)" class="mainButton blueButton"
+                       href="">چاپ سفارش</a>
+                    <a ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                       ng-click="print_cash()" class="mainButton blueButton" href="">چاپ فاکتور</a>
 
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()"
                             class="mainButton okrButton">ذخیره
@@ -427,7 +421,7 @@
                                     </div>
 
                                     <button ng-click="start_game()"
-                                            ng-disabled="new_invoice_data.current_game.numbers === 0 || new_invoice_data.current_game.start_time"
+                                            ng-disabled="!new_invoice_data.current_game.numbers || new_invoice_data.current_game.start_time"
                                             href=""
                                             class="mainButton grayButton">شروع زمان بازی
                                     </button>

@@ -7,7 +7,7 @@ angular.module("dashboard")
             };
             $scope.set_today_for_invoice();
             $scope.is_in_edit_mode_supplier = false;
-            $scope.current_menu_nav = "MAT";
+            $scope.current_menu_nav = "MATERIAL";
             $scope.read_only_mode = false;
             $scope.can_add_material = false;
             $scope.can_add_shop_product = false;
@@ -20,7 +20,7 @@ angular.module("dashboard")
                 'material_items': [],
                 'shop_product_items': [],
                 'total_price': 0,
-                'settlement_type': 'CASH',
+                'settlement_type': '',
                 'tax': 0,
                 'discount': 0,
                 'date': '',
@@ -73,6 +73,44 @@ angular.module("dashboard")
             $scope.getNextFactorNumber('BUY');
         };
 
+        $scope.compare_before_exit = function () {
+            return angular.toJson($scope.first_initial_value_of_invoice_purchase) === angular.toJson($scope.new_invoice_purchase_data);
+        };
+
+        $scope.search_materials = function () {
+            $scope.materials = $filter('filter')($scope.materials_original, {'name': $scope.search_data_material.search_word});
+        };
+
+        $scope.search_shop_products = function () {
+            $scope.shop_products = $filter('filter')($scope.shop_products_original, {'name': $scope.search_data_shop_products.search_word});
+        };
+
+        $scope.add_material_check = function () {
+            if ($scope.search_data_material.search_word) {
+                for (var index = 0; index < $scope.materials.length; index++) {
+                    var item = $scope.materials[index];
+                    if (item.name === $scope.search_data_material.search_word) {
+                        return false
+                    }
+                }
+                return true
+            }
+            return false
+        };
+
+        $scope.add_shop_product_check = function () {
+            if ($scope.search_data_shop_products.search_word) {
+                for (var index = 0; index < $scope.shop_products.length; index++) {
+                    var item = $scope.shop_products[index];
+                    if (item.name === $scope.search_data_shop_products.search_word) {
+                        return false
+                    }
+                }
+                return true
+            }
+            return false
+        };
+
         $scope.get_banking_data = function () {
             dashboardHttpRequest.getBankingByBranch($rootScope.user_data.branch)
                 .then(function (data) {
@@ -120,21 +158,12 @@ angular.module("dashboard")
         };
 
         $scope.get_most_items_supplier = function (supplier_id) {
-            var sending_data = {
-                'supplier_id': supplier_id
-            };
-            dashboardHttpRequest.getMostUsedItemsForSupplier(sending_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.favourite_materials = data['materials'];
-                        $scope.favourite_shops = data['shop_products'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $rootScope.show_toast(data.error_msg, 'danger');
-                    }
-                }, function (error) {
-                    $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
-                });
+            for (var index = 0; index < $scope.suppliers.length; index++) {
+                if ($scope.suppliers[index].id === supplier_id) {
+                    $scope.selected_supplier_name = $scope.suppliers[index].name;
+                    break;
+                }
+            }
         };
 
         $scope.set_today_for_invoice = function () {
@@ -214,6 +243,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.new_invoice_purchase_data.factor_number = data['next_factor_number'];
+                        $scope.first_initial_value_of_invoice_purchase = angular.copy($scope.new_invoice_purchase_data);
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -260,7 +290,8 @@ angular.module("dashboard")
             dashboardHttpRequest.getShopProducts($rootScope.user_data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.shop_products = data['shop_products']
+                        $scope.shop_products = data['shop_products'];
+                        $scope.shop_products_original = data['shop_products'];
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -429,6 +460,7 @@ angular.module("dashboard")
                 .then(function (data) {
                     if (data['response_code'] === 2) {
                         $scope.materials = data['materials'];
+                        $scope.materials_original = data['materials'];
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -461,7 +493,6 @@ angular.module("dashboard")
             $scope.search_data_material.search_word = search_word;
         };
 
-
         $scope.add_material_to_data_base_after_search = function (material_name) {
             var sending_data = {
                 'material_name': material_name,
@@ -483,12 +514,6 @@ angular.module("dashboard")
                     $rootScope.show_toast("خطای سرور ( پشتیبانان ما به زودی مشکل را برطرف خواهند کرد )", 'danger');
                 });
         };
-
-        $scope.search_shop_products = function (search_word, items) {
-            $scope.can_add_shop_product = !items.length;
-            $scope.search_data_shop_products.search_word = search_word;
-        };
-
 
         $scope.add_shop_product_to_data_base_after_search = function (shop_product_name) {
             var sending_data = {
@@ -565,7 +590,7 @@ angular.module("dashboard")
                 'material_items': [],
                 'shop_product_items': [],
                 'total_price': 0,
-                'settlement_type': 'CASH',
+                'settlement_type': '',
                 'tax': 0,
                 'discount': 0,
                 'date': '',

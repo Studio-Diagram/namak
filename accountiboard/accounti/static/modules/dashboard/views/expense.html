@@ -1,170 +1,189 @@
 <div ng-controller="expenseCtrl">
-    <div class="modal fade mainModal" id="addModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addModal"
+         tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">فاکتور هزینه </h2>
+                    <h2 class="modalTitle">سند حسابداری</h2>
+                    <a class="mainButton redButton" role="button"
+                       ng-if="compare_before_exit()" ng-click="close_modal('addModal');resetFrom()">خروج</a>
                     <a tabindex="0" class="mainButton redButton" role="button"
                        data-container="body"
                        data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
-                       question="مطمئن هستید؟"
+                       question="مطمئن هستید؟" ng-if="!compare_before_exit()"
                        text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
                        first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom()"
                        second-button-text="خروج و ذخیره"
                        second-callback="addExpense()">خروج</a>
-                    <a ng-hide="read_only_mode" href="" ng-click="addExpense()" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
+                    <a ng-hide="read_only_mode" href="" ng-click="addExpense()" class="mainButton greenButton">ذخیره</a>
                     <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
-                       class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت و جدید</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
-
+                       class="mainButton greenButton"> ذخیره و سند جدید</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton">
+                        پاک کردن صفحه </a>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <table class="invoiceTable">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <small>شماره فاکتور</small>
-                                            <a href=""
-                                               class="">{{ new_invoice_expense_data.factor_number | persianNumber }}</a>
-                                        </td>
-                                        <td>
-                                            <small>تاریخ فاکتور</small>
-                                            <input ng-model="new_invoice_expense_data.date" id="datepicker"
-                                                   class="form-control listFilter tableLefty" placeholder="تاریخ"
-                                                   type="text">
-                                        </td>
-                                        <td>
-                                            <small>نوع پرداخت</small>
-                                            <select ng-model="new_invoice_expense_data.settlement_type"
-                                                    class="form-control">
-                                                <option value="CASH">نقدی</option>
-                                                <option value="CREDIT">اعتباری</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <small>طرف حساب</small>
+                    <aside class="rightSideInvoiceSale">
+                        <div class="nav-group" role="group">
+                            <button class="mainButton active">
+                                <span>هزینه</span>
+                            </button>
+                        </div>
+                        <nav class="nav flex-column cafeMenuNav">
+                            <div>
+                                <form>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>طرف حساب</label>
                                             <ui-select ng-model="new_invoice_expense_data.supplier_id">
-                                                <ui-select-match placeholder="انتخاب طرف حساب">
+                                                <ui-select-match placeholder="جستجو">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
                                                         repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
-                                        </td>
-                                        <td>
-                                            <small>دسته‌بندی</small>
+                                        </div>
+                                        <div class="col">
+                                            <label>دسته‌بندی</label>
                                             <select ng-model="new_invoice_expense_data.expense_kind"
                                                     class="form-control">
+                                                <option value="">انتخاب کنید</option>
                                                 <option value="JARI_MASRAFI">جاری مصرفی</option>
                                                 <option value="JARI_NOT_MASRAFI">جاری غیر مصرفی</option>
                                                 <option value="NOT_JARI_MASRAFI">غیر جاری مصرفی</option>
                                                 <option value="NOT_JARI_NOT_MASRAFI">غیر جاری غیر مصرفی</option>
                                             </select>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <small> تگ‌های هزینه <i class="fa fa-question-circle"
-                                                                    title="با زدن اینتر تگ‌های جدید خود را بسازید."
-                                                                    data-toggle="tooltip" tooltip></i></small>
-                                            <tags-input ng-model="tags" display-property="name"
-                                                        placeholder="تگ خود را اضافه کنید."
-                                                        replace-spaces-with-dashes="false"
-                                                        add-on-comma="false">
-                                                <auto-complete source="loadTags($query)"
-                                                               min-length="0"
-                                                               load-on-focus="true"
-                                                               load-on-empty="true"
-                                                               max-results-to-show="32"></auto-complete>
-                                            </tags-input>
-                                        </td>
-
-                                        <td ng-hide="true">
-                                            <small>حساب بانکی</small>
-                                            <select ng-model="new_invoice_expense_data.banking_id"
-                                                    class="form-control"
-                                                    ng-options="banking.id as banking.name for banking in allbanking_names">
-                                            </select>
-                                        </td>
-
-                                        <td ng-hide="true">
-                                            <small>انبار</small>
-                                            <select ng-model="new_invoice_expense_data.stock_id"
-                                                    class="form-control"
-                                                    ng-options="stock.id as stock.name for stock in stocks">
-                                            </select>
-                                        </td>
-
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable invoiceItem">
-                                    <tbody>
-                                    <tr>
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <th class="first">#</th>
-                                        <th style="width: 30%" class="second">عنوان</th>
-                                        <th class="fifth">قیمت کل</th>
-                                        <th style="width: 25%;" class="sixth">توضیحات</th>
-                                    </tr>
-                                    <tr ng-repeat="service in new_invoice_expense_data.services">
-                                        <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
-                                                class="fas fa-trash"></i></a></th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td><input class="form-control" type="text"
-                                                   ng-model="service.service_name"></td>
-                                        <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
-                                                   class="form-control" type="text"
-                                                   ng-model="service.price" format></td>
-                                        <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="service.description"></td>
-                                    </tr>
-
-                                    </tbody>
-                                </table>
-                                <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton"><i
-                                        class="fas fa-eraser"></i>
-                                    اضافه کردن سطر جدید</a>
-                                <table class="invoiceTable invoiceTotal">
-                                    <tbody>
-                                    <tr>
-                                        <th>تخفیف</th>
-                                        <td><input ng-model="new_invoice_expense_data.discount" type="text"
-                                                   class="form-control"
-                                                   aria-label="" ng-change="change_total_price()" format>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>مالیات</th>
-                                        <td><input ng-model="new_invoice_expense_data.tax" type="text"
-                                                   class="form-control"
-                                                   aria-label="" ng-change="change_total_price()" format>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>جمع کل</th>
-                                        <td>
-                                            {{ new_invoice_expense_data.total_price | number | persianNumber }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </main>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div ng-if="new_invoice_expense_data.expense_tags.length" class="tagsWrapper">
+                                    <span class="tagOption" ng-repeat="tag in new_invoice_expense_data.expense_tags">
+                                        {{ tag.name }}
+                                        <i ng-click="delete_tag($index)" class="fas fa-times"></i>
+                                    </span>
+                                </div>
+                                <div class="searchProductWrapper">
+                                    <label>جستجو / افزودن تگ ( با زدن اینتر تگ اضافه می‌شود )</label>
+                                    <input ng-keyup="search_tags()" ng-enter="add_tag_after_enter()"
+                                           ng-model="search_data_tags.search_word"
+                                           class="form-control listFilter" type="text"
+                                           placeholder="نام تگ">
+                                </div>
+                                <div class="productsWrapper">
+                                    <div class="accountingCard" ng-repeat="tag in expense_tags"
+                                         ng-click="add_tag(tag.id, tag.name)">
+                                        <span ng-bind="tag.name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </aside>
+                    <aside class="leftSideInvoiceSale">
+                        <div class="generalInfoInvoice">
+                            <div>
+                                <label>تاریخ</label>
+                                <input ng-model="new_invoice_expense_data.date" id="datepicker"
+                                       class="form-control" placeholder="تاریخ" type="text">
+                            </div>
+                            <div>
+                                <label>طرف حساب</label>
+                                <input class="form-control customReadonly requiredField" type="text"
+                                       ng-model="new_invoice_expense_data.supplier_id" readonly>
+                            </div>
+                            <div>
+                                <label>شماره فاکتور</label>
+                                <input class="form-control iranian-number" type="text"
+                                       ng-model="new_invoice_expense_data.factor_number" disabled>
+                            </div>
                         </div>
-                    </div>
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="expenseTable">
+                            <tbody>
+                            <tr>
+                                <th></th>
+                                <th>عنوان</th>
+                                <th>قیمت کل</th>
+                                <th>توضیحات</th>
+                            </tr>
+                            <tr ng-repeat="service in new_invoice_expense_data.services">
+                                <td class="first">
+                                    <a ng-click="deleteNewItem($index)" style="cursor: pointer">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                                <td><input class="form-control" type="text"
+                                           ng-model="service.service_name"></td>
+                                <td><input ng-change="change_total_price()" style="font-family: 'B Yekan'"
+                                           class="form-control" type="text"
+                                           ng-model="service.price" format></td>
+                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                           ng-model="service.description"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="addRowButtonWrapper">
+                            <a ng-click="add_new_row_to_services()" href="" class="mainButton grayButton smallButton">
+                                افزودن سطر جدید</a>
+                        </div>
+                        <div class="invoiceSaleFooter">
+                            <div class="accountingMoreInfo">
+                                <div class="flexAuto">
+                                    <small>نوع پرداخت</small>
+                                    <select ng-model="new_invoice_expense_data.settlement_type"
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option value="CASH">نقدی</option>
+                                        <option value="CREDIT">اعتباری</option>
+                                    </select>
+                                </div>
+                                <div class="flexAuto">
+                                    <small>حساب بانکی</small>
+                                    <select ng-disabled="!new_invoice_expense_data.settlement_type || new_invoice_expense_data.settlement_type === 'CREDIT'"
+                                            ng-model="new_invoice_expense_data.banking_id"
+                                            class="form-control customSelect"
+                                            ng-options="banking.id as banking.name for banking in allbanking_names">
+                                    </select>
+
+                                </div>
+                                <div class="flexFull">
+                                    <small>انبار</small>
+                                    <select ng-disabled="!new_invoice_expense_data.settlement_type"
+                                            ng-model="new_invoice_expense_data.stock_id"
+                                            class="form-control customSelect"
+                                            ng-options="stock.id as stock.name for stock in stocks">
+                                    </select>
+                                </div>
+                            </div>
+                            <table class="invoiceTable invoiceSaleFooterTable">
+                                <tbody>
+                                <tr>
+                                    <th>تخفیف</th>
+                                    <td><input ng-disabled="read_only_mode"
+                                               ng-model="new_invoice_expense_data.discount" type="text"
+                                               class="form-control iranian-number"
+                                               aria-label="" ng-change="change_total_price()" format>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>مالیات</th>
+                                    <td><input ng-disabled="read_only_mode"
+                                               ng-model="new_invoice_expense_data.tax"
+                                               type="text"
+                                               class="form-control iranian-number"
+                                               aria-label="" ng-change="change_total_price()" format>
+                                    </td>
+                                </tr>
+                                <tr class="totalPriceRow">
+                                    <th>جمع کل</th>
+                                    <td class="priceField">
+                                        {{ new_invoice_expense_data.total_price | number | persianNumber }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>
