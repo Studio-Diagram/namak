@@ -1,0 +1,1404 @@
+:root {
+    --navbarBlack: #2B2D32;
+    --white: #FFFFFF;
+    --namakBlue: #4FCAD5;
+    --namakBlueBorder: #35BBCC;
+    --namakGrey: #707070;
+    --textBlack: #2B2D32;
+    --namakOkr: #E8CE6B;
+    --namakBackground: #eaeff5;
+    --myBlack: #2B2D32;
+    --myBlackBorder: #5D616B;
+    --myRed: #DB4D54;
+    --myRedBorder: #CE4249;
+    --myGreen: #80AB51;
+    --myGreenBorder: #658B3B;
+    --myYellow: #E7C764;
+    --myYellowBorder: #CCA835;
+    --myBlue: #35BBCC;
+    --myBlueBorder: #289FAE;
+    --myGray: #f4f5f8;
+    --myGrayBorder: darkgray;
+    --pageBorder: #d8d8d8;
+    --pageBG: #f4f5f8;
+    --pageBGHover: #e8e9ef;
+    --navBarLine: #4FCAD5;
+    --buttonNavBorder: #959699;
+    --mainBody: #eaeff5;
+    --okr: #c7af2a;
+    --okrBoarder: #B29E2D;
+    --newGray: #E2E7ED;
+    --newGrayBorder: #C6CACF;
+    --grayButtonBorder: #D8D8D8;
+    --navBarLineHover: #3DA7B1;
+    --oilBlueBorder: #4AA5AD;
+    --newYellow: #E8CE6B;
+    --newYellowBorder: #CCB24D;
+}
+
+body {
+    direction: rtl;
+    font-family: IRANSansWeb;
+    font-size: 13px;
+    text-align: right;
+    overflow-x: hidden;
+    background: var(--namakBackground);
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--textBlack);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--textBlack);
+}
+
+p {
+    font-size: 16px;
+    color: var(--textBlack);
+}
+
+button {
+    font-size: 16px !important;
+    font-weight: 300 !important;
+    border-radius: 10px !important;
+}
+
+.navbarBackground {
+    background-color: var(--navbarBlack);
+}
+
+.navbarCustomToggler {
+    border: none;
+    color: var(--white);
+}
+
+.navbarCustomToggler i {
+    color: var(--white);
+}
+
+.customNavbarNav {
+    padding-right: 0;
+}
+
+.notchHolder {
+    position: relative;
+    background: url('/static/img/landing/notch@mobile.png') no-repeat;
+    width: 140px;
+    height: 25px;
+}
+
+.notchHolder img {
+    position: absolute;
+    top: -30px;
+    right: 40px;
+}
+
+.navbarNamak {
+    height: 56px;
+    border-top: 10px solid var(--namakBlue);
+}
+
+.mainSection h1 {
+    text-align: center;
+}
+
+.mainSection .subTitle {
+    color: var(--namakGrey);
+    text-align: center;
+    font-weight: 300;
+}
+
+.namakList {
+    list-style: inside;
+    padding-right: 0;
+}
+
+.namakList li {
+    color: var(--textBlack);
+    font-weight: 300;
+}
+
+.namakList li::marker {
+    color: var(--namakOkr) !important;
+    font-size: 13px;
+}
+
+.backgroundWrapper {
+    background: var(--white);
+    border-radius: 45px;
+    padding: 0.7rem 2rem;
+
+}
+
+.mainSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mainSection > div {
+    text-align: center;
+}
+
+.namakBigButton {
+    height: 50px;
+}
+
+.namakBlueButton {
+    background: var(--namakBlue);
+    border-color: var(--namakBlueBorder);
+    color: var(--white);
+}
+
+.mainSection .namakBlueButton {
+    width: 185px;
+}
+
+section.proper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 75px;
+    text-align: center;
+}
+
+section.proper .textWrapper {
+    text-align: center;
+    margin: 1rem;
+}
+
+section.proper .textWrapper h2 {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 14px;
+}
+
+section.proper .textWrapper p {
+    font-size: 12px;
+    color: var(--namakGrey);
+    font-weight: 300;
+}
+
+section.features {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4rem;
+}
+
+section.features .buttonsWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    margin-top: 50px;
+}
+
+section.features .buttonsWrapper a {
+    background: var(--white);
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    height: 40px;
+    color: var(--namakGrey);
+    font-weight: 400 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section.features .buttonsWrapper a > i {
+    margin-left: 3px;
+}
+
+section.features .buttonsWrapper a.active {
+    background: var(--namakBlue);
+    color: var(--white);
+}
+
+.namakFeaturesTabContentWrapper > .tab-pane > div {
+    background: var(--white);
+    border-radius: 10px;
+    margin-top: 1rem;
+    padding: 23px;
+    height: 390px;
+}
+
+.namakFeaturesTabContentWrapper > .tab-pane > img {
+    position: relative;
+    margin-top: -280px;
+}
+
+.namakFeaturesTabContentWrapper > .tab-pane > div h3 {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 14px;
+}
+
+.namakFeaturesTabContentWrapper > .tab-pane > div h3 > i {
+    margin-left: 5px;
+}
+
+.namakFeaturesTabContentWrapper > .tab-pane > div p {
+    font-size: 12px;
+    color: var(--namakGrey);
+    line-height: 20px;
+    text-align: justify;
+}
+
+section.whyNamak {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 120px;
+}
+
+.whyNamakCard {
+    background: var(--white);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: justify;
+    padding: 25px 25px 10px 25px;
+    margin: 3rem 1rem 1rem 1rem;
+}
+
+.whyNamakCard img {
+    margin-top: -70px;
+}
+
+.whyNamakCard h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--namakGrey);
+}
+
+.whyNamakCard p {
+    font-size: 12px;
+    color: var(--namakGrey);
+}
+
+.nav-tabs {
+    border-bottom: none !important;
+}
+
+section.education,
+section.testimonials {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 75px;
+    text-align: center;
+}
+
+section.education > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 1rem;
+}
+
+section.testimonials > div {
+    display: flex;
+}
+
+section.education > div img {
+    flex: 0 1 70%;
+}
+
+section.education > div p {
+    flex: 0 1 100%;
+}
+
+section.education p,
+section.testimonials p {
+    font-size: 14px;
+    font-weight: 300;
+    text-align: justify;
+    margin-top: 2rem;
+    color: var(--namakGrey);
+    line-height: 2rem;
+}
+
+section.testimonials > div {
+    flex-direction: column;
+    margin: 2rem 1rem;
+}
+
+section.testimonials > div > div img {
+    width: 60%;
+    margin: auto;
+}
+
+footer.namakFooter {
+    background-color: var(--namakGrey);
+    color: var(--white);
+}
+
+.footerEnd {
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+@media (min-width: 992px) {
+    .navbar-nav.customNavbarNav {
+        margin-right: 6.5rem;
+    }
+}
+
+.desktop {
+    display: none;
+}
+
+section.features .buttonsWrapper a:hover {
+    text-decoration: none;
+}
+
+@media (min-width: 1024px) {
+    .desktop {
+        display: block;
+    }
+
+    .mobile {
+        display: none;
+    }
+
+    .mainSection {
+        flex-direction: row;
+        justify-content: space-around;
+        position: relative;
+    }
+
+    .mainSection h1,
+    .mainSection .subTitle {
+        text-align: right;
+    }
+
+    .backgroundWrapper {
+        background: transparent;
+        padding: 0;
+    }
+
+    .mainSection > div {
+        position: relative;
+        text-align: right;
+    }
+
+    .mainSection > div > img {
+        position: absolute;
+        bottom: 115px;
+        right: -150px;
+        z-index: -1;
+    }
+
+    .mainSection > div > button {
+        margin-top: 30px;
+    }
+
+    .screenShotImage {
+        position: absolute;
+        top: 10%;
+        left: 17%;
+        z-index: 10;
+        width: 45%;
+    }
+
+    .cafeManImage {
+        z-index: 20;
+    }
+
+    section.proper > div {
+        display: flex;
+        flex-direction: row;
+    }
+
+    section.proper .textWrapper {
+        margin: 0 10%;
+    }
+
+    section.features .buttonsWrapper {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    section.features .buttonsWrapper a {
+        width: 100%;
+        height: 117px;
+        display: flex;
+        flex-direction: column;
+        align-items: self-start;
+        padding: 1.2rem;
+    }
+
+    section.features .buttonsWrapper a div {
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    section.features .buttonsWrapper a > span {
+        font-size: 14px;
+        font-weight: 100;
+        margin-right: 1.7rem;
+        margin-top: 0.3rem;
+    }
+
+    .namakFeaturesTabContentWrapper > .tab-pane > div {
+        display: flex;
+        position: relative;
+    }
+
+    .namakFeaturesTabContentWrapper > .tab-pane > div > div {
+        flex: 0 1 40%;
+        margin: 4rem;
+    }
+
+    .namakFeaturesTabContentWrapper > .tab-pane > div > img {
+        position: absolute;
+        top: -50px;
+        left: 0;
+    }
+
+    section.whyNamak > div {
+        display: flex;
+    }
+
+    section.whyNamak > div:first-of-type > .whyNamakCard:first-child {
+        flex: 0 1 71%;
+    }
+
+    section.whyNamak > div:first-of-type > .whyNamakCard:nth-child(2) {
+        flex: 0 1 34%;
+    }
+
+    section.education > div img {
+        flex: 0 1 35%;
+    }
+
+    section.education > div p {
+        flex: 0 1 40%;
+        margin-right: 4rem;
+    }
+
+    section.testimonials > div > div {
+        margin: 2rem;
+
+    }
+
+    section.testimonials > div {
+        flex-direction: row;
+    }
+
+    section.testimonials > div > div img {
+        width: 50%;
+        margin: auto;
+    }
+}
+
+form.generalForm {
+    width: 450px;
+    text-align: center;
+    margin: auto;
+    padding: 25px;
+}
+
+form.generalForm h2 {
+    font-size: 1.4em;
+    margin-bottom: 1em;
+    font-weight: 100;
+}
+
+form.generalForm .form-group input {
+    border-color: var(--grayButtonBorder);
+    height: 3.2em;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+form.generalForm .form-group {
+    margin-bottom: 10px;
+}
+
+form.generalForm .submitButton {
+    background: var(--navBarLine);
+    border: none;
+    margin-bottom: 0;
+    font-size: 1em !important;
+    padding: 0.7em 4em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+form.generalForm .submitButton:hover {
+    background: var(--navBarLineHover);
+}
+
+form.generalForm .referButtonWrapper {
+    margin: 4.5em 0;
+    border-bottom: 1px solid #C6CACF;
+    width: 100%;
+}
+
+form.generalForm .referButtonWrapper span {
+    display: block;
+    background: #eaeff5;
+    font-size: 1em;
+    font-weight: 400;
+    width: 4rem;
+    margin: 0 auto -.9rem;
+    color: #707070;
+}
+
+.forgetPasswordLink {
+    font-size: 0.9em;
+    font-weight: 100;
+    margin-right: 1em;
+    display: flex;
+    align-self: center;
+}
+
+form.generalForm .submitButtonWrapper {
+    display: flex;
+    width: 100%;
+    text-align: right;
+    margin-bottom: 0;
+}
+
+#companyRegistrationForm {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.toast {
+    width: 500px;
+    max-width: 500px;
+    border-radius: 20px !important;
+    display: none;
+}
+
+.toast .toast-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.toast .toast-body > p {
+    flex: 1 0 100%;
+}
+
+.toast.toast-success {
+    background-color: var(--myGreen);
+    color: white;
+}
+
+.mainButton.toast-button {
+    -webkit-border-radius: 30px;
+    height: 2em;
+    padding: 0 1em 0 1em;
+}
+
+.toast-success .toast-button {
+    background-color: white;
+    border-color: transparent;
+    color: var(--myGreen);
+}
+
+.toast.toast-danger {
+    background-color: var(--myRed);
+    color: white;
+}
+
+.toast-danger .toast-button {
+    background-color: var(--white);
+    border-color: transparent;
+    color: var(--myRed);
+}
+
+.mainButton.fullWidthButton.transparentButton:hover {
+    background: #0000000f;
+}
+
+aside.leftAside {
+    background-color: #F4F7FA;
+    position: absolute;
+    top: -30px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--pageBorder);
+}
+
+.leftAside a {
+    padding: 1em 1em 0 0;
+    font-size: 1.5em;
+    display: flex;
+    font-weight: 100;
+    color: var(--myGreen);
+}
+
+.leftAside a span {
+    margin-right: 0.6em;
+}
+
+.leftAside a:hover {
+
+}
+
+.leftAside a:hover i {
+
+}
+
+.verticalButton {
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+#rightSidebarPageContentWrapper {
+    width: 250px;
+    min-width: 250px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#mainPageContentWrapper {
+    width: calc(100vw - 310px);
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#leftSidebarWrapper {
+    width: 60px;
+    display: flex;
+    position: relative;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#dashboardWrapper {
+    padding: 0;
+    display: flex;
+    height: calc(100vh - 77px);
+}
+
+#leftSidebarWrapper.collapseComplete {
+    width: 400px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all all 0.3s ease-in-out;
+    -ms-transition: all all 0.3s ease-in-out;
+    -o-transition: all all 0.3s ease-in-out;
+    transition: all all 0.3s ease-in-out;
+}
+
+#rightSidebarPageContentWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#leftSidebarWrapper.collapseComplete .leftSideTitle span {
+    display: block;
+}
+
+#rightSidebarPageContentWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftSidebarWrapper .leftSideTitle span {
+    display: none;
+}
+
+#leftAsideBugReportForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete #leftAsideBugReportForm {
+    margin: 1.7em;
+    visibility: visible;
+    animation: showElement 0s 0.3s forwards;
+    display: block;
+}
+
+.newsWrapper {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete .newsWrapper {
+    margin: 1.7em;
+    visibility: visible;
+    display: block;
+    animation: showElement 0s 0.3s forwards;
+}
+
+.newsWrapper .news p {
+    text-align: justify;
+}
+
+.newsWrapper .news {
+    border-bottom: 1px solid var(--grayButtonBorder);
+    margin-top: 2em;
+}
+
+#leftSidebarWrapper.collapseComplete a {
+    color: var(--myGreen);
+    font-size: 1.5em;
+}
+
+#leftSidebarWrapper i {
+    margin-top: 3px;
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    display: none;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-left {
+    display: block;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0 -10px 10px 10px;
+    background: var(--myBlack);
+    color: white;
+}
+
+#leftSidebarWrapper.collapseComplete i.fa-angle-double-right {
+    display: none;
+}
+
+#leftSidebarWrapper i.fa-angle-double-left {
+    margin-bottom: 0.6em;
+}
+
+#leftSidebarWrapper i.fa-angle-double-right {
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-right: -10px;
+    background: var(--myBlack);
+    color: white;
+}
+
+@keyframes showElement {
+    to {
+        opacity: 1;
+    }
+}
+
+#leftAsideBugReportForm textarea {
+    font-size: 1em;
+    font-weight: 100;
+}
+
+#personalRegistrationForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#phoneVerifyRegistrationForm {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+.showForm {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+a.mainButton {
+    display: inline-block;
+    text-align: center;
+    padding: 9px 15px;
+    color: white;
+    font-size: 1em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+a.mainButton:hover {
+
+}
+
+a.mainButton i {
+    color: white;
+}
+
+a.greenButton {
+    background: var(--myGreen);
+    border-color: var(--myGreenBorder);
+}
+
+a.greenButton:hover {
+    background: var(--myGreenBorder);
+    color: white;
+}
+
+button.greenButton {
+    background: var(--myGreen);
+    border-color: var(--myGreenBorder) !important;
+}
+
+button.greenButton:hover {
+    background: var(--myGreenBorder);
+    color: white;
+    cursor: pointer;
+}
+
+a.redButton {
+    background: var(--myRed);
+    border-color: var(--myRedBorder);
+}
+
+a.redButton:hover {
+    background: var(--myRedBorder);
+    color: white;
+}
+
+button.redButton {
+    background: var(--myRed);
+    border-color: var(--myRedBorder);
+}
+
+button.redButton:hover {
+    background: var(--myRedBorder);
+    color: white;
+    cursor: pointer;
+}
+
+a.whiteButton {
+    background: white;
+    color: var(--myBlack);
+    border-color: var(--myBlueBorder);
+}
+
+a.whiteButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+}
+
+a.yellowButton {
+    background: var(--myYellow);
+    border-color: var(--myYellowBorder);
+}
+
+a.yellowButton:hover {
+    background: var(--myYellowBorder);
+    color: white;
+}
+
+button.yellowButton {
+    background: var(--myYellow);
+    border-color: var(--myYellowBorder);
+}
+
+button.yellowButton:hover {
+    background: var(--myYellowBorder);
+    color: white;
+    cursor: pointer;
+}
+
+button.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+button.okrButton:hover {
+    background: var(--okrBoarder);
+    color: white;
+    cursor: pointer;
+}
+
+a.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+a.okrButton:hover {
+    background: var(--okrBoarder);
+    color: white;
+    cursor: pointer;
+}
+
+a.newYellowButton {
+    background: var(--newYellow);
+    border-color: var(--newYellowBorder);
+    color: var(--white);
+    font-size: 1em;
+    padding: 0.7em 4em;
+}
+
+a.newYellowButton:hover {
+    background: var(--newYellowBorder);
+    color: white;
+    cursor: pointer;
+}
+
+a.blueButton {
+    background: var(--myBlue);
+    border-color: var(--myBlueBorder) !important;
+}
+
+a.blueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+}
+
+button.blueButton {
+    background: var(--myBlue);
+    border-color: var(--myBlueBorder) !important;
+}
+
+button.blueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+button.oilBlueButton {
+    background-color: var(--navBarLine);
+    border-color: var(--oilBlueBorder) !important;
+    color: white;
+}
+
+button.oilBlueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+a.oilBlueButton {
+    background-color: var(--navBarLine);
+    border-color: var(--oilBlueBorder);
+    color: white;
+}
+
+a.oilBlueButton:hover {
+    background: var(--myBlueBorder);
+    color: white;
+    cursor: pointer;
+}
+
+button.blackButton {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+}
+
+button.blackButton:hover {
+    background: var(--myBlackBorder);
+    color: white;
+}
+
+a.blackButton {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+}
+
+a.blackButton:hover {
+    background: var(--myBlackBorder);
+    color: white;
+}
+
+select.blackSelect {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+    color: white;
+}
+
+select.blackSelect:focus {
+    background: var(--myBlack);
+    border-color: var(--myBlackBorder);
+    color: white;
+    box-shadow: none;
+}
+
+select.blackSelect:hover {
+    background: var(--myBlackBorder);
+    cursor: pointer;
+}
+
+a.grayButton {
+    color: var(--myBlack);
+    background: var(--myGray);
+    border-color: var(--myGrayBorder);
+}
+
+a.grayButton i {
+    color: var(--myBlack);
+}
+
+a.grayButton:hover {
+    border-color: var(--myBlack);
+}
+
+input::placeholder {
+    font-weight: 100;
+    color: var(--myGrayBorder);
+    font-size: .8em;
+    font-family: FontAwesome, IRANSans, Tahoma, Serif;
+}
+
+.input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group > .input-group-append:last-child > .input-group-text:not(:last-child), .input-group > .input-group-append:not(:last-child) > .btn, .input-group > .input-group-append:not(:last-child) > .input-group-text, .input-group > .input-group-prepend > .btn, .input-group > .input-group-prepend > .input-group-text {
+    border-radius: 0;
+
+}
+
+.input-group > .custom-select:not(:first-child), .input-group > .form-control:not(:first-child) {
+    border-radius: 0;
+}
+
+i {
+    vertical-align: baseline;
+}
+
+a {
+    color: var(--myBlack);
+}
+
+a:hover {
+    color: var(--myBlack);
+    text-decoration: none;
+
+}
+
+a:hover i {
+    color: var(--myRed);
+}
+
+.topHeader {
+    padding: 5px 30px;
+    background: var(--myBlack);
+    height: 47px;
+    border-top: 5px solid var(--navBarLine);
+}
+
+.topHeaderSignin {
+    height: 85px;
+    border-top: 12px solid var(--navBarLine);
+    background: var(--myBlack);
+}
+
+.topHeader .userInfo {
+    padding: 0;
+}
+
+.topHeader .userInfo span {
+    color: white;
+    padding-left: 30px;
+    font-size: 1.2em;
+    font-weight: 100;
+}
+
+.topHeader .user-actions-nav {
+    margin-left: 20px;
+}
+
+main.pageWrapper {
+    padding: 0;
+}
+
+.pageSubMenu {
+    border-bottom: 1px solid var(--pageBorder);
+
+}
+
+.pageSubMenu a {
+    font-size: 1.1em;
+    font-weight: 200;
+}
+
+.pageSubMenu a.active {
+    color: var(--myRed);
+    border-bottom: 3px solid var(--myRed);
+    font-weight: 400;
+}
+
+.pageSubMenu a:hover {
+
+    font-weight: 400;
+}
+
+main a.bigLogo {
+    width: 15em;
+    display: block;
+    margin: auto;
+}
+
+a.smallLink {
+    color: var(--myBlack);
+    font-style: italic;
+    font-weight: 100;
+}
+
+aside.mainAside {
+    padding: 0;
+    padding-left: 25px;
+    height: calc(100vh - 85px);
+}
+
+form.generalForm {
+    width: 450px;
+    text-align: center;
+    margin: auto;
+    padding: 25px;
+}
+
+form.generalForm h2 {
+    font-size: 1.4em;
+    margin-bottom: 1em;
+    font-weight: 100;
+}
+
+form.generalForm .form-group input {
+    border-color: var(--grayButtonBorder);
+    height: 3.2em;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+form.generalForm .form-group {
+    margin-bottom: 10px;
+}
+
+form.generalForm .submitButton {
+    background: var(--navBarLine);
+    border: none;
+    margin-bottom: 0;
+    font-size: 1em;
+    padding: 0.7em 4em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+form.generalForm .submitButton:hover {
+    background: var(--navBarLineHover);
+}
+
+form.generalForm .referButtonWrapper {
+    margin: 4.5em 0;
+    border-bottom: 1px solid #C6CACF;
+    width: 100%;
+}
+
+form.generalForm .referButtonWrapper span {
+    display: block;
+    background: #eaeff5;
+    font-size: 1em;
+    font-weight: 400;
+    width: 4rem;
+    margin: 0 auto -.9rem;
+    color: #707070;
+}
+
+.forgetPasswordLink {
+    font-size: 0.9em;
+    font-weight: 100;
+    margin-right: 1em;
+    display: flex;
+    align-self: center;
+}
+
+form.generalForm .submitButtonWrapper {
+    display: flex;
+    width: 100%;
+    text-align: right;
+    margin-bottom: 0;
+}
+
+.mainAside nav {
+
+}
+
+.mainAside nav ul {
+    padding: 0;
+}
+
+.mainAside nav ul li {
+    list-style-type: none;
+    margin-bottom: 3px;
+}
+
+.mainAside nav ul li a {
+    padding: 15px 0;
+    padding-right: 30px;
+    font-size: 1em;
+    display: block;
+    font-weight: 100;
+}
+
+.mainAside nav ul li a:hover {
+    background: var(--white);
+    font-weight: 400;
+    -webkit-border-radius: 30px 0 0 30px;
+    -moz-border-radius: 30px 0 0 30px;
+    border-radius: 30px 0 0 30px;
+}
+
+.mainAside nav ul li a:hover i {
+    color: var(--okr) !important;
+}
+
+.mainAside nav ul li a.active {
+    border-right: 5px solid var(--okr);
+    background: var(--white);
+    font-weight: 400;
+    -webkit-border-radius: 30px 0 0 30px;
+    -moz-border-radius: 30px 0 0 30px;
+    border-radius: 30px 0 0 30px;
+}
+
+.mainAside nav ul li a.active i {
+    color: var(--okr);
+}
+
+.mainAside nav ul li a i {
+    padding-left: 25px;
+    font-size: 1.1em;
+}
+
+main.pageContent {
+    padding: 15px 0 0 15px;
+    margin: 0 0 0 15px;
+    overflow: auto;
+    width: 100%;
+    height: calc(100vh - 118px);
+}
+
+main.pageContent a:hover {
+
+}
+
+main.pageContent a:hover i {
+}
+
+main.pageContent .userPageContent {
+    margin: 0;
+}
+
+.mainpageForms {
+    margin-top: 5rem;
+}
+
+.mainpageForms h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.fullWidthButton {
+    width: 100%;
+}
+
+.alert-dismissible {
+    padding-right: 1rem;
+    text-align: right;
+}
+
+.returnButton {
+    width: 35%;
+    margin-left: 1em;
+    color: #707070 !important;
+    border-color: #C6CACF !important;
+}
+
+.returnButton:hover {
+    background-color: #f1f3f4;
+}
+
+.transparentButton {
+    background-color: transparent !important;
+}
+
+button.mainButton {
+    display: inline-block;
+    text-align: center;
+    padding: 9px 15px;
+    color: white;
+    font-size: 1em !important;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+button.mainButton:disabled {
+    cursor: no-drop !important;
+    color: lightgray;
+}
+
+button.mainButton i {
+    color: white;
+    vertical-align: middle;
+}
+
+.registerDataTable tbody tr td {
+    border-left: none !important;
+    text-align: right;
+    width: 33.333333333%;
+}
+
+.registerDataTable tbody tr:hover {
+    background: transparent;
+}
+
+.registerDataTable tbody tr td .title {
+    color: #A3AAB2;
+}
+
+.registerDataTableWrapper {
+    border: 1px solid #C6CACF;
+    border-radius: 10px;
+    margin: 2em 0;
+}
+
+#changePasswordForgetPassword {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}
+
+#sendVerifyCodeForgetPassword {
+    visibility: hidden;
+    opacity: 0;
+    display: none;
+}

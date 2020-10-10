@@ -51,7 +51,7 @@
         <link href="{% static 'css/fontiran.css' %}" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'fontawesome-free-5.11.2-web/css/all.css' %}">
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'css/style.css' %}" rel="stylesheet" id="bootstrap-css">
+        <link href="{% static 'css/mainpageStyle.css' %}" rel="stylesheet">
         <link href="{% static 'css/bootstrap-clockpicker.css' %}" rel="stylesheet">
     {% endcompress %}
 
@@ -60,18 +60,28 @@
 </head>
 <body ng-app="mainpage">
 
-<nav class="topHeaderSignin navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg navbar-dark navbarBackground navbarNamak">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler navbarCustomToggler" type="button" data-toggle="collapse"
+            data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav customNavbarNav">
+            <li class="nav-item">
+                <a class="nav-link" ui-sref="main.login">ورود</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ui-sref="main.register">ثبت‌نام</a>
+            </li>
+        </ul>
+    </div>
 </nav>
-<a class="notch-holder main-page-notch-holder" href="/">
-    <img src="{% static 'img/namak-logo-big@2x.png' %}" width="100" height="77">
-    <span>
-                <bold>نمک؛</bold>
-                نرم افزار مدیریت کافه
-            </span>
-    <span class="namakVersion">
-                    v1.0.23
-                </span>
-</a>
+<section class="notchHolder">
+    <a ui-sref="main"><img src="https://namak.works/static/img/namak-logo-big%402x.png" width="53.43"
+                           height="41.23"></a>
+</section>
 <ui-view></ui-view>
 <script src="//code.tidio.co/8chliq5j7ywpxiluiaqjm0cthkcjcvsw.js" async></script>
 </body>

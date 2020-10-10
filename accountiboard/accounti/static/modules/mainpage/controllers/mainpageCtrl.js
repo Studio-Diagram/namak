@@ -12,7 +12,6 @@ angular.module("mainpage")
                     }
                 })(jQuery);
             }, 100);
-            $state.go('main.login');
         };
 
         initialize();
