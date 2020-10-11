@@ -1,18 +1,6 @@
 angular.module("mainpage")
     .controller("forgetCtrl", function ($scope, $interval, $rootScope, $filter, $http, $auth, $timeout, $window, mainpageHttpRequest, $state) {
         var initialize = function () {
-            var reCaptcha_showing = $interval(function () {
-                jQuery.noConflict();
-                (function ($) {
-                    var badge_object = $('.grecaptcha-badge');
-                    if (badge_object) {
-                        badge_object.css('visibility', 'visible');
-                        badge_object.css('opacity', '1');
-                        $interval.cancel(reCaptcha_showing);
-                    }
-                })(jQuery);
-            }, 500);
-
             $scope.minutes_counter = 120;
             $scope.resend_verification_enable = false;
             $scope.user_forget_password_data = {
