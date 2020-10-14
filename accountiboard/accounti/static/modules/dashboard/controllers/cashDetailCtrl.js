@@ -127,14 +127,6 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.openPermissionModal = function () {
-            $rootScope.open_modal('closeInvoicePermissionModal', 'submit_cash_today_modal');
-        };
-
-        $scope.closePermissionModal = function () {
-            $rootScope.close_modal('closeInvoicePermissionModal', 'submit_cash_today_modal');
-        };
-
         $scope.close_cash = function () {
             var sending_data = {
                 'night_report_inputs': $scope.night_report_inputs,
@@ -174,7 +166,7 @@ angular.module("dashboard")
 
         $scope.log_out = function () {
             $auth.logout();
-            $window.location.href = '/';
+            $window.location.href = '/login';
         };
 
         $scope.print_night_report = function () {

@@ -11,7 +11,7 @@ angular.module("dashboard")
                     key: "phone"
                 },
                 {
-                    name: "شماره عضویت",
+                    name: "شماره مشتری",
                     key: "card_number"
                 }
             ];

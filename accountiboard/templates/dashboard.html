@@ -136,25 +136,28 @@
     </div>
 </div>
 
-
-<div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
+<div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+     id="userProfileModal" tabindex="-1"
+     role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modalHeader">
-                <h2 class="modalTitle">اطلاعات کاربری</h2>
-                <a class="mainButton redButton closeModal" ng-click="close_modal('userProfileModal')"
-                   aria-label="Close">
-                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                </a>
-                <a ng-click="update_profile()" href="" class="mainButton greenButton"><i
-                        class="fas fa-save"></i> ثبت</a>
-                <a ng-click="change_password()" href="" class="mainButton greenButton"><i
-                        class="fas fa-save"></i> تغییر رمز عبور</a>
+            <div class="modal-header">
+                <div class="tabGroup">
+                    <button ng-click="change_nav_inside_modal('CHANGE_PROFILE')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'CHANGE_PROFILE'}" class="mainButton">
+                        اطلاعات کاربری
+                    </button>
+                    <button ng-click="change_nav_inside_modal('CHANGE_PASSWORD')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'CHANGE_PASSWORD'}"
+                            class="mainButton">
+                        تغییر رمز
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
-                <form>
+                <form ng-if="selected_nav_inside_modal === 'CHANGE_PROFILE'">
                     <div class="row">
                         <div class="col">
                             <label>نام<i class="fas fa-star-of-life"></i></label>
@@ -177,17 +180,17 @@
                             <input ng-model="user_profile_data.home_address" type="text"
                                    class="form-control" placeholder="آدرس">
 
-                            <label>موبایل<i class="fas fa-star-of-life"></i></label>
+                            <label>موبایل</label>
                             <input ng-model="user_profile_data.phone" type="text"
-                                   class="form-control" placeholder="موبایل">
+                                   class="form-control" placeholder="موبایل" disabled>
                         </div>
                     </div>
+                </form>
+                <form ng-if="selected_nav_inside_modal === 'CHANGE_PASSWORD'">
                     <div class="row">
                         <div class="col">
-                            <label> رمز عبور قدیمی <i class="fa fa-question-circle"
-                                                      title="در صورت عدم نیاز به تغییر رمز عبور فیلدهای زیر را خالی بگذارید."
-                                                      data-toggle="tooltip" tooltip></i></label>
-                            <input ng-model="user_profile_data.old_password" type="password"
+                            <label> رمز عبور قدیمی</label>
+                            <input ng-model="user_profile_data.old_password" type="password" autocomplete="new-password"
                                    class="form-control" placeholder="رمز عبور قدیمی">
 
                             <label>رمز عبور جدید</label>
@@ -202,12 +205,18 @@
                 </form>
             </div>
             <div class="modal-footer">
-
+                <a class="mainButton redButton closeModal" ng-click="close_modal('userProfileModal')"
+                   aria-label="Close">
+                    <span aria-hidden="true">خروج</span>
+                </a>
+                <a ng-if="selected_nav_inside_modal === 'CHANGE_PROFILE'" ng-click="update_profile()" href=""
+                   class="mainButton greenButton">ذخیره</a>
+                <a ng-if="selected_nav_inside_modal === 'CHANGE_PASSWORD'" ng-click="change_password()" href=""
+                   class="mainButton greenButton">تغییر رمز</a>
             </div>
         </div>
     </div>
 </div>
-
 
 <div style="position: absolute;bottom: 20px;right: 20px;;z-index: 1080;">
     <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
@@ -294,7 +303,7 @@
                 نرم افزار مدیریت کافه
             </span>
                 <span class="namakVersion">
-                    v1.0.23
+                    v1.1.0
                 </span>
             </a>
             <nav class=" nav flex-column myNav">

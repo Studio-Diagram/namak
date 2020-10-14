@@ -7,7 +7,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">سند حسابداری</h2>
+                    <h2 class="modalTitle">سند حسابداری پرداخت</h2>
                     <a class="mainButton redButton" role="button"
                        ng-if="compare_before_exit()" ng-click="close_modal('addModal');resetFrom();">خروج</a>
                     <a tabindex="0" ng-if="!compare_before_exit()" class="mainButton redButton" role="button"
@@ -36,7 +36,9 @@
                                 <div class="row">
                                     <div class="col">
                                         <label>طرف حساب</label>
-                                        <ui-select ng-model="new_pay_data.supplier_id">
+                                        <ui-select
+                                                ng-change="get_supplier_name_from_id(suppliers, new_pay_data.supplier_id)"
+                                                ng-model="new_pay_data.supplier_id">
                                             <ui-select-match placeholder="جستجو">
                                                 {{$select.selected.name}}</ui-select-match>
                                             <ui-select-choices
@@ -64,8 +66,10 @@
                                                             title="می‌توانید حساب‌های بانکی خود را در بخش مدیریت ببینید و ویرایش کنید."
                                                             data-toggle="tooltip" tooltip></i></label>
                                         <select ng-model="new_pay_data.banking_id"
-                                                class="form-control"
-                                                ng-options="banking.id as banking.name for banking in allbanking_names">
+                                                class="form-control customSelect">
+                                            <option value="">انتخاب کنید</option>
+                                            <option ng-repeat="banking in allbanking_names"
+                                                    ng-value="banking.id">{{ banking.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -102,15 +106,15 @@
                             <div>
                                 <label>طرف حساب</label>
                                 <input class="form-control customReadonly requiredField" type="text"
-                                       ng-model="new_pay_data.supplier_id" readonly>
+                                       ng-model="selected_supplier_name" disabled>
                             </div>
                             <div>
-                                <label>شماره فاکتور</label>
+                                <label>شماره سند</label>
                                 <input class="form-control iranian-number" type="text"
                                        ng-model="new_pay_data.factor_number" disabled>
                             </div>
                         </div>
-                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="accountingTable">
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable">
                             <tbody>
                             <tr>
                                 <th>عنوان</th>
@@ -133,7 +137,7 @@
         <div class="tableButtons">
             <div class="buttonGroup">
                 <a ng-click="open_modal('addModal');set_today_for_invoice();getNextFactorNumber('PAY')" href=""
-                   class="mainButton greenButton">پرداختی
+                   class="mainButton greenButton">سند پرداختی
                     جدید</a>
             </div>
             <div class="buttonGroup">

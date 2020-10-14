@@ -1,5 +1,6 @@
 <div ng-controller="salaryCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addModal"
+    <div data-backdrop="static" data-keyboard="false"
+         class="modal fade mainModal invoiceSaleModal invoiceAccountingModal" id="addModal"
          tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -43,7 +44,9 @@
                                 <div class="row">
                                     <div class="col">
                                         <label>طرف حساب</label>
-                                        <ui-select ng-model="new_salary_data.employee_id">
+                                        <ui-select
+                                                ng-change="get_employee_name_from_id()"
+                                                ng-model="new_salary_data.employee_id">
                                             <ui-select-match placeholder="انتخاب کارمند">
                                                 {{$select.selected.full_name}}</ui-select-match>
                                             <ui-select-choices
@@ -71,8 +74,10 @@
                                                             title="می‌توانید حساب‌های بانکی خود را در بخش مدیریت ببینید و ویرایش کنید."
                                                             data-toggle="tooltip" tooltip></i></label>
                                         <select ng-model="new_salary_data.banking_id"
-                                                class="form-control"
-                                                ng-options="banking.id as banking.name for banking in allbanking_names">
+                                                class="form-control customSelect">
+                                            <option value="">انتخاب کنید</option>
+                                            <option ng-repeat="banking in allbanking_names"
+                                                    ng-value="banking.id">{{ banking.name }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -111,15 +116,15 @@
                             <div>
                                 <label>طرف حساب</label>
                                 <input class="form-control customReadonly requiredField" type="text"
-                                       ng-model="new_pay_data.supplier_id" readonly>
+                                       ng-model="selected_employee_name" disabled>
                             </div>
                             <div>
-                                <label>شماره فاکتور</label>
+                                <label>شماره سند</label>
                                 <input class="form-control iranian-number" type="text"
                                        ng-model="new_salary_data.factor_number" disabled>
                             </div>
                         </div>
-                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="accountingTable">
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
                             <tbody>
                             <tr>
                                 <th>عنوان</th>
@@ -176,6 +181,7 @@
                             </tbody>
                         </table>
                         <div class="invoiceSaleFooter">
+                            <div></div>
                             <table class="invoiceTable invoiceSaleFooterTable">
                                 <tbody>
                                 <tr>

@@ -31,28 +31,28 @@ angular.module("dashboard")
             };
             $scope.headers = [
                 {
-                    name: "شماره فاکتور",
+                    name: "شماره سند",
                     key: "factor_number"
+                },
+                {
+                    name: "تاریخ",
+                    key: "date"
                 },
                 {
                     name: "طرف حساب",
                     key: "supplier_name"
                 },
                 {
-                    name: "دسته‌بندی",
-                    key: "expense_category"
-                },
-                {
                     name: "نوع پرداخت",
                     key: "settlement_type"
                 },
                 {
-                    name: "مبلغ هزینه",
-                    key: "total_price"
+                    name: "دسته‌بندی",
+                    key: "expense_category"
                 },
                 {
-                    name: "تاریخ",
-                    key: "date"
+                    name: "مبلغ",
+                    key: "total_price"
                 }
             ];
             $scope.search_data_tags = {
@@ -327,6 +327,7 @@ angular.module("dashboard")
                 'banking_id': '',
                 'stock_id': ''
             };
+            $rootScope.selected_supplier_name = "";
         };
 
         $scope.change_total_price = function () {

@@ -341,6 +341,7 @@ angular.module("dashboard")
             };
 
             $scope.open_user_profile = function () {
+                $rootScope.change_nav_inside_modal('CHANGE_PROFILE');
                 dashboardHttpRequest.getUserProfile()
                     .then(function (data) {
                         $scope.user_profile_data = data['_item'];
@@ -427,6 +428,15 @@ angular.module("dashboard")
             $rootScope.changeMenuNav = function (name) {
                 $rootScope.current_menu_nav = name;
             };
+
+            $rootScope.get_supplier_name_from_id = function (suppliers, supplier_id) {
+            for (var index = 0; index < suppliers.length; index++) {
+                if (suppliers[index].id === supplier_id) {
+                    $rootScope.selected_supplier_name = suppliers[index].name;
+                    return suppliers[index].name;
+                }
+            }
+        };
 
             initialize();
 

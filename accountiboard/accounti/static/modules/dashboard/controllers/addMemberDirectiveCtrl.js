@@ -45,6 +45,7 @@ angular.module("dashboard")
             })(jQuery);
 
             $scope.config_clock();
+            $scope.set_today_for_credit();
         };
 
         $scope.config_clock = function () {
@@ -192,6 +193,18 @@ angular.module("dashboard")
                     }
                 }, function (error) {
                 });
+        };
+
+        $scope.set_today_for_credit = function () {
+            jQuery.noConflict();
+            (function ($) {
+                $(document).ready(function () {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    $("#start_credit_date").datepicker();
+                    $('#start_credit_date').datepicker('setDate', today);
+                });
+            })(jQuery);
         };
 
         $scope.reset_member_form = function () {

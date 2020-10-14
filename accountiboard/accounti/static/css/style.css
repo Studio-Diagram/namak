@@ -1644,7 +1644,7 @@ span.badge.badge-pill.badge-white {
     height: 17px;
 }
 
-.tableWrapper span.badge.badge-info {
+.badge.badge-info {
     font-size: 0.85em;
     padding: 0.8em;
     background-color: #E5F7F9;
@@ -1652,7 +1652,7 @@ span.badge.badge-pill.badge-white {
     color: var(--oilBlueBorder);
 }
 
-.tableWrapper span.badge.badge-danger {
+.badge.badge-danger {
     padding: 8px;
     background-color: #F2E4E7;
     color: #DB4E54;
@@ -1664,7 +1664,7 @@ span.badge.badge-pill.badge-white {
     border-radius: 5px;
 }
 
-.tableWrapper span.badge.badge-gray {
+.badge.badge-gray {
     padding: 8px;
     background-color: #EAEFF5;
     color: #999;
@@ -1676,7 +1676,7 @@ span.badge.badge-pill.badge-white {
     border-radius: 5px;
 }
 
-.tableWrapper span.badge.badge-success {
+.badge.badge-success {
     font-size: 12px;
     padding: 8px;
     background-color: #D6E2CD;
@@ -1688,7 +1688,7 @@ span.badge.badge-pill.badge-white {
     border-radius: 5px;
 }
 
-.tableWrapper span.badge.badge-warning {
+.badge.badge-warning {
     font-size: 0.85em;
     padding: 0.8em;
     color: var(--okr);
@@ -1806,6 +1806,8 @@ tags-input .tags .tag-item {
 
 .dashboard-col {
     border-left: 1px solid var(--pageBorder);
+    overflow-y: auto;
+    max-height: calc(100vh - 101px);
 }
 
 .page_button:hover {
@@ -2833,6 +2835,9 @@ a.newGrayButton:hover {
     font-size: 16px;
     border-left: 1px solid var(--white);
     border-bottom: 1px solid var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .menuItemCard:nth-child(3n) {
@@ -2844,28 +2849,52 @@ a.newGrayButton:hover {
     filter: brightness(110%);
 }
 
-.menuItemCard:nth-child(6n+1) {
+.menuItemCard:nth-child(12n+1) {
     background-color: #FAA328;
 }
 
-.menuItemCard:nth-child(6n+2) {
+.menuItemCard:nth-child(12n+2) {
     background-color: #E65F5C;
 }
 
-.menuItemCard:nth-child(6n+3) {
+.menuItemCard:nth-child(12n+3) {
     background-color: #83B692;
 }
 
-.menuItemCard:nth-child(6n+4) {
-    background-color: #E3B528;
+.menuItemCard:nth-child(12n+4) {
+    background-color: #68BAAE;
 }
 
-.menuItemCard:nth-child(6n+5) {
+.menuItemCard:nth-child(12n+5) {
     background-color: #C99EA4;
 }
 
-.menuItemCard:nth-child(6n) {
+.menuItemCard:nth-child(12n+6) {
     background-color: #45425A;
+}
+
+.menuItemCard:nth-child(12n+7) {
+    background-color: #94B0DB;
+}
+
+.menuItemCard:nth-child(12n+8) {
+    background-color: #585B56;
+}
+
+.menuItemCard:nth-child(12n+9) {
+    background-color: #53599A;
+}
+
+.menuItemCard:nth-child(12n+10) {
+    background-color: #84B692;
+}
+
+.menuItemCard:nth-child(12n+11) {
+    background-color: #E3B528;
+}
+
+.menuItemCard:nth-child(12n) {
+    background-color: #E65F5C;
 }
 
 .gameSectionWrapper {
@@ -2876,7 +2905,7 @@ a.newGrayButton:hover {
 
 .startGameInputs {
     display: grid;
-    grid-template-columns: 1fr 1fr 1.4fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 0 10px;
 }
 
@@ -2962,6 +2991,11 @@ table.newInvoiceSaleTable tbody tr .first a {
     font-size: 13px;
 }
 
+table.newInvoiceSaleTable tbody tr .first a:hover, .redTrash {
+    color: var(--myRed) !important;
+    background: #F2E4E7 !important;
+}
+
 .searchMember > div label {
     font-size: 11px;
 }
@@ -2970,7 +3004,7 @@ table.newInvoiceSaleTable tbody tr .first a {
     display: grid;
     grid-template-columns: 1fr 0.3fr;
     align-items: end;
-    padding: 10px 20px 25px 20px;
+    padding: 30px 20px 30px 20px;
     grid-gap: 0 10px;
     border-bottom: 1px solid #C6CACF;
 }
@@ -2983,7 +3017,7 @@ table.newInvoiceSaleTable tbody tr .first a {
     display: grid;
     grid-template-columns: 1fr 0.3fr;
     align-items: end;
-    padding: 10px 20px 25px 20px;
+    padding: 30px 20px 30px 20px;
     grid-gap: 0 10px;
 }
 
@@ -2998,7 +3032,7 @@ table.newInvoiceSaleTable tbody tr .first a {
 }
 
 .addNewMember {
-    padding: 10px 20px 25px 20px;
+    padding: 30px 20px 30px 20px;
     border-bottom: 1px solid #C6CACF;
 }
 
@@ -3537,4 +3571,13 @@ table .badge {
     cursor: pointer;
     margin-right: 3px;
     font-size: 12px;
+}
+
+.invoiceAccountingModal .generalInfoInvoice {
+    margin: 0;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    padding-bottom: 14px;
+    padding-top: 15px;
 }

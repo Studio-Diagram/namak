@@ -19,7 +19,7 @@ angular.module("dashboard")
             $scope.headers = {
                 INVOICE_SALE: [
                     {
-                        name: "شماره فاکتور",
+                        name: "شماره سند",
                         key: "id"
                     },
                     {
@@ -37,7 +37,7 @@ angular.module("dashboard")
                 ],
                 INVOICE_EXPENSE: [
                     {
-                        name: "شماره فاکتور",
+                        name: "شماره سند",
                         key: "id"
                     },
                     {
@@ -67,7 +67,7 @@ angular.module("dashboard")
                 ],
                 INVOICE_PAY: [
                     {
-                        name: "شماره فاکتور",
+                        name: "شماره سند",
                         key: "id"
                     },
                     {
@@ -97,7 +97,7 @@ angular.module("dashboard")
                 ],
                 INVOICE_PURCHASE: [
                     {
-                        name: "شماره فاکتور",
+                        name: "شماره سند",
                         key: "id"
                     },
                     {
@@ -123,7 +123,7 @@ angular.module("dashboard")
                 ],
                 INVOICE_RETURN: [
                     {
-                        name: "شماره فاکتور",
+                        name: "شماره سند",
                         key: "id"
                     },
                     {
@@ -161,7 +161,7 @@ angular.module("dashboard")
                 ],
                 INVOICE_SALARY: [
                     {
-                        name: "شماره فاکتور",
+                        name: "شماره سند",
                         key: "id"
                     },
                     {

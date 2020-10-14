@@ -7,8 +7,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="tabGroup">
-                    <button class="mainButton active">
-جزییات فروش
+                    <button class="mainButton"
+                            ng-click="change_nav_inside_modal('BAR_DETAILS_SALE');get_menu_categories_base_on_kind('BAR');"
+                            ng-class="{'active' : selected_nav_inside_modal === 'BAR_DETAILS_SALE'}">
+                        بار
+                    </button>
+                    <button class="mainButton"
+                            ng-click="change_nav_inside_modal('KITCHEN_DETAILS_SALE');get_menu_categories_base_on_kind('KITCHEN');"
+                            ng-class="{'active' : selected_nav_inside_modal === 'KITCHEN_DETAILS_SALE'}">
+                        آشپزخانه
+                    </button>
+                    <button class="mainButton"
+                            ng-click="change_nav_inside_modal('OTHER_DETAILS_SALE');get_menu_categories_base_on_kind('OTHER');"
+                            ng-class="{'active' : selected_nav_inside_modal === 'OTHER_DETAILS_SALE'}">
+                        سایر
                     </button>
                 </div>
             </div>
@@ -19,10 +31,10 @@
                             <tbody>
                             <tr>
                                 <td>
-                                    <small>فیلتر دسته‌بندی</small>
+                                    <small>دسته‌بندی</small>
                                     <select ng-change="change_detail_sale_category()"
                                             ng-model="sale_detail_category_filter"
-                                            class="form-control">
+                                            class="form-control customSelect">
                                         <option value="">همه</option>
                                         <option ng-repeat="category in detail_categories"
                                                 value="{{ category.id }}">{{ category.name }}</option>
@@ -38,7 +50,6 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th scope="col">#</th>
                                     <th scope="col">نام آیتم</th>
                                     <th scope="col">دسته‌بندی</th>
                                     <th scope="col">تعداد</th>
@@ -46,7 +57,6 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="item in sale_details">
-                                    <td>{{ $index + 1 | persianNumber }}</td>
                                     <td>{{ item.name }}</td>
                                     <td>{{ item.category }}</td>
                                     <td>{{ item.numbers | persianNumber }}</td>
@@ -64,25 +74,6 @@
                    aria-label="Close">
                     <span aria-hidden="true">خروج</span>
                 </a>
-                <a ng-click="openPermissionModal()" href=""
-                   class="mainButton greenButton">ثبت</a>
-            </div>
-        </div>
-    </div>
-</div>
-<div style="height: 119px" class="modal fade mainModal alertModal redAlertModal"
-     id="closeInvoicePermissionModal" data-backdrop="static"
-     data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modalHeader">
-                <h2 class="modalTitle">تایید بستن صندوق</h2>
-                <a ng-click="close_cash()" href="" class="mainButton greenButton"> بله</a>
-                <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-            </div>
-            <div class="modal-body">
-                <p style="margin: 5px 15px 0 0"> آیا اطمینان به بستن صندوق دارید؟ شما به طور خودکار خارج خواهید
-                    شد.</p>
             </div>
         </div>
     </div>
@@ -97,7 +88,7 @@
             <div class="modal-header">
                 <div class="tabGroup">
                     <button class="mainButton active">
-                        اطلاعات صندوق
+                        خلاصه صندوق
                     </button>
                 </div>
             </div>
@@ -108,56 +99,45 @@
                             <table class="invoiceTable">
                                 <tbody>
                                 <tr>
-                                    <td class="small-text">فروش</td>
-                                    <td class="small-text">{{ status.all_sales_price - status.all_discount | number | persianNumber }}
+                                    <td class="small-text">دریافتی خالص</td>
+                                    <td class="small-text">{{ status.all_cash + status.all_pos | number | persianNumber }}
                                         ریال
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="small-text">پوز بانکی</td>
+                                    <td class="small-text">کارت‌خوان</td>
                                     <td class="small-text">{{ status.all_pos | number | persianNumber }} ریال</td>
                                 </tr>
                                 <tr>
-                                    <td class="small-text">گزارش پرداخت</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.outcome_report">
+                                    <td class="small-text">نقد</td>
+                                    <td class="small-text">{{ status.all_cash | number | persianNumber }}
+                                        ریال
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="small-text">بلیط رویداد</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.event_tickets">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">گزارش دریافت</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.income_report">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">انعام</td>
-                                    <td class="small-text">{{ status.all_tip | number | persianNumber }} ریال</td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">پول نقد</td>
+                                    <td class="small-text">موجودی نقد صندوق</td>
                                     <td class="small-text">
                                         <input class="form-control" type="number" min="0"
                                                ng-model="night_report_inputs.current_money_in_cash">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="small-text">صندوق</td>
-                                    <td class="small-text">{{ ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
-                                        ریال
+                                    <td class="small-text">گزارش خروج پول از صندوق</td>
+                                    <td class="small-text">
+                                        <input class="form-control" type="number" min="0"
+                                               ng-model="night_report_inputs.outcome_report">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="small-text">گزارش ورود پول به صندوق</td>
+                                    <td class="small-text">
+                                        <input class="form-control" type="number" min="0"
+                                               ng-model="night_report_inputs.income_report">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="small-text">اختلاف</td>
-                                    <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
+                                    <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
                                         ریال
                                     </td>
                                 </tr>
@@ -173,8 +153,14 @@
                    aria-label="Close">
                     <span aria-hidden="true">خروج</span>
                 </a>
-                <a ng-click="openPermissionModal()" href=""
-                   class="mainButton greenButton">ثبت</a>
+                <a tabindex="0" class="mainButton greenButton" role="button"
+                       data-container="body"
+                       ng-disabled="disable_print_after_save_all_buttons"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="با زدن دکمه بلی این صندوق ذخیره ‌می‌شود و در صورت صورت اتصال پرینتر خلاصه صندوق چاپ می‌شود. همچنین برای جلوگیری از اشتباه شما به صورت خودکار از حساب کاربری خود خارج خواهید شد."
+                       second-button-text="بلی"
+                       second-callback="close_cash()">ذخیره و بستن صندوق</a>
             </div>
         </div>
     </div>
@@ -202,169 +188,169 @@
             <a ng-show="show_submit_today_cash_button" ng-click="open_modal('submit_cash_today_modal')"
                class="addUser mainButton greenButton"
                href=""
-               data-toggle="modal"> ثبت اطلاعات روزانه</a>
-            <a ng-show="show_print_today_cash_button" ng-click="print_night_report()"
-               class="addUser mainButton blueButton ml-3" href=""
-               data-toggle="modal">پرینت گزارش روزانه</a>
+               data-toggle="modal"> ثبت اطلاعات و بستن صندوق</a>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row no-gutters">
-            <div ng-if="display_cash_number" class="col-sm-12">
-                <h3>تاریخ صندوق</h3>
-                <div class="tableWrapper">
-                    <table class="cashTable cashDate">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <h4>تاریخ و زمان باز شدن</h4>
-                                <span>{{ status.cash.start_time | persianNumber }}</span>
-                                <span> - </span>
-                                <span>{{ status.cash.start_date | persianNumber }}</span>
-                            </td>
-                            <td>
-                                <h4>تاریخ و زمان بسته شدن</h4>
-                                <span>{{ status.cash.end_time | persianNumber }}</span>
-                                <span> - </span>
-                                <span>{{ status.cash.end_date | persianNumber }}</span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <h3>گزارش فروش</h3>
-                <div class="tableWrapper">
-                    <table class="cashTable">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <h4><i class="fas fa-cash-register"></i> دریافتی خالص</h4>
-                                <span class="">{{ status.all_sales_price - status.all_discount - status.all_credits + status.all_tax + status.all_tip | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-money-bill"></i> نقد</h4>
-                                <span class="">{{ status.all_cash | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="far fa-credit-card"></i> کارت‌خوان</h4>
-                                <span class="">{{ status.all_pos | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tableWrapper">
-                    <table class="cashTable">
-                        <tbody>
-                        <tr>
-                            <td class="mainValue">
-                                <h4><i class="fas fa-cash-register"></i> کل فروش</h4>
-                                <span class="">{{ status.all_sales_price | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-file-invoice-dollar"></i> مالیات</h4>
-                                <span class="greenText">{{ status.all_tax | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-hand-holding-usd"></i> انعام</h4>
-                                <span class="greenText">{{ status.all_tip | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-file-invoice"></i> تخفیف</h4>
-                                <span class="redText">{{ status.all_discount | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-file-invoice"></i> اعتبار</h4>
-                                <span class="redText">{{ status.all_credits | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <h3>گزارش تفکیکی</h3>
-                <div class="tableWrapper">
-                    <table class="cashTable">
-                        <tbody>
-                        <tr>
-                            <td class="">
-                                <h4><i class="fas fa-coffee"></i> فروش بار</h4>
-                                <span class="">{{ status.all_bar | number | persianNumber }}</span>
-                                <small>ریال</small>
-                                <button ng-click="get_menu_categories_base_on_kind('BAR');"
-                                        class="mainButton smallButton grayButton mt-2">جزییات
-                                </button>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-utensils"></i> فروش آشپزخانه</h4>
-                                <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
-                                <small>ریال</small>
-                                <button ng-click="get_menu_categories_base_on_kind('KITCHEN');"
-                                        class="mainButton smallButton grayButton mt-2">جزییات
-                                </button>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-file-invoice-dollar"></i> فروش سایر</h4>
-                                <span class="">{{ status.all_other | number | persianNumber }}</span>
-                                <small>ریال</small>
-                                <button ng-click="get_menu_categories_base_on_kind('OTHER');"
-                                        class="mainButton smallButton grayButton mt-2">جزییات
-                                </button>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-chess-rook"></i> هزینه بازی</h4>
-                                <span class="">{{ status.all_games | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-chess-rook"></i> فروش فروشگاهی</h4>
-                                <span class="">{{ status.all_sales | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-users"></i> تعداد مهمانان</h4>
-                                <span class="">{{ status.all_guests | persianNumber }}</span>
-                                <small>نفر</small>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tableWrapper">
-                    <table class="cashTable">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <h4><i class="fas fa-shopping-basket"></i> خرید</h4>
-                                <span class="">{{ status.all_purchase | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-hammer"></i> هزینه</h4>
-                                <span class="">{{ status.all_expense | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                            <td>
-                                <h4><i class="fas fa-file-invoice-dollar"></i> پرداختی</h4>
-                                <span class="">{{ status.all_pays | number | persianNumber }}</span>
-                                <small>ریال</small>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <div ng-if="display_cash_number">
+        <h3>تاریخ صندوق</h3>
+        <div class="tableWrapper">
+            <table class="cashTable cashDate">
+                <tbody>
+                <tr>
+                    <td>
+                        <h4>تاریخ و زمان باز شدن</h4>
+                        <span>{{ status.cash.start_time | persianNumber }}</span>
+                        <span> - </span>
+                        <span>{{ status.cash.start_date | persianNumber }}</span>
+                    </td>
+                    <td>
+                        <h4>تاریخ و زمان بسته شدن</h4>
+                        <span>{{ status.cash.end_time | persianNumber }}</span>
+                        <span> - </span>
+                        <span>{{ status.cash.end_date | persianNumber }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <h3>وضعیت صندوق به تفکیک نوع پرداخت</h3>
+        <div class="tableWrapper">
+            <table class="cashTable">
+                <tbody>
+                <tr>
+                    <td>
+                        <h4> نقد</h4>
+                        <span class="">{{ status.all_cash | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> کارت‌خوان</h4>
+                        <span class="">{{ status.all_pos | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> دریافتی خالص ( تسویه شده )</h4>
+                        <span class="">{{ status.all_cash + status.all_pos | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3>جزییات صندوق: اضافات / کسورات</h3>
+        <div class="tableWrapper">
+            <table class="cashTable">
+                <tbody>
+                <tr>
+                    <td class="mainValue">
+                        <h4> کل فروش ( ناخالص )</h4>
+                        <span class="">{{ status.all_sales_price | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> مالیات ( <i style="color: var(--myGreen)" class="fas fa-arrow-up"></i> اضافات )</h4>
+                        <span class="greenText">{{ status.all_tax | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> انعام ( <i style="color: var(--myGreen)" class="fas fa-arrow-up"></i> اضافات )</h4>
+                        <span class="greenText">{{ status.all_tip | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> تخفیف ( <i style="color: var(--myRed)" class="fas fa-arrow-down"></i> کسورات )</h4>
+                        <span class="redText">{{ status.all_discount | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> اعتبار ( <i style="color: var(--myRed)" class="fas fa-arrow-down"></i> کسورات )</h4>
+                        <span class="redText">{{ status.all_credits | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> دریافتی خالص ( تسویه شده / نشده )</h4>
+                        <span class="">{{ status.all_sales_price - status.all_discount - status.all_credits + status.all_tax + status.all_tip | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <h3>گزارش تفکیکی بخش‌های فروش</h3>
+        <div class="tableWrapper">
+            <table class="cashTable">
+                <tbody>
+                <tr>
+                    <td class="">
+                        <h4> فروش بار</h4>
+                        <span class="">{{ status.all_bar | number | persianNumber }}</span>
+                        <small>ریال</small>
+                        <button ng-click="get_menu_categories_base_on_kind('BAR');change_nav_inside_modal('BAR_DETAILS_SALE');"
+                                class="mainButton smallButton grayButton mt-2">جزییات
+                        </button>
+                    </td>
+                    <td>
+                        <h4> فروش آشپزخانه</h4>
+                        <span class="">{{ status.all_kitchen | number | persianNumber }}</span>
+                        <small>ریال</small>
+                        <button ng-click="get_menu_categories_base_on_kind('KITCHEN');change_nav_inside_modal('KITCHEN_DETAILS_SALE');"
+                                class="mainButton smallButton grayButton mt-2">جزییات
+                        </button>
+                    </td>
+                    <td>
+                        <h4> فروش سایر</h4>
+                        <span class="">{{ status.all_other | number | persianNumber }}</span>
+                        <small>ریال</small>
+                        <button ng-click="get_menu_categories_base_on_kind('OTHER');change_nav_inside_modal('OTHER_DETAILS_SALE');"
+                                class="mainButton smallButton grayButton mt-2">جزییات
+                        </button>
+                    </td>
+                    <td>
+                        <h4> هزینه بازی</h4>
+                        <span class="">{{ status.all_games | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> فروش فروشگاهی</h4>
+                        <span class="">{{ status.all_sales | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> تعداد مهمانان</h4>
+                        <span class="">{{ status.all_guests | persianNumber }}</span>
+                        <small>نفر</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3>گزارش تفکیکی اسناد حسابداری</h3>
+        <div class="tableWrapper">
+            <table class="cashTable">
+                <tbody>
+                <tr>
+                    <td>
+                        <h4> خرید</h4>
+                        <span class="">{{ status.all_purchase | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> هزینه</h4>
+                        <span class="">{{ status.all_expense | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                    <td>
+                        <h4> پرداختی</h4>
+                        <span class="">{{ status.all_pays | number | persianNumber }}</span>
+                        <small>ریال</small>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </main>

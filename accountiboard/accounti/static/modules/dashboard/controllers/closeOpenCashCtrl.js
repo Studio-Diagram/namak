@@ -4,65 +4,6 @@ angular.module("dashboard")
             $scope.get_all_cashes();
         };
 
-        $scope.log_out = function () {
-            dashboardHttpRequest.logOut($rootScope.user_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $window.location.href = '/';
-                        $rootScope.user_data = {
-                            "username": '',
-                            "branch": ''
-                        };
-                    }
-                    else if (data['response_code'] === 3) {
-                        $window.location.href = '/';
-                        $rootScope.user_data = {
-                            "username": '',
-                            "branch": ''
-                        };
-                    }
-                }, function (error) {
-
-                });
-        };
-
-
-        $scope.close_cash = function () {
-            var sending_data = {
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
-            dashboardHttpRequest.closeCash(sending_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.close_cash_offline();
-                        $scope.log_out();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $rootScope.show_toast(data.error_msg, 'danger');
-                    }
-                }, function (error) {
-
-                });
-        };
-
-        $scope.close_cash_offline = function () {
-            var sending_data = {
-                'night_report_inputs': $scope.night_report_inputs,
-                'branch_id': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
-            };
-            offlineAPIHttpRequest.close_cash(sending_data)
-                .then(function (data) {
-                    if (data['response_code'] === 2) {
-
-                    }
-                    else if (data['response_code'] === 3) {
-
-                    }
-                }, function (error) {});
-        };
-
         $scope.get_all_cashes = function () {
             var data = {
                 'branch_id': $rootScope.user_data.branch,
@@ -81,22 +22,6 @@ angular.module("dashboard")
                     $rootScope.is_page_loading = false;
 
                 });
-        };
-
-        $scope.openPermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closePermissionModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#closeInvoicePermissionModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         initialize();

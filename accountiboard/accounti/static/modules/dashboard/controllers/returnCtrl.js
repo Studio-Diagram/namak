@@ -22,8 +22,12 @@ angular.module("dashboard")
             };
             $scope.headers = [
                 {
-                    name: "شماره فاکتور",
+                    name: "شماره سند",
                     key: "factor_number"
+                },
+                {
+                    name: "تاریخ",
+                    key: "date"
                 },
                 {
                     name: "طرف حساب",
@@ -38,16 +42,12 @@ angular.module("dashboard")
                     key: "numbers"
                 },
                 {
-                    name: "قیمت کل",
+                    name: "مبلغ",
                     key: "total_price"
                 },
                 {
                     name: "توضیحات",
                     key: "description"
-                },
-                {
-                    name: "تاریخ",
-                    key: "date"
                 }
             ];
             $scope.table_config = {
@@ -294,6 +294,7 @@ angular.module("dashboard")
                 'stock_id': ''
             };
             $scope.getNextFactorNumber('RETURN');
+            $rootScope.selected_supplier_name = "";
         };
         initialize();
     });

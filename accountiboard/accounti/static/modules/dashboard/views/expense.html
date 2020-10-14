@@ -1,5 +1,6 @@
 <div ng-controller="expenseCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addModal"
+    <div data-backdrop="static" data-keyboard="false"
+         class="modal fade mainModal invoiceSaleModal invoiceAccountingModal" id="addModal"
          tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -37,7 +38,9 @@
                                     <div class="row">
                                         <div class="col">
                                             <label>طرف حساب</label>
-                                            <ui-select ng-model="new_invoice_expense_data.supplier_id">
+                                            <ui-select
+                                                    ng-change="get_supplier_name_from_id(suppliers, new_invoice_expense_data.supplier_id)"
+                                                    ng-model="new_invoice_expense_data.supplier_id">
                                                 <ui-select-match placeholder="جستجو">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
@@ -49,7 +52,7 @@
                                         <div class="col">
                                             <label>دسته‌بندی</label>
                                             <select ng-model="new_invoice_expense_data.expense_kind"
-                                                    class="form-control">
+                                                    class="form-control customSelect">
                                                 <option value="">انتخاب کنید</option>
                                                 <option value="JARI_MASRAFI">جاری مصرفی</option>
                                                 <option value="JARI_NOT_MASRAFI">جاری غیر مصرفی</option>
@@ -91,15 +94,16 @@
                             <div>
                                 <label>طرف حساب</label>
                                 <input class="form-control customReadonly requiredField" type="text"
-                                       ng-model="new_invoice_expense_data.supplier_id" readonly>
+                                       ng-model="selected_supplier_name" disabled>
                             </div>
                             <div>
-                                <label>شماره فاکتور</label>
+                                <label>شماره سند</label>
                                 <input class="form-control iranian-number" type="text"
                                        ng-model="new_invoice_expense_data.factor_number" disabled>
                             </div>
                         </div>
-                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="expenseTable">
+                        <table style="margin-bottom: 0 !important;" class="invoiceTable invoiceItem newInvoiceSaleTable"
+                               id="invoiceSaleTable">
                             <tbody>
                             <tr>
                                 <th></th>
@@ -142,17 +146,20 @@
                                     <small>حساب بانکی</small>
                                     <select ng-disabled="!new_invoice_expense_data.settlement_type || new_invoice_expense_data.settlement_type === 'CREDIT'"
                                             ng-model="new_invoice_expense_data.banking_id"
-                                            class="form-control customSelect"
-                                            ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="banking in allbanking_names"
+                                                ng-value="banking.id">{{ banking.name }}</option>
                                     </select>
-
                                 </div>
                                 <div class="flexFull">
                                     <small>انبار</small>
                                     <select ng-disabled="!new_invoice_expense_data.settlement_type"
                                             ng-model="new_invoice_expense_data.stock_id"
-                                            class="form-control customSelect"
-                                            ng-options="stock.id as stock.name for stock in stocks">
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="stock in stocks"
+                                                ng-value="stock.id">{{ stock.name }}</option>
                                     </select>
                                 </div>
                             </div>

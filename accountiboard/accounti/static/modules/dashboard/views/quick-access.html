@@ -46,7 +46,7 @@
         <div class="row">
             <div class="col-md-5 dashboard-col">
                 <div ng-show="not_order_invoices_data.length"
-                     class="badge badge-pill badge-danger dashboard-badge mb-3">سفارش نداده
+                     class="badge badge-danger mb-3">سفارش نداده
                 </div>
                 <div ng-show="not_order_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div ng-show="wait_game_invoices_data.length"
-                     class="badge badge-pill badge-danger dashboard-badge mb-3">منتظر بازی
+                     class="badge badge-danger mb-3">منتظر بازی
                 </div>
                 <div ng-show="wait_game_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
@@ -86,7 +86,7 @@
                                     <input ng-disabled="new_invoice_data.current_game.start_time"
                                            ng-model="invoice.card_number" type="number"
                                            min="0"
-                                           class="form-control" placeholder="شماره کارت"
+                                           class="form-control" placeholder="شماره مشتری"
                                            aria-label="">
                                 </td>
                                 <td class="align-middle" scope="row" ng-show="invoice.has_member">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <div ng-show="playing_game_invoices_data.length"
-                     class="badge badge-pill badge-info dashboard-badge mb-3">در حال بازی
+                     class="badge badge-info mb-3">در حال بازی
                 </div>
                 <div ng-show="playing_game_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div ng-show="wait_for_settle_invoices_data.length"
-                     class="badge badge-pill badge-warning dashboard-badge mb-3">منتظر تسویه
+                     class="badge badge-warning mb-3">منتظر تسویه
                 </div>
                 <div ng-show="wait_for_settle_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
@@ -146,7 +146,7 @@
                     </div>
                 </div>
                 <div ng-show="end_game_invoices_data.length"
-                     class="badge badge-pill badge-success dashboard-badge mb-3">بازی تمام شده
+                     class="badge badge-success mb-3">بازی تمام شده
                 </div>
                 <div ng-show="end_game_invoices_data.length" class="mb-3">
                     <div class="tableWrapper">
@@ -245,7 +245,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">نام مشتری</th>
-                                <th scope="col">شماره عضویت</th>
+                                <th scope="col">شماره مشتری</th>
                             </tr>
                             </thead>
                             <tbody>

@@ -30,7 +30,7 @@ angular.module("dashboard")
                 'table_id': 0,
                 'table_name': 0,
                 'member_id': 0,
-                'guest_numbers': 0,
+                'guest_numbers': 1,
                 'member_name': '',
                 'member_data': '',
                 'current_game': {
@@ -372,7 +372,7 @@ angular.module("dashboard")
 
         $scope.log_out = function () {
             $auth.logout();
-            $window.location.href = '/';
+            $window.location.href = '/login';
         };
 
         $scope.open_cash = function () {
@@ -1000,10 +1000,6 @@ angular.module("dashboard")
                 });
         };
 
-        $scope.addGuestNums = function (numbers) {
-            $scope.new_invoice_data.guest_numbers = parseInt(numbers);
-        };
-
         $scope.add_item = function (id, name, price) {
             var int_price = parseInt(price);
             var int_id = parseInt(id);
@@ -1046,7 +1042,7 @@ angular.module("dashboard")
         $scope.start_game = function () {
             var now = new Date();
             $scope.new_invoice_data.current_game.start_time = now.getHours() + ":" + now.getMinutes();
-            if ($scope.new_invoice_data.guest_numbers === 0) {
+            if ($scope.new_invoice_data.guest_numbers === 1) {
                 $scope.new_invoice_data.guest_numbers = $scope.new_invoice_data.current_game.numbers;
             }
         };
@@ -1491,7 +1487,7 @@ angular.module("dashboard")
                 'table_id': 0,
                 'table_name': 0,
                 'member_id': 0,
-                'guest_numbers': 0,
+                'guest_numbers': 1,
                 'member_name': '',
                 'member_data': '',
                 'current_game': {

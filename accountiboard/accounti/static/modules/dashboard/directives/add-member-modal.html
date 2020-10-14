@@ -20,7 +20,7 @@
                     <button ng-click="change_nav_inside_modal('MEMBER_SHOW_CREDITS')"
                             ng-class="{'active' : selected_nav_inside_modal === 'MEMBER_SHOW_CREDITS'}"
                             class="mainButton">
-                        لیست اعتبارها
+                        اعتبارها
                     </button>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                                    class="form-control" placeholder="شماره تلفن">
                         </div>
                     </div>
-                    <div class="row align-items-end">
+                    <div class="row align-items-end mb-2">
                         <div class="col-2">
                             <label class="requiredFieldStar">تاریخ تولد</label>
                             <input ng-model="new_member_data.day_of_birth" type="text" aria-label="Last name"
@@ -61,9 +61,9 @@
                                    class="form-control mb-0" placeholder="سال">
                         </div>
                         <div class="col-6">
-                            <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                            <label>نحوه آشنایی با کافه<i class="fas fa-star-of-life"></i></label>
                             <select ng-model="new_member_data.intro" class="form-control customSelect" id="sel1">
-                                <option ng-selected="new_member_data.intro === null" value="">نحوه آشنایی با کافه
+                                <option ng-selected="new_member_data.intro === null" value="">انتخاب کنید
                                 </option>
                                 <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
                                     معرفی دوستان
@@ -88,10 +88,10 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label>شماره کارت</label><br>
-                            <small>خالی گذاشتن این فیلد باعث می شود شماره کارت ، شماره تلفن عضو باشد.</small>
-                            <input ng-model="new_member_data.card_number" type="text" aria-label="Last name"
-                                   class="form-control" placeholder="شماره کارت">
+                            <label>شماره مشتری</label>
+                            <input ng-model="new_member_data.card_number" type="text"
+                                   class="form-control" placeholder="شماره مشتری">
+                            <small>خالی گذاشتن این فیلد باعث می شود شماره مشتری ، شماره تلفن عضو باشد.</small>
                         </div>
                     </div>
                 </form>
@@ -130,9 +130,9 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
-                            <select class="form-control" ng-model="new_credit_data.credit_category">
-                                <option value="">دسته‌بندی اعتبار را انتخاب کنید</option>
+                            <label>اعتبار در کدام بخش فروش اعمال شود؟<i class="fas fa-star-of-life"></i></label>
+                            <select class="form-control customSelect" ng-model="new_credit_data.credit_category">
+                                <option value="">انتخاب کنید</option>
                                 <option ng-repeat="credit_category in credit_categories"
                                         ng-value="credit_category.key">{{ credit_category.name }}</option>
                             </select>
@@ -179,10 +179,10 @@
                     <span aria-hidden="true">خروج</span>
                 </a>
                 <a ng-if="selected_nav_inside_modal === 'MEMBER_INFO'" ng-click="addMember()" href=""
-                   class="mainButton greenButton">ثبت</a>
+                   class="mainButton greenButton">ذخیره اطلاعات مشتری</a>
 
                 <a ng-if="selected_nav_inside_modal === 'MEMBER_ADD_CREDIT'" ng-click="create_credit()" href=""
-                   class="mainButton greenButton">ثبت</a>
+                   class="mainButton greenButton">افزودن اعتبار</a>
             </div>
         </div>
     </div>

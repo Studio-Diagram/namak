@@ -36,24 +36,24 @@ angular.module("dashboard")
             };
             $scope.headers = [
                 {
-                    name: "شماره فاکتور",
+                    name: "شماره سند",
                     key: "factor_number"
+                },
+                {
+                    name: "تاریخ",
+                    key: "date"
                 },
                 {
                     name: "طرف حساب",
                     key: "supplier_name"
                 },
                 {
-                    name: "مبلغ خرید",
-                    key: "total_price"
-                },
-                {
                     name: "نوع پرداخت",
                     key: "kind"
                 },
                 {
-                    name: "تاریخ خرید",
-                    key: "date"
+                    name: "مبلغ",
+                    key: "total_price"
                 }
             ];
             $scope.table_config = {
@@ -157,15 +157,6 @@ angular.module("dashboard")
             $scope.add_item_shop(shop_p.id, shop_p.name, shop_p.price, shop_p.buy_price);
         };
 
-        $scope.get_most_items_supplier = function (supplier_id) {
-            for (var index = 0; index < $scope.suppliers.length; index++) {
-                if ($scope.suppliers[index].id === supplier_id) {
-                    $scope.selected_supplier_name = $scope.suppliers[index].name;
-                    break;
-                }
-            }
-        };
-
         $scope.set_today_for_invoice = function () {
             jQuery.noConflict();
             (function ($) {
@@ -201,6 +192,7 @@ angular.module("dashboard")
                             'stock_id': data['invoice']['stock']['id'],
                         };
                         $scope.openAddModal();
+                        $rootScope.selected_supplier_name = $rootScope.get_supplier_name_from_id($scope.suppliers, data['invoice']['supplier_id']);
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -339,6 +331,7 @@ angular.module("dashboard")
         };
 
         $scope.add_item = function (id, name, price) {
+            if ($scope.read_only_mode) return false;
             var int_price = parseInt(price);
             var int_id = parseInt(id);
             var is_fill = false;
@@ -380,6 +373,7 @@ angular.module("dashboard")
         };
 
         $scope.add_item_shop = function (id, name, price, buy_price) {
+            if ($scope.read_only_mode) return false;
             var int_price = parseInt(price);
             var int_buy_price = parseInt(buy_price);
             var int_id = parseInt(id);
@@ -610,6 +604,7 @@ angular.module("dashboard")
                 };
                 $scope.get_shop_products();
             }
+            $rootScope.selected_supplier_name = "";
         };
         initialize();
     });

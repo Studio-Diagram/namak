@@ -21,7 +21,7 @@
          role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="max-width: 800px">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="tabGroup">
@@ -43,7 +43,7 @@
                     <form ng-if="selected_nav_inside_modal === 'NEW_RESERVE'">
                         <div class="row">
                             <div class="col">
-                                <label class="requiredFieldStar">دسته‌بندی</label>
+                                <label class="requiredFieldStar">نوع رزرو</label>
                                 <select ng-model="new_reserve_data.reserve_state" class="form-control customSelect">
                                     <option value="">انتخاب کنید</option>
                                     <option value="waiting">
@@ -55,7 +55,7 @@
                                 </select>
                             </div>
                             <div class="col">
-                                <label>نام رزروکننده</label>
+                                <label>نام مهمان</label>
                                 <input ng-disabled="new_reserve_data.reserve_state === 'walked'"
                                        ng-model="new_reserve_data.customer_name" type="text"
                                        class="form-control" placeholder="نام رزروکننده">
@@ -104,22 +104,19 @@
                                 <input ng-model="new_reserve_data.customer_name" type="text"
                                        class="form-control" placeholder="نام مورد انتظار">
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col">
                                 <label>شماره تماس<i class="fas fa-star-of-life"></i></label>
                                 <input ng-model="new_reserve_data.phone" type="text"
                                        class="form-control" placeholder="شماره تماس">
                             </div>
                         </div>
+                        <div c
                         <div class="row">
                             <div class="col">
                                 <label>تعداد نفرات<i class="fas fa-star-of-life"></i></label>
                                 <input ng-model="new_reserve_data.numbers" type="number"
                                        class="form-control" placeholder="تعداد نفرات">
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col">
                                 <label>ساعت شروع</label>
                                 <input ng-model="new_reserve_data.start_time" type="text"
@@ -165,9 +162,12 @@
                         <a ng-if="selected_nav_inside_modal === 'NEW_RESERVE'"
                            ng-click="gone_reserve(new_reserve_data.reserve_id)" href="" class="mainButton okrButton">رزرو
                             رفت!</a>
-                        <a ng-if="selected_nav_inside_modal === 'NEW_RESERVE'"
-                           ng-click="openPermissionModal(new_reserve_data.reserve_id)" href=""
-                           class="mainButton">حذف</a>
+                        <a tabindex="0" class="mainButton" role="button"
+                       data-container="body" ng-if="selected_nav_inside_modal === 'NEW_RESERVE'"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="اطلاعات این رزرو به‌طور کامل پاک خواهد شد."
+                       first-button-text="حذف" first-callback="delete_reserve(new_reserve_data.reserve_id)">حذف</a>
                     </div>
                     <div>
                         <a class="mainButton redButton closeModal mr-0"

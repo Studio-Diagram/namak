@@ -510,12 +510,12 @@ myApp.directive('popover', function ($compile) {
             (function ($) {
                 var content = `<div class="popoverWrapper"><div>
                     <p><i class="fas fa-exclamation-triangle"></i><span ng-bind="question"></span></p>
-                    <p ng-bind="text"></p>
+                    <p style="text-align: justify;" ng-bind="text"></p>
                     <a ng-if="firstButtonText" href="" ng-click="firstCallback()" 
                     class="mainButton redButton smallButton fullWidthButton" 
                     ng-bind="firstButtonText"></a>
                     <a ng-if="secondButtonText" href="" ng-click="secondCallback()" ng-bind="secondButtonText"
-                    class="mainButton newGrayButton smallButton fullWidthButton"></a>
+                    class="mainButton greenButton smallButton fullWidthButton"></a>
                     </div>
                     </div>`;
                 var compileContent = $compile(content)(scope);

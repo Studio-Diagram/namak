@@ -21,16 +21,16 @@ angular.module("dashboard")
             };
             $scope.headers = [
                 {
-                    name: "شماره پرداختی",
+                    name: "شماره سند",
                     key: "factor_number"
+                },
+                {
+                    name: "تاریخ",
+                    key: "created_time"
                 },
                 {
                     name: "طرف حساب",
                     key: "supplier_name"
-                },
-                {
-                    name: "میزان پرداختی",
-                    key: "payment_amount"
                 },
                 {
                     name: "نوع پرداخت",
@@ -45,8 +45,8 @@ angular.module("dashboard")
                     key: "banking"
                 },
                 {
-                    name: "تاریخ",
-                    key: "created_time"
+                    name: "مبلغ",
+                    key: "payment_amount"
                 }
             ];
             $scope.table_config = {
@@ -234,6 +234,7 @@ angular.module("dashboard")
                 'stock_id': '',
                 'description': ''
             };
+            $rootScope.selected_supplier_name = "";
         };
         initialize();
     });

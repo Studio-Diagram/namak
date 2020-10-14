@@ -1,5 +1,6 @@
 <main ng-controller="buyCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addModal"
+    <div data-backdrop="static" data-keyboard="false"
+         class="modal fade mainModal invoiceSaleModal invoiceAccountingModal" id="addModal"
          tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -7,10 +8,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">سند حسابداری</h2>
-                    <a class="mainButton redButton" role="button"
+                    <h2 class="modalTitle">سند حسابداری خرید</h2>
+                    <a ng-if="read_only_mode" class="mainButton redButton" role="button"
+                       ng-click="closeAddModal()">خروج</a>
+                    <a class="mainButton redButton" role="button" ng-hide="read_only_mode"
                        ng-if="compare_before_exit()" ng-click="closeAddModal()">خروج</a>
-                    <a ng-if="!compare_before_exit()" tabindex="0" class="mainButton redButton" role="button"
+                    <a ng-if="!compare_before_exit()" ng-hide="read_only_mode" tabindex="0" class="mainButton redButton"
+                       role="button"
                        data-container="body"
                        data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
                        question="مطمئن هستید؟"
@@ -41,9 +45,9 @@
                             <div class="accordion">
                                 <ul>
                                     <div class="searchProductWrapper">
-                                        <small>طرف حساب</small>
+                                        <label>طرف حساب</label>
                                         <ui-select ng-disabled="read_only_mode"
-                                                   ng-change="get_most_items_supplier(new_invoice_purchase_data.supplier_id)"
+                                                   ng-change="get_supplier_name_from_id(suppliers, new_invoice_purchase_data.supplier_id)"
                                                    ng-model="new_invoice_purchase_data.supplier_id">
                                             <ui-select-match placeholder="انتخاب طرف حساب">
                                                 {{$select.selected.name}}</ui-select-match>
@@ -121,7 +125,7 @@
                             <div>
                                 <label>طرف حساب</label>
                                 <input class="form-control customReadonly requiredField" type="text"
-                                       ng-model="selected_supplier_name" readonly>
+                                       ng-model="selected_supplier_name" disabled>
                             </div>
                             <div>
                                 <label>شماره فاکتور</label>
@@ -132,7 +136,7 @@
                         <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
                             <tbody>
                             <tr>
-                                <th class="first"></th>
+                                <th ng-if="!read_only_mode" class="first"></th>
                                 <th class="second">عنوان</th>
                                 <th class="third">قیمت واحد</th>
                                 <th class="forth">تعداد</th>
@@ -140,7 +144,7 @@
                                 <th class="sixth">توضیحات</th>
                             </tr>
                             <tr ng-repeat="item in new_invoice_purchase_data.material_items">
-                                <td class="first">
+                                <td ng-if="!read_only_mode" class="first">
                                     <a ng-click="deleteNewItem('material', $index)" style="cursor: pointer">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -162,7 +166,7 @@
                             </tr>
 
                             <tr ng-repeat="item in new_invoice_purchase_data.shop_product_items">
-                                <td class="first">
+                                <td ng-if="!read_only_mode" class="first">
                                     <a ng-click="deleteNewItem('shop', $index)" style="cursor: pointer">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -194,7 +198,8 @@
                             <div class="accountingMoreInfo">
                                 <div class="flexAuto">
                                     <small>نوع پرداخت</small>
-                                    <select ng-model="new_invoice_purchase_data.settlement_type"
+                                    <select ng-disabled="read_only_mode"
+                                            ng-model="new_invoice_purchase_data.settlement_type"
                                             class="form-control customSelect">
                                         <option value="">انتخاب کنید</option>
                                         <option value="CASH">نقدی</option>
@@ -204,19 +209,23 @@
                                 </div>
                                 <div class="flexAuto">
                                     <small>حساب بانکی</small>
-                                    <select ng-disabled="!new_invoice_purchase_data.settlement_type || new_invoice_purchase_data.settlement_type === 'CREDIT' || new_invoice_purchase_data.settlement_type === 'AMANi'"
+                                    <select ng-disabled="!new_invoice_purchase_data.settlement_type || new_invoice_purchase_data.settlement_type === 'CREDIT' || new_invoice_purchase_data.settlement_type === 'AMANi' || read_only_mode"
                                             ng-model="new_invoice_purchase_data.banking_id"
-                                            class="form-control customSelect"
-                                            ng-options="banking.id as banking.name for banking in allbanking_names">
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="banking in allbanking_names"
+                                                ng-value="banking.id">{{ banking.name }}</option>
                                     </select>
 
                                 </div>
                                 <div class="flexFull">
                                     <small>انبار</small>
-                                    <select ng-disabled="!new_invoice_purchase_data.settlement_type"
+                                    <select ng-disabled="!new_invoice_purchase_data.settlement_type || read_only_mode"
                                             ng-model="new_invoice_purchase_data.stock_id"
-                                            class="form-control customSelect"
-                                            ng-options="stock.id as stock.name for stock in stocks">
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="stock in stocks"
+                                                ng-value="stock.id">{{ stock.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -255,7 +264,7 @@
     </div>
     <div class="tableButtons">
         <div class="buttonGroup">
-            <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">فاکتور
+            <a ng-click="openAddModal();getNextFactorNumber('BUY')" href="" class="mainButton greenButton">سند
                 خرید جدید</a>
         </div>
     </div>

@@ -76,7 +76,6 @@ angular.module("dashboard")
                             'index': ''
                         };
                         $scope.new_reserve_data.tables_id = [];
-                        $scope.closeAddModal();
                         $scope.closeCompleteReserveModal();
                     }
                 };
@@ -301,8 +300,8 @@ angular.module("dashboard")
                             $scope.delete_reserve_offline(sending_data);
                             $scope.change_date();
                             $scope.closePermissionModal();
-                            $scope.closeAddModal();
                             $scope.get_waiting_list();
+                            $scope.closeCompleteReserveModal();
                         }
                         else if (data['response_code'] === 3) {
                             $rootScope.show_toast(data.error_msg, 'danger');
@@ -473,7 +472,6 @@ angular.module("dashboard")
                             $scope.new_reserve_data['server_primary_key_for_offline'] = data['server_primary_key_for_offline'];
                             $scope.add_reserve_offline($scope.new_reserve_data);
                             $scope.change_date();
-                            $scope.closeAddModal();
                             $scope.closeCompleteReserveModal();
                         }
                         else if (data['response_code'] === 3) {
@@ -565,7 +563,7 @@ angular.module("dashboard")
                                 $scope.openAddWalkedModal();
                             }
                             else {
-                                $scope.openAddModal();
+                                $scope.openCompleteReserveModal();
                             }
                         }
                         else if (data['response_code'] === 3) {

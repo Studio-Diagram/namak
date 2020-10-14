@@ -1,5 +1,6 @@
 <div ng-controller="returnCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addModal"
+    <div data-backdrop="static" data-keyboard="false"
+         class="modal fade mainModal invoiceSaleModal invoiceAccountingModal" id="addModal"
          tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
@@ -47,6 +48,7 @@
                                         <div class="col">
                                             <label>طرف حساب</label>
                                             <ui-select
+                                                    ng-change="get_supplier_name_from_id(suppliers, new_invoice_return_data.supplier_id)"
                                                     ng-class="{'disabled': new_invoice_return_data.return_type !== 'CAFE_TO_SUPPLIER'}"
                                                     ng-disabled="new_invoice_return_data.return_type !== 'CAFE_TO_SUPPLIER'"
                                                     ng-model="new_invoice_return_data.supplier_id">
@@ -86,15 +88,15 @@
                             <div>
                                 <label>طرف حساب</label>
                                 <input class="form-control customReadonly requiredField" type="text"
-                                       ng-model="new_invoice_return_data.supplier_id" readonly>
+                                       ng-model="selected_supplier_name" disabled>
                             </div>
                             <div>
-                                <label>شماره فاکتور</label>
+                                <label>شماره سند</label>
                                 <input class="form-control iranian-number" type="text"
                                        ng-model="new_invoice_return_data.factor_number" disabled>
                             </div>
                         </div>
-                        <table class="invoiceTable invoiceItem newInvoiceSaleTable">
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
                             <tbody>
                             <tr>
                                 <th class="first"></th>
@@ -118,19 +120,22 @@
                         <div class="invoiceSaleFooter">
                             <div class="accountingMoreInfo">
                                 <div class="flexFull">
+                                    <small>انبار</small>
+                                    <select ng-model="new_invoice_return_data.stock_id"
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="stock in stocks"
+                                                ng-value="stock.id">{{ stock.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="flexFull">
                                     <small>حساب بانکی</small>
                                     <select ng-disabled="new_invoice_return_data.return_type !== 'CUSTOMER_TO_CAFE'"
                                             ng-model="new_invoice_return_data.banking_id"
-                                            class="form-control customSelect"
-                                            ng-options="banking.id as banking.name for banking in allbanking_names">
-                                    </select>
-
-                                </div>
-                                <div class="flexFull">
-                                    <small>انبار</small>
-                                    <select ng-model="new_invoice_return_data.stock_id"
-                                            class="form-control customSelect"
-                                            ng-options="stock.id as stock.name for stock in stocks">
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="banking in allbanking_names"
+                                                ng-value="banking.id">{{ banking.name }}</option>
                                     </select>
                                 </div>
                             </div>

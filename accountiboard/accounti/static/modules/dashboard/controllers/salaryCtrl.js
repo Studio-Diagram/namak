@@ -25,7 +25,7 @@ angular.module("dashboard")
                 'reduction_description': '',
                 'description': '',
                 'branch_id': $rootScope.user_data.branch,
-                'banking_id': '',
+                'banking_id': ''
 
             };
             $scope.get_banking_data();
@@ -39,16 +39,16 @@ angular.module("dashboard")
             })(jQuery);
             $scope.headers = [
                 {
-                    name: "شماره فاکتور",
+                    name: "شماره سند",
                     key: "factor_number"
                 },
                 {
-                    name: "نام کارمند",
-                    key: "employee_name"
+                    name: "تاریخ",
+                    key: "invoice_date"
                 },
                 {
-                    name: "خالص پرداختی",
-                    key: "total_price"
+                    name: "طرف حساب",
+                    key: "employee_name"
                 },
                 {
                     name: "نوع پرداخت",
@@ -59,8 +59,8 @@ angular.module("dashboard")
                     key: "banking"
                 },
                 {
-                    name: "تاریخ پرداخت ",
-                    key: "invoice_date"
+                    name: "مبلغ",
+                    key: "total_price"
                 }
             ];
             $scope.table_config = {
@@ -69,6 +69,15 @@ angular.module("dashboard")
                 has_delete_button: true,
                 has_row_numbers: false
             };
+        };
+
+        $scope.get_employee_name_from_id = function () {
+            for (var index = 0; index < $scope.employees.length; index++) {
+                if ($scope.employees[index].id === $scope.new_salary_data.employee_id) {
+                    $scope.selected_employee_name = $scope.employees[index].full_name;
+                    break;
+                }
+            }
         };
 
         $scope.compare_before_exit = function () {
@@ -134,6 +143,7 @@ angular.module("dashboard")
                 'branch_id': $rootScope.user_data.branch,
                 'banking_id': ''
             };
+            $scope.selected_employee_name = "";
         };
 
         $scope.get_banking_data = function () {
@@ -245,6 +255,7 @@ angular.module("dashboard")
                     $scope.first_initial_value_of_invoice_salary = angular.copy($scope.new_salary_data);
                     $scope.edit_mode = true;
                     $scope.open_modal('addModal');
+                    $scope.get_employee_name_from_id();
                 }, function (error) {
                     $rootScope.show_toast(error.data.error_msg, 'danger');
                 });
