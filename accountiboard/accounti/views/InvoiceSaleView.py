@@ -1131,11 +1131,6 @@ class PrintAfterSaveView(View):
 
 
 class PrintCashView(View):
-    @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
-                                       USER_ROLES['ACCOUNTANT']},
-                                      ALLOW_ALL_PLANS,
-                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         print_data = {
@@ -1179,11 +1174,6 @@ class PrintCashView(View):
 
 
 class PrintCashWithTemlateView(View):
-    @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
-                                       USER_ROLES['ACCOUNTANT']},
-                                      ALLOW_ALL_PLANS,
-                                      branch_disable=True)
     def get(self, request, *args, **kwargs):
         now_time = jdatetime.datetime.now()
         print_data = {
@@ -1287,11 +1277,6 @@ class PrintCashWithTemlateView(View):
 
 
 class PrintAfterSaveTemlateView(View):
-    @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
-                                       USER_ROLES['ACCOUNTANT']},
-                                      ALLOW_ALL_PLANS,
-                                      branch_disable=True)
     def get(self, request, *args, **kwargs):
         now_time = jdatetime.datetime.now()
         invoice_id = request.GET['invoice_id']
