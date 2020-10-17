@@ -1,0 +1,94 @@
+<div ng-controller="branchDetailCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="editBranchDetailsModal" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            اطلاعات شعبه
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col">
+                                <label>نام شعبه<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="branch_data.name" type="text"
+                                       class="form-control" placeholder="نام شعبه">
+                            </div>
+                            <div class="col">
+                                <label>ساعت شروع کاری<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="branch_data.start_working_time" class="form-control"
+                                       id="start-time-clock"
+                                       placeholder="ساعت شروع کاری">
+                            </div>
+                            <div class="col">
+                                <label>ساعت پایان کاری<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="branch_data.end_working_time" class="form-control" id="end-time-clock"
+                                       placeholder="ساعت پایان کاری">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>آدرس<i class="fas fa-star-of-life"></i></label>
+                                <textarea style="font-size: 13px;font-weight: 100;"
+                                          ng-model="branch_data.address"
+                                          class="form-control" placeholder="آدرس"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="mainButton redButton closeModal"
+                       ng-click="close_modal('editBranchDetailsModal');setDefaultData(show_branch_data);"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-click="updateBranch()" href=""
+                       class="mainButton greenButton">ثبت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a class="addUser mainButton greenButton" ng-click="open_modal('editBranchDetailsModal')"
+                   data-toggle="modal">ویرایش اطلاعات</a>
+            </div>
+        </div>
+        <div class="infoTableWrapper">
+            <table class="table infoTable">
+                <tr>
+                    <td>
+                        <span class="title">نام شعبه</span>
+                        <br>
+                        <span ng-bind="show_branch_data.name"></span>
+                    </td>
+                    <td>
+                        <span class="title">آغاز کار</span>
+                        <br>
+                        <span ng-bind="show_branch_data.start_working_time | persianNumber"></span>
+                    </td>
+                    <td>
+                        <span class="title">پایان کار</span>
+                        <br>
+                        <span ng-bind="show_branch_data.end_working_time | persianNumber"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="title">آدرس کافه</span>
+                        <br>
+                        <span ng-bind="show_branch_data.address"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </main>
+</div>

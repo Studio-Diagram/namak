@@ -1,27 +1,4 @@
 <div ng-controller="expenseCategoryCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade mainModal" id="addExpenseCategoryModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -61,8 +38,7 @@
                 <div class="tableButtons clearfix">
                     <input ng-keyup="searchExpenseCategory()" ng-model="search_data_expense_cat.search_word"
                            class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    <a class="addUser mainButton greenButton" ng-click="openAddModal()" data-toggle="modal"><i
-                            class="fas fa-user-plus"></i> دسته‌بندی جدید</a>
+                    <a class="addUser mainButton greenButton" ng-click="openAddModal()" data-toggle="modal"> دسته‌بندی جدید</a>
                 </div>
                 <div class="tableWrapper">
                     <table class="table">

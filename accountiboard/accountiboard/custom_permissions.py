@@ -1,12 +1,11 @@
-from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, BRANCH_NOT_IN_SESSION_ERROR
+from accountiboard.constants import UNAUTHENTICATED, ACCESS_DENIED, NO_MESSAGE, ALL_PLANS_SET
 from accountiboard.utils import decode_JWT_return_user
 from functools import wraps
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 import json
 import jwt
 from accountiboard.settings import JWT_SECRET
-# from accountiboard.utils import *
-import datetime
+from datetime import datetime, timedelta
 from accounti.models import TokenBlacklist
 
 
@@ -41,60 +40,63 @@ def permission_decorator_class_based(permission_func, permitted_roles, bundles, 
 
     return decorator
 
+def permission_decorator_class_based_simplified(permission_func):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(self, request, *args, **kwargs):
+            permission_result = permission_func(request, *args, **kwargs)
+            if permission_result.get('state'):
+                return view_func(self, request, *args, **kwargs)
+            return HttpResponseRedirect('/onward/login/')
 
-def session_authenticate(request, permitted_roles, branch_disable=False):
-    user_roles = request.session.get('user_role', None)
-    if request.session.get('is_logged_in', None) and user_roles:
-        request_branch = get_branch(request)
-        session_branch = request.session.get('branch_list', None)
-        if not session_branch:
-            return {
-                "state": False,
-                "message": BRANCH_NOT_IN_SESSION_ERROR
-            }
-        for role in user_roles:
-            if role in permitted_roles:
-                if branch_disable or request_branch in session_branch:
-                    return {
-                        "state": True,
-                        "message": NO_MESSAGE
-                    }
+        return _wrapped_view
+
+    return decorator
+
+
+def session_authenticate_admin_panel(request, *args, **kwargs):
+    if request.session.get('admin_is_logged_in'):
+        return {
+            "state": True,
+            "message": NO_MESSAGE
+        }
+    else:
         return {
             "state": False,
-            "message": ACCESS_DENIED
+            "message": UNAUTHENTICATED
         }
-    return {
-        "state": False,
-        "message": UNAUTHENTICATED
-    }
 
 
 
 def token_authenticate(request, permitted_roles, bundles, branch_disable=False, *args, **kwargs):
-    payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
-    request_branch = get_branch(request)
+    view_bundles = ALL_PLANS_SET - bundles
+    try:
+        payload = decode_JWT_return_user(request.META['HTTP_AUTHORIZATION'])
+    except:
+        return {
+            "state": False,
+            "message": UNAUTHENTICATED
+        }
     if not payload:
         return {
             "state": False,
             "message": UNAUTHENTICATED
         }
 
-    if TokenBlacklist.objects.filter(user=payload['sub_id']).count() > 0:
-        for blacklist_obj in TokenBlacklist.objects.filter(user=payload['sub_id']):
-            if datetime.datetime.utcfromtimestamp(payload['iat']) < blacklist_obj.created_time:
+    request_branch = get_branch(request, *args, **kwargs)
+    token_black_list_objects = TokenBlacklist.objects.filter(user=payload['sub_id'])
+    if token_black_list_objects.count() > 0:
+        for blacklist_obj in token_black_list_objects:
+            if datetime.fromtimestamp(payload['iat']) + timedelta(seconds=30) < blacklist_obj.created_time:
                 return {
                     "state": False,
                     "message": UNAUTHENTICATED
                 }
 
-    # Adding 'FREE' plan to bundle definition on view decorators and also JWT token:
-    bundles.add('FREE')
-    payload_bundles = {payload['sub_bundle'], 'FREE'}
-
     for role in payload['sub_roles']:
         if role in permitted_roles:
-            if bundles.issubset(payload_bundles):
-                if branch_disable or any(branch.get('id') == request_branch for branch in payload['sub_branch_list']):
+            if payload['sub_bundle'] in view_bundles:
+                if branch_disable or any(branch['id'] == request_branch for branch in payload['sub_branch_list']):
                     return {
                         "state": True,
                         "message": NO_MESSAGE,
@@ -106,22 +108,22 @@ def token_authenticate(request, permitted_roles, bundles, branch_disable=False, 
     }
 
 
-def get_branch(request):
+def get_branch(request, *args, **kwargs):
+    branch_list = []
     try:
-        if request.method == 'POST':
+        if request.method in {'POST', 'PUT'}:
             body_unicode = request.body.decode('utf-8')
             rec_data = json.loads(body_unicode)
-            branch = None
-            if 'branch' in rec_data:
-                branch = rec_data['branch']
-            elif 'branch_id' in rec_data:
-                branch = rec_data['branch_id']
-            return branch
-        elif request.method == 'GET':
-            branch_str = request.GET.get('branch', None)
-            if branch_str:
-                branch = int(branch_str)
-            return branch
+            branch_list.extend([rec_data.get('branch_id'), rec_data.get('branch')])
+
+        branch_list.extend([
+            kwargs.get('branch_id'), kwargs.get('branch'),
+            request.GET.get('branch_id'), request.GET.get('branch'),
+        ])
+
+        for branch in branch_list:
+            if branch:
+                return int(branch)
     except:
         return None
 

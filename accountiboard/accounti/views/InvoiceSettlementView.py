@@ -1,31 +1,30 @@
 from django.http import JsonResponse
+from django.views import View
+from accountiboard.custom_permissions import *
 from accounti.models import *
 from datetime import datetime
 import jdatetime, json
 from accountiboard.constants import *
 
 
-def create_new_invoice_settlement(request):
-    if request.method == "POST":
+class CreateNewInvoiceSettlementView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_settlement_id = rec_data['id']
+        invoice_settlement_id = rec_data.get('id')
 
         if invoice_settlement_id == 0:
-            supplier_id = rec_data['supplier_id']
-            payment_amount = rec_data['payment_amount']
-            username = rec_data['username']
-            settle_type = rec_data['settle_type']
-            backup_code = rec_data['backup_code']
-            branch_id = rec_data['branch_id']
-            invoice_date = rec_data['date']
-            factor_number = rec_data['factor_number']
+            supplier_id = rec_data.get('supplier_id')
+            payment_amount = rec_data.get('payment_amount')
+            settle_type = rec_data.get('settle_type')
+            backup_code = rec_data.get('backup_code')
+            branch_id = rec_data.get('branch_id')
+            invoice_date = rec_data.get('date')
+            factor_number = rec_data.get('factor_number')
             banking_id = rec_data.get('banking_id')
-            stock_id = rec_data.get('stock_id')
 
-            if not username:
-                return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-            if not request.session.get('is_logged_in', None) == username:
-                return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
             if not branch_id:
                 return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
             if not payment_amount:
@@ -53,14 +52,6 @@ def create_new_invoice_settlement(request):
             else:
                 banking_obj = None
 
-            if stock_id:
-                try:
-                    stock_obj = Stock.objects.get(pk=stock_id)
-                except:
-                    return JsonResponse({"error_msg": STOCK_NOT_FOUND}, status=404)
-            else:
-                stock_obj = None
-
             invoice_date_split = invoice_date.split('/')
             invoice_date_g = jdatetime.datetime(int(invoice_date_split[2]), int(invoice_date_split[1]),
                                                 int(invoice_date_split[0]), datetime.now().hour, datetime.now().minute,
@@ -83,7 +74,6 @@ def create_new_invoice_settlement(request):
                 created_time=invoice_date_g,
                 factor_number=new_factor_number,
                 banking=banking_obj,
-                stock=stock_obj,
             )
             new_invoice.save()
 
@@ -91,17 +81,15 @@ def create_new_invoice_settlement(request):
 
         return JsonResponse({"response_code": 3, "error_msg": "Wrong ID!"})
 
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
-
-def get_all_invoices(request):
-    if request.method == "POST":
+class GetAllInvoiceSettlementsView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        username = rec_data['username']
-        branch_id = rec_data['branch_id']
+        branch_id = rec_data.get('branch_id')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not branch_id:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
@@ -125,20 +113,22 @@ def get_all_invoices(request):
             })
 
         return JsonResponse({"response_code": 2, 'invoices': invoices})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
-def search_pays(request):
-    if request.method == "POST":
+class SearchPaysView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
+    def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
-        search_word = rec_data['search_word']
-        username = rec_data['username']
+        search_word = rec_data.get('search_word')
+        branch_id = rec_data.get('branch_id')
 
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
         if not search_word:
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-        items_searched = InvoiceSettlement.objects.filter(supplier__name__contains=search_word)
+        items_searched = InvoiceSettlement.objects.filter(supplier__name__contains=search_word, branch_id=branch_id).order_by(
+            '-id')
         pays = []
         for pay in items_searched:
             invoice_date = pay.created_time.date()
@@ -151,26 +141,18 @@ def search_pays(request):
                 'payment_amount': pay.payment_amount,
                 'settle_type': pay.get_settle_type_display(),
                 'backup_code': pay.backup_code,
+                'banking': pay.banking.name if pay.banking else "",
                 'created_time': jalali_date.strftime("%Y/%m/%d")
             })
         return JsonResponse({"response_code": 2, 'pays': pays})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
 
 
-def delete_invoice_settlement(request):
-    if request.method == "POST":
-        rec_data = json.loads(request.read().decode('utf-8'))
-        invoice_id = rec_data['invoice_id']
-        username = rec_data['username']
-
-        if not request.session.get('is_logged_in', None) == username:
-            return JsonResponse({"response_code": 3, "error_msg": UNATHENTICATED})
-        if not invoice_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-        invoice_obj = InvoiceSettlement.objects.get(pk=invoice_id)
-
+class DeleteInvoiceSettlementView(View):
+    @permission_decorator_class_based(token_authenticate,
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
+    def delete(self, request, item_id, *args, **kwargs):
+        invoice_obj = InvoiceSettlement.objects.get(pk=item_id)
         invoice_obj.delete()
-
-        return JsonResponse({"response_code": 2})
-    return JsonResponse({"response_code": 4, "error_msg": "GET REQUEST!"})
+        return JsonResponse({})

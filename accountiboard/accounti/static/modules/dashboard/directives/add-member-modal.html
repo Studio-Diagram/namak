@@ -1,0 +1,189 @@
+<div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+     id="addMemberModal" tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="tabGroup">
+                    <button ng-click="change_nav_inside_modal('MEMBER_INFO')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'MEMBER_INFO'}"
+                            class="mainButton">
+                        اطلاعات مشتری
+                    </button>
+                    <button ng-click="change_nav_inside_modal('MEMBER_ADD_CREDIT')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'MEMBER_ADD_CREDIT'}"
+                            class="mainButton">
+                        افزودن اعتبار
+                    </button>
+                    <button ng-click="change_nav_inside_modal('MEMBER_SHOW_CREDITS')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'MEMBER_SHOW_CREDITS'}"
+                            class="mainButton">
+                        اعتبارها
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form ng-show="selected_nav_inside_modal === 'MEMBER_INFO'">
+                    <div class="row">
+                        <div class="col">
+                            <label>نام<i class="fas fa-star-of-life"></i></label>
+                            <input ng-required="$touched" ng-model="new_member_data.first_name" type="text"
+                                   aria-label="First name"
+                                   class="form-control" placeholder="نام">
+                        </div>
+                        <div class="col">
+                            <label>نام خانوادگی<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.last_name" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="نام خانوادگی">
+                        </div>
+                        <div class="col">
+                            <label>شماره تلفن<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_member_data.phone" type="text" aria-label="Last name"
+                                   class="form-control" placeholder="شماره تلفن">
+                        </div>
+                    </div>
+                    <div class="row align-items-end mb-2">
+                        <div class="col-2">
+                            <label class="requiredFieldStar">تاریخ تولد</label>
+                            <input ng-model="new_member_data.day_of_birth" type="text" aria-label="Last name"
+                                   class="form-control mb-0" placeholder="روز">
+                        </div>
+                        <div class="col-2">
+                            <label></label>
+                            <input ng-model="new_member_data.month_of_birth" type="text" aria-label="Last name"
+                                   class="form-control mb-0" placeholder="ماه">
+                        </div>
+                        <div class="col-2">
+                            <label></label>
+                            <input ng-model="new_member_data.year_of_birth" type="text" aria-label="Last name"
+                                   class="form-control mb-0" placeholder="سال">
+                        </div>
+                        <div class="col-6">
+                            <label>نحوه آشنایی با کافه<i class="fas fa-star-of-life"></i></label>
+                            <select ng-model="new_member_data.intro" class="form-control customSelect" id="sel1">
+                                <option ng-selected="new_member_data.intro === null" value="">انتخاب کنید
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
+                                    معرفی دوستان
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'friends'" value="HEAVY">
+                                    جست‌وجوی اینترنت
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'instagram'" value="ABSTRACT">
+                                    اینستاگرام
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'roomiz'" value="FAMILY">
+                                    سایت رومیز
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'events'" value="FAMILY">
+                                    شرکت در رویدادها
+                                </option>
+                                <option ng-selected="new_member_data.intro === 'other'" value="FAMILY">
+                                    سایر
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>شماره مشتری</label>
+                            <input ng-model="new_member_data.card_number" type="text"
+                                   class="form-control" placeholder="شماره مشتری">
+                            <small>خالی گذاشتن این فیلد باعث می شود شماره مشتری ، شماره تلفن عضو باشد.</small>
+                        </div>
+                    </div>
+                </form>
+                <form ng-show="selected_nav_inside_modal === 'MEMBER_ADD_CREDIT'">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>مقدار اعتبار<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_credit_data.total_credit" type="text"
+                                   aria-label="Last name"
+                                   class="form-control" placeholder="مقدار اعتبار" format>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>تاریخ شروع<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_credit_data.start_date" type="text"
+                                   class="form-control" placeholder="تاریخ شروع" id="start_credit_date">
+                        </div>
+                        <div class="col">
+                            <label>ساعت شروع<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_credit_data.start_time" type="text"
+                                   class="form-control" placeholder="ساعت شروع" id="start_credit_time">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>تاریخ انقضا<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_credit_data.expire_date" type="text"
+                                   class="form-control" placeholder="تاریخ انقضا" id="expire_credit_date">
+                        </div>
+                        <div class="col">
+                            <label>ساعت انقضا<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="new_credit_data.expire_time" type="text"
+                                   class="form-control" placeholder="ساعت انقضا" id="expire_credit_time">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>اعتبار در کدام بخش فروش اعمال شود؟<i class="fas fa-star-of-life"></i></label>
+                            <select class="form-control customSelect" ng-model="new_credit_data.credit_category">
+                                <option value="">انتخاب کنید</option>
+                                <option ng-repeat="credit_category in credit_categories"
+                                        ng-value="credit_category.key">{{ credit_category.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div ng-hide="true" class="row mt-3">
+                        <div class="col">
+                            <label>کد اعتبار<i class="fas fa-star-of-life"></i></label>
+                            <input ng-model="gift_code_data.gift_code" type="text" class="form-control"
+                                   placeholder="کد اعتبار">
+                        </div>
+                    </div>
+                </form>
+                <div ng-show="selected_nav_inside_modal === 'MEMBER_SHOW_CREDITS'" class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">شروع</th>
+                            <th scope="col">انقضا</th>
+                            <th scope="col">اعتبار</th>
+                            <th scope="col">استفاده شده</th>
+                            <th scope="col">دسته بندی</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="credit in member_credit_data">
+                            <th scope="row">{{ $index + 1 | persianNumber }}</th>
+                            <td scope="row">{{ credit.start_date | persianNumber }}</td>
+                            <td scope="row">{{ credit.expire_date | persianNumber }}</td>
+                            <td scope="row">{{ credit.total_price | number | persianNumber }}</td>
+                            <td scope="row">{{ credit.used_price | number | persianNumber }}</td>
+                            <td scope="row">{{ credit.credit_categories }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="mainButton redButton closeModal"
+                   ng-click="reset_member_form();close_modal('addMemberModal')"
+                   aria-label="Close">
+                    <span aria-hidden="true">خروج</span>
+                </a>
+                <a ng-if="selected_nav_inside_modal === 'MEMBER_INFO'" ng-click="addMember()" href=""
+                   class="mainButton greenButton">ذخیره اطلاعات مشتری</a>
+
+                <a ng-if="selected_nav_inside_modal === 'MEMBER_ADD_CREDIT'" ng-click="create_credit()" href=""
+                   class="mainButton greenButton">افزودن اعتبار</a>
+            </div>
+        </div>
+    </div>
+</div>

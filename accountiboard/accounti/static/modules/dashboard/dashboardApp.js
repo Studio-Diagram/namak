@@ -16,75 +16,83 @@ myApp.directive('ngEnter', function () {
 
 myApp.config(function ($stateProvider, $authProvider) {
     $authProvider.tokenType = 'Bearer';
-    var registerEmployee = {
-        name: 'manager',
-        url: '/manager',
-        templateUrl: 'static/modules/dashboard/views/manager.html'
+    var dashboard = {
+        name: 'dashboard',
+        url: '/dashboard'
     };
-    var addEmployee = {
-        name: 'manager.addEmployee',
-        url: '/addEmployee',
+    var cafe_management = {
+        name: 'dashboard.cafe_management',
+        url: '/cafe',
+        templateUrl: 'static/modules/dashboard/views/cafe_management.html'
+    };
+    var branch_management = {
+        name: 'dashboard.branch_management',
+        url: '/branch',
+        templateUrl: 'static/modules/dashboard/views/branch_management.html'
+    };
+    var employee = {
+        name: 'dashboard.cafe_management.employee',
+        url: '/employee',
         templateUrl: 'static/modules/dashboard/views/add_employee.html'
     };
     var tables = {
-        name: 'manager.tables',
+        name: 'dashboard.branch_management.tables',
         url: '/tables',
         templateUrl: 'static/modules/dashboard/views/tables.html'
     };
-    var menuCategory = {
-        name: 'manager.menuCategory',
-        url: '/menuCategory',
-        templateUrl: 'static/modules/dashboard/views/menu_category.html'
+    var menu_manager = {
+        name: 'dashboard.branch_management.menu',
+        url: '/menu',
+        templateUrl: 'static/modules/dashboard/views/menu_manager.html'
     };
-    var menuItem = {
-        name: 'manager.menuItem',
-        url: '/menuItem',
-        templateUrl: 'static/modules/dashboard/views/menu_item.html'
+    var menu_general = {
+        name: 'dashboard.branch_management.menu.general',
+        url: '/general',
+        templateUrl: 'static/modules/dashboard/views/menu.html'
     };
-    var printers = {
-        name: 'manager.printers',
+    var menu_printers = {
+        name: 'dashboard.branch_management.menu.printers',
         url: '/printers',
-        templateUrl: 'static/modules/dashboard/views/printer.html'
+        templateUrl: 'static/modules/dashboard/views/printers.html'
+    };
+    var branch_details = {
+        name: 'dashboard.branch_management.details',
+        url: '/details',
+        templateUrl: 'static/modules/dashboard/views/branch_details.html'
+    };
+    var game_branch_details = {
+        name: 'dashboard.branch_management.game_details',
+        url: '/game_details',
+        templateUrl: 'static/modules/dashboard/views/game_branch_details.html'
     };
     var member_manager = {
-        name: 'member_manager',
+        name: 'dashboard.member_manager',
         url: '/member_manager',
         templateUrl: 'static/modules/dashboard/views/member_manager.html'
     };
     var member = {
-        name: 'member_manager.member',
+        name: 'dashboard.member_manager.member',
         url: '/member',
         templateUrl: 'static/modules/dashboard/views/member.html'
     };
     var lottery = {
-        name: 'member_manager.lottery',
+        name: 'dashboard.member_manager.lottery',
         url: '/lottery',
         templateUrl: 'static/modules/dashboard/views/lottery.html'
     };
-    var boardgame = {
-        name: 'boardgame',
-        url: '/boardgame',
-        templateUrl: 'static/modules/dashboard/views/boardgame.html'
-    };
-
-    var stock = {
-        name: 'manager.stock',
-        url: '/stock',
-        templateUrl: 'static/modules/dashboard/views/stock.html'
-    };
 
     var branch = {
-        name: 'manager.branch',
+        name: 'dashboard.cafe_management.branch',
         url: '/branch',
         templateUrl: 'static/modules/dashboard/views/branch.html'
     };
     var cash_manager = {
-        name: 'cash_manager',
+        name: 'dashboard.cash_manager',
         url: '/cash_manager',
         templateUrl: 'static/modules/dashboard/views/cash-manager.html'
     };
     var salon = {
-        name: 'cash_manager.salon',
+        name: 'dashboard.cash_manager.salon',
         url: '/salon/:table_name',
         params: {
             "table_name": {
@@ -94,39 +102,39 @@ myApp.config(function ($stateProvider, $authProvider) {
         },
         templateUrl: 'static/modules/dashboard/views/salon.html'
     };
-    var cash = {
-        name: 'cash_manager.cash',
-        url: '/cash',
-        templateUrl: 'static/modules/dashboard/views/cash.html'
-    };
-    var account_manager = {
-        name: 'account_manager',
-        url: '/account_manager',
+    var accounting = {
+        name: 'dashboard.accounting',
+        url: '/accounting',
         templateUrl: 'static/modules/dashboard/views/account-manager.html'
     };
+    var accounting_documents_manager = {
+        name: 'dashboard.accounting.documents',
+        url: '/documents',
+        templateUrl: 'static/modules/dashboard/views/accounting_documents_manager.html'
+    };
     var buy = {
-        name: 'account_manager.buy',
+        name: 'dashboard.accounting.documents.buy',
         url: '/buy',
         templateUrl: 'static/modules/dashboard/views/buy.html'
     };
     var pay = {
-        name: 'account_manager.pay',
+        name: 'dashboard.accounting.documents.pay',
         url: '/pay',
         templateUrl: 'static/modules/dashboard/views/pays.html'
     };
     var expense = {
-        name: 'account_manager.expense',
+        name: 'dashboard.accounting.documents.expense',
         url: '/expense',
         templateUrl: 'static/modules/dashboard/views/expense.html'
     };
     var suppliers = {
-        name: 'account_manager.suppliers',
+        name: 'dashboard.accounting.suppliers',
         url: '/suppliers',
         templateUrl: 'static/modules/dashboard/views/suppliers.html'
     };
     var reports = {
-        name: 'account_manager.reports',
-        url: '/reports?type&start&end&branches&suppliers&s_types',
+        name: 'dashboard.accounting.reports',
+        url: '/reports?type&start&end&suppliers&s_types&employees',
         params: {
             "type": {
                 dynamic: true,
@@ -140,10 +148,6 @@ myApp.config(function ($stateProvider, $authProvider) {
                 dynamic: true,
                 value: null
             },
-            "branches": {
-                dynamic: true,
-                value: null
-            },
             "suppliers": {
                 dynamic: true,
                 value: null
@@ -151,74 +155,140 @@ myApp.config(function ($stateProvider, $authProvider) {
             "s_types": {
                 dynamic: true,
                 value: null
+            },
+            "employees":{
+                dynamic: true,
+                value: null
             }
         },
         templateUrl: 'static/modules/dashboard/views/reports.html'
     };
     var supplier = {
-        name: 'account_manager.supplier',
+        name: 'dashboard.accounting.supplier',
         url: '/supplier/:supplier',
         templateUrl: 'static/modules/dashboard/views/supplier.html'
     };
     var detail = {
-        name: 'account_manager.detail',
+        name: 'dashboard.accounting.detail',
         url: '/supplier/:detailState/:supplier',
         templateUrl: 'static/modules/dashboard/views/detail.html'
     };
 
     var invoiceReturn = {
-        name: 'account_manager.return',
+        name: 'dashboard.accounting.documents.return',
         url: '/return',
         templateUrl: 'static/modules/dashboard/views/return.html'
     };
 
     var expenseCategory = {
-        name: 'manager.expenseCat',
+        name: 'dashboard.manager.expenseCat',
         url: '/expenseCat',
         templateUrl: 'static/modules/dashboard/views/expense_category.html'
     };
 
     var reservation = {
-        name: 'reservation',
+        name: 'dashboard.reservation',
         url: '/reservation',
         templateUrl: 'static/modules/dashboard/views/reservation.html'
     };
 
     var open_close_cash = {
-        name: 'account_manager.manage_cash',
+        name: 'dashboard.accounting.manage_cash',
         url: '/manage_cash',
         templateUrl: 'static/modules/dashboard/views/open_close_cash.html'
     };
 
+    var open_close_cash_detail = {
+        name: 'dashboard.accounting.manage_cash_detail',
+        url: '/manage_cash/:cash_id',
+        templateUrl: 'static/modules/dashboard/views/open_close_cash_detail.html'
+    };
+
+    var big_cash_detail_view_in_open_close_cash = {
+        name: 'dashboard.accounting.manage_cash_detail_big',
+        url: '/manage_cash/:cash_id/detail',
+        template: '<cash-detail-directive></cash-detail-directive>',
+        params: {
+            "display_cash_number": true,
+            "show_submit_today_cash_button": false,
+            "show_print_today_cash_button": false,
+        }
+    };
+
+    var cash = {
+        name: 'dashboard.cash_manager.cash',
+        url: '/cash/:cash_id',
+        template: '<cash-detail-directive></cash-detail-directive>',
+        params: {
+            "display_cash_number": false,
+            "show_submit_today_cash_button": true,
+            "show_print_today_cash_button": true,
+        }
+    };
+
     var quick_access = {
-        name: 'quickAccess',
+        name: 'dashboard.quickAccess',
         url: '/quickAccess',
         templateUrl: 'static/modules/dashboard/views/quick-access.html'
     };
 
     var banking = {
-        name: 'manager.banking',
+        name: 'dashboard.cafe_management.banking',
         url: '/banking',
         templateUrl: 'static/modules/dashboard/views/banking.html'
     };
     var stocks = {
-        name: 'manager.stocks',
+        name: 'dashboard.cafe_management.stocks',
         url: '/stocks',
         templateUrl: 'static/modules/dashboard/views/stocks.html'
     };
+    var salary ={
+        name: 'dashboard.accounting.documents.salary',
+        url:'/salary',
+        templateUrl:'static/modules/dashboard/views/salary.html'
 
-    $stateProvider.state(registerEmployee);
-    $stateProvider.state(addEmployee);
-    $stateProvider.state(menuCategory);
-    $stateProvider.state(menuItem);
+    };
+
+    var namak = {
+        name: 'dashboard.cafe_management.namak',
+        url: '/namak',
+        templateUrl: 'static/modules/dashboard/views/namak.html'
+    };
+
+    var bundles = {
+        name: 'dashboard.cafe_management.namak.bundles',
+        url: '/bundles',
+        templateUrl: 'static/modules/dashboard/views/bundles.html'
+    };
+
+    var buy_bundle = {
+        name: 'dashboard.cafe_management.namak.buy_bundle',
+        url: '/buy-bundle',
+        templateUrl: 'static/modules/dashboard/views/buy_bundle.html'
+    };
+
+    var transactions = {
+        name: 'dashboard.cafe_management.namak.transactions',
+        url: '/transactions',
+        templateUrl: 'static/modules/dashboard/views/transactions.html'
+    };
+
+    $stateProvider.state(dashboard);
+    $stateProvider.state(cafe_management);
+    $stateProvider.state(branch_management);
+    $stateProvider.state(employee);
+    $stateProvider.state(menu_manager);
+    $stateProvider.state(menu_general);
+    $stateProvider.state(menu_printers);
+    $stateProvider.state(branch_details);
+    $stateProvider.state(game_branch_details);
     $stateProvider.state(member);
-    $stateProvider.state(boardgame);
-    $stateProvider.state(stock);
     $stateProvider.state(branch);
     $stateProvider.state(cash_manager);
     $stateProvider.state(salon);
     $stateProvider.state(cash);
-    $stateProvider.state(account_manager);
+    $stateProvider.state(accounting);
+    $stateProvider.state(accounting_documents_manager);
     $stateProvider.state(buy);
     $stateProvider.state(pay);
     $stateProvider.state(expense);
@@ -230,13 +300,19 @@ myApp.config(function ($stateProvider, $authProvider) {
     $stateProvider.state(expenseCategory);
     $stateProvider.state(reservation);
     $stateProvider.state(open_close_cash);
+    $stateProvider.state(open_close_cash_detail);
+    $stateProvider.state(big_cash_detail_view_in_open_close_cash);
     $stateProvider.state(tables);
     $stateProvider.state(member_manager);
     $stateProvider.state(lottery);
     $stateProvider.state(quick_access);
-    $stateProvider.state(printers);
     $stateProvider.state(banking);
     $stateProvider.state(stocks);
+    $stateProvider.state(namak);
+    $stateProvider.state(bundles);
+    $stateProvider.state(buy_bundle);
+    $stateProvider.state(transactions);
+    $stateProvider.state(salary);
 });
 
 angular.module("dashboard")
@@ -351,11 +427,44 @@ myApp.directive('tableDirective', function () {
             headers: '=',
             rows: '=',
             config: '=',
-            detailCallback: '&'
+            detailCallback: '&',
+            rightSideDetailCallback: '&',
+            deleteCallback: '&'
         },
-        templateUrl: '/static/modules/dashboard/directives/reusable-table.html'
+        templateUrl: '/static/modules/dashboard/directives/reusable-table.html',
+        link: function (scope) {
+            if (scope.config.has_second_button_on_right_side === undefined) scope.config.has_second_button_on_right_side = false;
+            if (scope.config.has_row_numbers === undefined) scope.config.has_row_numbers = true;
+            if (scope.config.price_with_tags === undefined) scope.config.price_with_tags = false;
+            if (scope.config.has_delete_button === undefined) scope.config.has_delete_button = false;
+            if (scope.config.table_title === undefined) scope.config.table_title = false;
+        }
     }
 
+});
+
+myApp.directive('settledInvoiceModalDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/settled-invoice-modal.html',
+        controller: 'settledInvoiceModalCtrl'
+    }
+});
+
+myApp.directive('addMemberModalDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/add-member-modal.html',
+        controller: 'addMemberDirectiveCtrl'
+    }
+});
+
+myApp.directive('cashDetailDirective', function () {
+    return {
+        restrict: 'EA',
+        templateUrl: '/static/modules/dashboard/directives/cash-detail.html',
+        controller: 'cashDetailCtrl'
+    }
 });
 
 function configureTemplateFactory($provide) {
@@ -380,3 +489,49 @@ function configureTemplateFactory($provide) {
 }
 
 myApp.config(['$provide', configureTemplateFactory]);
+
+myApp.config(["$locationProvider", function ($locationProvider) {
+    $locationProvider.html5Mode(true);
+}]);
+
+myApp.directive('popover', function ($compile) {
+    return {
+        restrict: 'EA',
+        scope: {
+            question: '@',
+            text: '@',
+            firstButtonText: '@',
+            secondButtonText: '@',
+            firstCallback: '&',
+            secondCallback: '&'
+        },
+        link: function (scope, elem, $scope) {
+            jQuery.noConflict();
+            (function ($) {
+                var content = `<div class="popoverWrapper"><div>
+                    <p><i class="fas fa-exclamation-triangle"></i><span ng-bind="question"></span></p>
+                    <p style="text-align: justify;" ng-bind="text"></p>
+                    <a ng-if="firstButtonText" href="" ng-click="firstCallback()" 
+                    class="mainButton redButton smallButton fullWidthButton" 
+                    ng-bind="firstButtonText"></a>
+                    <a ng-if="secondButtonText" href="" ng-click="secondCallback()" ng-bind="secondButtonText"
+                    class="mainButton greenButton smallButton fullWidthButton"></a>
+                    </div>
+                    </div>`;
+                var compileContent = $compile(content)(scope);
+                var options = {
+                    content: compileContent[0],
+                    html: true
+                };
+                $(elem).popover(options);
+            })(jQuery);
+
+        }
+    }
+});
+
+
+myApp.constant('SUCCESS_MESSAGES', {
+    save_invoice_sale: "فاکتور با موفقیت ذخیره شد.",
+    print_after_save_invoice_sale: "فاکتور با موفقیت ذخیره و چاپ شد."
+});

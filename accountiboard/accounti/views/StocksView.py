@@ -5,9 +5,9 @@ from django.views import View
 
 class StocksView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
     def get(self, request, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = [x['id'] for x in payload['sub_branch_list']]
@@ -28,9 +28,9 @@ class StocksView(View):
 
 
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         name   = rec_data.get('name')
@@ -42,20 +42,20 @@ class StocksView(View):
         if not branches_in_request or not name:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE
-            }, status=401)
+            }, status=400)
 
         for branch in branches_in_request:
             if branch['id'] not in branch_id_list_jwt:
                 return JsonResponse({
                     'error_msg': ACCESS_DENIED
-                }, status=401)
+                }, status=400)
             elif 'is_checked' in branch and branch['is_checked']:
                 branches_id_list_to_add.append(branch['id'])
 
         if not branches_id_list_to_add:
             return JsonResponse({
                 'error_msg': DATA_REQUIRE_BRANCH
-            }, status=401)
+            }, status=400)
                 
 
         current_stock = Stock.objects.create(
@@ -77,9 +77,9 @@ class StocksView(View):
 
 class StockDetailView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
     def get(self, request, id, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = [x['id'] for x in payload['sub_branch_list']]
@@ -104,9 +104,9 @@ class StockDetailView(View):
                     }, status=404)
 
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
     def put(self, request, id, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         name = rec_data.get('name')
@@ -161,9 +161,9 @@ class StockDetailView(View):
 
 class StockByBranchView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
-                                      {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
     def get(self, request, branch_id, *args, **kwargs):
         payload = request.payload
         branch_id_list_jwt = {x['id'] for x in payload['sub_branch_list']}

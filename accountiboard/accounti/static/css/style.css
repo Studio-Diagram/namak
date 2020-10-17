@@ -19,6 +19,9 @@
     --mainBody: #eaeff5;
     --white: #fff;
     --okr: #c7af2a;
+    --okrBoarder: #B29E2D;
+    --newGray: #E2E7ED;
+    --newGrayBorder: #C6CACF;
     --grayButtonBorder: #D8D8D8;
     --navBarLineHover: #3DA7B1;
     --oilBlueBorder: #4AA5AD;
@@ -282,13 +285,13 @@ form.generalForm .submitButtonWrapper {
 }
 
 .mainAside nav ul li a i {
-    padding-left: 30px;
+    padding-left: 25px;
+    font-size: 1.1em;
 }
 
 main.pageContent {
     padding: 15px 0 0 15px;
-    margin: 0;
-    margin-left: 15px;
+    margin: 0 0 0 15px;
     overflow: auto;
     width: 100%;
     height: calc(100vh - 118px);
@@ -369,12 +372,12 @@ button.redButton:hover {
 
 a.whiteButton {
     background: white;
-    color: var(--myGreen);
-    border-color: var(--myGreenBorder);
+    color: var(--myBlack);
+    border-color: var(--myBlueBorder);
 }
 
 a.whiteButton:hover {
-    background: var(--myGreenBorder);
+    background: var(--myBlueBorder);
     color: white;
 }
 
@@ -399,6 +402,28 @@ button.yellowButton:hover {
     cursor: pointer;
 }
 
+button.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+button.okrButton:hover {
+    background: var(--okrBoarder);
+    color: white;
+    cursor: pointer;
+}
+
+a.okrButton {
+    background: var(--okr);
+    border-color: var(--okrBoarder) !important;
+}
+
+a.okrButton:hover {
+    background: var(--okrBoarder);
+    color: white;
+    cursor: pointer;
+}
+
 a.newYellowButton {
     background: var(--newYellow);
     border-color: var(--newYellowBorder);
@@ -415,7 +440,7 @@ a.newYellowButton:hover {
 
 a.blueButton {
     background: var(--myBlue);
-    border-color: var(--myBlueBorder);
+    border-color: var(--myBlueBorder) !important;
 }
 
 a.blueButton:hover {
@@ -425,7 +450,7 @@ a.blueButton:hover {
 
 button.blueButton {
     background: var(--myBlue);
-    border-color: var(--myBlueBorder);
+    border-color: var(--myBlueBorder) !important;
 }
 
 button.blueButton:hover {
@@ -436,7 +461,7 @@ button.blueButton:hover {
 
 button.oilBlueButton {
     background-color: var(--navBarLine);
-    border-color: var(--oilBlueBorder);
+    border-color: var(--oilBlueBorder) !important;
     color: white;
 }
 
@@ -533,7 +558,6 @@ a.iconButton.active i {
 
 main.pageContent .listFilter {
     width: 200px;
-    margin: 0 0 15px 0;
     float: right;
 }
 
@@ -718,7 +742,6 @@ tbody {
 
 .mainModal .modal-dialog .modal-content .modal-body nav {
     border-bottom: 1px solid var(--pageBorder);
-    margin-top: 10px;
 }
 
 .mainModal .modal-dialog .modal-content .modal-footer {
@@ -759,6 +782,8 @@ form .row div input {
 
 .mainModal .cafeMenuNav {
     border: none !important;
+    height: calc(100vh - 259px);
+    overflow-y: auto;
 }
 
 .mainModal .cafeMenuNav ul {
@@ -898,15 +923,27 @@ table.invoiceItem td {
 }
 
 table.invoiceItem th.first {
-    width: 2%;
+    width: 3%;
 }
 
 table.invoiceItem th.second {
-    width: 25%;
+    width: 33%;
+}
+
+table.invoiceItem th.third {
+    width: 15%;
+}
+
+table.invoiceItem th.forth {
+    width: 12%;
+}
+
+table.invoiceItem th.fifth {
+    width: 15%;
 }
 
 table.invoiceItem th.sixth {
-    width: 35%;
+    width: 20%;
 }
 
 table.invoiceTable tr.newOrder td, table.invoiceTable tr.newOrder th {
@@ -923,7 +960,7 @@ table.invoiceTotal th {
 }
 
 table.invoiceTotal tr:last-child td {
-    font-size: 1.3em;
+    font-size: 1.2em;
     font-weight: 400;
 }
 
@@ -985,12 +1022,8 @@ button.mainButton {
 }
 
 button.mainButton:disabled {
-    cursor: no-drop;
+    cursor: no-drop !important;
     color: lightgray;
-}
-
-button.mainButton:hover {
-
 }
 
 button.mainButton i {
@@ -1099,6 +1132,11 @@ table.cashTable tbody tr td.mainValue span {
     padding: 5px 10px !important;
 }
 
+.mediumButton {
+    font-size: 1em !important;
+    padding: 5px 10px !important;
+}
+
 .tableWrapper .tableName {
     width: 100%;
     margin: 0;
@@ -1133,7 +1171,7 @@ table.cashTable tbody tr td.mainValue span {
     flex-flow: row-reverse;
     justify-content: space-between;
     height: 40px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 main.pageContent .tableButtons nav {
@@ -1513,9 +1551,10 @@ tr.tableTotal .redText {
 }
 
 .fa-star-of-life {
-    font-size: 10px;
-    color: red;
-    margin-right: 6px;
+    font-size: 6px;
+    color: var(--myRed);
+    margin-right: 3px;
+    vertical-align: super;
 }
 
 #open-cash-button {
@@ -1563,11 +1602,15 @@ tr.tableTotal .redText {
 ul.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu.ng-scope {
     display: block;
     text-align: right;
+    margin: 0;
+    border-radius: 0 0 5px 5px;
+    padding-bottom: 0;
 }
 
 .ui-select-match.ng-scope {
     border: thin solid lightgrey;
     border-radius: 7px;
+    background: var(--white);
 }
 
 i.fas.fa-caret-down {
@@ -1581,15 +1624,14 @@ span.btn.btn-default.form-control.ui-select-toggle {
     padding-top: 6px;
 }
 
-span.badge.badge-pill.badge-warning {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 20px;
-    padding: 5px;
-    background: white;
-    color: var(--myGreen);
-    border: 1px solid var(--myGreen);
+span.badge.badge-pill.badge-white {
+    width: 22px;
+    background: var(--myBlue);
+    color: white;
+    font-size: 13px;
+    text-align: center;
+    height: 22px;
+    line-height: 16px;
 }
 
 .tableNavigation a {
@@ -1602,29 +1644,56 @@ span.badge.badge-pill.badge-warning {
     height: 17px;
 }
 
-.tableWrapper span.badge.badge-info.ng-binding {
+.badge.badge-info {
     font-size: 0.85em;
     padding: 0.8em;
-    background-color: var(--myBlue);
+    background-color: #E5F7F9;
+    border: 1px solid var(--oilBlueBorder);
+    color: var(--oilBlueBorder);
 }
 
-.tableWrapper span.badge.badge-danger.ng-binding {
-    font-size: 0.85em;
-    padding: 0.8em;
-    background-color: var(--myRed);
+.badge.badge-danger {
+    padding: 8px;
+    background-color: #F2E4E7;
+    color: #DB4E54;
+    font-size: 12px;
+    border: 1px solid #CE4249;
+    font-weight: 400;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
-.tableWrapper span.badge.badge-success.ng-binding {
-    font-size: 0.85em;
-    padding: 0.8em;
-    background-color: var(--myGreen);
+.badge.badge-gray {
+    padding: 8px;
+    background-color: #EAEFF5;
+    color: #999;
+    font-size: 12px;
+    border: 1px solid #A9A9A9;
+    font-weight: 400;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
-.tableWrapper span.badge.badge-warning.ng-binding {
+.badge.badge-success {
+    font-size: 12px;
+    padding: 8px;
+    background-color: #D6E2CD;
+    font-weight: 400;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.badge.badge-warning {
     font-size: 0.85em;
     padding: 0.8em;
-    color: white;
-    background-color: var(--myYellow);
+    color: var(--okr);
+    background-color: #FBF5E1;
+    border: 1px solid var(--okr);
 }
 
 .ui-widget-content {
@@ -1711,7 +1780,7 @@ tags-input .tags .tag-item {
 }
 
 .preloader {
-    height: calc(100vh - 85px);
+    height: calc(100vh - 118px);
 }
 
 .preloader:before {
@@ -1719,12 +1788,12 @@ tags-input .tags .tag-item {
     content: '';
     display: block;
     top: 35%;
-    width: 10%;
-    height: 35%;
+    width: 90px;
+    height: 90px;
     background: url(/static/img/namak-main.gif);
-    background-size: 8em 8em;
+    background-size: cover;
     background-repeat: no-repeat;
-    left: 55%;
+    left: 50%;
 }
 
 .page_button {
@@ -1737,6 +1806,8 @@ tags-input .tags .tag-item {
 
 .dashboard-col {
     border-left: 1px solid var(--pageBorder);
+    overflow-y: auto;
+    max-height: calc(100vh - 101px);
 }
 
 .page_button:hover {
@@ -1776,33 +1847,72 @@ tags-input .tags .tag-item {
 
 .checkbox-unit {
     margin-bottom: 0 !important;
-    flex-direction: column;
+    flex-direction: row;
     display: flex;
     padding-left: 0 !important;
+    margin-top: 2em;
+    flex-wrap: wrap;
 }
 
-.checkbox-item {
-    margin-bottom: 0;
-    border: 1px dotted var(--pageBorder);
-    padding: 0.7em !important;
+.checkbox-unit .checkbox-unit-title {
+    flex: 0 0 100%;
 }
 
-.checkbox-item:hover {
+input[type="checkbox"] {
+    display: none;
+}
+
+.check-box-effect {
+    border: 1px solid var(--myGrayBorder);
+    display: block;
+    margin: 5px;
+    padding: .7em 1.3em;
+    border-radius: 30px;
     cursor: pointer;
-    background-color: var(--pageBorder);
+
+}
+
+.check-box-effect:before {
+    content: '\f058';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-left: 10px;
+    font-size: 1.5em;
+    vertical-align: middle;
+    color: var(--gray);
+    opacity: .3;
+}
+
+.check-box-effect:hover {
+    background: white;
+}
+
+input[type="checkbox"]:checked + .check-box-effect {
+    background-color: var(--myBlue) !important;
+    border-color: var(--myBlue);
+    color: white;
+}
+
+input[type="checkbox"]:checked + .check-box-effect:before {
+    color: white;
+    opacity: 1;
+}
+
+.table_category_wrapper {
+    border-bottom: 1px solid var(--pageBorder);
+    margin-bottom: 1em;
+    padding: 0;
+    margin-left: 15px;
 }
 
 .table_category {
-    border-bottom: 1px dotted var(--pageBorder);
-    margin-bottom: 1em;
-    padding: 0 0 0 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0 10px;
 }
 
-.table_category:nth-last-child(-n+2) {
+.table_category_wrapper:last-child {
     border-bottom: none;
-    margin-bottom: 1em;
-    padding: 0;
-    padding-left: 15px;
 }
 
 .red-cell {
@@ -2079,22 +2189,26 @@ th.disabled:hover {
 }
 
 .toast {
-    width: 318px;
-    -webkit-border-radius: 0 30px 30px 0;
-    -moz-border-radius: 0 30px 30px 0;
-    border-radius: 0 30px 30px 0;
-    height: 4em;
+    width: 500px;
+    max-width: 500px;
+    border-radius: 20px !important;
     display: none;
 }
 
 .toast .toast-body {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.toast .toast-body > p {
+    flex: 1 0 100%;
 }
 
 .toast.toast-success {
-    border-left: 6px solid #80AB51;
+    background-color: var(--myGreen);
+    color: white;
 }
 
 .mainButton.toast-button {
@@ -2104,17 +2218,20 @@ th.disabled:hover {
 }
 
 .toast-success .toast-button {
-    background-color: #80AB51;
+    background-color: white;
     border-color: transparent;
+    color: var(--myGreen);
 }
 
 .toast.toast-danger {
-    border-left: 6px solid #DB4E54;
+    background-color: var(--myRed);
+    color: white;
 }
 
 .toast-danger .toast-button {
-    background-color: #DB4E54;
+    background-color: var(--white);
     border-color: transparent;
+    color: var(--myRed);
 }
 
 .mainButton.fullWidthButton.transparentButton:hover {
@@ -2351,6 +2468,10 @@ aside.leftAside {
     width: 33.333333333%;
 }
 
+.registerDataTable tbody tr:hover {
+    background: transparent;
+}
+
 .registerDataTable tbody tr td .title {
     color: #A3AAB2;
 }
@@ -2397,6 +2518,10 @@ aside.leftAside {
     flex: 0 0 calc(50% - 5px);
 }
 
+.quick-buttons .bigButton {
+    flex: 0 0 calc(100%);
+}
+
 .leftAside > div {
     overflow-y: scroll;
     height: calc(100vh - 100px);
@@ -2434,4 +2559,1025 @@ aside.leftAside {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+}
+
+.infoTable tbody tr td {
+    text-align: right;
+    width: 33.333333333%;
+}
+
+.infoTable tbody tr:hover {
+    background: transparent;
+}
+
+.infoTable tbody tr td .title {
+    color: #A3AAB2;
+    font-size: 0.9em;
+    font-weight: 300;
+    line-height: 1.5rem;
+}
+
+.infoTableWrapper {
+    border: 1px solid #C6CACF;
+    border-radius: 10px;
+    margin: 2em 0;
+    background: var(--white);
+}
+
+.priceField::after {
+    content: ' ریال ';
+}
+
+.personField::after {
+    content: ' نفر ';
+}
+
+.tableWithBorderTopTR tr:last-child {
+    border-top: 1px solid var(--grayButtonBorder);
+}
+
+.arrowButton {
+    width: 5%;
+    vertical-align: middle !important;
+}
+
+.arrowButton i:hover {
+    cursor: pointer;
+}
+
+.cashTable.cashDate td span {
+    font-size: 1.2em;
+    font-weight: 400;
+}
+
+.invoiceSaleModal {
+    top: 75px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+    background: transparent;
+    border: none;
+}
+
+.invoiceSaleModal .modal-content {
+    background: transparent !important;
+}
+
+.invoiceSaleModal .modal-dialog {
+    background: transparent;
+}
+
+.invoiceSaleModal .modal-body {
+    background-color: var(--mainBody);
+    border: 10px solid var(--myBlack) !important;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    grid-template-rows: 100%;
+}
+
+.invoiceSaleModal .modal-body .rightSideInvoiceSale {
+    padding-left: 0 !important;
+}
+
+.invoiceSaleModal .modalTitle {
+    font-size: 20px !important;
+    border: none !important;
+    font-weight: 900;
+    color: var(--white);
+}
+
+.invoiceSaleModal .modalHeader {
+    border: none !important;
+}
+
+.modal-backdrop.show {
+    opacity: .85 !important;
+}
+
+.generalInfoInvoiceSale label {
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+.nav-group {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.nav-group button {
+    border-radius: 0;
+    border-left: none;
+    background-color: var(--white);
+    border-color: black;
+    flex: 1 0 auto;
+    color: var(--myBlack);
+}
+
+.nav-group button.active {
+    color: var(--white);
+    background-color: var(--myBlack);
+}
+
+.nav-group > button:first-child {
+    border-right: 1px solid var(--myBlack);
+    -webkit-border-radius: 0 5px 5px 0;
+    -moz-border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0;
+}
+
+.nav-group > button:last-child {
+    border-left: 1px solid var(--myBlack);
+    -webkit-border-radius: 5px 0 0 5px;
+    -moz-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+.nav-group button:hover {
+    cursor: pointer;
+}
+
+.rightSideInvoiceSale {
+    border-left: 1px solid #C6CACF;
+}
+
+.rightSideInvoiceSale .nav-group {
+    background: var(--white);
+    padding: 14px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.leftSideInvoiceSale {
+    padding: 0 15px 10px 15px !important;
+    overflow-y: auto;
+}
+
+.leftSideInvoiceSale .newInvoiceSaleTable {
+    margin-bottom: 20px !important;
+}
+
+.tableButtonWrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.tableButtonWrapper a {
+    font-size: 12px !important;
+}
+
+a.newGrayButton {
+    background: var(--newGray);
+    color: var(--myBlack);
+    border-color: var(--newGrayBorder) !important;
+}
+
+a.newGrayButton:hover {
+    background: var(--newGrayBorder);
+    color: var(--myBlack);
+    cursor: pointer;
+}
+
+.searchProductWrapper {
+    padding: 10px 71px 30px 71px;
+}
+
+.searchProductWrapper label {
+    margin-bottom: 5px;
+    font-size: 11px;
+}
+
+.productCard {
+    display: grid;
+    background: var(--white);
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+    padding: 12px;
+    min-height: 70px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 8px 0;
+}
+
+.productCard span:first-child {
+    grid-column: 1 / 4;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.productCard span:nth-last-child(-n + 2) {
+    font-size: 13px;
+    color: #767A80;
+
+}
+
+.productCard:hover {
+    cursor: pointer;
+}
+
+.productCard:hover > span:first-child {
+    color: var(--myBlue);
+    text-decoration: underline;
+}
+
+.productCard.disabled {
+    color: var(--myRed);
+    cursor: no-drop;
+}
+
+.productsWrapper {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.productCard:nth-child(-n+2) {
+    border-top: 1px solid #C6CACF;
+}
+
+.productCard:nth-child(2n) {
+    border-left: none;
+}
+
+.menuCategoriesWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    z-index: 100;
+}
+
+.menuCategoryCard {
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+}
+
+.menuCategoryCard:nth-child(4n) {
+    border-left: none;
+}
+
+.menuCategoryCard:hover {
+    cursor: pointer;
+}
+
+.menuItemsWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.menuItemCard {
+    padding: 45px 28px;
+    color: var(--white);
+    font-size: 16px;
+    border-left: 1px solid var(--white);
+    border-bottom: 1px solid var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuItemCard:nth-child(3n) {
+    border-left: none;
+}
+
+.menuItemCard:hover {
+    cursor: pointer;
+    filter: brightness(110%);
+}
+
+.menuItemCard:nth-child(12n+1) {
+    background-color: #FAA328;
+}
+
+.menuItemCard:nth-child(12n+2) {
+    background-color: #E65F5C;
+}
+
+.menuItemCard:nth-child(12n+3) {
+    background-color: #83B692;
+}
+
+.menuItemCard:nth-child(12n+4) {
+    background-color: #68BAAE;
+}
+
+.menuItemCard:nth-child(12n+5) {
+    background-color: #C99EA4;
+}
+
+.menuItemCard:nth-child(12n+6) {
+    background-color: #45425A;
+}
+
+.menuItemCard:nth-child(12n+7) {
+    background-color: #94B0DB;
+}
+
+.menuItemCard:nth-child(12n+8) {
+    background-color: #585B56;
+}
+
+.menuItemCard:nth-child(12n+9) {
+    background-color: #53599A;
+}
+
+.menuItemCard:nth-child(12n+10) {
+    background-color: #84B692;
+}
+
+.menuItemCard:nth-child(12n+11) {
+    background-color: #E3B528;
+}
+
+.menuItemCard:nth-child(12n) {
+    background-color: #E65F5C;
+}
+
+.gameSectionWrapper {
+    padding: 15px;
+    display: grid;
+    grid-gap: 20px 0;
+}
+
+.startGameInputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0 10px;
+}
+
+.startGameInputs .gameStartTime {
+    border: 1px solid #C6CACF;
+    padding: 9px 83px;
+    font-size: 13px;
+    font-weight: 400;
+    text-align: center;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 0;
+    height: 39.5px;
+}
+
+.startGameInputs button {
+    align-self: flex-end;
+}
+
+.generalInfoInvoiceSale {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 0 11px;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    padding-bottom: 20px;
+    padding-top: 15px;
+}
+
+.invoiceSaleFooter {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.gameCardInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 0.4fr 0.6fr;
+    align-items: start;
+    padding: 10px;
+    border: 1px solid #C6CACF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.gameCardInfo button {
+    grid-column: 1 / 4;
+}
+
+table.newInvoiceSaleTable tbody tr th {
+    background: #EAEFF5 !important;
+}
+
+table.newInvoiceSaleTable tr:first-child td:last-child, table.newInvoiceSaleTable tr:first-child th:last-child {
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    border-top-left-radius: 10px;
+}
+
+table.newInvoiceSaleTable tr:first-child td:first-child, table.newInvoiceSaleTable tr:first-child th:first-child {
+
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+table.newInvoiceSaleTable tr td, table.newInvoiceSaleTable tr th {
+    border-left: 1px dotted var(--pageBorder) !important;
+}
+
+table.newInvoiceSaleTable tbody tr .first a {
+    color: #C6CACF;
+    background: #EAEFF5;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+table.newInvoiceSaleTable tbody tr .first a:hover, .redTrash {
+    color: var(--myRed) !important;
+    background: #F2E4E7 !important;
+}
+
+.searchMember > div label {
+    font-size: 11px;
+}
+
+.searchMember {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    padding: 30px 20px 30px 20px;
+    grid-gap: 0 10px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.autoHeight {
+    height: auto !important;
+}
+
+.staticNameGuest {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: end;
+    padding: 30px 20px 30px 20px;
+    grid-gap: 0 10px;
+}
+
+.staticNameGuest > div label {
+    font-size: 11px;
+}
+
+.staticNameGuest small, .addNewMember small {
+    color: #767A80;
+    text-align: justify;
+    margin-top: 10px;
+}
+
+.addNewMember {
+    padding: 30px 20px 30px 20px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.addNewMember > div:first-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px 10px;
+}
+
+.addNewMember > div:first-child > div:nth-child(4) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: end;
+    grid-column: 1 / 4;
+    grid-gap: 0 10px;
+}
+
+.addNewMember > div:first-child > div:nth-child(2) {
+    grid-column: 2 / 4;
+}
+
+.addNewMember > div:first-child > div:nth-child(3) {
+    grid-column: 4 / 6;
+}
+
+.addNewMember > div:first-child > div:nth-child(5) {
+    grid-column: 4 / 6;
+}
+
+.addNewMember label {
+    font-size: 11px;
+}
+
+.addNewMember > div:nth-child(2) {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr;
+    align-items: end;
+    margin-top: 10px;
+    grid-gap: 0 10px;
+}
+
+.memberName > div {
+    padding: 10px 80px;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.memberName > div > p {
+    background: #4FCAD5;
+    border-radius: 5px;
+    text-align: center;
+    color: var(--white);
+    font-size: 13px;
+    padding: 10px;
+}
+
+.creditsMenu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    border-bottom: 1px solid #C6CACF;
+}
+
+.creditsMenu > div:first-child {
+    border-left: 1px solid #C6CACF;
+}
+
+.creditsMenu > div {
+    padding: 10px 0;
+}
+
+.creditsMenu > div.active {
+    background-color: var(--white);
+}
+
+.creditsMenu > div:hover {
+    cursor: pointer;
+    background-color: #C6CACF;
+}
+
+.creditsMenu > div.active:hover {
+    background-color: var(--white);
+    cursor: default;
+}
+
+.addCredits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 20px;
+    grid-gap: 25px 30px;
+}
+
+.addCredits > div:first-child {
+    grid-column: 1 / 3;
+}
+
+.addCredits > div:nth-child(4) {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr 0.2fr;
+    align-items: end;
+    grid-gap: 0 10px;
+}
+
+.addCredits > div:nth-child(2), .addCredits > div:nth-child(3) {
+    border: 1px solid #C6CACF;
+    padding: 15px;
+    border-radius: 5px;
+    display: grid;
+    grid-row-gap: 15px;
+}
+
+.addCredits label {
+    font-size: 11px;
+}
+
+.showCredits {
+    display: grid;
+    grid-gap: 20px 0;
+    padding: 30px;
+}
+
+.showCredits .creditInfo, .gameDataInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    grid-gap: 0 25px;
+}
+
+.creditInfo > div, .gameDataInfo > div {
+    border: 1px solid #C6CACF;
+    border-radius: 5px;
+    padding: 20px 0;
+    display: grid;
+    grid-gap: 15px 0;
+}
+
+.creditInfo > div span:first-child, .gameDataInfo > div span:first-child {
+    font-size: 11px;
+}
+
+.creditInfo > div span:last-child, .gameDataInfo > div span:last-child {
+    font-size: 26px;
+}
+
+.totalPriceRow th, .totalPriceRow td {
+    font-weight: 500 !important;
+    font-size: 14px;
+}
+
+#invoiceSaleTable tbody > tr td:last-child {
+    font-size: 10px;
+}
+
+#invoiceSaleTable tbody > tr:first-child th {
+    position: sticky;
+    top: 95px;
+}
+
+.menuCategoryCard span {
+    padding: 10px;
+    display: block;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.menuCategoryCard.active span, .menuCategoryCard:hover span {
+    font-weight: 500;
+    background-color: var(--white);
+}
+
+.menuCategoryCard.active {
+    cursor: default;
+    background: none;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.leftSideInvoiceSale > table tbody::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid var(--mainBody);
+    background: var(--newGrayBorder);
+    margin-right: 5px;
+}
+
+.mainButton.blueButton.dropdown-toggle::after {
+    display: none;
+}
+
+.stateAlert {
+    border-radius: 5px;
+    padding: 1.5em;
+}
+
+.greenState {
+    background-color: #D6E2CD;
+    border: 1px solid #658B3B;
+    color: #658B3B;
+}
+
+.customStateBox {
+    margin: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.customStateBox p {
+    margin: 0;
+}
+
+.leftSideInvoiceSale .stateAlert {
+    margin: 10px 0;
+}
+
+.popoverWrapper {
+    width: 180px;
+    font-family: IRANSans;
+    font-size: 10px;
+}
+
+.popoverWrapper > div > p:first-child {
+    font-size: 11px;
+    color: var(--myRed);
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    justify-content: center;
+}
+
+.popoverWrapper > div > p:nth-child(2) {
+    line-height: 15px;
+}
+
+.popoverWrapper > div a {
+    font-size: 12px !important;
+    margin: 3px 0;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.form-control.customReadonly[readonly] {
+    background-color: var(--white);
+}
+
+.form-control.customDropdown {
+    font-size: 13px;
+    height: 40px;
+}
+
+.hoursMinutesField::before {
+    content: "'";
+}
+
+.invoiceTable.invoiceSaleFooterTable tr > th {
+    width: 45%;
+}
+
+.customSelect {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, #fff0 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 1px), calc(100% - 15px) calc(1em + 1px), calc(100% - 2.5em) 0.5em;
+    background-size: 5px 6px, 6px 5px, 1px 1.5em;
+    background-repeat: no-repeat;
+    padding-right: 30px;
+}
+
+.requiredField {
+    border: 1px solid var(--myBlack);
+}
+
+table .badge {
+    margin-left: 5px;
+}
+
+.nestedMenuWrapper {
+    display: flex;
+}
+
+.nestedMenuWrapper .tableNavigation {
+    flex: 0 0 150px;
+    margin-left: 15px;
+}
+
+.nestedMenuWrapper .nestedPageWrapper {
+    flex: 0 0 calc(100% - 165px);
+    padding: 15px 0 0 15px;
+    overflow: auto;
+    height: calc(100vh - 118px);
+}
+
+.dataBoxWrapper {
+    display: flex;
+    gap: 25px;
+}
+
+.dataBoxWrapper > div {
+    border: 1px solid #C6CACF;
+    border-radius: 5px;
+    flex: 1;
+    display: flex;
+    padding: 20px;
+    text-align: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dataBoxWrapper > div span:first-child {
+    font-size: 11px;
+    flex: 1 1 100%;
+}
+
+.dataBoxWrapper > div span:last-child {
+    font-size: 26px;
+    flex: 1 1 100%;
+}
+
+.numberField:after {
+    content: " عدد ";
+}
+
+.modalBottomButtonsTopNav {
+    right: 30%;
+    left: 30%;
+    top: 65px;
+    border: none;
+    background: transparent;
+    width: inherit;
+    height: inherit;
+}
+
+.modalBottomButtonsTopNav .modal-content {
+    background: transparent !important;
+}
+
+.modalBottomButtonsTopNav .modal-body {
+    background: var(--pageBG);
+    padding: 25px;
+    border-radius: 5px;
+    max-height: calc(100vh - 300px);
+    overflow-y: scroll;
+}
+
+.modalBottomButtonsTopNav .modal-footer {
+    padding: 0;
+    margin-top: 10px;
+    border: none;
+}
+
+.modalBottomButtonsTopNav .modal-footer .mainButton {
+    margin: 0 10px 0 0;
+}
+
+.modalBottomButtonsTopNav .modal-header {
+    padding: 0;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.modalBottomButtonsTopNav .modal-content {
+    border: none;
+}
+
+.modalBottomButtonsTopNav .modal-dialog {
+    max-width: 550px;
+}
+
+.tabGroup {
+    display: flex;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid var(--white);
+    overflow: hidden;
+}
+
+.tabGroup .mainButton {
+    border-radius: 0;
+    background: transparent;
+    color: var(--white);
+    border: none;
+    flex: 1 0 auto;
+    font-size: 16px;
+}
+
+.tabGroup .mainButton.active {
+    background: var(--white);
+    color: var(--myBlack);
+    cursor: default;
+}
+
+.oilBlueButton .badge-white {
+    background: var(--white) !important;
+    color: var(--myBlue) !important;
+}
+
+.requiredFieldStar:after {
+    content: "\f621";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 6px;
+    color: var(--myRed);
+    margin-right: 3px;
+    vertical-align: super;
+}
+
+.cafeMenuNav > form {
+    margin: 22px;
+}
+
+.cafeMenuNav > div > form {
+    margin: 22px;
+}
+
+.generalInfoInvoice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.generalInfoInvoice > div {
+    flex: 1 0 auto;
+}
+
+#accountingTable tbody tr > td {
+    position: relative;
+    top: 15px;
+}
+
+#accountingTable tbody > tr:first-child th {
+    position: sticky;
+    top: 95px;
+}
+
+.invoiceSaleFooter .accountingMoreInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #C6CACF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.flexAuto {
+    flex: 1 0 auto;
+}
+
+.flexFull {
+    flex: 1 0 100%;
+}
+
+.accountingCard {
+    background: var(--white);
+    border-bottom: 1px solid #C6CACF;
+    border-left: 1px solid #C6CACF;
+    padding: 12px;
+}
+
+.accountingCard:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--myBlue);
+}
+
+.ui-select-bootstrap .ui-select-choices-row > span {
+    padding: 7px 20px !important;
+}
+
+.addRowButtonWrapper {
+    background: white;
+    padding: 0.4rem;
+    border: 1px solid var(--pageBorder);
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    margin-bottom: 1rem;
+}
+
+#expenseTable {
+    margin-bottom: 0 !important;
+}
+
+#expenseTable tr:last-child td:last-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#expenseTable tr:last-child td:first-child {
+    border-bottom-right-radius: 0;
+}
+
+.ui-select-container.ui-select-bootstrap.dropdown.disabled > div {
+    background: #eaeff5;
+}
+
+.ui-select-container.ui-select-bootstrap.dropdown.disabled > div > span {
+    background: #eaeff5;
+}
+
+.ui-select-container.ui-select-bootstrap.dropdown.disabled > div > span:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.tagOption {
+    background: var(--myBlue);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: var(--white);
+    margin-left: 5px;
+}
+
+.tagsWrapper {
+    margin: 25px;
+    display: flex;
+}
+
+.tagOption i {
+    cursor: pointer;
+    margin-right: 3px;
+    font-size: 12px;
+}
+
+.invoiceAccountingModal .generalInfoInvoice {
+    margin: 0;
+    position: sticky;
+    top: 0;
+    background: var(--mainBody);
+    padding-bottom: 14px;
+    padding-top: 15px;
 }

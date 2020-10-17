@@ -1,10 +1,12 @@
 from django.views import View
 from django.shortcuts import render
 from accounti.models import *
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from accountiboard.custom_permissions import *
 
 class AdminBranchDetailView(View):
 
+    @permission_decorator_class_based_simplified(session_authenticate_admin_panel)
     def get(self, request, branch_id, *args, **kwargs):
         context = {}
 
@@ -18,7 +20,6 @@ class AdminBranchDetailView(View):
         employee_count = EmployeeToBranch.objects.filter(branch=current_branch).count()
         printer_count = Printer.objects.filter(branch=current_branch).count()
         menu_category_count = MenuCategory.objects.filter(branch=current_branch).count()
-        boardgame_count = Boardgame.objects.filter(branch=current_branch).count()
         member_count = Member.objects.filter(organization=current_branch.organization).count()
 
         table_category_count = TableCategory.objects.filter(branch=current_branch).count()
@@ -50,7 +51,6 @@ class AdminBranchDetailView(View):
             'branch_employee_count': employee_count,
             'branch_printer_count': printer_count,
             'branch_menu_category_count': menu_category_count,
-            'branch_boardgame_count': boardgame_count,
             'branch_member_count': member_count,
             'branch_table_category_count': table_category_count,
             'branch_table_count': table_count,

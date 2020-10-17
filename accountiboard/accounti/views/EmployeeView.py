@@ -43,7 +43,7 @@ class LoginView(View):
         if not check_password(password, user_obj.password):
             return JsonResponse({"response_code": 3, "error_msg": WRONG_USERNAME_OR_PASS}, status=400)
 
-        user_obj.last_login = datetime.datetime.utcnow()
+        user_obj.last_login = datetime.utcnow()
         user_obj.save()
         if user_obj.get_user_type_display() == "cafe_owner":
             cafe_owner_object = CafeOwner.objects.get(user=user_obj)
@@ -56,7 +56,6 @@ class LoginView(View):
                 "name": cafe_owner_to_branch.name
             } for cafe_owner_to_branch in user_branch_objects]
             user_role = [USER_ROLES['CAFE_OWNER']]
-            request.session['user_role'] = [USER_ROLES['CAFE_OWNER']]
             try:
                 bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
             except:
@@ -65,7 +64,6 @@ class LoginView(View):
             employee_object = Employee.objects.get(user=user_obj)
             if employee_object.is_active != True:
                 return JsonResponse({"response_code": 3, "error_msg": "You don't have access rights."}, status=403)
-            request.session['user_role'] = employee_object.employee_roles
             user_role = employee_object.employee_roles
             branches = EmployeeToBranch.objects.filter(employee=employee_object)
             branch_object = branches.first().branch.id
@@ -74,8 +72,8 @@ class LoginView(View):
                 "id": employee_to_branch.branch.id,
                 "name": employee_to_branch.branch.name,
             } for employee_to_branch in branches]
-            this_organization = branches.first().branch.organization
-            cafe_owner_object = CafeOwner.objects.get(organization=this_organization)
+            organization_object = branches.first().branch.organization
+            cafe_owner_object = CafeOwner.objects.get(organization=organization_object)
             try:
                 bundle = Bundle.objects.get(cafe_owner=cafe_owner_object, is_active=True).bundle_plan
             except:
@@ -83,9 +81,14 @@ class LoginView(View):
         else:
             return JsonResponse({"response_code": 3}, status=403)
 
-        request.session['is_logged_in'] = username
-
-        jwt_token = make_new_JWT_token(user_obj.id, user_obj.phone, user_role, bundle, user_branches)
+        jwt_token = make_new_JWT_token(
+            user_obj.id,
+            user_obj.phone,
+            user_role,
+            bundle,
+            user_branches,
+            organization_object.id,
+        )
         return JsonResponse(
             {"response_code": 2,
              "user_data": {'username': username, 'branch': branch_object, 'full_name': user_obj.get_full_name(),
@@ -100,13 +103,11 @@ class LoginView(View):
 
 
 class RegisterEmployeeView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']}, # After bundles are implemented. remove this argument if uncommenting permissions before that
-    #     branch_disable=True
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = RegisterEmployeeValidator(rec_data)
@@ -201,40 +202,43 @@ class RegisterEmployeeView(View):
 
 
 class SearchEmployeeView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
-
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
         if not validator.is_valid():
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         search_word = rec_data['search_word']
-        branch_id = rec_data['branch_id']
 
-        employees_from_branch = EmployeeToBranch.objects.filter(branch=Branch.objects.get(pk=branch_id))
+        employees_from_branch = Employee.objects.filter(user__last_name__contains=search_word)
         employees = []
         for employee in employees_from_branch:
-            if search_word in employee.employee.last_name:
+            employee_branches = EmployeeToBranch.objects.filter(employee=employee,
+                                                                branch__organization=request.payload.get(
+                                                                    'sub_organization'))
+            if employee_branches:
                 employees.append({
-                    "last_name": employee.employee.user.get_full_name(),
-                    "auth_lvl": employee.auth_level,
+                    "id": employee.pk,
+                    "full_name": employee.user.get_full_name(),
+                    "auth_levels": employee.employee_roles,
+                    "branches": [{
+                        "id": employee_branch.branch.id,
+                        "name": employee_branch.branch.name
+                    } for employee_branch in employee_branches]
                 })
         return JsonResponse({"response_code": 2, 'employees': employees})
 
 
 class GetEmployeesView(View):
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['FREE']},
-    )
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -259,13 +263,11 @@ class GetEmployeesView(View):
 
 
 class GetEmployeeView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
 
@@ -289,35 +291,28 @@ class GetEmployeeView(View):
 
 
 class GetMenuCategoriesView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        branch_id = rec_data['branch']
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
+    def get(self, request, branch_id, *args, **kwargs):
         all_menu_categories = MenuCategory.objects.filter(branch_id=branch_id).order_by('list_order')
-        menu_categories = []
-        for category in all_menu_categories:
-            menu_categories.append({
-                "id": category.pk,
-                "name": category.name,
-            })
+        menu_categories = [{
+            'id': menu_category.pk,
+            'name': menu_category.name,
+            'printers': [{
+                'id': printer.pk,
+                'name': printer.printer.name
+            } for printer in PrinterToCategory.objects.filter(menu_category=menu_category)]
+        } for menu_category in all_menu_categories]
         return JsonResponse({"response_code": 2, 'menu_categories': menu_categories})
 
 
 class GetMenuCategoryView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
 
         rec_data = json.loads(request.read().decode('utf-8'))
@@ -357,13 +352,10 @@ class GetMenuCategoryView(View):
 
 
 class AddMenuCategoryView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = AddMenuCategoryValidator(rec_data)
@@ -380,7 +372,12 @@ class AddMenuCategoryView(View):
             return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
 
         if menu_category_id == 0:
-            new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id)
+            first_menu_category = MenuCategory.objects.filter(branch=branch_id).order_by('list_order').first()
+            if first_menu_category:
+                list_order = first_menu_category.list_order - 1
+            else:
+                list_order = 0
+            new_menu_category = MenuCategory(name=name, kind=kind, branch_id=branch_id, list_order=list_order)
             new_menu_category.save()
             for printer_id in printers_id:
                 printer_object = Printer.objects.get(pk=printer_id)
@@ -403,13 +400,10 @@ class AddMenuCategoryView(View):
 
 
 class SearchMenuCategoryView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
@@ -431,12 +425,10 @@ class SearchMenuCategoryView(View):
 
 
 class GetMenuItemsView(View):
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER']},
-        {USER_PLANS_CHOICES['FREE']},
-        branch_disable=False
-    )
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -456,13 +448,11 @@ class GetMenuItemsView(View):
 
 
 class GetMenuItemView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
 
@@ -479,13 +469,11 @@ class GetMenuItemView(View):
 
 
 class AddMenuItemView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = AddMenuItemValidator(rec_data)
@@ -518,34 +506,23 @@ class AddMenuItemView(View):
 
 
 class DeleteMenuItemView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
-    def post(self, request, *args, **kwargs):
-        rec_data = json.loads(request.read().decode('utf-8'))
-        menu_item_id = rec_data['menu_item_id']
-
-        if not menu_item_id:
-            return JsonResponse({"response_code": 3, "error_msg": DATA_REQUIRE})
-
-        old_menu_item = MenuItem.objects.get(pk=menu_item_id)
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
+    def delete(self, request, item_id, *args, **kwargs):
+        old_menu_item = MenuItem.objects.get(pk=item_id)
         old_menu_item.is_delete = 1
         old_menu_item.save()
-        return JsonResponse({"response_code": 2})
+        return JsonResponse({})
 
 
 class SearchMenuItemView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         validator = SearchEmployeeValidator(rec_data)
@@ -580,13 +557,10 @@ class SearchMenuItemView(View):
 
 
 class GetMenuItemsWithCategoriesView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -609,13 +583,10 @@ class GetMenuItemsWithCategoriesView(View):
 
 
 class GetPrintersView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data.get('branch')
@@ -635,13 +606,11 @@ class GetPrintersView(View):
 
 
 class GetPrinterView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def get(self, request, *args, **kwargs):
         printer_object = get_object_or_404(Printer, pk=self.kwargs.get('printer_id', 0))
 
@@ -653,13 +622,10 @@ class GetPrinterView(View):
 
 
 class AddPrinterView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         printer_id = rec_data.get('printer_id')
@@ -680,13 +646,10 @@ class AddPrinterView(View):
 
 
 class GetTodayCashView(View):
-    # @permission_decorator_class_based(
-    #     token_authenticate,
-    #     {USER_ROLES['CAFE_OWNER']},
-    #     {USER_PLANS_CHOICES['FREE']},
-    #     branch_disable=False
-    # )
-
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         branch_id = rec_data['branch']
@@ -699,12 +662,11 @@ class GetTodayCashView(View):
 
 
 class KickUnkickEmployeeView(View):
-    @permission_decorator_class_based(
-        token_authenticate,
-        {USER_ROLES['CAFE_OWNER']},
-        {USER_PLANS_CHOICES['FREE']},
-        branch_disable=True
-    )
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
+                                       USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         employee_id = rec_data.get('employee_id')
@@ -736,3 +698,33 @@ class KickUnkickEmployeeView(View):
                 return JsonResponse({'error_msg': 'This employee was not found'}, status=403)
         else:
             return JsonResponse({'error_msg': 'This employee works in another branch'}, status=403)
+
+
+class GetBranchEmployeesView(View):
+    @permission_decorator_class_based(token_authenticate,
+                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['ACCOUNTANT']},
+                                      ALLOW_ALL_PLANS,
+                                      branch_disable=True)
+    def get(self, request, branch_id, *args, **kwargs):
+
+        if not branch_id:
+            return JsonResponse({"error_msg": DATA_REQUIRE}, status=400)
+
+        branch_object = Branch.objects.get(id=branch_id)
+        branch_employees = EmployeeToBranch.objects.filter(branch=branch_object).values(
+            'employee').distinct()
+        employees = []
+        for employee in branch_employees:
+            employee_object = Employee.objects.get(id=employee.get('employee'))
+            employee_branches = EmployeeToBranch.objects.filter(employee=employee_object)
+            employees.append({
+                "id": employee_object.pk,
+                "full_name": employee_object.user.get_full_name(),
+                "auth_levels": employee_object.employee_roles,
+                "branches": [{
+                    "id": employee_branch.branch.id,
+                    "name": employee_branch.branch.name
+                } for employee_branch in employee_branches],
+            })
+
+        return JsonResponse({'employees': employees}, status=200)

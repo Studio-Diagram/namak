@@ -1,50 +1,33 @@
 <div ng-controller="accountManagerCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal"
-         tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="addModal" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت تامین‌کننده جدید</h2>
-                    <a class="mainButton redButton" ng-click="openPermissionModal()" href="" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="addSupplier()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            اطلاعات طرف حساب
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <h3>اطلاعات تامین‌کننده</h3>
                         <div class="row">
                             <div class="col">
-                                <label>نام تامین‌کننده</label>
+                                <label class="requiredFieldStar">نام طرف حساب</label>
                                 <input ng-model="new_supplier_data.name" type="text" aria-label="First name"
-                                       class="form-control" placeholder="نام تامین‌کننده">
+                                       class="form-control" placeholder="نام طرف حساب">
                             </div>
                             <div class="col">
-                                <label>شماره تلفن تامین‌کننده</label>
+                                <label class="requiredFieldStar">شماره تلفن طرف حساب</label>
                                 <input ng-model="new_supplier_data.phone" type="text" aria-label="First name"
-                                       class="form-control" placeholder="شماره تلفن تامین‌کننده">
+                                       class="form-control" placeholder="شماره تلفن طرف حساب">
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col">
                                 <label>نام مسول فروش</label>
                                 <input ng-model="new_supplier_data.salesman_name" type="text" aria-label="First name"
@@ -59,40 +42,21 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
+                    <a class="mainButton redButton closeModal"
+                       ng-click="closeAddModal()"
                        aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                        <span aria-hidden="true">خروج</span>
                     </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
+                    <a ng-click="addSupplier()" href=""
+                       class="mainButton greenButton">ثبت</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <main class="pageContent container-fluid">
+    <main class="pageContent">
         <div class="tableButtons">
             <div class="buttonGroup">
-                <a ng-click="openAddModal()" href="" class="mainButton greenButton">تامین‌کننده جدید</a>
+                <a ng-click="openAddModal()" href="" class="mainButton greenButton">طرف حساب جدید</a>
             </div>
             <div class="buttonGroup">
                 <form>
@@ -101,43 +65,10 @@
                 </form>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">عنوان</th>
-                            <th scope="col">مسول فروش</th>
-                            <th scope="col">شماره تماس</th>
-                            <th scope="col">مانده حساب</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="supplier in suppliers">
-                            <td><a ng-click="editSupplier(supplier.id)" href=""
-                                   class="mainButton fullWidthButton smallButton grayButton">ویرایش</a></td>
-                            <th scope="row">{{ supplier.name }}</th>
-                            <td>{{ supplier.salesman_name }}</td>
-                            <td>{{ supplier.salesman_phone }}</td>
-                            <td><span
-                                    ng-class="supplier.remainder >= 0 ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ supplier.remainder | number | persianNumber }} ریال</span>
-                            </td>
-                            <td><a ui-sref="account_manager.supplier({ supplier: supplier.id })"
-                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
-
-        </div>
+        <table-directive headers="headers"
+                         config="table_config"
+                         rows="suppliers" detail-callback="go_to_supplier_detail(item_id)"
+                         right-side-detail-callback="editSupplier(item_id)"
+                         delete-callback="deleteSupplier(item_id)"></table-directive>
     </main>
 </div>

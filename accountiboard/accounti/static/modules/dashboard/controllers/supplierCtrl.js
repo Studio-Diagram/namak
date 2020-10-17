@@ -1,6 +1,38 @@
 angular.module("dashboard")
-    .controller("supplierCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, dashboardHttpRequest, $stateParams) {
+    .controller("supplierCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $state, dashboardHttpRequest, $stateParams) {
         var initialize = function () {
+            $scope.all_sum_invoices_supplier = [
+                {
+                    id: "PURCHASE",
+                    name: "خرید",
+                    numbers: 0,
+                    total_price: 0
+                },
+                {
+                    id: "PAY",
+                    name: "پرداخت",
+                    numbers: 0,
+                    total_price: 0
+                },
+                {
+                    id: "EXPENSE",
+                    name: "هزینه",
+                    numbers: 0,
+                    total_price: 0
+                },
+                {
+                    id: "RETURN",
+                    name: "مرجوعی",
+                    numbers: 0,
+                    total_price: 0
+                },
+                {
+                    id: "AMANI_SALE",
+                    name: "فروش فروشگاهی",
+                    numbers: 0,
+                    total_price: 0
+                }
+            ];
             jQuery.noConflict();
             (function ($) {
                 $(document).ready(function () {
@@ -10,24 +42,49 @@ angular.module("dashboard")
                 });
 
             })(jQuery);
-            $scope.error_message = '';
+            $scope.headers = [
+                {
+                    name: "عنوان",
+                    key: "name"
+                },
+                {
+                    name: "تعداد",
+                    key: "numbers"
+                },
+                {
+                    name: "ملبغ",
+                    key: "total_price"
+                }
+            ];
+            $scope.table_configs = {
+                price_fields: ["total_price"],
+                has_detail_button: true,
+                has_row_numbers: false,
+                price_with_tags: true
+            };
             $scope.supplier_id = $stateParams.supplier;
             $rootScope.search_data_supplier = {
                 'from_time': '',
-                'to_time': '',
-                'username': $rootScope.user_data.username
+                'to_time': ''
             };
             $scope.search_data_supplier_remainder = {
                 'supplier_id': $stateParams.supplier,
-                'to_time': '',
-                'username': $rootScope.user_data.username
+                'to_time': ''
             };
             $scope.get_supplier();
+            $scope.get_sum_all_invoices();
+        };
+
+        $scope.get_sum_all_invoices = function () {
             $scope.get_sum_invoice_purchases();
             $scope.get_sum_invoice_settlements();
             $scope.get_sum_invoice_expenses();
             $scope.get_sum_invoice_returns();
             $scope.get_sum_invoice_amani_sales();
+        };
+
+        $scope.go_to_detail_of_invoice = function (invoice_type) {
+            $state.go('dashboard.accounting.detail', {supplier: $scope.supplier_id, detailState: invoice_type});
         };
 
         $scope.get_remainder = function () {
@@ -40,13 +97,8 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.remainder = data['supplier_remainder'];
                     }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    else if (data['response_code'] === 3) $rootScope.show_toast(data.error_msg, 'danger');
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
         };
 
@@ -56,53 +108,20 @@ angular.module("dashboard")
                 $rootScope.search_data_supplier.to_time = $("#datepicker").val();
                 $rootScope.search_data_supplier.from_time = $("#datepicker1").val();
             })(jQuery);
-            $scope.get_sum_invoice_purchases();
-            $scope.get_sum_invoice_settlements();
-            $scope.get_sum_invoice_expenses();
-            $scope.get_sum_invoice_returns();
-            $scope.get_sum_invoice_amani_sales();
+            $scope.get_sum_all_invoices();
         };
+
         $scope.get_supplier = function () {
-            var data = {
-                'username': $rootScope.user_data.username,
-                'supplier_id': $scope.supplier_id
-            };
-            dashboardHttpRequest.getSupplier(data)
+            dashboardHttpRequest.getSupplier($scope.supplier_id)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
-                        $scope.supplier_name = data['supplier']['name'];
-                        $scope.remainder = data['supplier']['remainder'];
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    $scope.supplier_name = data['supplier']['name'];
+                    $scope.remainder = data['supplier']['remainder'];
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
-        };
-
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addModal').css('z-index', "");
-            })(jQuery);
         };
 
         $scope.get_sum_invoice_purchases = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $rootScope.search_data_supplier.from_time,
                 'to_time': $rootScope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id
@@ -110,23 +129,16 @@ angular.module("dashboard")
             dashboardHttpRequest.getSumInPurchase(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.sum_purchase = data['all_invoice_purchases_sum']['total_price__sum'];
-                        $scope.last_buy = data['last_buy'];
-                        $scope.purchase_count = data['purchase_count'];
+                        $scope.all_sum_invoices_supplier[0].numbers = data['purchase_count'];
+                        $scope.all_sum_invoices_supplier[0].total_price = data['all_invoice_purchases_sum']['total_price__sum'];
                     }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    else if (data['response_code'] === 3) $rootScope.show_toast(data.error_msg, 'danger');
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
         };
 
         $scope.get_sum_invoice_settlements = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $rootScope.search_data_supplier.from_time,
                 'to_time': $rootScope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id
@@ -134,23 +146,16 @@ angular.module("dashboard")
             dashboardHttpRequest.getSumInSettlement(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.sum_settlement = data['all_invoice_settlements_sum']['payment_amount__sum'];
-                        $scope.last_pay = data['last_pay'];
-                        $scope.pay_count = data['pay_count'];
+                        $scope.all_sum_invoices_supplier[1].numbers = data['pay_count'];
+                        $scope.all_sum_invoices_supplier[1].total_price = data['all_invoice_settlements_sum']['payment_amount__sum'];
                     }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    else if (data['response_code'] === 3) $rootScope.show_toast(data.error_msg, 'danger');
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
         };
 
         $scope.get_sum_invoice_expenses = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $rootScope.search_data_supplier.from_time,
                 'to_time': $rootScope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id
@@ -158,23 +163,16 @@ angular.module("dashboard")
             dashboardHttpRequest.getSumInExpense(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.sum_expense = data['all_invoice_expenses_sum']['price__sum'];
-                        $scope.last_expense = data['last_expense'];
-                        $scope.expense_count = data['expense_count'];
+                        $scope.all_sum_invoices_supplier[2].numbers = data['expense_count'];
+                        $scope.all_sum_invoices_supplier[2].total_price = data['all_invoice_expenses_sum']['price__sum'];
                     }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    else if (data['response_code'] === 3) $rootScope.show_toast(data.error_msg, 'danger');
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
         };
 
         $scope.get_sum_invoice_returns = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'from_time': $rootScope.search_data_supplier.from_time,
                 'to_time': $rootScope.search_data_supplier.to_time,
                 'supplier_id': $scope.supplier_id
@@ -182,23 +180,16 @@ angular.module("dashboard")
             dashboardHttpRequest.getSumInReturn(data)
                 .then(function (data) {
                     if (data['response_code'] === 2) {
-                        $scope.sum_return = data['all_invoice_returns_sum']['total_price__sum'];
-                        $scope.last_return = data['last_return'];
-                        $scope.return_count = data['return_count'];
+                        $scope.all_sum_invoices_supplier[3].numbers = data['return_count'];
+                        $scope.all_sum_invoices_supplier[3].total_price = data['all_invoice_returns_sum']['total_price__sum'];
                     }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    else if (data['response_code'] === 3) $rootScope.show_toast(data.error_msg, 'danger');
                 }, function (error) {
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
         };
 
         $scope.get_sum_invoice_amani_sales = function () {
             var data = {
-                'username': $rootScope.user_data.username,
                 'branch': $rootScope.user_data.branch,
                 'from_time': $rootScope.search_data_supplier.from_time,
                 'to_time': $rootScope.search_data_supplier.to_time,
@@ -208,18 +199,12 @@ angular.module("dashboard")
                 .then(function (data) {
                     $rootScope.is_page_loading = false;
                     if (data['response_code'] === 2) {
-                        $scope.sum_amani_sales = data['all_amani_sales_sum'];
-                        $scope.last_amani_sales = '-';
-                        $scope.amani_sales_count = data['all_amani_sales_buy'];
+                        $scope.all_sum_invoices_supplier[4].numbers = data['all_amani_sales_buy'];
+                        $scope.all_sum_invoices_supplier[4].total_price = data['all_amani_sales_sum'];
                     }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
+                    else if (data['response_code'] === 3) $rootScope.show_toast(data.error_msg, 'danger');
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = 500;
-                    $scope.openErrorModal();
                 });
         };
 

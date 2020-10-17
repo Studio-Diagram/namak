@@ -1,7 +1,6 @@
 <main ng-controller="forgetCtrl">
-    <div class="row no-gutters">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
+    <div class="row no-gutters mainpageForms">
+        <div class="generalFormWrapper">
             <h2 class="text-center">بازیابی رمز عبور</h2>
             <form id="sendVerifyCodeForgetPassword" class="generalForm showForm">
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
@@ -25,7 +24,7 @@
                     <span>یا</span>
                 </div>
                 <div>
-                    <a class="btn fullWidthButton newYellowButton" ui-sref="login">ورود به پنل کاربری</a>
+                    <a class="btn fullWidthButton newYellowButton" ui-sref="main.login">ورود به پنل کاربری</a>
                 </div>
             </form>
             <form id="changePasswordForgetPassword" class="generalForm">
@@ -59,7 +58,7 @@
                 <div class="form-group submitButtonWrapper mt-3">
                     <button ng-click="send_forget_password()" type="button"
                             class="submitButton btn oilBlueButton fullWidthButton"
-                            ng-disabled="!user_forget_password_data.password || !user_forget_password_data.re_password || (user_forget_password_data.password !== user_forget_password_data.re_password) || (user_forget_password_data.password.length < 8) || !user_forget_password_data.sms_verify_token">
+                            ng-disabled="!user_forget_password_data.password || !user_forget_password_data.re_password || !user_forget_password_data.sms_verify_token">
                         <span ng-show="form_state.is_loading"><i
                                 ng-class="{'fa fa-spinner fa-spin': form_state.is_loading}"></i></span>
                         <span ng-hide="form_state.is_loading">تغییر رمز عبور</span>
@@ -69,7 +68,7 @@
                     <span>یا</span>
                 </div>
                 <div>
-                    <a class="btn fullWidthButton newYellowButton" ui-sref="login">ورود به پنل کاربری</a>
+                    <a class="btn fullWidthButton newYellowButton" ui-sref="main.login">ورود به پنل کاربری</a>
                 </div>
             </form>
         </div>

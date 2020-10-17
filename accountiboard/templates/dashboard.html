@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
+    <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,11 +37,8 @@
         <script src="{% static 'modules/dashboard/services/offlineAPIHttpRequest.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/dashboardCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/employeeCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/managerCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/menuCategoryCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/menuItemCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/menuCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/memberCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/boardgameCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/branchCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/salonCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/accountManagerCtrl.js' %}"></script>
@@ -50,17 +48,28 @@
         <script src="{% static 'modules/dashboard/controllers/supplierCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/supplierDetailCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/returnCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/statusCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/expenseCategoryCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/reservationCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/closeOpenCashCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/closeOpenCashDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/settledInvoiceModalCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/tableCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/lotteryCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/quickAccessCtrl.js' %}"></script>
-        <script src="{% static 'modules/dashboard/controllers/printerCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/reportsCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/bankingCtrl.js' %}"></script>
         <script src="{% static 'modules/dashboard/controllers/stocksCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/cashDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/addMemberDirectiveCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/branchDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/gameBranchDetailCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/namakCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/bundlesCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/buyBundleCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/transactionsCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/subManagerCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/printersCtrl.js' %}"></script>
+        <script src="{% static 'modules/dashboard/controllers/salaryCtrl.js' %}"></script>
         <script src="{% static 'js/ng-tags-input.min.js' %}"></script>
     {% endcompress %}
 
@@ -92,22 +101,33 @@
 </head>
 
 <body ng-app="dashboard" ng-controller="dashboardCtrl">
-<div class="modal fade mainModal alertModal redAlertModal" id="mainErrorModal" data-backdrop="static"
+
+<div class="modal fade mainModal alertModal redAlertModal" id="transactionResultModal" data-backdrop="static"
      data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modalHeader">
-                <h2 class="modalTitle">خطا</h2>
-                <a ng-click="close_modal('mainErrorModal', 'userProfileModal')" class="mainButton redButton" href=""
+                <h2 class="modalTitle">نتیجه پرداخت</h2>
+                <a ng-click="closeDeleteModal()" class="mainButton redButton" data-dismiss="modal" href=""
                    aria-label="Close">
                     <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
                 </a>
+
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <main class="col-sm-12">
-                            <span class="alertText" ng-bind="error_message"></span>
+                            <span ng-show="transaction_successful_activated"
+                                  class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی جدید فعال شد
+                            </span>
+                            <span ng-show="transaction_successful_reserved"
+                                  class="alertText">پرداخت با موفقیت انجام شد و طرح اشتراکی رزرو شد
+                            </span>
+                            <span ng-show="transaction_unsuccessful"
+                                  class="alertText">پرداخت با خطا مواجه شد
+                            </span>
+
                         </main>
                     </div>
                 </div>
@@ -115,24 +135,29 @@
         </div>
     </div>
 </div>
-<div class="modal fade mainModal littleModal" id="userProfileModal" tabindex="-1" role="dialog"
+
+<div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+     id="userProfileModal" tabindex="-1"
+     role="dialog"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modalHeader">
-                <h2 class="modalTitle">اطلاعات کاربری</h2>
-                <a class="mainButton redButton closeModal" ng-click="close_modal('userProfileModal')"
-                   aria-label="Close">
-                    <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                </a>
-                <a ng-click="update_profile()" href="" class="mainButton greenButton"><i
-                        class="fas fa-save"></i> ثبت</a>
-                <a ng-click="change_password()" href="" class="mainButton greenButton"><i
-                        class="fas fa-save"></i> تغییر رمز عبور</a>
+            <div class="modal-header">
+                <div class="tabGroup">
+                    <button ng-click="change_nav_inside_modal('CHANGE_PROFILE')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'CHANGE_PROFILE'}" class="mainButton">
+                        اطلاعات کاربری
+                    </button>
+                    <button ng-click="change_nav_inside_modal('CHANGE_PASSWORD')"
+                            ng-class="{'active' : selected_nav_inside_modal === 'CHANGE_PASSWORD'}"
+                            class="mainButton">
+                        تغییر رمز
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
-                <form>
+                <form ng-if="selected_nav_inside_modal === 'CHANGE_PROFILE'">
                     <div class="row">
                         <div class="col">
                             <label>نام<i class="fas fa-star-of-life"></i></label>
@@ -155,17 +180,17 @@
                             <input ng-model="user_profile_data.home_address" type="text"
                                    class="form-control" placeholder="آدرس">
 
-                            <label>موبایل<i class="fas fa-star-of-life"></i></label>
+                            <label>موبایل</label>
                             <input ng-model="user_profile_data.phone" type="text"
-                                   class="form-control" placeholder="موبایل">
+                                   class="form-control" placeholder="موبایل" disabled>
                         </div>
                     </div>
+                </form>
+                <form ng-if="selected_nav_inside_modal === 'CHANGE_PASSWORD'">
                     <div class="row">
                         <div class="col">
-                            <label> رمز عبور قدیمی <i class="fa fa-question-circle"
-                                                      title="در صورت عدم نیاز به تغییر رمز عبور فیلدهای زیر را خالی بگذارید."
-                                                      data-toggle="tooltip" tooltip></i></label>
-                            <input ng-model="user_profile_data.old_password" type="password"
+                            <label> رمز عبور قدیمی</label>
+                            <input ng-model="user_profile_data.old_password" type="password" autocomplete="new-password"
                                    class="form-control" placeholder="رمز عبور قدیمی">
 
                             <label>رمز عبور جدید</label>
@@ -180,22 +205,27 @@
                 </form>
             </div>
             <div class="modal-footer">
-
+                <a class="mainButton redButton closeModal" ng-click="close_modal('userProfileModal')"
+                   aria-label="Close">
+                    <span aria-hidden="true">خروج</span>
+                </a>
+                <a ng-if="selected_nav_inside_modal === 'CHANGE_PROFILE'" ng-click="update_profile()" href=""
+                   class="mainButton greenButton">ذخیره</a>
+                <a ng-if="selected_nav_inside_modal === 'CHANGE_PASSWORD'" ng-click="change_password()" href=""
+                   class="mainButton greenButton">تغییر رمز</a>
             </div>
         </div>
     </div>
 </div>
 
-
-<div style="position: absolute; top: 5em; left: 0;z-index: 1050;">
+<div style="position: absolute;bottom: 20px;right: 20px;;z-index: 1080;">
     <div class="toast" ng-class="{'toast-success' : toast_type === 'success', 'toast-danger': toast_type === 'danger'}"
          role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
+            <p ng-bind="toast_message"></p>
             <button class="mainButton toast-button ml-1" data-dismiss="toast" aria-label="Close">
-                <i class="fa fa-check"></i>
                 <span>باشه</span>
             </button>
-            <span ng-bind="toast_message"></span>
         </div>
     </div>
 </div>
@@ -273,53 +303,46 @@
                 نرم افزار مدیریت کافه
             </span>
                 <span class="namakVersion">
-                    v1.0.21
+                    v1.1.0
                 </span>
             </a>
             <nav class=" nav flex-column myNav">
                 <ul>
                     <li class="nav-item">
-                        <a ng-class="isActive('/quickAccess') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
+                        <a ng-class="isActive('/dashboard/quickAccess') ? 'nav-link active' : 'nav-link'"
+                           ui-sref="dashboard.quickAccess" href=""><i class="fas fa-user-circle"></i>داشبورد
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a ng-class="isActive('/cash_manager') ? 'nav-link active' : 'nav-link'"
-                           ui-sref="cash_manager.salon"
+                        <a ng-class="isActive('/dashboard/cash_manager') ? 'nav-link active' : 'nav-link'"
+                           ui-sref="dashboard.cash_manager.salon"
                            href="" class="nav-link"><i class="fas fa-cash-register"></i>صندوق</a>
 
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="reservation"
-                           ng-class="isActive('/reservation') ? 'nav-link active' : 'nav-link'"
-                           class="nav-link"><i class="fas fa-table"></i>رزرواسیون</a>
+                        <a ui-sref="dashboard.reservation"
+                           ng-class="isActive('/dashboard/reservation') ? 'nav-link active' : 'nav-link'"
+                           class="nav-link"><i class="fas fa-phone"></i>رزرواسیون</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="member_manager.member" href=""
-                           ng-class="isActive('/member_manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-id-card"></i>عضویت</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a ui-sref="boardgame" href=""
-                           ng-class="isActive('/boardgame') ? 'nav-link active' : 'nav-link'"><i class="fas
-                           fa-chess"></i>قفسه بازی‌ها</a>
+                        <a ui-sref="dashboard.member_manager.member" href=""
+                           ng-class="isActive('/dashboard/member_manager') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-smile-wink"></i>مشتریان</a>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-calendar-day"></i>رویدادها</a>
+                        <a ui-sref="dashboard.accounting.documents.buy" href=""
+                           ng-class="isActive('/dashboard/accounting') ? 'nav-link active' : 'nav-link'"><i class="fas
+                           fa-calculator"></i>حسابداری</a>
                     </li>
                     <li class="nav-item">
-                        <a ui-sref="account_manager.buy" href=""
-                           ng-class="isActive('/account_manager') ? 'nav-link active' : 'nav-link'"><i class="fas
-                           fa-chess"></i>حسابداری</a>
+                        <a ui-sref="dashboard.branch_management.details"
+                           ng-class="isActive('/dashboard/branch') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-code-branch"></i>مدیریت شعبه</a>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link disabled"><i class="fas fa-code"></i>پشتیبانی فنی</a>
-                    </li>
-                    <li class="nav-item" class="nav-link">
-                        <a ui-sref="manager.addEmployee"
-                           ng-class="isActive('/manager') ? 'nav-link active' : 'nav-link'"><i
-                                class="fas fa-cogs"></i>مدیریت</a>
+                        <a ui-sref="dashboard.cafe_management.employee"
+                           ng-class="isActive('/dashboard/cafe') ? 'nav-link active' : 'nav-link'"><i
+                                class="fas fa-store"></i>مدیریت کافه</a>
                     </li>
                 </ul>
             </nav>
@@ -392,5 +415,6 @@
     </div>
 
 </div>
+<script src="//code.tidio.co/8chliq5j7ywpxiluiaqjm0cthkcjcvsw.js" async></script>
 </body>
 </html>

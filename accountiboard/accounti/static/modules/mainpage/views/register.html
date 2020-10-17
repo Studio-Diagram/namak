@@ -1,7 +1,6 @@
 <main ng-controller="registerCtrl">
-    <div class="row no-gutters">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
+    <div class="row no-gutters mainpageForms">
+        <div class="generalFormWrapper">
             <h2 class="text-center">ثبت‌ کافه جدید</h2>
             <form id="companyRegistrationForm" class="generalForm showForm">
                 <div ng-show="form_state.is_error" class="alert alert-danger alert-dismissible">
@@ -9,12 +8,12 @@
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.company_name" type="text" class="form-control"
-                           placeholder="نام کمپانی">
+                           placeholder="نام کافه">
 
                 </div>
                 <div class="form-group">
                     <input ng-model="new_user.company_address" type="text" class="form-control"
-                           placeholder="آدرس کمپانی">
+                           placeholder="آدرس کافه">
 
                 </div>
                 <div class="row">
@@ -44,7 +43,7 @@
                     <span>یا</span>
                 </div>
                 <div>
-                    <a class="btn fullWidthButton newYellowButton" ui-sref="login">ورود به پنل کاربری</a>
+                    <a class="btn fullWidthButton newYellowButton" ui-sref="main.login">ورود به پنل کاربری</a>
                 </div>
             </form>
             <form id="personalRegistrationForm" class="generalForm">

@@ -1,89 +1,46 @@
 <div ng-controller="tableCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addModal" tabindex="-1"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="addModal" tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت میز جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="addTable()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button ng-click="change_nav_inside_modal('TABLE')"
+                                ng-class="{'active' : selected_nav_inside_modal === 'TABLE'}" class="mainButton">میز
+                            جدید
+                        </button>
+                        <button ng-click="change_nav_inside_modal('TABLE_CATEGORY')"
+                                ng-class="{'active' : selected_nav_inside_modal === 'TABLE_CATEGORY'}"
+                                class="mainButton">گروه
+                            میز جدید
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <h3>اطلاعات میز</h3>
+                    <form ng-if="selected_nav_inside_modal === 'TABLE'">
                         <div class="row">
                             <div class="col">
-                                <label>نام میز<i class="fas fa-star-of-life"></i></label>
+                                <label>نام میز</label>
                                 <input ng-model="new_table_data.name" type="text"
                                        class="form-control" placeholder="نام میز">
                             </div>
                             <div class="col">
-                                <label>گروه میز<i class="fas fa-star-of-life"></i></label>
-                                <select ng-model="new_table_data.table_cat_id" class="form-control">
-                                    <option value="">گروه میز</option>
+                                <label>گروه میز</label>
+                                <select ng-model="new_table_data.table_cat_id" class="form-control customSelect">
+                                    <option value="">انتخاب کنید</option>
                                     <option ng-repeat="category in table_categories"
                                             ng-value="category.id">{{ category.name }}</option>
                                 </select>
                             </div>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal" id="addModalTableCategory" tabindex="-1" role="dialog"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت گروه میز جدید</h2>
-                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="addTableCategory()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <h3>اطلاعات گروه میز</h3>
+                    <form ng-if="selected_nav_inside_modal === 'TABLE_CATEGORY'">
                         <div class="row">
                             <div class="col">
-                                <label>نام گروه میز<i class="fas fa-star-of-life"></i></label>
+                                <label>نام گروه میز</label>
                                 <input ng-model="new_table_category_data.name" type="text"
                                        class="form-control" placeholder="نام گروه میز">
                             </div>
@@ -91,73 +48,77 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-
+                    <a class="mainButton redButton closeModal" ng-click="closeForm()" aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-if="selected_nav_inside_modal === 'TABLE'" ng-click="addTable()" href=""
+                       class="mainButton greenButton">ثبت</a>
+                    <a ng-if="selected_nav_inside_modal === 'TABLE_CATEGORY'" ng-click="addTableCategory()" href=""
+                       class="mainButton greenButton">ثبت</a>
                 </div>
             </div>
         </div>
     </div>
-    <main class="pageContent container-fluid">
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <div class="row">
-                    <div class="col">
-                        <div class="tableButtons">
-                            <div class="buttonGroup">
-                                <a class="addUser mainButton greenButton" ng-click="open_modal('addModal')"
-                                   data-toggle="modal"><i
-                                        class="fas fa-user-plus"></i> میز جدید</a>
-                            </div>
-                        </div>
-                        <div class="tableWrapper">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">نام میز</th>
-                                    <th scope="col">نام گروه میز</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="table in tables">
-                                    <th scope="row">{{ table.table_name }}</th>
-                                    <th scope="row">{{ table.table_category_name }}</th>
-                                    <td><a ng-click="editTable(table.table_id)" href=""
-                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="tableButtons">
-                            <div class="buttonGroup">
-                                <a style="margin-left: 10px" class="addUser mainButton greenButton"
-                                   ng-click="open_modal('addModalTableCategory')" data-toggle="modal"><i
-                                        class="fas fa-user-plus"></i>گروه میز جدید</a>
-                            </div>
-                        </div>
-                        <div class="tableWrapper">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">نام گروه میز</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="table in table_categories">
-                                    <th scope="row">{{ table.name }}</th>
-                                    <td><a ng-click="editTableCategory(table.id)" href=""
-                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
+    <main class="pageContent">
+        <div class="row">
+            <div class="col">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton"
+                           ng-click="open_modal('addModal');change_nav_inside_modal('TABLE');"
+                           data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> میز جدید</a>
                     </div>
                 </div>
-            </main>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام میز</th>
+                            <th scope="col">نام گروه میز</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="table in tables">
+                            <th scope="row">{{ table.table_name }}</th>
+                            <th scope="row">{{ table.table_category_name }}</th>
+                            <td><a ng-click="editTable(table.table_id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a style="margin-left: 10px" class="addUser mainButton greenButton"
+                           ng-click="open_modal('addModal');change_nav_inside_modal('TABLE_CATEGORY');"
+                           data-toggle="modal"><i
+                                class="fas fa-user-plus"></i>گروه میز جدید</a>
+                    </div>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام گروه میز</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="table in table_categories">
+                            <th scope="row">{{ table.name }}</th>
+                            <td><a ng-click="editTableCategory(table.id)" href=""
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
         </div>
     </main>
 </div>

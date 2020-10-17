@@ -20,13 +20,11 @@ angular.module("dashboard")
                         "price_per_hour": 0
                     }
                 ],
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch': $rootScope.user_data.branch
             };
             $scope.search_data_branch = {
                 'search_word': '',
-                'branch': $rootScope.user_data.branch,
-                'username': $rootScope.user_data.username
+                'branch': $rootScope.user_data.branch
             };
             $scope.branchSearchWord = '';
             $scope.get_branches_data($rootScope.user_data);
@@ -84,28 +82,12 @@ angular.module("dashboard")
                         $scope.branches = data['branches'];
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
                     $rootScope.is_page_loading = false;
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
-        };
-
-        $scope.openAddBranchModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addBranchModal').modal('show');
-            })(jQuery);
-        };
-
-        $scope.closeAddBranchModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#addBranchModal').modal('hide');
-            })(jQuery);
         };
 
         $scope.addBranch = function () {
@@ -119,15 +101,13 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.get_branches_data($rootScope.user_data);
                         $scope.resetFrom();
-                        $scope.closeAddBranchModal();
+                        $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
+                        $rootScope.show_toast(data.error_msg, 'danger');
                     }
                 }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
+
                 });
         };
 
@@ -142,45 +122,28 @@ angular.module("dashboard")
                             $scope.branches = data['branches'];
                         }
                         else if (data['response_code'] === 3) {
-                            $scope.error_message = data['error_msg'];
-                            $scope.openErrorModal();
+                            $rootScope.show_toast(data.error_msg, 'danger');
                         }
-                    }, function (error) {
-                        $scope.error_message = error;
-                        $scope.openErrorModal();
-                    });
+                    }, function (error) {});
             }
         };
 
         $scope.editBranch = function (branch_id) {
             $scope.is_in_edit_mode = true;
-            var data = {
-                'username': $rootScope.user_data.username,
-                'branch': branch_id
-            };
-            dashboardHttpRequest.getBranch(data)
+            dashboardHttpRequest.getBranch(branch_id)
                 .then(function (data) {
-                    if (data['response_code'] === 2) {
                         $scope.new_branch_data = {
                             'branch_id': data['branch']['id'],
                             'name': data['branch']['name'],
                             'address': data['branch']['address'],
-                            'start_time': data['branch']['start_time'],
-                            'end_time': data['branch']['end_time'],
+                            'start_time': data['branch']['start_working_time'],
+                            'end_time': data['branch']['end_working_time'],
                             'game_data': data['branch']['game_data'],
                             'min_paid_price': data['branch']['min_paid_price'],
                             'guest_pricing': data['branch']['guest_pricing']
                         };
-                        $scope.openAddBranchModal();
-                    }
-                    else if (data['response_code'] === 3) {
-                        $scope.error_message = data['error_msg'];
-                        $scope.openErrorModal();
-                    }
-                }, function (error) {
-                    $scope.error_message = error;
-                    $scope.openErrorModal();
-                });
+                        $rootScope.open_modal('addModal');
+                }, function (error) {});
 
         };
 
@@ -206,27 +169,6 @@ angular.module("dashboard")
                 'branch': $rootScope.user_data.branch,
                 'username': $rootScope.user_data.username
             };
-        };
-
-        $scope.closeForm = function () {
-            $scope.resetFrom();
-            $scope.closeAddBranchModal();
-        };
-
-        $scope.openErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('show');
-                $('#addBranchModal').css('z-index', 1000);
-            })(jQuery);
-        };
-
-        $scope.closeErrorModal = function () {
-            jQuery.noConflict();
-            (function ($) {
-                $('#errorModal').modal('hide');
-                $('#addBranchModal').css('z-index', "");
-            })(jQuery);
         };
 
         initialize();

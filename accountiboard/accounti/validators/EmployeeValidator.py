@@ -35,7 +35,6 @@ class RegisterEmployeeValidator(forms.Form):
 
 class SearchEmployeeValidator(forms.Form):
     search_word = forms.CharField(max_length=255)
-    branch_id = forms.IntegerField()
 
 
 class AddMenuCategoryValidator(forms.Form):

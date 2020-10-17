@@ -1,0 +1,13 @@
+<div class="pageSubMenu">
+    <nav class=" nav">
+        <a ui-sref="dashboard.branch_management.details"  ng-class="isActive('/dashboard/branch/details') ? 'nav-link active' : 'nav-link'">اطلاعات شعبه</a>
+        <a ui-sref="dashboard.branch_management.tables"  ng-class="isActive('/dashboard/branch/tables') ? 'nav-link active' : 'nav-link'">میز‌های کافه</a>
+        <a ui-sref="dashboard.branch_management.menu.general"  ng-class="isActive('/dashboard/branch/menu') ? 'nav-link active' : 'nav-link'">منوی کافه</a>
+        <a ui-sref="dashboard.branch_management.game_details"  ng-class="isActive('/dashboard/branch/game_details') ? 'nav-link active' : 'nav-link'">تنظیمات بازی</a>
+    </nav>
+</div>
+
+<div class="preloader" ng-show="is_page_loading"></div>
+<div ng-hide="is_page_loading">
+    <ui-view></ui-view>
+</div>

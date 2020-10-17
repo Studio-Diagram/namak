@@ -1,0 +1,31 @@
+<div ng-controller="transactionsCtrl">
+
+
+    <div class="tableWrapper">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>شماره کارت</th>
+                <th>شماره موبایل</th>
+                <th>مقدار</th>
+                <th>وضعیت</th>
+                <th>توضیحات</th>
+            </tr>
+
+            <tr ng-repeat="transaction in all_transactions">
+                <td>{{ transaction.card_number | persianNumber }}</td>
+                <td>{{ transaction.mobile | persianNumber }}</td>
+                <td>{{ transaction.amount | number | persianNumber }}</td>
+                <td>{{ transaction.status }}</td>
+                <td>{{ transaction.description }}</td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+
+</div>

@@ -1,0 +1,13 @@
+<div class="pageSubMenu">
+    <nav class=" nav">
+        <a ui-sref="dashboard.cafe_management.employee" ng-class="isActive('/dashboard/cafe/employee') ? 'nav-link active' : 'nav-link'">کارمندان</a>
+        <a ui-sref="dashboard.cafe_management.branch"  ng-class="isActive('/dashboard/cafe/branch') ? 'nav-link active' : 'nav-link'">شعبه‌ها</a>
+		<a ui-sref="dashboard.cafe_management.banking"  ng-class="isActive('/dashboard/cafe/banking') ? 'nav-link active' : 'nav-link'">بانکداری</a>
+        <a ui-sref="dashboard.cafe_management.stocks"  ng-class="isActive('/dashboard/cafe/stocks') ? 'nav-link active' : 'nav-link'">انبارداری</a>
+    </nav>
+</div>
+
+<div class="preloader" ng-show="is_page_loading"></div>
+<div ng-hide="is_page_loading">
+    <ui-view></ui-view>
+</div>

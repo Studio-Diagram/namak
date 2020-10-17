@@ -1,18 +1,6 @@
 angular.module("mainpage")
     .controller("registerCtrl", function ($scope, $interval, $rootScope, $filter, $http, $state, $auth, $timeout, $window, mainpageHttpRequest) {
         var initialize = function () {
-            var reCaptcha_showing = $interval(function () {
-                jQuery.noConflict();
-                (function ($) {
-                    var badge_object = $('.grecaptcha-badge');
-                    if (badge_object) {
-                        badge_object.css('visibility', 'visible');
-                        badge_object.css('opacity', '1');
-                        $interval.cancel(reCaptcha_showing);
-                    }
-                })(jQuery);
-            }, 500);
-
             $scope.new_user = {
                 phone: "",
                 password: "",
@@ -56,7 +44,7 @@ angular.module("mainpage")
             mainpageHttpRequest.registerCafeOwner($scope.new_user)
                 .then(function (data) {
                     $scope.form_state.is_loading = false;
-                    $state.go("login");
+                    $state.go("main.login");
                 }, function (error) {
                     $scope.form_state.is_error = true;
                     $scope.form_state.is_loading = false;

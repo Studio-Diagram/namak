@@ -2,9 +2,7 @@ from django.db import models
 from django.contrib import admin
 from multiselectfield import MultiSelectField
 from django.core.mail import send_mail
-# from django.contrib.postgres.fields import JSONField
 from django.db.models import JSONField
-from django.utils import timezone
 from uuid import uuid4
 
 
@@ -104,15 +102,19 @@ class BankingBaseClass(models.Model):
     name = models.CharField(max_length=30, blank=False, null=False)
     unit = models.CharField(max_length=30, blank=True, null=True, default="IR-RIAL")
 
+
 class BankingToBranch(models.Model):
-    branch  = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
+    branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE)
     banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE)
+
 
 class CashRegister(BankingBaseClass):
     pass
 
+
 class Tankhah(BankingBaseClass):
     pass
+
 
 class Bank(BankingBaseClass):
     bank_name = models.CharField(max_length=255, null=True, blank=True)
@@ -165,31 +167,6 @@ class MenuItem(models.Model):
     menu_category = models.ForeignKey(MenuCategory, null=True, blank=False, on_delete=models.CASCADE)
 
 
-class Boardgame(models.Model):
-    CATEGORY = (
-        ('HEAVY', 'استراتژی سنگین'),
-        ('LIGHT', 'استراتژی سبک'),
-        ('FAMILY', 'خانواده و مهمانی'),
-        ('ABSTRACT', 'استراتژی انتزاعی'),
-    )
-    name = models.CharField(max_length=255, null=False)
-    category = models.CharField(max_length=50, choices=CATEGORY, blank=False, null=False)
-    min_players = models.IntegerField(null=False)
-    max_players = models.IntegerField(null=False)
-    best_players = models.IntegerField(null=False)
-    rate = models.FloatField(null=True, default=5)
-    learning_time = models.IntegerField(null=False)
-    duration = models.IntegerField(null=False)
-    image = models.ImageField(null=False)
-    image_name = models.CharField(max_length=500, null=True, default="default.jpg")
-    description = models.TextField()
-    bgg_code = models.IntegerField(null=False)
-    branch = models.ForeignKey(Branch, null=True, blank=True, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
 class Member(models.Model):
     INTRO_CHOICES = (
         ('search', 'جست‌وجوی اینترنت'),
@@ -203,7 +180,7 @@ class Member(models.Model):
     last_name = models.CharField(max_length=255, null=False)
     card_number = models.CharField(max_length=20, null=False)
     phone = models.CharField(max_length=30, null=False)
-    intro = models.CharField(max_length=255, choices=INTRO_CHOICES, default='other')
+    intro = models.CharField(max_length=255, choices=INTRO_CHOICES, default='other', null=True)
     year_of_birth = models.IntegerField(null=False)
     month_of_birth = models.IntegerField(null=False)
     day_of_birth = models.IntegerField(null=False)
@@ -304,6 +281,7 @@ class InvoiceSales(models.Model):
     tax = models.FloatField(null=False, default=0)
     tip = models.FloatField(null=False, default=0)
     settlement_type = models.CharField(max_length=50, choices=SETTLEMENT_CHOICES, default='CASH')
+    static_guest_name = models.CharField(max_length=255, null=True, blank=True)
     guest_numbers = models.IntegerField(null=False)
     is_settled = models.IntegerField(null=False, default=0)
     total_price = models.FloatField(default=0)
@@ -351,8 +329,8 @@ class InvoicesSalesToGame(models.Model):
 class Supplier(models.Model):
     name = models.CharField(max_length=50, null=False)
     phone = models.CharField(max_length=30, null=False)
-    salesman_name = models.CharField(max_length=50, null=False)
-    salesman_phone = models.CharField(max_length=50, null=False)
+    salesman_name = models.CharField(max_length=255, null=True, blank=True)
+    salesman_phone = models.CharField(max_length=50, null=True, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -365,6 +343,7 @@ class Visitor(models.Model):
     supplier = models.ForeignKey(to=Supplier, on_delete=models.CASCADE)
 
 
+# TODO: remove stock from this model
 class InvoiceSettlement(models.Model):
     SETTLE_TYPES = (
         ('NOT_DEFINED', 'تعریف نشده'),
@@ -506,7 +485,7 @@ class InvoiceExpenseToService(models.Model):
 class InvoiceReturn(models.Model):
     RETURN_TYPES = (
         ('CUSTOMER_TO_CAFE', 'مشتری به کافه'),
-        ('CAFE_TO_SUPPLIER', 'کافه به تامین‌کننده'),
+        ('CAFE_TO_SUPPLIER', 'کافه به طرف حساب'),
     )
     factor_number = models.IntegerField(null=False, blank=False, default=0)
     created_time = models.DateTimeField(null=False)
@@ -699,11 +678,11 @@ class Transaction(models.Model):
     token = models.CharField(max_length=1020, null=False, blank=False)
     amount = models.DecimalField(max_digits=9, decimal_places=0, null=False, blank=False)
     mobile = models.CharField(max_length=20, null=True, blank=True)
-    factorNumber = models.UUIDField(default=uuid4, blank=False, null=False)
+    factor_number = models.UUIDField(default=uuid4, blank=False, null=False)
     description = models.CharField(max_length=1275, null=True, blank=True)
     redirect = models.CharField(max_length=1020, null=True, blank=True)
-    cardNumber = models.CharField(max_length=25, null=True, blank=True)
-    transId = models.CharField(max_length=100, null=True, blank=True)
+    card_number = models.CharField(max_length=25, null=True, blank=True)
+    trans_id = models.CharField(max_length=100, null=True, blank=True)
     message = models.CharField(max_length=255, null=True, blank=True)
 
 
@@ -727,20 +706,20 @@ class Bundle(models.Model):
 
 class TokenBlacklist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_time = models.DateTimeField(default=timezone.now)
+    created_time = models.DateTimeField(auto_now_add=True)
 
 
 class SmsToken(models.Model):
     phone = models.CharField(max_length=30, null=False, blank=False)
     token = models.CharField(max_length=30, null=False, blank=False)
-    created_time = models.DateTimeField(default=timezone.now)
+    created_time = models.DateTimeField(auto_now_add=True)
 
 
 class LatestNews(models.Model):
     title = models.CharField(max_length=300, blank=False, null=False)
     text = models.CharField(max_length=4000, blank=False, null=False)
     link = models.CharField(max_length=300, blank=True, null=True)
-    datetime = models.DateTimeField(default=timezone.now)
+    created_time = models.DateTimeField(auto_now_add=True)
 
 
 class BugReport(models.Model):
@@ -751,3 +730,34 @@ class BugReport(models.Model):
     image_name = models.CharField(max_length=500, null=True, default="default.jpg")
     created_time = models.DateTimeField(auto_now_add=True)
 
+
+class InvoiceSalary(models.Model):
+    SETTLE_TYPES = (
+        ('NOT_DEFINED', 'تعریف نشده'),
+        ('CASH', 'نقدی'),
+        ('CARD', 'کارت به کارت'),
+        ('PAYA', 'پایا'),
+        ('CHECK', 'چک'),
+        ('SATNA', 'ساتنا'),
+    )
+    branch = models.ForeignKey(to=Branch, on_delete=models.CASCADE, null=False)
+    employee = models.ForeignKey(Employee, null=False, blank=True, on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(null=True, blank=True)
+    base_salary = models.IntegerField(default=0)
+    over_time_pay = models.IntegerField(default=0)
+    over_time_pay_description = models.TextField(null=True, blank=True)
+    benefits = models.IntegerField(default=0)
+    benefits_description = models.TextField(null=True, blank=True)
+    bonuses = models.IntegerField(default=0)
+    bonuses_description = models.TextField(null=True, blank=True)
+    reduction = models.IntegerField(default=0)
+    reduction_description = models.TextField(null=True, blank=True)
+    insurance = models.IntegerField(default=0)
+    tax = models.IntegerField(default=0)
+    total_price = models.IntegerField(default=0)
+    factor_number = models.IntegerField(default=0)
+    invoice_date = models.DateTimeField(null=False)
+    backup_code = models.CharField(max_length=150, null=False, default=0)
+    settle_type = models.CharField(max_length=50, null=False, choices=SETTLE_TYPES, default="NOT_DEFINED")
+    banking = models.ForeignKey(to=BankingBaseClass, on_delete=models.CASCADE, null=True, blank=True)

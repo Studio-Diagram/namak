@@ -1,319 +1,79 @@
 <div ng-controller="salonCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteItemsModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ویرایش فاکتور</h2>
-                    <a ng-click="closeDeleteModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="delete_items()" href="" class="mainButton greenButton"><i class="fas fa-save"></i> ثبت</a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">دلیل حذف یا تغییر جزییات فاکتور را توضیح دهید</span>
-                                <label>توضیحات</label>
-                                <form>
-                                    <div class="form-group">
-                                        <textarea ng-model="will_delete_items.message" class="form-control"
-                                                  rows="3"></textarea>
-                                    </div>
-                                </form>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteInvoiceModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">حذف فاکتور</h2>
-                    <a ng-click="closeDeleteInvoiceModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="delete_invoice()" href="" class="mainButton greenButton"><i class="fas fa-save"></i>
-                        حذف فاکتور</a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">دلیل حذف فاکتور را توضیح دهید</span>
-                                <label>توضیحات</label>
-                                <form>
-                                    <div class="form-group">
-                                        <textarea ng-model="invoice_delete_description" class="form-control"
-                                                  rows="3"></textarea>
-                                    </div>
-                                </form>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal"
-         id="editSettledInvoicePayment"
-         tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ویرایش نوع پرداخت</h2>
-                    <a ng-click="close_modal('editSettledInvoicePayment', 'viewInvoiceModal')"
-                       class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a href="" ng-click="edit_settled_invoice_payment()" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ویرایش</a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <form>
-                                    <label class="lefty iconic">نقد<i class="fas fa-money-bill-alt"></i></label>
-                                    <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
-                                    <input type="range" class="form-control-range"
-                                           min="0"
-                                           max="{{ editable_invoice.total }}"
-                                           step="5000"
-                                           ng-change="edit_payment_modal_changer()"
-                                           ng-model="editable_invoice.cash">
-                                    <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
-                                           class="form-control paymentMethod righty"
-                                           ng-model="editable_invoice.pos" format>
-                                    <input ng-change="edit_payment_modal_changer()" style="font-family: 'B Yekan'"
-                                           type="text"
-                                           aria-label="cash"
-                                           class="form-control paymentMethod lefty"
-                                           ng-model="editable_invoice.cash" format>
-                                </form>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal" id="viewInvoiceModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="deleteItemsModal" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">فاکتور فروش </h2>
-                    <a class="mainButton redButton" data-dismiss="modal" href="#" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a class="mainButton greenButton" href=""
-                       ng-click="initiate_edit_payment_invoice_sale();">
-                        <span aria-hidden="true">تغییر نحوه تسویه</span>
-                    </a>
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            حذف آیتم از فاکتور
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <table class="invoiceTable invoiceItem">
-                                    <tbody>
-                                    <tr>
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <th class="first">#</th>
-                                        <th class="second">عنوان</th>
-                                        <th class="third">قیمت واحد</th>
-                                        <th class="forth">تعداد</th>
-                                        <th class="fifth">قیمت کل</th>
-                                        <th class="sixth">توضیحات</th>
-                                    </tr>
-                                    <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
-                                        <th class="first"><input
-                                                ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
-                                                type="checkbox"
-                                                aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index | persianNumber }}</td>
-                                        <td>{{ old_item.name }}</td>
-                                        <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td>{{ old_item.nums | persianNumber }}</td>
-                                        <td>{{ old_item.total | number | persianNumber }}</td>
-                                        <td>{{ old_item.description }}</td>
-                                    </tr>
-                                    <tr ng-repeat="new_item in new_invoice_data.menu_items_new">
-                                        <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
-                                                class="fas fa-trash"></i></a></th>
-                                        <td>{{ $index | persianNumber }}</td>
-                                        <td>{{ new_item.name }}</td>
-                                        <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
-                                                   ng-change="changeItemNumber($index)"></td>
-                                        <td>{{ new_item.total | number | persianNumber }}</td>
-                                        <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="new_item.description"></td>
-                                    </tr>
-
-                                    <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
-                                        <th class="first"><input ng-click="will_delete_items_adder('shop', old_item.id)"
-                                                                 type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td>{{ old_item.name }}</td>
-                                        <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td>{{ old_item.nums | persianNumber }}</td>
-                                        <td>{{ old_item.total | persianNumber }}</td>
-                                        <td>{{ old_item.description }}</td>
-                                    </tr>
-                                    <tr ng-repeat="new_item in new_invoice_data.shop_items_new">
-                                        <th class="first"><a ng-click="deleteNewItemShop($index)"
-                                                             style="cursor: pointer"><i class="fas fa-trash"></i></a>
-                                        </th>
-                                        <td>{{ $index | persianNumber }}</td>
-                                        <td>{{ new_item.name }}</td>
-                                        <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
-                                                   ng-change="changeItemShopNumber($index)"></td>
-                                        <td>{{ new_item.total | persianNumber }}</td>
-                                        <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="new_item.description"></td>
-                                    </tr>
-
-                                    <tr ng-repeat="game in new_invoice_data.games">
-                                        <th class="first"><input ng-click="will_delete_items_adder('game', game.id)"
-                                                                 type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index | persianNumber }}</td>
-                                        <td>بازی {{ game.numbers | persianNumber }} نفره
-                                            ( {{ game.start_time | persianNumber }}
-                                            تا {{ game.end_time | persianNumber }} )
-                                        </td>
-                                        <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
-                                        <td style="direction: ltr">{{ game.points | persianNumber }}</td>
-                                        <td>{{ game.total | number | persianNumber }}</td>
-                                        <td></td>
-                                    </tr>
-
-
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable invoiceTotal">
-                                    <tbody>
-                                    <tr>
-                                        <th>اعتبار</th>
-                                        <td>
-                                            {{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>اعتبار مصرفی</th>
-                                        <td>
-                                            {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>انعام</th>
-                                        <td>{{ new_invoice_data.tip | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>تخفیف</th>
-                                        <td>{{ new_invoice_data.discount | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>جمع کل</th>
-                                        <td>
-                                            {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </main>
+                    <form>
+                        <div class="form-group">
+                            <label>دلیل حذف آیتم را توضیح دهید</label>
+                            <textarea ng-model="will_delete_items.message" class="form-control"
+                                      rows="3"></textarea>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
+                    <a class="mainButton redButton closeModal"
+                       ng-click="closeDeleteModal()"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-click="delete_items()" href=""
+                       class="mainButton greenButton">تایید</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="deleteInvoiceModal" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            حذف فاکتور
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label>دلیل حذف فاکتور را توضیح دهید</label>
+                            <textarea ng-model="invoice_delete_description" class="form-control"
+                                      rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="mainButton redButton closeModal"
+                       ng-click="close_modal('deleteInvoiceModal')"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-click="delete_invoice()" href=""
+                       class="mainButton greenButton">تایید</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="deleteItemsModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ویرایش فاکتور</h2>
-                    <a ng-click="closeDeleteModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="delete_items()" href="" class="mainButton greenButton"><i class="fas fa-save"></i> ثبت</a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">دلیل حذف یا تغییر جزییات فاکتور را توضیح دهید</span>
-                                <label>توضیحات</label>
-                                <form>
-                                    <div class="form-group">
-                                        <textarea ng-model="will_delete_items.message" class="form-control"
-                                                  rows="3"></textarea>
-                                    </div>
-                                </form>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddInvoiceModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="timeCalcModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">محاسبه موقت زمان بازی</h2>
-                    <a ng-click="closeTimeCalcModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ calcedPoints | number | persianNumber }} ریال به ازای هر نفر</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addInvoiceModal" tabindex="-1"
+    <settled-invoice-modal-directive>
+    </settled-invoice-modal-directive>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal invoiceSaleModal" id="addInvoiceModal"
+         tabindex="-1"
          role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -321,477 +81,698 @@
             <div class="modal-content">
                 <div class="modalHeader">
                     <h2 class="modalTitle">فاکتور فروش </h2>
-                    <button ng-click="openPermissionModal()" class="mainButton redButton"
-                            ng-disabled="disable_print_after_save_all_buttons"
-                            aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                    <a class="mainButton redButton" role="button"
+                       ng-if="compare_before_exit()" ng-click="closeAddInvoiceModal()"
+                       ng-disabled="disable_print_after_save_all_buttons">خروج</a>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body" ng-if="!compare_before_exit()"
+                       ng-click="compare_before_exit()"
+                       ng-disabled="disable_print_after_save_all_buttons"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج" first-callback="closeAddInvoiceModal()"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="saveAndCloseInvoice()">خروج</a>
+                    <button ng-disabled="disable_print_after_save_all_buttons || !can_settle_invoice_boolean"
                             id="settle_button" ng-click="openPayModal()"
-                            class="mainButton greenButton"><i
-                            class="fas fa-dollar-sign"></i> تسویه
+                            class="mainButton greenButton">تسویه
                     </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
-                            ng-click="print_cash()"
-                            class="mainButton yellowButton"><i class="fas fa-cash-register"></i> چاپ مشتری
-                    </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons"
-                            ng-click="print_after_save(new_invoice_data.invoice_sales_id)"
-                            class="mainButton blueButton"><i class="fas fa-print"></i> چاپ سفارش
-                    </button>
-                    <button ng-disabled="disable_print_after_save_all_buttons" ng-click="perform_credit()"
-                            class="mainButton grayButton"><i class="fas fa-save"></i> اعمال اعتبار
-                    </button>
-                    <a href="" ng-click="openDeleteModal()" class="mainButton grayButton"><i class="fas fa-trash"></i>
-                        پاک کردن</a>
-                    <a href="" ng-click="openDeleteInvoiceModal()" class="mainButton grayButton"><i
-                            class="fas fa-trash"></i>
-                        پاک کردن فاکتور</a>
+
+                    <a ng-disabled="disable_print_after_save_all_buttons"
+                       ng-click="print_after_save(new_invoice_data.invoice_sales_id)" class="mainButton blueButton"
+                       href="">چاپ سفارش</a>
+                    <a ng-disabled="disable_print_after_save_all_buttons && can_settle_invoice_boolean"
+                       ng-click="print_cash()" class="mainButton blueButton" href="">چاپ فاکتور</a>
+
                     <button ng-disabled="disable_print_after_save_all_buttons" ng-click="saveInvoice()"
-                            class="mainButton grayButton"><i class="fas fa-save"></i> ذخیره
+                            class="mainButton okrButton">ذخیره
+                        <span ng-if="!compare_before_exit()">(اطلاعات ذخیره نشده وجود دارد)</span>
                     </button>
 
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <aside class="col-sm-4">
-                                <nav class="nav nav-justified">
-                                    <a ng-click="changeMenuNav('MENU')" href=""
-                                       ng-class="current_menu_nav === 'MENU' ? 'nav-link iconButton active' : 'nav-link iconButton'">منو
-                                        کافه</a>
-                                    <a ng-click="changeMenuNav('SHOP')" href=""
-                                       ng-class="current_menu_nav === 'SHOP' ? 'nav-link iconButton active' : 'nav-link iconButton'">فروشگاه</i></a>
-                                </nav>
-                                <input ng-show="current_menu_nav === 'MENU'" ng-keyup="searchMenuItem()"
-                                       ng-model="search_data_menu_item.search_word"
-                                       class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
-                                <input ng-show="current_menu_nav === 'SHOP'" ng-keyup="search_shop_products()"
-                                       ng-model="search_data_shop_products.search_word"
-                                       class="form-control listFilter zoop5" type="text" placeholder="فیلتر کن">
-                                <nav class=" nav flex-column cafeMenuNav">
-                                    <ul>
-                                        <div class="accordion">
-
-                                            <table class="table menuNavTable"
-                                                   ng-show="current_menu_nav === 'MENU' && !search_data_menu_item.search_word">
-                                                <tbody>
-                                                <tr class="row">
-                                                    <th ng-click="showCollapse($index)"
-                                                        ng-repeat="category in menu_items_with_categories"
-                                                        ng-class="selected_menu_nav_cat === $index ? 'col-sm-4 active' : 'col-sm-4'">{{ category.category_name }}</th>
-                                                    <th class="col-sm-4"
-                                                        ng-show="menu_items_with_categories.length % 3 === 1"></th>
-                                                    <th class="col-sm-4"
-                                                        ng-show="menu_items_with_categories.length % 3 === 1"></th>
-                                                    <th class="col-sm-4"
-                                                        ng-show="menu_items_with_categories.length % 3 === 2"></th>
-                                                </tr>
-                                                <tr ng-if="selected_category.items.length < 6" class="row">
-                                                    <th class="col-sm-6"
-                                                        ng-repeat="item in selected_category.items"
-                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
-                                                    <th class="col-sm-6 dumb"
-                                                        ng-repeat="x in [].constructor(6 - selected_category.items.length % 6) track by $index"></th>
-                                                </tr>
-                                                <tr ng-if="selected_category.items.length >= 6" class="row">
-                                                    <th class="col-sm-6"
-                                                        ng-repeat="item in selected_category.items"
-                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
-                                                    <th class="col-sm-6"
-                                                        ng-show="selected_category.items.length % 2 === 1"></th>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                            <table class="table menuNavTable"
-                                                   ng-show="current_menu_nav === 'MENU' && search_data_menu_item.search_word">
-                                                <tbody>
-                                                <tr style="border-top: none !important;" class="row"></tr>
-                                                <tr class="row">
-                                                    <th class="col-sm-6"
-                                                        ng-repeat="item in menu_items"
-                                                        ng-click="add_item(item.id, item.name, item.price)">{{ item.name }}</th>
-                                                    <th class="col-sm-6"
-                                                        ng-show="menu_items.length % 2 === 1"></th>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                            <table class="table menuNavTable"
-                                                   ng-show="current_menu_nav === 'SHOP'">
-                                                <tbody>
-                                                <tr style="border-top: none !important;" class="row"></tr>
-                                                <tr class="row">
-                                                    <th ng-class="shop.real_numbers === 0 ? 'disabled' : ''"
-                                                        title="{{ shop.price | number | persianNumber }}"
-                                                        data-toggle="tooltip" class="col-sm-6"
-                                                        ng-repeat="shop in shop_products"
-                                                        ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.real_numbers)"
-                                                        tooltip>
-                                                        {{ shop.name }}<span
-                                                            ng-class="shop.real_numbers === 0 ? 'badge badge-pill badge-danger mr-1' : 'badge badge-pill badge-dark mr-1'">{{ shop.real_numbers }}</span>
-                                                    </th>
-                                                    <th class="col-sm-6"
-                                                        ng-show="selected_category.items.length % 2 === 1"></th>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                    <aside class="rightSideInvoiceSale">
+                        <div class="nav-group" role="group">
+                            <button ng-click="changeMenuNav('MENU')" class="mainButton"
+                                    ng-class="{'active' : current_menu_nav === 'MENU'}">
+                                <span>منوی کافه</span>
+                            </button>
+                            <button ng-click="changeMenuNav('SHOP')" class="mainButton"
+                                    ng-class="{'active' : current_menu_nav === 'SHOP'}">
+                                <span> فروشگاه </span>
+                            </button>
+                            <button ng-click="changeMenuNav('MEMBER')" class="mainButton"
+                                    ng-class="{'active' : current_menu_nav === 'MEMBER'}">
+                                <span> مشتری </span>
+                            </button>
+                            <button ng-click="changeMenuNav('GAME')" class="mainButton"
+                                    ng-class="{'active' : current_menu_nav === 'GAME'}">
+                                <span>بازی</span>
+                            </button>
+                        </div>
+                        <nav ng-show="current_menu_nav === 'MENU'" class="nav flex-column cafeMenuNav">
+                            <ul>
+                                <div class="accordion">
+                                    <div class="menuCategoriesWrapper">
+                                        <div ng-click="showCollapse($index)"
+                                             ng-class="{'active': selected_category.category_name === category.category_name }"
+                                             ng-repeat="category in menu_items_with_categories"
+                                             class="menuCategoryCard">
+                                            <span ng-bind="category.category_name"></span>
                                         </div>
-                                    </ul>
-                                </nav>
+                                        <div class="menuCategoryCard"
+                                             ng-repeat="x in [].constructor(menu_items_with_categories.length % 4) track by $index"></div>
+                                    </div>
+                                    <div class="menuItemsWrapper">
+                                        <div ng-repeat="item in selected_category.items"
+                                             ng-click="add_item(item.id, item.name, item.price)"
+                                             class="menuItemCard">
+                                            <span ng-bind="item.name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </nav>
 
-                            </aside>
-                            <main class="col-sm-8">
-                                <table class="invoiceTable">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <small>شماره فاکتور</small>
-                                            <a href=""
-                                               class="">{{ new_invoice_data.invoice_sales_id | persianNumber }}</a>
-                                        </td>
-                                        <td>
-                                            <small>میز<i class="fas fa-star-of-life"></i></small>
-                                            <select ng-model="new_invoice_data.table_id" class="form-control">
-                                                <option ng-repeat="table in tables"
-                                                        value="{{ table.table_id }}"
-                                                        ng-selected="table.table_id == new_invoice_data.table_id">{{ table.table_name }}</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <small>مهمان</small>
-                                            <input class="form-control" type="text"
-                                                   ng-model="new_invoice_data.member_data"
-                                                   ng-enter="get_member_data(new_invoice_data.member_data)"
+                        <nav ng-show="current_menu_nav === 'SHOP'" class="nav flex-column cafeMenuNav">
+                            <ul>
+                                <div class="accordion">
+                                    <div class="searchProductWrapper">
+                                        <label>جستجوی محصول</label>
+                                        <input ng-keyup="search_shop_products()"
+                                               ng-model="search_data_shop_products.search_word"
+                                               class="form-control listFilter" type="text"
+                                               placeholder="نام محصول فروشگاهی">
+                                    </div>
+                                    <div class="productsWrapper">
+                                        <div class="productCard" ng-repeat="shop in shop_products"
+                                             ng-class="{'disabled': shop.real_numbers === 0}"
+                                             ng-click="add_item_shop(shop.id, shop.name, shop.price, shop.real_numbers)">
+                                            <span ng-bind="shop.name"></span>
+                                            <span>
+                                                        <i class="fas fa-tag"></i>
+                                                        <span>&nbsp;</span>
+                                                        <span ng-bind="shop.price | number | persianNumber"></span>
+                                                    </span>
+                                            <span>
+                                                        <i class="fas fa-boxes"></i>
+                                                        <span>&nbsp;</span>
+                                                        <span ng-if="shop.real_numbers"
+                                                              ng-bind="shop.real_numbers | persianNumber"></span>
+                                                        <span ng-if="!shop.real_numbers">ناموجود</span>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </nav>
+
+                        <nav ng-show="current_menu_nav === 'MEMBER'" class="nav flex-column cafeMenuNav">
+                            <div ng-if="!new_invoice_data.member_id && !new_invoice_data.static_guest_name"
+                                 class="notMemberState">
+                                <div class="searchMember">
+                                    <div>
+                                        <label>جستجوی مشتری</label>
+                                        <input id="searchMemberInput" class="form-control autoHeight" type="text"
+                                               ng-model="search_member_data"
+                                               ng-enter="get_member_data(search_member_data)"
+                                               placeholder="شماره مشتری"
+                                               select-on-click>
+                                    </div>
+                                    <button ng-click="get_member_data(search_member_data)"
+                                            class="mainButton greenButton">تایید
+                                    </button>
+                                </div>
+                                <div class="addNewMember">
+                                    <div>
+                                        <div>
+                                            <label>نام</label>
+                                            <input class="form-control autoHeight" type="text"
+                                                   placeholder="" ng-model="new_member_data.first_name"
                                                    select-on-click>
-                                        </td>
-                                        <td>
-                                            <small>تعداد مهمانان</small>
-                                            <input class="form-control" type="number" min="0"
-                                                   ng-model="new_invoice_data.guest_numbers">
-                                        </td>
+                                        </div>
+                                        <div>
+                                            <label>نام خانوادگی</label>
+                                            <input class="form-control autoHeight" type="text"
+                                                   placeholder="" ng-model="new_member_data.last_name"
+                                                   select-on-click>
+                                        </div>
+                                        <div>
+                                            <label>شماره موبایل</label>
+                                            <input class="form-control autoHeight" type="text"
+                                                   placeholder="" ng-model="new_member_data.phone"
+                                                   select-on-click>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <label>تاریخ تولد</label>
+                                                <input class="form-control autoHeight" type="text"
+                                                       placeholder="روز" ng-model="new_member_data.day_of_birth"
+                                                       select-on-click>
+                                            </div>
+                                            <input class="form-control autoHeight" type="text"
+                                                   placeholder="ماه" ng-model="new_member_data.month_of_birth"
+                                                   select-on-click>
+                                            <input class="form-control autoHeight" type="text"
+                                                   placeholder="سال" ng-model="new_member_data.year_of_birth"
+                                                   select-on-click>
+                                        </div>
+                                        <div>
+                                            <label>نحوه آشنایی</label>
+                                            <select ng-model="new_member_data.intro"
+                                                    class="form-control customSelect">
+                                                <option ng-selected="new_member_data.intro === null" value="">
+                                                    انتخاب کنید
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'search'" value="LIGHT">
+                                                    معرفی دوستان
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'friends'" value="HEAVY">
+                                                    جست‌وجوی اینترنت
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'instagram'"
+                                                        value="ABSTRACT">
+                                                    اینستاگرام
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'roomiz'" value="FAMILY">
+                                                    سایت رومیز
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'events'" value="FAMILY">
+                                                    شرکت در رویدادها
+                                                </option>
+                                                <option ng-selected="new_member_data.intro === 'other'" value="FAMILY">
+                                                    سایر
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <label>شماره مشتری</label>
+                                            <input class="form-control autoHeight" type="text"
+                                                   ng-model="new_member_data.card_number"
+                                                   select-on-click>
+                                        </div>
+                                        <button ng-click="add_member_and_add_to_invoice()"
+                                                class="mainButton greenButton">
+                                            ذخیره و اضافه کردن به فاکتور
+                                        </button>
+                                        <small>
+                                            اگر چیزی ننویسید شماره موبایل به عنوان شماره مشتری ثبت می‌شود
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="staticNameGuest">
+                                    <div>
+                                        <label>نام استاتیک برای مشتری</label>
+                                        <input class="form-control autoHeight" type="text"
+                                               ng-enter="setStaticGuestName(static_guest_name)"
+                                               placeholder="" ng-model="static_guest_name"
+                                               select-on-click>
+                                    </div>
+                                    <button ng-click="setStaticGuestName(static_guest_name)"
+                                            class="mainButton greenButton">تایید
+                                    </button>
+                                    <small>
+                                        نام استاتیک فقط برای این فاکتور استفاده خواهد شد و در سیستم به عنوان
+                                        مشتری ثبت نمی‌گردد. از این فیلد در صورتی استفاده کنید که نمی‌خواهید
+                                        مشتری در سیستم ثبت شود، اما می‌خواهید فاکتور او نام داشته باشد.
+                                    </small>
+                                </div>
+                            </div>
+                            <div ng-if="new_invoice_data.member_id || new_invoice_data.static_guest_name"
+                                 class="isMemberState">
+                                <div class="memberName">
+                                    <div>
+                                        <label>مشتری</label>
+                                        <p ng-if="new_invoice_data.member_id"
+                                           ng-bind="new_invoice_data.member_name"></p>
+                                        <p ng-if="!new_invoice_data.member_id && new_invoice_data.static_guest_name">
+                                            <span ng-bind="new_invoice_data.static_guest_name"></span>
+                                            <span ng-click="setStaticGuestName('')" class="closeIcon"><i
+                                                    class="fas fa-times-circle"></i></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div ng-if="new_invoice_data.member_id" class="creditsMenu">
+                                    <div ng-click="change_credit_menu_state('SHOW_CREDITS')"
+                                         ng-class="{'active' : credit_state === 'SHOW_CREDITS'}">
+                                        <span>لیست اعتبارها</span>
+                                    </div>
+                                    <div ng-click="change_credit_menu_state('ADD_CREDITS')"
+                                         ng-class="{'active' : credit_state === 'ADD_CREDITS'}">
+                                        <span>افزودن اعتبار</span>
+                                    </div>
+                                </div>
+                                <div ng-if="new_invoice_data.member_id" class="credits">
+                                    <div ng-if="credit_state === 'SHOW_CREDITS'" class="showCredits">
+                                        <div class="creditInfo">
+                                            <div>
+                                                <span>جمع اعتبار مانده</span>
+                                                <span ng-class="{'priceField' : new_invoice_data.total_credit }"
+                                                      ng-bind="new_invoice_data.total_credit | number | persianNumber"></span>
+                                            </div>
+                                            <div>
+                                                <span>جمع اعتبار مصرف شده در فاکتور</span>
+                                                <span ng-class="{'priceField' : new_invoice_data.used_credit }"
+                                                      ng-bind="new_invoice_data.used_credit | number | persianNumber"></span>
+                                            </div>
+                                        </div>
+                                        <button ng-click="perform_credit()"
+                                                class="mainButton greenButton">اعمال اعتبار
+                                        </button>
+                                        <table class="invoiceTable invoiceItem newInvoiceSaleTable">
+                                            <tbody>
+                                            <tr>
+                                                <th>عنوان</th>
+                                                <th>میزان اعتبار</th>
+                                                <th>استفاده شده</th>
+                                            </tr>
 
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <input ng-disabled="new_invoice_data.current_game.start_time"
-                                                   ng-model="new_invoice_data.current_game.numbers" type="number"
-                                                   min="0"
-                                                   class="form-control" placeholder="تعداد نفرات بازی"
-                                                   aria-label="">
-
-                                        </td>
-                                        <td>
-                                            <a ng-show="new_invoice_data.current_game.start_time" href=""
-                                               class="">{{ new_invoice_data.current_game.start_time | persianNumber }}</a>
-                                            <button ng-click="start_game()"
-                                                    ng-disabled="new_invoice_data.current_game.numbers === 0"
-                                                    ng-show="!new_invoice_data.current_game.start_time" href=""
-                                                    class="mainButton grayButton">شروع زمان بازی
+                                            <tr ng-repeat="credit_type in new_invoice_data.credits_data">
+                                                <td ng-bind="credit_type.name"></td>
+                                                <td ng-class="{'priceField' : credit_type.total_price }"
+                                                    ng-bind="credit_type.total_price | number | persianNumber"></td>
+                                                <td ng-class="{'priceField' : credit_type.used_price }"
+                                                    ng-bind="credit_type.used_price | number | persianNumber"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div ng-if="credit_state === 'ADD_CREDITS'" class="addCredits">
+                                        <div>
+                                            <label>مقدار اعتبار<i
+                                                    class="fas fa-star-of-life"></i></label>
+                                            <input ng-model="new_credit_data.total_credit" type="text"
+                                                   aria-label="Last name"
+                                                   class="form-control" placeholder="مقدار اعتبار"
+                                                   format>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <label>تاریخ شروع<i class="fas fa-star-of-life"></i></label>
+                                                <input ng-model="new_credit_data.start_date" type="text"
+                                                       class="form-control" placeholder="تاریخ شروع"
+                                                       id="start_credit_date">
+                                            </div>
+                                            <div>
+                                                <label>ساعت شروع<i class="fas fa-star-of-life"></i></label>
+                                                <input ng-model="new_credit_data.start_time" type="text"
+                                                       class="form-control" placeholder="ساعت شروع"
+                                                       id="start_credit_time">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <label>تاریخ انقضا<i
+                                                        class="fas fa-star-of-life"></i></label>
+                                                <input ng-model="new_credit_data.expire_date" type="text"
+                                                       class="form-control" placeholder="تاریخ انقضا"
+                                                       id="expire_credit_date">
+                                            </div>
+                                            <div>
+                                                <label>ساعت انقضا<i class="fas fa-star-of-life"></i></label>
+                                                <input ng-model="new_credit_data.expire_time" type="text"
+                                                       class="form-control" placeholder="ساعت انقضا"
+                                                       id="expire_credit_time">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                                <select class="form-control"
+                                                        ng-model="new_credit_data.credit_category">
+                                                    <option value="">دسته‌بندی اعتبار را انتخاب کنید
+                                                    </option>
+                                                    <option ng-repeat="credit_category in credit_categories"
+                                                            ng-value="credit_category.key">{{ credit_category.name }}</option>
+                                                </select>
+                                            </div>
+                                            <button ng-click="create_credit()" class="mainButton greenButton">ذخیره
                                             </button>
-                                        </td>
-                                        <td>
-                                            <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
-                                                    ng-disabled="new_invoice_data.current_game.start_time === '' || disable_print_after_save_all_buttons"
-                                                    href="" class="mainButton grayButton">اتمام زمان بازی
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button ng-click="openTimeCalcModal()"
-                                                    ng-disabled="new_invoice_data.current_game.start_time === ''"
-                                                    class="mainButton grayButton">محاسبه موقت
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable invoiceItem">
-                                    <tbody>
-                                    <tr>
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <th class="first">#</th>
-                                        <th class="second">عنوان</th>
-                                        <th class="third">قیمت واحد</th>
-                                        <th class="forth">تعداد</th>
-                                        <th class="fifth">قیمت کل</th>
-                                        <th class="sixth">توضیحات</th>
-                                    </tr>
-                                    <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
-                                        <th class="first"><input type="checkbox"
-                                                                 ng-click="will_delete_items_adder('menu', old_item.id, [old_item.menu_item_id, old_item.nums])"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td>{{ old_item.name }}</td>
-                                        <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td>{{ old_item.nums | persianNumber }}</td>
-                                        <td>{{ old_item.total | number | persianNumber }}</td>
-                                        <td>{{ old_item.description }}</td>
-                                    </tr>
-                                    <tr ng-repeat="new_item in new_invoice_data.menu_items_new">
-                                        <th class="first"><a ng-click="deleteNewItem($index)" style="cursor: pointer"><i
-                                                class="fas fa-trash"></i></a></th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td>{{ new_item.name }}</td>
-                                        <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
-                                                   ng-change="changeItemNumber($index)"></td>
-                                        <td>{{ new_item.total | number | persianNumber }}</td>
-                                        <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="new_item.description"></td>
-                                    </tr>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
 
+                        <nav ng-show="current_menu_nav === 'GAME'" class="nav flex-column cafeMenuNav">
+                            <div class="gameSectionWrapper">
+                                <div class="startGameInputs">
+                                    <div>
+                                        <label>تعداد بازیکنان</label>
+                                        <input ng-disabled="new_invoice_data.current_game.start_time"
+                                               ng-model="new_invoice_data.current_game.numbers" type="number"
+                                               min="0"
+                                               class="form-control" placeholder="تعداد نفرات بازی"
+                                               aria-label="">
+                                    </div>
 
-                                    <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
-                                        <th class="first"><input type="checkbox"
-                                                                 ng-click="will_delete_items_adder('shop', old_item.id)"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td>{{ old_item.name }}</td>
-                                        <td>{{ old_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td>{{ old_item.nums | persianNumber }}</td>
-                                        <td>{{ old_item.total | persianNumber }}</td>
-                                        <td>{{ old_item.description }}</td>
-                                    </tr>
-                                    <tr ng-repeat="new_item in new_invoice_data.shop_items_new">
-                                        <th class="first"><a ng-click="deleteNewItemShop($index)"
-                                                             style="cursor: pointer"><i class="fas fa-trash"></i></a>
-                                        </th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td>{{ new_item.name }}</td>
-                                        <td>{{ new_item.price | number:fractionSize | persianNumber }}</td>
-                                        <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
-                                                   ng-change="changeItemShopNumber($index)"></td>
-                                        <td>{{ new_item.total | persianNumber }}</td>
-                                        <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="new_item.description"></td>
-                                    </tr>
+                                    <button ng-click="start_game()"
+                                            ng-disabled="!new_invoice_data.current_game.numbers || new_invoice_data.current_game.start_time"
+                                            href=""
+                                            class="mainButton grayButton">شروع زمان بازی
+                                    </button>
+                                </div>
+                                <div class="gameDataTable">
+                                    <table class="invoiceTable invoiceItem newInvoiceSaleTable">
+                                        <tbody>
+                                        <tr>
+                                            <th>تعداد بازیکن</th>
+                                            <th>شروع</th>
+                                            <th>پایان</th>
+                                            <th>مدت</th>
+                                            <th></th>
+                                        </tr>
 
+                                        <tr ng-repeat="game in new_invoice_data.games">
+                                            <td class="personField" ng-bind="game.numbers | persianNumber"></td>
+                                            <td ng-bind="game.start_time | persianNumber"></td>
+                                            <td ng-bind="game.end_time | persianNumber"></td>
+                                            <td style="direction: ltr"
+                                                ng-bind="game.points | persianNumber"></td>
+                                            <td class="priceField"
+                                                ng-bind="game.total | number| persianNumber"></td>
+                                        </tr>
+                                        <tr ng-if="new_invoice_data.current_game.start_time">
+                                            <td class="personField"
+                                                ng-bind="new_invoice_data.current_game.numbers | persianNumber"></td>
+                                            <td ng-bind="new_invoice_data.current_game.start_time | persianNumber"></td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>
+                                                <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
+                                                        class="mainButton okrButton mediumButton fullWidthButton">
+                                                    پایان زمان بازی
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="gameDataInfo">
+                                    <div>
+                                        <span>مجموع زمان بازی‌ها</span>
+                                        <span class="hoursMinutesField"
+                                              ng-bind="convert_total_seconds_to_hours_minutes(new_invoice_data.sum_all_games) | persianNumber"></span>
+                                    </div>
+                                    <div>
+                                        <span>مجموع هزینه بازی‌ها</span>
+                                        <span ng-class="{'priceField' : new_invoice_data.sum_all_games.total_price }"
+                                              ng-bind="new_invoice_data.sum_all_games.total_price | number | persianNumber"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
 
-                                    <tr ng-repeat="game in new_invoice_data.games">
-                                        <th class="first"><input type="checkbox"
-                                                                 ng-click="will_delete_items_adder('game', game.id)"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <td>{{ $index + 1 | persianNumber }}</td>
-                                        <td>بازی {{ game.numbers | persianNumber }} نفره
-                                            ( {{ game.start_time | persianNumber }}
-                                            تا {{ game.end_time | persianNumber }} )
-                                        </td>
-                                        <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
-                                        <td style="direction: ltr">{{ game.points | persianNumber }}</td>
-                                        <td>{{ game.total | number| persianNumber }}</td>
-                                        <td></td>
-                                    </tr>
-
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable invoiceTotal">
-                                    <tbody>
-                                    <tr>
-                                        <th>اعتبار</th>
-                                        <td>
-                                            {{ new_invoice_data.total_credit | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>اعتبار مصرفی</th>
-                                        <td>
-                                            {{ new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>انعام</th>
-                                        <td><input ng-model="new_invoice_data.tip" type="text" class="form-control"
-                                                   aria-label="" format>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>تخفیف</th>
-                                        <td><input ng-model="new_invoice_data.discount" type="text" class="form-control"
-                                                   aria-label="" format>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>جمع کل</th>
-                                        <td>
-                                            {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number:fractionSize | persianNumber }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </main>
+                    </aside>
+                    <aside class="leftSideInvoiceSale">
+                        <div class="generalInfoInvoiceSale">
+                            <div>
+                                <label>میز</label>
+                                <select ng-model="new_invoice_data.table_id"
+                                        class="form-control customSelect requiredField">
+                                    <option ng-repeat="table in tables"
+                                            value="{{ table.table_id }}"
+                                            ng-selected="table.table_id == new_invoice_data.table_id">{{ table.table_name }}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>مشتری</label>
+                                <input class="form-control customReadonly" type="text"
+                                       ng-click="clickOnMemberInput()"
+                                       ng-model="new_invoice_data.member_data" readonly
+                                       select-on-click>
+                            </div>
+                            <div>
+                                <label>تعداد مهمانان</label>
+                                <input class="form-control" type="number" min="0"
+                                       ng-model="new_invoice_data.guest_numbers">
+                            </div>
+                            <div>
+                                <label>شماره سند</label>
+                                <input class="form-control iranian-number" type="text"
+                                       ng-model="new_invoice_data.invoice_sales_id" disabled>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
+                            <tbody>
+                            <tr>
+                                <th class="first"></th>
+                                <th class="second">عنوان</th>
+                                <th class="third">قیمت واحد</th>
+                                <th class="forth">تعداد</th>
+                                <th class="fifth">قیمت کل</th>
+                                <th class="sixth">توضیحات</th>
+                            </tr>
+                            <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
+                                <td class="first">
+                                    <a ng-click="openDeleteModal('MENU', old_item.id)" style="cursor: pointer">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                                <td>{{ old_item.name }}</td>
+                                <td>{{ old_item.price | number | persianNumber }}</td>
+                                <td>{{ old_item.nums | persianNumber }}</td>
+                                <td>{{ old_item.total | number | persianNumber }}</td>
+                                <td>{{ old_item.description }}</td>
+                            </tr>
 
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         style="z-index: 1060"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal alertModal" id="payModal"
-         tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">انتخاب نوع پرداخت</h2>
-                    <a ng-click="closePayModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a href="" ng-click="settleInvoice()" class="mainButton greenButton"><i class="fas fa-save"></i> ثبت</a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <form>
-                                    <label class="lefty iconic">نقد<i class="fas fa-money-bill-alt"></i></label>
-                                    <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
-                                    <input ng-change="payModalChangeNumber()" type="range" class="form-control-range"
-                                           ng-model="new_invoice_data.cash" min="0"
-                                           max="{{ new_invoice_data.total_price - new_invoice_data.discount + new_invoice_data.tip - new_invoice_data.used_credit }}"
-                                           step="5000">
-                                    <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
-                                           class="form-control paymentMethod righty"
-                                           ng-model="new_invoice_data.card" format>
-                                    <input style="font-family: 'B Yekan'" ng-change="payModalChangeNumber()" type="text"
-                                           aria-label="cash"
-                                           class="form-control paymentMethod lefty"
-                                           ng-model="new_invoice_data.cash" format>
-                                </form>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div style="height: 119px" class="modal fade mainModal alertModal redAlertModal"
-         id="closeCashPermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید بستن صندوق</h2>
-                    <a ng-click="close_cash()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="close_modal('closeCashPermissionModal', 'submit_cash_today_modal')" href=""
-                       class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به بستن صندوق دارید؟ شما به طور خودکار خارج خواهید
-                        شد.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal" id="submit_cash_today_modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت اطلاعات صندوق روزانه</h2>
-                    <a class="mainButton redButton closeModal" ng-click="close_modal('submit_cash_today_modal')"
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="open_modal('closeCashPermissionModal', 'submit_cash_today_modal')" href=""
-                       class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت و چاپ گزارش</a>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-6">
-                            <table class="invoiceTable">
+                            <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
+                                <td class="first">
+                                    <a ng-click="openDeleteModal('SHOP', old_item.id)" style="cursor: pointer">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                                <td>{{ old_item.name }}</td>
+                                <td>{{ old_item.price | number | persianNumber }}</td>
+                                <td>{{ old_item.nums | persianNumber }}</td>
+                                <td>{{ old_item.total | number | persianNumber }}</td>
+                                <td>{{ old_item.description }}</td>
+                            </tr>
+                            <tr ng-repeat="game in new_invoice_data.games">
+                                <td class="first">
+                                    <a ng-click="openDeleteModal('GAME', game.id)" style="cursor: pointer">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                                <td>بازی {{ game.numbers | persianNumber }} نفره
+                                    ( {{ game.start_time | persianNumber }}
+                                    تا {{ game.end_time | persianNumber }} )
+                                </td>
+                                <td>{{ game.numbers * price_per_hour_person | number | persianNumber }}</td>
+                                <td style="direction: ltr">{{ game.points | persianNumber }}</td>
+                                <td>{{ game.total | number| persianNumber }}</td>
+                                <td></td>
+                            </tr>
+                            <tr ng-repeat="new_item in new_invoice_data.menu_items_new">
+                                <td class="first"><a class="redTrash" ng-click="deleteNewItem($index)"
+                                                     style="cursor: pointer"><i
+                                        class="fas fa-trash"></i></a></td>
+                                <td>{{ new_item.name }}</td>
+                                <td>{{ new_item.price | number | persianNumber }}</td>
+                                <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
+                                           ng-change="changeItemNumber($index)"></td>
+                                <td>{{ new_item.total | number | persianNumber }}</td>
+                                <td><input class="form-control" type="text"
+                                           ng-model="new_item.description"></td>
+                            </tr>
+                            <tr ng-repeat="new_item in new_invoice_data.shop_items_new">
+                                <td class="first"><a class="redTrash" ng-click="deleteNewItemShop($index)"
+                                                     style="cursor: pointer"><i class="fas fa-trash"></i></a>
+                                </td>
+                                <td>{{ new_item.name }}</td>
+                                <td>{{ new_item.price | number | persianNumber }}</td>
+                                <td><input class="form-control" type="number" min="0" ng-model="new_item.nums"
+                                           ng-change="changeItemShopNumber($index)"></td>
+                                <td>{{ new_item.total | number | persianNumber }}</td>
+                                <td><input class="form-control" type="text"
+                                           ng-model="new_item.description"></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <div class="invoiceSaleFooter">
+                            <div>
+                                <div ng-if="new_invoice_data.current_game.start_time" class="gameCardInfo">
+                                    <div>
+                                        <label>تعداد</label>
+                                        <p ng-bind="new_invoice_data.current_game.numbers | persianNumber"></p>
+                                    </div>
+                                    <div>
+                                        <label>از ساعت</label>
+                                        <p ng-bind="new_invoice_data.current_game.start_time | persianNumber"></p>
+                                    </div>
+                                    <div>
+                                        <label>مدت</label>
+                                        <p>- دقیقه</p>
+                                    </div>
+                                    <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
+                                            class="mainButton mediumButton okrButton">
+                                        پایان زمان بازی
+                                    </button>
+                                </div>
+                            </div>
+                            <table class="invoiceTable invoiceSaleFooterTable">
                                 <tbody>
                                 <tr>
-                                    <td class="small-text">فروش</td>
-                                    <td class="small-text">{{ status.all_sales_price - status.all_discount | number | persianNumber }}
-                                        ریال
+                                    <th>اعتبار مصرف شده</th>
+                                    <td>
+                                        {{ new_invoice_data.used_credit | number | persianNumber }}</td>
+                                </tr>
+                                <tr>
+                                    <th>تخفیف</th>
+                                    <td><input ng-model="new_invoice_data.discount" type="text"
+                                               class="form-control"
+                                               aria-label="" format>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="small-text">پوز بانکی</td>
-                                    <td class="small-text">{{ status.all_pos | number | persianNumber }} ریال</td>
+                                <tr class="totalPriceRow">
+                                    <th>جمع کل</th>
+                                    <td class="priceField">
+                                        {{ new_invoice_data.total_price - new_invoice_data.discount - new_invoice_data.used_credit | number | persianNumber }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="small-text">گزارش پرداخت</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.outcome_report">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">بلیط رویداد</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.event_tickets">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">گزارش دریافت</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.income_report">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">انعام</td>
-                                    <td class="small-text">{{ status.all_tip | number | persianNumber }} ریال</td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">پول نقد</td>
-                                    <td class="small-text">
-                                        <input class="form-control" type="number" min="0"
-                                               ng-model="night_report_inputs.current_money_in_cash">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">صندوق</td>
-                                    <td class="small-text">{{ ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
-                                        ریال
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-text">اختلاف</td>
-                                    <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report - night_report_inputs.event_tickets + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
-                                        ریال
+                                    <th>انعام</th>
+                                    <td><input ng-model="new_invoice_data.tip" type="text" class="form-control"
+                                               aria-label="" format>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="payModal" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            انتخاب نوع پرداخت
+                        </button>
                     </div>
                 </div>
+                <div class="modal-body">
+                    <form>
+                        <label class="lefty iconic">نقد<i class="fas fa-money-bill-alt"></i></label>
+                        <label class="righty iconic"><i class="fas fa-credit-card"></i>کارت‌خوان</label>
+                        <input ng-change="payModalChangeNumber()" type="range" class="form-control-range"
+                               ng-model="new_invoice_data.cash" min="0"
+                               max="{{ new_invoice_data.total_price - new_invoice_data.discount + new_invoice_data.tip - new_invoice_data.used_credit }}"
+                               step="5000">
+                        <input style="font-family: 'B Yekan'" disabled type="text" aria-label="pos"
+                               class="form-control paymentMethod righty"
+                               ng-model="new_invoice_data.card" format>
+                        <input style="font-family: 'B Yekan'" ng-change="payModalChangeNumber()" type="text"
+                               aria-label="cash"
+                               class="form-control paymentMethod lefty"
+                               ng-model="new_invoice_data.cash" format>
+                    </form>
+                </div>
                 <div class="modal-footer">
-
+                    <a class="mainButton redButton closeModal"
+                       ng-click="closePayModal()"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-click="settleInvoice()" href=""
+                       class="mainButton greenButton">تسویه</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="submit_cash_today_modal" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            خلاصه صندوق
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col">
+                                <table class="invoiceTable">
+                                    <tbody>
+                                    <tr>
+                                        <td class="small-text">دریافتی خالص</td>
+                                        <td class="small-text">{{ status.all_cash + status.all_pos | number | persianNumber }}
+                                            ریال
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="small-text">کارت‌خوان</td>
+                                        <td class="small-text">{{ status.all_pos | number | persianNumber }} ریال</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="small-text">نقد</td>
+                                        <td class="small-text">{{ status.all_cash | number | persianNumber }}
+                                            ریال
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="small-text">موجودی نقد صندوق</td>
+                                        <td class="small-text">
+                                            <input class="form-control" type="number" min="0"
+                                                   ng-model="night_report_inputs.current_money_in_cash">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="small-text">گزارش خروج پول از صندوق</td>
+                                        <td class="small-text">
+                                            <input class="form-control" type="number" min="0"
+                                                   ng-model="night_report_inputs.outcome_report">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="small-text">گزارش ورود پول به صندوق</td>
+                                        <td class="small-text">
+                                            <input class="form-control" type="number" min="0"
+                                                   ng-model="night_report_inputs.income_report">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="small-text">اختلاف</td>
+                                        <td ng-class="night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report + night_report_inputs.income_report + status.all_tip ) >= 0 ? 'small-text green-cell': 'small-text red-cell'">{{ night_report_inputs.current_money_in_cash - ( status.all_sales_price - status.all_discount - status.all_pos -  night_report_inputs.outcome_report + night_report_inputs.income_report + status.all_tip ) | number | persianNumber }}
+                                            ریال
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="mainButton redButton closeModal"
+                       ng-click="close_modal('submit_cash_today_modal')"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a tabindex="0" class="mainButton greenButton" role="button"
+                       data-container="body"
+                       ng-disabled="disable_print_after_save_all_buttons"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="با زدن دکمه بلی این صندوق ذخیره ‌می‌شود و در صورت صورت اتصال پرینتر خلاصه صندوق چاپ می‌شود. همچنین برای جلوگیری از اشتباه شما به صورت خودکار از حساب کاربری خود خارج خواهید شد."
+                       second-button-text="بلی"
+                       second-callback="close_cash()">ذخیره و بستن صندوق</a>
                 </div>
             </div>
         </div>
@@ -825,37 +806,37 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">نام مهمان</th>
                 <th scope="col">میز</th>
-                <th>وضعیت سفارش</th>
-                <th>وضعیت بازی</th>
-                <th scope="col">مبلغ فاکتور</th>
+                <th scope="col">نام مهمان</th>
                 <th scope="col">تعداد مهمانان</th>
-                <th scope="col">ساعت تسویه</th>
+                <th>وضعیت</th>
+                <th scope="col">مبلغ فاکتور</th>
                 <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
-                <th scope="row">{{ invoice.guest_name }}</th>
                 <td>{{ invoice.table_name }}</td>
-                <td><span ng-hide="invoice.is_settled"
+                <th scope="row">{{ invoice.guest_name }}</th>
+                <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
+                <td>
+                    <span ng-hide="invoice.is_settled"
                           ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span>
-                </td>
-                <td><span ng-hide="invoice.is_settled"
+                    <span ng-hide="invoice.is_settled"
                           ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
                 </td>
                 <td>
-                    {{ invoice.total_price - invoice.discount - invoice.used_credit | number:fractionSize | persianNumber }}
+                    {{ invoice.total_price - invoice.discount - invoice.used_credit | number | persianNumber }}
                     ریال
                 </td>
-                <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
-                <td>{{ invoice.settle_time | persianNumber }}</td>
-                <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href=""
-                                                                                               class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
-                </td>
-                <td ng-show="invoice.is_settled" ng-click="showInvoice(invoice.invoice_id)"><a href=""
-                                                                                               class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                <td class="tableButtonWrapper">
+                    <a href="" ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"
+                       class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                    <a href="" ng-show="invoice.is_settled"
+                       ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true);changeMenuNav('GAME');"
+                       class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                    <a href="" ng-hide="invoice.is_settled" ng-click="openDeleteInvoiceModal(invoice.invoice_id)"
+                       class="mainButton redButton smallButton fullWidthButton">حذف</a>
                 </td>
             </tr>
             </tbody>
@@ -863,13 +844,7 @@
 
     </div>
     <main ng-hide="cash_state === 'NO_CASH' || cash_state === 'OLD_CASH' || cash_state === 'OLD_CASH_WITH_UNSETTLED_INVOICES'"
-          class="pageContent container-fluid">
-        <div class="tableButtons">
-            <div class="buttonGroup">
-                <a class="addUser mainButton greenButton" ng-click="openAddInvoiceModal()" data-toggle="modal"><i
-                        class="fas fa-file-invoice-dollar"></i> فاکتور جدید</a>
-            </div>
-        </div>
+          class="pageContent">
         <div class="row saloonPageContent">
             <main class="col-4 col-xl-3 tableNavigation">
                 <div class="row">
@@ -882,18 +857,26 @@
                         </button>
                     </div>
                 </div>
-                <div class="row">
-                    <div ng-repeat="table_category in categorized_tables_data" class="col-md-6 table_category">
+                <div ng-repeat="table_category in categorized_tables_data" class="table_category_wrapper">
+                    <p ng-bind="table_category.table_category_name"></p>
+                    <div class="table_category">
                         <a ng-repeat="table in table_category.tables" href="" ng-click="selectTable(table.table_name)"
-                           ng-class="set_class_name(table.table_name)"><span
-                                ng-hide="table_factor_counts(table.table_name) === 0"
-                                class="badge badge-pill badge-warning"
-                                ng-bind="table_factor_counts(table.table_name)"></span>{{ table.table_name }}</a>
+                           ng-class="set_class_name(table.table_name)">
+                            <span ng-bind="table.table_name"></span>
+                            <span ng-if="table_factor_counts(table.table_name)" class="badge badge-pill badge-white"
+                                  ng-bind="table_factor_counts(table.table_name) | persianNumber"></span></a>
                     </div>
                 </div>
             </main>
 
             <main class="col-8 col-xl-9">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton" ng-click="openAddInvoiceModal()"
+                           data-toggle="modal"><i
+                                class="fas fa-file-invoice-dollar"></i> فاکتور جدید</a>
+                    </div>
+                </div>
                 <div ng-hide="current_selected_table_name" class="tableWrapper">
                     <table class="table">
                         <thead>
@@ -901,35 +884,37 @@
                         <h3 class="tableName">فاکتورهای امروز</h3>
                         <tbody>
                         <tr>
-                            <th scope="col">نام مهمان</th>
                             <th scope="col">میز</th>
-                            <th>وضعیت سفارش</th>
-                            <th>وضعیت بازی</th>
-                            <th scope="col">مبلغ فاکتور</th>
+                            <th scope="col">نام مهمان</th>
                             <th scope="col">تعداد مهمانان</th>
-                            <th scope="col">ساعت تسویه</th>
+                            <th scope="col">وضعیت</th>
+                            <th scope="col">مبلغ فاکتور</th>
                             <th scope="col"></th>
                         </tr>
                         <tr ng-repeat="invoice in all_today_invoices" ng-class="invoice.is_settled ? 'settled_row': ''">
-                            <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.table_name }}</td>
-                            <td><span ng-hide="invoice.is_settled"
-                                      ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span>
-                            </td>
-                            <td><span ng-hide="invoice.is_settled"
-                                      ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
-                            </td>
-                            <td>
-                                {{ invoice.total_price - invoice.discount - invoice.used_credit | number:fractionSize | persianNumber }}
-                                ریال
-                            </td>
+                            <th scope="row">{{ invoice.guest_name }}</th>
                             <td>{{ invoice.guest_nums | persianNumber }} نفر</td>
-                            <td>{{ invoice.settle_time | persianNumber }}</td>
-                            <td ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"><a href=""
-                                                                                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            <td>
+                                <span ng-hide="invoice.is_settled"
+                                      ng-class="return_status_badge_class_invoice(invoice.invoice_status.status)">{{ invoice.invoice_status.text }}</span>
+                                <span ng-hide="invoice.is_settled"
+                                      ng-class="return_status_badge_class_game(invoice.game_status.status)">{{ invoice.game_status.text }}</span>
+                                <span ng-show="invoice.is_settled"
+                                      class="badge badge-pill badge-gray">تسویه شده</span>
                             </td>
-                            <td ng-show="invoice.is_settled" ng-click="showInvoice(invoice.invoice_id)"><a href=""
-                                                                                                           class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            <td class="priceField">
+                                {{ invoice.total_price - invoice.discount - invoice.used_credit | number | persianNumber }}
+                            </td>
+                            <td class="tableButtonWrapper">
+                                <a href="" ng-show="invoice.is_settled"
+                                   ng-click="showInvoice(invoice.invoice_id, showEditPaymentButton=true, showPrintButton=true);changeMenuNav('GAME');"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                <a href="" ng-hide="invoice.is_settled" ng-click="editInvoice(invoice.invoice_id)"
+                                   class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                                <a href="" ng-hide="invoice.is_settled"
+                                   ng-click="openDeleteInvoiceModal(invoice.invoice_id)"
+                                   class="mainButton redButton smallButton fullWidthButton">حذف</a>
                             </td>
                         </tr>
                         </tbody>
@@ -943,29 +928,32 @@
                         <tr>
                             <th>نام مهمان</th>
                             <th>تعداد مهمانان</th>
-                            <th>وضعیت سفارش</th>
-                            <th>وضعیت بازی</th>
+                            <th>وضعیت</th>
                             <th>مبلغ فاکتور</th>
                             <th></th>
                         </tr>
                         <tr ng-repeat="s_invoice in selected_table_data">
                             <th scope="row">{{ s_invoice.guest_name }}</th>
                             <td>{{ s_invoice.guest_nums | persianNumber }} نفر</td>
-                            <td><span
-                                    ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span>
-                            </td>
-                            <td><span
-                                    ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span>
+                            <td>
+                                <span
+                                        ng-class="return_status_badge_class_invoice(s_invoice.invoice_status.status)">{{ s_invoice.invoice_status.text }}</span>
+                                <span
+                                        ng-class="return_status_badge_class_game(s_invoice.game_status.status)">{{ s_invoice.game_status.text }}</span>
                             </td>
                             <td>
-                                {{ s_invoice.total_price - s_invoice.discount - s_invoice.used_credit | number:fractionSize | persianNumber }}ریال
+                                <span class="priceField"
+                                      ng-bind="s_invoice.total_price - s_invoice.discount - s_invoice.used_credit | number | persianNumber"></span>
                             </td>
-                            <td ng-hide="s_invoice.is_settled" ng-click="editInvoice(s_invoice.invoice_id)"><a href=""
-                                                                                                               class="mainButton grayButton smallButton fullWidthButton">جزییات</a>
+                            <td class="tableButtonWrapper">
+                                <a href="" ng-click="editInvoice(s_invoice.invoice_id)"
+                                   class="mainButton newGrayButton smallButton fullWidthButton">جزییات</a>
+                                <a href="" ng-click="openDeleteInvoiceModal(s_invoice.invoice_id)"
+                                   class="mainButton redButton smallButton fullWidthButton">حذف</a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
-
                 </div>
 
             </main>

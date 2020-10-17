@@ -1,0 +1,197 @@
+<div ng-controller="menuCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="addModal" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button ng-click="change_nav_inside_modal('MENU_ITEM')"
+                                ng-class="{'active' : selected_nav_inside_modal === 'MENU_ITEM'}"
+                                class="mainButton">
+                            آیتم
+                            جدید
+                        </button>
+                        <button ng-click="change_nav_inside_modal('MENU_CATEGORY')"
+                                ng-class="{'active' : selected_nav_inside_modal === 'MENU_CATEGORY'}"
+                                class="mainButton">دسته‌بندی جدید
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form ng-if="selected_nav_inside_modal === 'MENU_ITEM'">
+                        <div class="row">
+                            <div class="col">
+                                <label>نام<i class="fas fa-star-of-life"></i></label>
+                                <input name="name" ng-model="new_menu_item_data.name" type="text"
+                                       class="form-control" placeholder="نام آیتم">
+                            </div>
+                            <div class="col">
+                                <label>قیمت ( ریال )<i class="fas fa-star-of-life"></i></label>
+                                <input name="price" ng-model="new_menu_item_data.price"
+                                       type="text"
+                                       class="form-control iranian-number" placeholder="قیمت آیتم" format>
+                            </div>
+                            <div class="col">
+                                <label>دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_menu_item_data.menu_category_id" class="form-control customSelect"
+                                        id="sel1"
+                                        ng-options="category.id as category.name for category in menu_categories">
+                                    <option value="">انتخاب کنید</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <form ng-if="selected_nav_inside_modal === 'MENU_CATEGORY'">
+                        <div class="row">
+                            <div class="col">
+                                <label>نام دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="new_menu_category_data.name" type="text" aria-label="First name"
+                                       class="form-control" placeholder="نام دسته‌بندی">
+                            </div>
+                            <div class="col">
+                                <label>نوع دسته‌بندی<i class="fas fa-star-of-life"></i></label>
+                                <select ng-model="new_menu_category_data.kind" class="form-control" id="sel1">
+                                    <option value="">نوع دسته‌بندی</option>
+                                    <option ng-selected="new_menu_category_data.kind === 'KITCHEN'" value="KITCHEN">
+                                        آشپزخانه
+                                    </option>
+                                    <option ng-selected="new_menu_category_data.kind === 'BAR'" value="BAR">
+                                        بار
+                                    </option>
+                                    <option ng-selected="new_menu_category_data.kind === 'OTHER'" value="OTHER">
+                                        سایر
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkbox-unit">
+                            <label class="checkbox-unit-title">از کدام پرینتر چاپ شود؟</label>
+                            <label ng-repeat="printer in printers" class="checkbox-item">
+                                <input style="float: left;" ng-checked="printer.is_checked"
+                                       ng-model="printer.is_checked_m"
+                                       type="checkbox"
+                                       ng-click="changePrinterCheckBox(is_checked, printer.printer_id)">
+                                <span class="check-box-effect">پرینتر {{ printer.printer_name }}</span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="mainButton redButton closeModal" ng-click="close_modal('addModal');resetFrom()"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-if="selected_nav_inside_modal === 'MENU_ITEM'" ng-click="addMenuItem()" href=""
+                       class="mainButton greenButton">ثبت</a>
+                    <a ng-if="selected_nav_inside_modal === 'MENU_CATEGORY'" ng-click="addMenuCategory()" href=""
+                       class="mainButton greenButton">ثبت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent">
+        <div class="row userPageContent">
+            <div class="col-md-7 pr-0">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton"
+                           ng-click="open_modal('addModal');change_nav_inside_modal('MENU_ITEM');"
+                           data-toggle="modal"><i
+                                class="fas fa-user-plus"></i> آیتم جدید</a>
+                    </div>
+                    <div class="buttonGroup">
+                        <form>
+                            <input ng-keyup="searchMenuItem()" ng-model="searach_data_menu_item.search_word"
+                                   class="form-control listFilter" type="search" placeholder="فیلتر کن">
+                        </form>
+                    </div>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">نام آیتم</th>
+                            <th scope="col">قیمت</th>
+                            <th scope="col">دسته‌بندی</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in menu_items">
+                            <th scope="row">{{ item.name }}</th>
+                            <td class="priceField">{{ item.price | number | persianNumber }}</td>
+                            <td>{{ item.category_name }}</td>
+                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
+                                                              class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+                            <td style="text-align: center">
+                                <a tabindex="0" class="mainButton fullWidthButton smallButton grayButton"
+                                   role="button" data-container="body"
+                                   ng-disabled="disable_print_after_save_all_buttons"
+                                   data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                                   question="مطمئن هستید؟"
+                                   text="بعد از پاک شدن آیتم اطلاعات قابل بازیابی نخواهند بود."
+                                   first-button-text="حذف آیتم"
+                                   first-callback="deleteMenuItem(item.id)">
+                                    حدف
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="col-md-5 p-0">
+                <div class="tableButtons">
+                    <div class="buttonGroup">
+                        <a class="addUser mainButton greenButton"
+                           ng-click="open_modal('addModal');change_nav_inside_modal('MENU_CATEGORY');"
+                           data-toggle="modal"
+                           data-backdrop="static" data-keyboard="false">
+                             دسته‌بندی جدید</a>
+                    </div>
+                </div>
+                <div class="tableWrapper">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">نام دسته‌بندی</th>
+                            <th scope="col">پرینتر</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="category in menu_categories">
+                            <td class="arrowButton" scope="row">
+                                <a ng-click="change_order(category.id, 'UP')"><i
+                                        class="fas fa-arrow-up"></i></a>
+                            </td>
+                            <td class="arrowButton" scope="row">
+                                <a ng-click="change_order(category.id, 'DOWN')"><i
+                                        class="fas fa-arrow-down"></i></a>
+                            </td>
+                            <td scope="row" class="align-middle">{{ category.name }}</td>
+                            <td class="align-middle" scope="row">
+                                        <span ng-repeat="printer in category.printers"
+                                              ng-bind="($index + 1 !== category.printers.length) ? printer.name + ' ، ' : printer.name"></span>
+                            </td>
+                            <td class="align-middle"><a ng-click="editMenuCategory(category.id)"
+                                                        href=""
+                                                        class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

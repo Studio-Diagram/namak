@@ -1,26 +1,20 @@
 <div ng-controller="stocksCtrl">
-    <div data-backdrop="static" data-keyboard="false" class="modal fade mainModal" id="addStockModal"
-         tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="addStockModal" tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">ثبت انبار جدید</h2>
-                    <a class="mainButton redButton" ng-click="close_modal('addStockModal');resetFrom()" href="" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-click="addStock()" href="" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
-                     
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">
+                            انبار
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <h3>اطلاعات انبار</h3>
-
-
                         <div class="row">
                             <div class="col">
                                 <label>نام انبار<i class="fas fa-star-of-life"></i></label>
@@ -29,13 +23,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <label>شعبه<i class="fas fa-star-of-life"></i></label><br>
-                            <div ng-repeat="branch in branches"
-                                 class="checkbox-unit col">
-                                <label class="checkbox-item">
-                                    <input style="float: left;" ng-checked="branch.is_checked" ng-model="branch.is_checked_m"
+                            <div class="checkbox-unit">
+                                <label class="checkbox-unit-title requiredFieldStar">شعبه</label>
+                                <label ng-repeat="branch in branches" class="checkbox-item">
+                                    <input ng-checked="branch.is_checked"
+                                           ng-model="branch.is_checked_m"
                                            type="checkbox"
-                                           ng-click="changeStockBranchCheckBox(branch.id)">{{ branch.name }}
+                                           ng-click="changeStockBranchCheckBox(branch.id)">
+                                    <span class="check-box-effect" ng-bind="branch.name"></span>
                                 </label>
                             </div>
                         </div>
@@ -43,55 +38,26 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="close_modal('errorModal', 'addStockModal')" class="mainButton redButton" data-dismiss="modal" href=""
+                    <a class="mainButton redButton closeModal"
+                       ng-click="close_modal('addStockModal');resetFrom()"
                        aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
+                        <span aria-hidden="true">خروج</span>
                     </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
+                    <a ng-click="addStock()" href=""
+                       class="mainButton greenButton">ثبت</a>
                 </div>
             </div>
         </div>
     </div>
     <main class="pageContent container-fluid">
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-                <div class="tableButtons">
-                    <a class="addUser mainButton greenButton" ng-click="open_modal('addStockModal')" data-toggle="modal"
-                       data-backdrop="static" data-keyboard="false"><i
-                            class="fas fa-user-plus"></i> انبار جدید</a>
-                    <input ng-keyup="searchMenuCategory()" ng-model="searach_data_menu_category.search_word"
-                           class="form-control listFilter" type="search" placeholder="فیلتر کن">
-                    
-                </div>
-
-
-                    <table-directive headers="table_headers"
-                                     config="table_config"
-                                     rows="stocks"
-                                     detail-callback="editStock(item_id)">
-                    </table-directive>
-
-
-            </main>
+        <div class="tableButtons">
+            <a class="addUser mainButton greenButton" ng-click="open_modal('addStockModal')" data-toggle="modal"
+               data-backdrop="static" data-keyboard="false"> انبار جدید</a>
         </div>
+        <table-directive headers="table_headers"
+                         config="table_config"
+                         rows="stocks"
+                         detail-callback="editStock(item_id)">
+        </table-directive>
     </main>
 </div>

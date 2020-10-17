@@ -1,0 +1,89 @@
+<div ng-controller="gameBranchDetailCtrl">
+    <div data-backdrop="static" data-keyboard="false" class="modal fade modalBottomButtonsTopNav"
+         id="editGameDetailsModal" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="tabGroup">
+                        <button class="mainButton active">تنظیمات بازی</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col">
+                                <label>کمترین واحد (برای رند شدن فاکتور)<i class="fas fa-star-of-life"></i></label>
+                                <input ng-model="game_branch_data.min_paid_price" type="text"
+                                       class="form-control iranian-number" placeholder="کمترین واحد" format>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div ng-repeat="game_data_object in game_branch_data.game_data" class="col">
+                                <label>هزینه ساعت {{ game_data_object.which_hour | persianNumber }} بازی<i
+                                        class="fas fa-star-of-life"></i></label>
+                                <input ng-model="game_data_object.price_per_hour" class="form-control iranian-number"
+                                       placeholder="قیمت به ازای یک ساعت ( ریال )" format>
+                            </div>
+                        </div>
+                        <div class="checkbox-unit">
+                            <label>تاثیر عضویت در محاسبه هزینه بازی</label>
+                            <label class="form-check-label checkbox-item">
+                                <input ng-model="game_branch_data.guest_pricing"
+                                       type="checkbox">
+                                <span class="check-box-effect">برای مهمانانی که عضو نیستند، زمان بازی به واحدهای یک ساعته، رند به بالا شود</span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a class="mainButton redButton closeModal"
+                       ng-click="close_modal('editGameDetailsModal');setDefaultData(show_game_branch_data);"
+                       aria-label="Close">
+                        <span aria-hidden="true">خروج</span>
+                    </a>
+                    <a ng-click="updateBranch()" href=""
+                       class="mainButton greenButton">ثبت</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="pageContent">
+        <div class="tableButtons">
+            <div class="buttonGroup">
+                <a class="addUser mainButton greenButton" ng-click="open_modal('editGameDetailsModal')"
+                   data-toggle="modal">ویرایش اطلاعات</a>
+            </div>
+        </div>
+        <div class="infoTableWrapper">
+            <table class="table infoTable">
+                <tr>
+                    <td>
+                        <span class="title">کمترین واحد (برای رند شدن فاکتور) </span>
+                        <br>
+                        <span class="priceField"
+                              ng-bind="show_game_branch_data.min_paid_price | number | persianNumber"></span>
+                    </td>
+                    <td ng-repeat="game_data_object in show_game_branch_data.game_data">
+                        <span class="title"> هزینه ساعت {{ game_data_object.which_hour | persianNumber }} بازی </span>
+                        <br>
+                        <span class="priceField"
+                              ng-bind="game_data_object.price_per_hour | number | persianNumber"></span>
+                    </td>
+                </tr>
+            </table>
+            <table class="table infoTable tableWithBorderTopTR">
+                <tr>
+                    <td>
+                        <span class="title">تاثیر عضویت در محاسبه هزینه بازی</span>
+                        <br>
+                        <span ng-if="show_game_branch_data.guest_pricing">برای مهمانانی که عضو نیستند، زمان بازی به واحدهای یک ساعته، رند به بالا شود.</span>
+                        <span ng-if="!show_game_branch_data.guest_pricing">برای تمام مهمانان بازی به طور دقیق محاسبه شود.</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </main>
+</div>

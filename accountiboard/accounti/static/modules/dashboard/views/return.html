@@ -1,177 +1,154 @@
 <div ng-controller="returnCtrl">
-    <div class="modal fade mainModal alertModal redAlertModal" id="closeInvoicePermissionModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">تایید خروج از فاکتور</h2>
-                    <a ng-click="closeAddModal()" href="" class="mainButton greenButton"> بله</a>
-                    <a ng-click="closePermissionModal()" href="" class="mainButton redButton"> خیر</a>
-                </div>
-                <div class="modal-body">
-                    <p style="margin: 5px 15px 0 0"> آیا اطمینان به خروج دارید؟ تمام اطلاعات ذخیره نشده شما از بین
-                        می‌رود.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade mainModal" id="addModal" tabindex="-1" role="dialog"
+    <div data-backdrop="static" data-keyboard="false"
+         class="modal fade mainModal invoiceSaleModal invoiceAccountingModal" id="addModal"
+         tabindex="-1"
+         role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modalHeader">
-                    <h2 class="modalTitle">فاکتور مرجوعی </h2>
-                    <a ng-click="openPermissionModal()" class="mainButton redButton" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                    <a ng-hide="read_only_mode" href="" ng-click="addReturn()" class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت</a>
+                    <h2 class="modalTitle">سند حسابداری</h2>
+                    <a class="mainButton redButton" role="button"
+                       ng-if="compare_before_exit()" ng-click="close_modal('addModal');resetFrom()">خروج</a>
+                    <a tabindex="0" class="mainButton redButton" role="button"
+                       data-container="body" ng-if="!compare_before_exit()"
+                       data-toggle="popover" data-trigger="focus" data-placement="bottom" popover
+                       question="مطمئن هستید؟"
+                       text="تغییرات ذخیره‌نشده وجود دارد. با بستن بدون ذخیره این تغییرات اعمال نخواهند شد."
+                       first-button-text="خروج بدون ذخیره" first-callback="close_modal('addModal');resetFrom()"
+                       second-button-text="خروج و ذخیره"
+                       second-callback="addReturn()">خروج</a>
+                    <a ng-hide="read_only_mode" href="" ng-click="addReturn()" class="mainButton greenButton"> ذخیره</a>
                     <a ng-hide="read_only_mode" href="" ng-click="save_and_open_modal();"
-                       class="mainButton greenButton"><i
-                            class="fas fa-save"></i> ثبت و جدید</a>
-                    <a ng-click="resetFrom()" href="" class="mainButton grayButton"><i class="fas fa-eraser"></i>
-                        پاک کردن </a>
-
+                       class="mainButton greenButton"> ذخیره و سند جدید</a>
+                    <a ng-click="resetFrom()" href="" class="mainButton grayButton">
+                        پاک کردن صفحه </a>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <table class="invoiceTable">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <small>شماره فاکتور</small>
-                                            <a href=""
-                                               class="">{{ new_invoice_return_data.factor_number | persianNumber }}</a>
-                                        </td>
-                                        <td>
-                                            <small>تاریخ فاکتور</small>
-                                            <input ng-model="new_invoice_return_data.date" id="datepicker"
-                                                   class="form-control listFilter tableLefty" placeholder="تاریخ"
-                                                   type="text">
-                                        </td>
-                                        <td>
-                                            <small>نوع مرجوعی</small>
+                    <aside class="rightSideInvoiceSale">
+                        <div class="nav-group" role="group">
+                            <button class="mainButton active">
+                                <span>مرجوعی</span>
+                            </button>
+                        </div>
+                        <nav class="nav flex-column cafeMenuNav">
+                            <div>
+                                <form>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>نوع مرجوعی</label>
                                             <select ng-model="new_invoice_return_data.return_type"
                                                     class="form-control">
-                                                <option value="">نوع مرجوعی را انتخاب کنید...</option>
+                                                <option value="">انتخاب کنید</option>
                                                 <option value="CUSTOMER_TO_CAFE">مشتری به کافه</option>
-                                                <option value="CAFE_TO_SUPPLIER">کافه به تامین‌کننده</option>
+                                                <option value="CAFE_TO_SUPPLIER">کافه به طرف حساب</option>
                                             </select>
-                                        </td>
-                                        
-                                        <td>
-                                            <small>تامین کننده</small>
-                                            <ui-select ng-model="new_invoice_return_data.supplier_id">
-                                                <ui-select-match placeholder="انتخاب تامین‌کننده">
+                                        </div>
+                                        <div class="col">
+                                            <label>طرف حساب</label>
+                                            <ui-select
+                                                    ng-change="get_supplier_name_from_id(suppliers, new_invoice_return_data.supplier_id)"
+                                                    ng-class="{'disabled': new_invoice_return_data.return_type !== 'CAFE_TO_SUPPLIER'}"
+                                                    ng-disabled="new_invoice_return_data.return_type !== 'CAFE_TO_SUPPLIER'"
+                                                    ng-model="new_invoice_return_data.supplier_id">
+                                                <ui-select-match placeholder="جستجو">
                                                     {{$select.selected.name}}</ui-select-match>
                                                 <ui-select-choices
                                                         repeat="supplier.id as supplier in suppliers | filter: $select.search">
                                                     <div ng-bind="supplier.name"></div>
                                                 </ui-select-choices>
                                             </ui-select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table ng-hide="true" class="invoiceTable">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <small>حساب بانکی</small>
-                                            <select ng-model="new_invoice_return_data.banking_id"
-                                                    class="form-control" ng-options="banking.id as banking.name for banking in allbanking_names">
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <small>انبار</small>
-                                            <select ng-model="new_invoice_return_data.stock_id"
-                                                    class="form-control" ng-options="stock.id as stock.name for stock in stocks">
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <table class="invoiceTable invoiceItem">
-                                    <tbody>
-                                    <tr>
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <th class="first">#</th>
-                                        <th style="width: 30%" class="second">محصول</th>
-                                        <th class="fifth">تعداد</th>
-                                        <th style="width: 25%;" class="sixth">توضیحات</th>
-                                    </tr>
-                                    <tr ng-repeat="return_product in new_invoice_return_data.return_products">
-                                        <th class="first"><input type="checkbox"
-                                                                 aria-label="Checkbox for following text input"></th>
-                                        <td>{{ 1 | persianNumber }}</td>
-                                        <td>
-                                            <ui-select ng-change="get_last_buy_price(return_product.shop_id)"
-                                                       ng-model="return_product.shop_id">
-                                                <ui-select-match placeholder="انتخاب محصول">
-                                                    {{$select.selected.name}}</ui-select-match>
-                                                <ui-select-choices
-                                                        repeat="shop.id as shop in shops | filter: $select.search">
-                                                    <div ng-bind="shop.name"></div>
-                                                </ui-select-choices>
-                                            </ui-select>
-
-                                        </td>
-                                        <td><input style="font-family: 'B Yekan'" class="form-control" type="number"
-                                                   min="0"
-                                                   ng-model="return_product.numbers"></td>
-                                        <td><input class="form-control" type="text" ng-maxlength="60"
-                                                   ng-model="return_product.description"></td>
-                                    </tr>
-
-                                    </tbody>
-                                </table>
-                                <a ng-click="add_new_row_to_return_products()" href="" class="mainButton grayButton"><i
-                                        class="fas fa-eraser"></i>
-                                    اضافه کردن سطر جدید</a>
-                            </main>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="searchProductWrapper">
+                                    <label>جستجوی محصولات فروشگاهی</label>
+                                    <input ng-keyup="search_shop_products()"
+                                           ng-model="search_data_shop_products.search_word"
+                                           class="form-control listFilter" type="text"
+                                           placeholder="نام محصول فروشگاهی">
+                                </div>
+                                <div class="productsWrapper">
+                                    <div class="accountingCard" ng-repeat="shop in shops"
+                                         ng-click="add_item_shop(shop.id, shop.name)">
+                                        <span ng-bind="shop.name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </aside>
+                    <aside class="leftSideInvoiceSale">
+                        <div class="generalInfoInvoice">
+                            <div>
+                                <label>تاریخ</label>
+                                <input ng-model="new_invoice_return_data.date" id="datepicker"
+                                       class="form-control" placeholder="تاریخ" type="text">
+                            </div>
+                            <div>
+                                <label>طرف حساب</label>
+                                <input class="form-control customReadonly requiredField" type="text"
+                                       ng-model="selected_supplier_name" disabled>
+                            </div>
+                            <div>
+                                <label>شماره سند</label>
+                                <input class="form-control iranian-number" type="text"
+                                       ng-model="new_invoice_return_data.factor_number" disabled>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
+                        <table class="invoiceTable invoiceItem newInvoiceSaleTable" id="invoiceSaleTable">
+                            <tbody>
+                            <tr>
+                                <th class="first"></th>
+                                <th class="second">محصول</th>
+                                <th>تعداد</th>
+                                <th>توضیحات</th>
+                            </tr>
+                            <tr ng-repeat="return_product in new_invoice_return_data.return_products">
+                                <td class="first"><a href="" ng-click="delete_product_row($index)"><i
+                                        class="fa fa-trash"></i></a></td>
+                                <td ng-bind="return_product.shop_name">
+                                </td>
+                                <td><input class="form-control iranian-number" type="number" min="0"
+                                           ng-model="return_product.numbers"></td>
+                                <td><input class="form-control" type="text" ng-maxlength="60"
+                                           ng-model="return_product.description"></td>
+                            </tr>
+                            </tbody>
+                        </table>
 
+                        <div class="invoiceSaleFooter">
+                            <div class="accountingMoreInfo">
+                                <div class="flexFull">
+                                    <small>انبار</small>
+                                    <select ng-model="new_invoice_return_data.stock_id"
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="stock in stocks"
+                                                ng-value="stock.id">{{ stock.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="flexFull">
+                                    <small>حساب بانکی</small>
+                                    <select ng-disabled="new_invoice_return_data.return_type !== 'CUSTOMER_TO_CAFE'"
+                                            ng-model="new_invoice_return_data.banking_id"
+                                            class="form-control customSelect">
+                                        <option value="">انتخاب کنید</option>
+                                        <option ng-repeat="banking in allbanking_names"
+                                                ng-value="banking.id">{{ banking.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade mainModal alertModal redAlertModal" id="errorModal" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modalHeader">
-                    <h2 class="modalTitle">خطا</h2>
-                    <a ng-click="closeErrorModal()" class="mainButton redButton" data-dismiss="modal" href=""
-                       aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i>  خروج</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <main class="col-sm-12">
-                                <span class="alertText">{{ error_message }}</span>
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <main class="pageContent container-fluid">
+    <main class="pageContent">
         <div class="tableButtons">
             <div class="buttonGroup">
-                <a ng-click="openAddModal();getNextFactorNumber('RETURN')" href=""
+                <a ng-click="open_modal('addModal');set_today_for_invoice();getNextFactorNumber('RETURN')" href=""
                    class="mainButton greenButton">مرجوعی جدید</a>
             </div>
             <div class="buttonGroup">
@@ -181,40 +158,6 @@
                 </form>
             </div>
         </div>
-        <div class="row userPageContent">
-            <main class="col-sm-12 ">
-
-                <div class="tableWrapper">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">شماره فاکتور</th>
-                            <th scope="col">تامین‌کننده</th>
-                            <th scope="col">نام محصول</th>
-                            <th scope="col">تعداد</th>
-                            <th scope="col">قیمت کل</th>
-                            <th scope="col">توضیحات</th>
-                            <th scope="col">تاریخ</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="invoice_return in returns">
-                            <th>{{ invoice_return.factor_number | persianNumber }}</th>
-                            <th scope="row">{{ invoice_return.supplier_name }}</th>
-                            <th scope="row">{{ invoice_return.shop_name }}</th>
-                            <td>{{ invoice_return.numbers | persianNumber }}</td>
-                            <td>{{ invoice_return.total_price | number | persianNumber }} ریال</td>
-                            <td>{{ invoice_return.description }}</td>
-                            <td>{{ invoice_return.date | persianNumber }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </main>
-
-
-        </div>
+        <table-directive headers="headers" config="table_config" rows="returns"></table-directive>
     </main>
 </div>

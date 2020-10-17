@@ -1,18 +1,6 @@
 angular.module("mainpage")
     .controller("loginCtrl", function ($scope, $interval, $rootScope, $filter, $http, $auth, $timeout, $window, mainpageHttpRequest, deviceDetector) {
         var initialize = function () {
-            var reCaptcha_showing = $interval(function () {
-                jQuery.noConflict();
-                (function ($) {
-                    var badge_object = $('.grecaptcha-badge');
-                    if (badge_object) {
-                        badge_object.css('visibility', 'visible');
-                        badge_object.css('opacity', '1');
-                        $interval.cancel(reCaptcha_showing);
-                    }
-                })(jQuery);
-            }, 500);
-
             $scope.user_login_data = {
                 "username": '',
                 "password": '',

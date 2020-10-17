@@ -7,11 +7,9 @@ from django.views import View
 
 class BugReportView(View):
     @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'],
-                                       USER_ROLES['ACCOUNTANT'], USER_ROLES['CASHIER'],
-                                       USER_ROLES['STAFF']},
-                                       {USER_PLANS_CHOICES['FREE']},
-                                      branch_disable=True)
+        {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'], USER_ROLES['ACCOUNTANT']},
+        ALLOW_ALL_PLANS,
+        branch_disable=True)
     def post(self, request, *args, **kwargs):
         rec_data = json.loads(request.read().decode('utf-8'))
         title = rec_data.get('title')
