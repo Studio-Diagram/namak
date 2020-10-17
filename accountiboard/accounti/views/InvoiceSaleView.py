@@ -1204,6 +1204,7 @@ class PrintCashWithTemlateView(View):
         print_data['tax'] = format(int(invoice_obj.tax), ',d')
         sum_all_used_credit_on_this_invoice = CreditToInvoiceSale.objects.filter(invoice_sale=invoice_obj).aggregate(
             Sum('used_price')).get('used_price__sum')
+        sum_all_used_credit_on_this_invoice = sum_all_used_credit_on_this_invoice if sum_all_used_credit_on_this_invoice else 0
         print_data['credits'] = format(int(sum_all_used_credit_on_this_invoice),
                                        ',d') if sum_all_used_credit_on_this_invoice else 0
         print_data['payable'] = format(
