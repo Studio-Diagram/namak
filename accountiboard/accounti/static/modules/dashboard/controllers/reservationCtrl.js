@@ -563,7 +563,7 @@ angular.module("dashboard")
                                 $scope.openAddWalkedModal();
                             }
                             else {
-                                $scope.openCompleteReserveModal();
+                                $scope.openCompleteReserveModal('waiting');
                             }
                         }
                         else if (data['response_code'] === 3) {

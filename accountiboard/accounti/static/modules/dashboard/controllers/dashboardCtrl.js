@@ -69,6 +69,15 @@ angular.module("dashboard")
                         $rootScope.is_sub_page_loading = true;
                     }
                 });
+                $timeout(function () {
+                    jQuery.noConflict();
+                    (function ($) {
+                        var tidio_object = $('#tidio-chat-iframe');
+                        tidio_object.css('z-index', 1);
+                        console.log(tidio_object);
+
+                    })(jQuery);
+                }, 10000)
             };
 
             $rootScope.change_nav_inside_modal = function (value) {
@@ -430,13 +439,13 @@ angular.module("dashboard")
             };
 
             $rootScope.get_supplier_name_from_id = function (suppliers, supplier_id) {
-            for (var index = 0; index < suppliers.length; index++) {
-                if (suppliers[index].id === supplier_id) {
-                    $rootScope.selected_supplier_name = suppliers[index].name;
-                    return suppliers[index].name;
+                for (var index = 0; index < suppliers.length; index++) {
+                    if (suppliers[index].id === supplier_id) {
+                        $rootScope.selected_supplier_name = suppliers[index].name;
+                        return suppliers[index].name;
+                    }
                 }
-            }
-        };
+            };
 
             initialize();
 
