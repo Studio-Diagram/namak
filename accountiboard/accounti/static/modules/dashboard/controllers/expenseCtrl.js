@@ -32,11 +32,13 @@ angular.module("dashboard")
             $scope.headers = [
                 {
                     name: "شماره سند",
-                    key: "factor_number"
+                    key: "factor_number",
+                    is_number: true
                 },
                 {
                     name: "تاریخ",
-                    key: "date"
+                    key: "date",
+                    is_number: true
                 },
                 {
                     name: "طرف حساب",
@@ -59,7 +61,7 @@ angular.module("dashboard")
                 'search_word': ''
             };
             $scope.table_config = {
-                price_fields: ["payment_amount"],
+                price_fields: ["total_price"],
                 has_detail_button: false,
                 has_delete_button: true,
                 has_row_numbers: false

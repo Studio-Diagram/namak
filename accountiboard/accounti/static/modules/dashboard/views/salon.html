@@ -16,7 +16,9 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label>دلیل حذف آیتم را توضیح دهید</label>
+                            <label>دلیل حذف آیتم را توضیح دهید
+                                <span>( {{ deleting_item.name }} به تعداد {{ deleting_item.numbers | persianNumber }} )</span>
+                            </label>
                             <textarea ng-model="will_delete_items.message" class="form-control"
                                       rows="3"></textarea>
                         </div>
@@ -528,7 +530,7 @@
                             </tr>
                             <tr ng-repeat="old_item in new_invoice_data.menu_items_old">
                                 <td class="first">
-                                    <a ng-click="openDeleteModal('MENU', old_item.id)" style="cursor: pointer">
+                                    <a ng-click="openDeleteModal('MENU', old_item.id, old_item.name, old_item.nums)" style="cursor: pointer">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -541,7 +543,7 @@
 
                             <tr ng-repeat="old_item in new_invoice_data.shop_items_old">
                                 <td class="first">
-                                    <a ng-click="openDeleteModal('SHOP', old_item.id)" style="cursor: pointer">
+                                    <a ng-click="openDeleteModal('SHOP', old_item.id, old_item.name, old_item.nums)" style="cursor: pointer">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -553,7 +555,7 @@
                             </tr>
                             <tr ng-repeat="game in new_invoice_data.games">
                                 <td class="first">
-                                    <a ng-click="openDeleteModal('GAME', game.id)" style="cursor: pointer">
+                                    <a ng-click="openDeleteModal('GAME', game.id, 'بازی', game.numbers)" style="cursor: pointer">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>

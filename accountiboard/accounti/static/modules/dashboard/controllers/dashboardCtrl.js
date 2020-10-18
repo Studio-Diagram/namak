@@ -74,8 +74,6 @@ angular.module("dashboard")
                     (function ($) {
                         var tidio_object = $('#tidio-chat-iframe');
                         tidio_object.css('z-index', 1);
-                        console.log(tidio_object);
-
                     })(jQuery);
                 }, 10000)
             };

@@ -8,11 +8,13 @@ angular.module("dashboard")
                 },
                 {
                     name: "شماره موبایل",
-                    key: "phone"
+                    key: "phone",
+                    is_number: true
                 },
                 {
                     name: "شماره مشتری",
-                    key: "card_number"
+                    key: "card_number",
+                    is_number: true
                 }
             ];
             $scope.member_table_configs = {

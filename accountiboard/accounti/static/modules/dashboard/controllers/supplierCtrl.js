@@ -49,7 +49,8 @@ angular.module("dashboard")
                 },
                 {
                     name: "تعداد",
-                    key: "numbers"
+                    key: "numbers",
+                    is_number: true
                 },
                 {
                     name: "ملبغ",

@@ -22,11 +22,13 @@ angular.module("dashboard")
             $scope.headers = [
                 {
                     name: "شماره سند",
-                    key: "factor_number"
+                    key: "factor_number",
+                    is_number: true
                 },
                 {
                     name: "تاریخ",
-                    key: "created_time"
+                    key: "created_time",
+                    is_number: true
                 },
                 {
                     name: "طرف حساب",
@@ -38,7 +40,8 @@ angular.module("dashboard")
                 },
                 {
                     name: "شماره ارجاع",
-                    key: "backup_code"
+                    key: "backup_code",
+                    is_number: true
                 },
                 {
                     name: "بانکداری",
