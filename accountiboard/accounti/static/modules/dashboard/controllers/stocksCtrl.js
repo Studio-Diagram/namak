@@ -3,7 +3,7 @@ angular.module("dashboard")
         var initialize = function () {
             $scope.new_stocks_data = {
                 'id': 0,
-                'branches':[],
+                'branches': [],
                 'name': ''
             };
             $scope.get_stocks_data();
@@ -19,7 +19,12 @@ angular.module("dashboard")
                     key: "branches_names"
                 }
             ];
-            $scope.table_config = {has_detail_button: true, price_fields: [],has_delete_button: false,};
+            $scope.table_config = {
+                has_detail_button: true,
+                price_fields: [],
+                has_delete_button: false,
+                has_row_numbers: false,
+            };
         };
 
         $scope.get_stocks_data = function () {
@@ -54,16 +59,18 @@ angular.module("dashboard")
                         $scope.get_stocks_data();
                         $scope.resetFrom();
                         $rootScope.close_modal('addStockModal');
-                        
-                    }, function (error) {});
+
+                    }, function (error) {
+                    });
             } else {
                 dashboardHttpRequest.updateStockDetail($scope.new_stocks_data.id, $scope.new_stocks_data)
                     .then(function (data) {
                         $scope.get_stocks_data();
                         $scope.resetFrom();
                         $rootScope.close_modal('addStockModal');
-                        
-                    }, function (error) {});
+
+                    }, function (error) {
+                    });
             }
 
         };
@@ -74,7 +81,7 @@ angular.module("dashboard")
                     // $scope.new_stocks_data.branches = data.branches;
                     // $scope.new_stocks_data.branches = $scope.branches;
                     $scope.new_stocks_data = {
-                        'branches':$scope.branches,
+                        'branches': $scope.branches,
                         'name': '',
                     };
                     angular.copy($rootScope.user_data.branches, $scope.new_stocks_data.branches);
@@ -89,11 +96,12 @@ angular.module("dashboard")
                             }
                         })
                     });
-                    
+
                     $scope.new_stocks_data.id = data.id;
                     $scope.new_stocks_data.name = data.name;
                     $rootScope.open_modal('addStockModal');
-                }, function (error) {});
+                }, function (error) {
+                });
 
         };
 
@@ -147,7 +155,7 @@ angular.module("dashboard")
         $scope.resetFrom = function () {
             $scope.new_stocks_data = {
                 'id': 0,
-                'branches':[],
+                'branches': [],
                 'name': ''
             };
             $scope.clearStockBranchesCheckboxes();

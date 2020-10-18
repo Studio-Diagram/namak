@@ -40,11 +40,13 @@ angular.module("dashboard")
             $scope.headers = [
                 {
                     name: "شماره سند",
-                    key: "factor_number"
+                    key: "factor_number",
+                    is_number: true
                 },
                 {
                     name: "تاریخ",
-                    key: "invoice_date"
+                    key: "invoice_date",
+                    is_number: true
                 },
                 {
                     name: "طرف حساب",

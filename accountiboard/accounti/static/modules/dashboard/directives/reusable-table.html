@@ -26,7 +26,7 @@
                 </a>
             </td>
             <td scope="row" ng-repeat="header in headers">
-                <span ng-if="config.price_fields.indexOf(header.key) === -1">{{ item[header.key] | persianNumber }}</span>
+                <span ng-class="{'iranian-number': header.is_number}" ng-if="config.price_fields.indexOf(header.key) === -1">{{ item[header.key] }}</span>
                 <span class="priceField"
                       ng-if="config.price_fields.indexOf(header.key) !== -1 && !config.price_with_tags">{{ item[header.key] | number | persianNumber }}</span>
                 <span class="priceField"

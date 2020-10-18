@@ -713,10 +713,12 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.openDeleteModal = function (deleting_item_type, deleting_item_id) {
+        $scope.openDeleteModal = function (deleting_item_type, deleting_item_id, deleteing_item_name, deleteing_item_numbers) {
             $scope.deleting_item = {
                 type: deleting_item_type,
-                id: deleting_item_id
+                id: deleting_item_id,
+                name: deleteing_item_name,
+                numbers: deleteing_item_numbers
             };
             $rootScope.open_modal('deleteItemsModal', 'addInvoiceModal');
         };
