@@ -1410,11 +1410,6 @@ class EditPaymentInvoiceSaleView(View):
 
 
 class NightReportTemplateView(View):
-    @permission_decorator_class_based(token_authenticate,
-                                      {USER_ROLES['CAFE_OWNER'], USER_ROLES['MANAGER'], USER_ROLES['CASHIER'],
-                                       USER_ROLES['ACCOUNTANT']},
-                                      ALLOW_ALL_PLANS,
-                                      branch_disable=True)
     def get(self, request, *args, **kwargs):
         jdatetime.set_locale('fa_IR')
         report_data = {}
