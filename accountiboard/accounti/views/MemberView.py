@@ -133,6 +133,7 @@ class SearchMemberView(View):
                 'id': member.pk,
                 'first_name': member.first_name,
                 'last_name': member.last_name,
+                'full_name': member.get_full_name(),
                 'phone': member.phone,
                 'card_number': member.card_number,
             })
