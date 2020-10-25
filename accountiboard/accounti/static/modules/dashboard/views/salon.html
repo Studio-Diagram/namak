@@ -465,6 +465,7 @@
                                             <td>-</td>
                                             <td>
                                                 <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
+                                                        ng-disabled="disable_print_after_save_all_buttons"
                                                         class="mainButton okrButton mediumButton fullWidthButton">
                                                     پایان زمان بازی
                                                 </button>
@@ -611,6 +612,7 @@
                                         <p>- دقیقه</p>
                                     </div>
                                     <button ng-click="endCurrentGame(new_invoice_data.current_game.id)"
+                                            ng-disabled="disable_print_after_save_all_buttons"
                                             class="mainButton mediumButton okrButton">
                                         پایان زمان بازی
                                     </button>
@@ -787,7 +789,7 @@
         <p>
             برای شروع کار باید صندوق جدید باز کنید.
         </p>
-        <button ng-click="open_cash()" class="mainButton greenButton">باز کردن صندوق جدید</button>
+        <button ng-disabled="disable_cash_buttons" ng-click="open_cash()" class="mainButton greenButton">باز کردن صندوق جدید</button>
     </div>
     <div ng-show="cash_state === 'OLD_CASH' || cash_state === 'OLD_CASH_WITH_UNSETTLED_INVOICES'"
          class="cashStateAlert oldCashState">

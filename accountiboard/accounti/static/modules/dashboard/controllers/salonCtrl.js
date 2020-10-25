@@ -1,6 +1,7 @@
 angular.module("dashboard")
     .controller("salonCtrl", function ($scope, $interval, $rootScope, $filter, $http, $timeout, $window, $stateParams, $state, dashboardHttpRequest, offlineAPIHttpRequest, $auth, SUCCESS_MESSAGES) {
         var initialize = function () {
+            $scope.disable_cash_buttons = false;
             $scope.static_guest_name = "";
             $scope.search_member_data = "";
             $scope.is_in_edit_mode = false;
@@ -376,8 +377,10 @@ angular.module("dashboard")
         };
 
         $scope.open_cash = function () {
+            $scope.disable_cash_buttons = true;
             dashboardHttpRequest.openCash($rootScope.user_data)
                 .then(function (data) {
+                    $scope.disable_cash_buttons = false;
                     if (data['response_code'] === 2) {
                         $scope.open_cash_offline(data['new_cash_id']);
                         $scope.get_today_cash();
@@ -713,19 +716,22 @@ angular.module("dashboard")
             })(jQuery);
         };
 
-        $scope.openDeleteModal = function (deleting_item_type, deleting_item_id, deleteing_item_name, deleteing_item_numbers) {
+        $scope.openDeleteModal = function (deleting_item_type, deleting_item_id, deleting_item_name, deleting_item_numbers) {
             $scope.deleting_item = {
                 type: deleting_item_type,
                 id: deleting_item_id,
-                name: deleteing_item_name,
-                numbers: deleteing_item_numbers
+                name: deleting_item_name,
+                numbers: deleting_item_numbers
             };
             $rootScope.open_modal('deleteItemsModal', 'addInvoiceModal');
         };
 
         $scope.closeDeleteModal = function () {
             $rootScope.close_modal('deleteItemsModal', 'addInvoiceModal');
-            $scope.read_only_mode = false;
+            $scope.will_delete_items.game = [];
+            $scope.will_delete_items.shop = [];
+            $scope.will_delete_items.menu = [];
+            $scope.will_delete_items.message = "";
         };
 
         $scope.openDeleteInvoiceModal = function (invoice_id) {
