@@ -750,7 +750,10 @@ class EndCurrentGameView(View):
 
         branch_object = Branch.objects.get(id=branch_id)
 
-        game_object = Game.objects.get(pk=game_id, end_time="00:00:00")
+        try:
+            game_object = Game.objects.get(pk=game_id, end_time="00:00:00")
+        except Game.DoesNotExist:
+            return JsonResponse({"response_code": 3, "error_msg": GAME_IS_FINISHED_OR_NOT_EXISTED})
         invoice_to_sales_object = InvoicesSalesToGame.objects.get(game=game_object)
         invoice_id = invoice_to_sales_object.invoice_sales.pk
         invoice_object = InvoiceSales.objects.get(pk=invoice_id)

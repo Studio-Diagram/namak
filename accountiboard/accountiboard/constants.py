@@ -120,6 +120,7 @@ USER_ROLES = {
 
 ONE_HOUR_SECONDS = 3600
 CAN_NOT_CALCULATE_GAME = "به دلیل نبود قیمت‌های ساعت اول و دوم امکان محاسبه قیمت وجود ندارد."
+GAME_IS_FINISHED_OR_NOT_EXISTED = "بازی وجود ندارد یا قبلا اتمام یافته است."
 BRANCH_DEFAULT_DATA = {
     "NAME": "شعبه مرکزی",
     "STARTING_TIME": "08:00",
