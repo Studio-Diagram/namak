@@ -102,12 +102,12 @@ button {
 
 .notchHolder img {
     position: absolute;
-    top: -30px;
-    right: 40px;
+    top: -40px;
+    right: 34px;
 }
 
 .navbarNamak {
-    min-height: 56px;
+    height: 62px;
     border-top: 10px solid var(--namakBlue);
 }
 
@@ -129,6 +129,7 @@ button {
 .namakList li {
     color: var(--textBlack);
     font-weight: 300;
+    font-size: 1rem;
 }
 
 .namakList li::marker {
@@ -161,10 +162,6 @@ button {
     background: var(--namakBlue);
     border-color: var(--namakBlueBorder);
     color: var(--white);
-}
-
-.mainSection .namakBlueButton {
-    width: 185px;
 }
 
 section.proper {
@@ -354,10 +351,24 @@ footer.namakFooter {
     padding: 1.5rem 0;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--white);
+}
+
+.navbarNamak .nav-link.mainButton.okrButton {
+    color: var(--myBlack);
+    padding: 0.4rem 1rem;
+    font-weight: bold;
+}
+
 @media (min-width: 992px) {
     .navbar-nav.customNavbarNav {
         margin-right: 6.5rem;
         margin-bottom: 0;
+    }
+
+    .navbarNamak .navbar-collapse {
+        justify-content: flex-end;
     }
 }
 
@@ -382,6 +393,7 @@ section.features .buttonsWrapper a:hover {
         flex-direction: row;
         justify-content: space-around;
         position: relative;
+        margin-top: 3rem;
     }
 
     .mainSection h1,

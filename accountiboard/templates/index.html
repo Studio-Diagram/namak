@@ -60,28 +60,31 @@
 </head>
 <body ng-app="mainpage">
 
-<nav class="navbar navbar-expand-lg navbar-dark navbarBackground navbarNamak">
-    <a class="navbar-brand" href="#"></a>
-    <button class="navbar-toggler navbarCustomToggler" type="button" data-toggle="collapse"
-            data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav customNavbarNav">
-            <li class="nav-item">
-                <a class="nav-link" ui-sref="main.login">ورود</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" ui-sref="main.register">ثبت‌نام</a>
-            </li>
-        </ul>
+
+<div class="navbarBackground navbarNamak">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <button class="navbar-toggler navbarCustomToggler" type="button" data-toggle="collapse"
+                    data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav customNavbarNav">
+                    <li class="nav-item">
+                        <a class="nav-link" ui-sref="main.login">ورود</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mainButton okrButton" ui-sref="main.register">ثبت‌نام</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <section class="notchHolder">
+            <a ui-sref="main"><img src="https://namak.works/static/img/namak-logo-big%402x.png" width="70px"></a>
+        </section>
     </div>
-</nav>
-<section class="notchHolder">
-    <a ui-sref="main"><img src="https://namak.works/static/img/namak-logo-big%402x.png" width="53.43"
-                           height="41.23"></a>
-</section>
+</div>
 <ui-view></ui-view>
 <script src="//code.tidio.co/8chliq5j7ywpxiluiaqjm0cthkcjcvsw.js" async></script>
 </body>
