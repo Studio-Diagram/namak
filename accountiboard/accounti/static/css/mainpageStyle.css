@@ -34,6 +34,7 @@
     --oilBlueBorder: #4AA5AD;
     --newYellow: #E8CE6B;
     --newYellowBorder: #CCB24D;
+    --myLightGreen: #D6E2CD;
 }
 
 .grecaptcha-badge {
@@ -102,12 +103,12 @@ button {
 
 .notchHolder img {
     position: absolute;
-    top: -30px;
-    right: 40px;
+    top: -40px;
+    right: 34px;
 }
 
 .navbarNamak {
-    min-height: 56px;
+    height: 62px;
     border-top: 10px solid var(--namakBlue);
 }
 
@@ -124,11 +125,13 @@ button {
 .namakList {
     list-style: inside;
     padding-right: 0;
+    line-height: 1.7rem;
 }
 
 .namakList li {
     color: var(--textBlack);
     font-weight: 300;
+    font-size: 1rem;
 }
 
 .namakList li::marker {
@@ -163,10 +166,6 @@ button {
     color: var(--white);
 }
 
-.mainSection .namakBlueButton {
-    width: 185px;
-}
-
 section.proper {
     display: flex;
     flex-direction: column;
@@ -181,15 +180,22 @@ section.proper .textWrapper {
 }
 
 section.proper .textWrapper h2 {
-    font-size: 16px;
-    font-weight: 400;
-    margin-bottom: 14px;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: -40px;
+    z-index: 2;
+    position: relative;
+}
+
+section.proper .textWrapper .imageWrapper {
+    margin-bottom: 1rem;
 }
 
 section.proper .textWrapper p {
-    font-size: 12px;
+    font-size: 1rem;
     color: var(--namakGrey);
     font-weight: 300;
+    margin-top: -3rem;
 }
 
 section.features {
@@ -202,8 +208,8 @@ section.features {
 section.features .buttonsWrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 1rem;
-    margin-top: 50px;
+    grid-gap: 0.5rem;
+    margin-top: 1rem;
 }
 
 section.features .buttonsWrapper a {
@@ -211,7 +217,7 @@ section.features .buttonsWrapper a {
     border-radius: 10px !important;
     font-size: 12px !important;
     height: 40px;
-    color: var(--namakGrey);
+    color: var(--myBlack);
     font-weight: 400 !important;
     display: flex;
     justify-content: center;
@@ -227,10 +233,14 @@ section.features .buttonsWrapper a.active {
     color: var(--white);
 }
 
+section.features .buttonsWrapper a.active:hover div {
+    color: var(--white);
+}
+
 .namakFeaturesTabContentWrapper > .tab-pane > div {
     background: var(--white);
     border-radius: 10px;
-    margin-top: 1rem;
+    margin-top: .5rem;
     padding: 23px;
     height: 390px;
 }
@@ -241,7 +251,7 @@ section.features .buttonsWrapper a.active {
 }
 
 .namakFeaturesTabContentWrapper > .tab-pane > div h3 {
-    font-size: 16px;
+    font-size: 1.5rem;
     font-weight: 400;
     margin-bottom: 14px;
 }
@@ -251,10 +261,21 @@ section.features .buttonsWrapper a.active {
 }
 
 .namakFeaturesTabContentWrapper > .tab-pane > div p {
-    font-size: 12px;
-    color: var(--namakGrey);
-    line-height: 20px;
+    font-size: 1rem;
+    color: var(--myBlack);
     text-align: justify;
+    font-weight: 100;
+    line-height: 1.5rem;
+}
+
+.namakFeaturesTabContentWrapper > .tab-pane > div h4 {
+    color: var(--myGreen);
+    font-weight: 300;
+    border: 1px solid var(--myGrayBorder);
+    padding: 1rem;
+    border-radius: 0.8rem;
+    text-align: center;
+    font-size: 1.4rem;
 }
 
 section.whyNamak {
@@ -264,31 +285,45 @@ section.whyNamak {
     margin-top: 120px;
 }
 
+.whiteBackground {
+    width: 100%;
+    background: var(--white)
+}
+
 .whyNamakCard {
-    background: var(--white);
+    background: var(--mainBody);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: justify;
-    padding: 25px 25px 10px 25px;
-    margin: 3rem 1rem 1rem 1rem;
+    padding: 20px 25px 10px 25px;
+    margin: 2rem 0 1rem 1rem;
+    position: relative;
 }
 
 .whyNamakCard img {
-    margin-top: -70px;
+    position: absolute;
+    top: -45px;
+    left: 15px;
+    width: 90px;
+    height: 90px;
 }
 
 .whyNamakCard h3 {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--namakGrey);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--myBlack);
+    text-align: right;
+    width: 100%;
 }
 
 .whyNamakCard p {
-    font-size: 12px;
-    color: var(--namakGrey);
+    font-size: 1rem;
+    color: var(--myBlack);
+    font-weight: 100;
+    line-height: 1.5rem;
 }
 
 .nav-tabs {
@@ -314,6 +349,7 @@ section.education > div {
 
 section.testimonials > div {
     display: flex;
+    justify-content: space-between;
 }
 
 section.education > div img {
@@ -354,10 +390,24 @@ footer.namakFooter {
     padding: 1.5rem 0;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--white);
+}
+
+.navbarNamak .nav-link.mainButton.okrButton {
+    color: var(--myBlack);
+    padding: 0.4rem 1rem;
+    font-weight: bold;
+}
+
 @media (min-width: 992px) {
     .navbar-nav.customNavbarNav {
         margin-right: 6.5rem;
         margin-bottom: 0;
+    }
+
+    .navbarNamak .navbar-collapse {
+        justify-content: flex-end;
     }
 }
 
@@ -367,6 +417,10 @@ footer.namakFooter {
 
 section.features .buttonsWrapper a:hover {
     text-decoration: none;
+}
+
+section.features .buttonsWrapper a:hover div {
+    color: var(--namakBlue);
 }
 
 @media (min-width: 1024px) {
@@ -382,6 +436,7 @@ section.features .buttonsWrapper a:hover {
         flex-direction: row;
         justify-content: space-around;
         position: relative;
+        margin-top: 5rem;
     }
 
     .mainSection h1,
@@ -401,7 +456,7 @@ section.features .buttonsWrapper a:hover {
 
     .mainSection > div > img {
         position: absolute;
-        bottom: 115px;
+        bottom: 145px;
         right: -150px;
         z-index: -1;
     }
@@ -425,10 +480,11 @@ section.features .buttonsWrapper a:hover {
     section.proper > div {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
     }
 
     section.proper .textWrapper {
-        margin: 0 10%;
+        flex: 0 1 40%;
     }
 
     section.features .buttonsWrapper {
@@ -437,11 +493,10 @@ section.features .buttonsWrapper a:hover {
 
     section.features .buttonsWrapper a {
         width: 100%;
-        height: 117px;
         display: flex;
         flex-direction: column;
         align-items: self-start;
-        padding: 1.2rem;
+        padding: 2.6rem 1.3rem;
     }
 
     section.features .buttonsWrapper a div {
@@ -449,11 +504,14 @@ section.features .buttonsWrapper a:hover {
         font-weight: 400;
     }
 
+    section.features .buttonsWrapper a > div > i {
+        vertical-align: middle;
+    }
+
     section.features .buttonsWrapper a > span {
-        font-size: 14px;
+        font-size: 0.8rem;
         font-weight: 100;
         margin-right: 1.7rem;
-        margin-top: 0.3rem;
     }
 
     .namakFeaturesTabContentWrapper > .tab-pane > div {
@@ -463,7 +521,7 @@ section.features .buttonsWrapper a:hover {
 
     .namakFeaturesTabContentWrapper > .tab-pane > div > div {
         flex: 0 1 40%;
-        margin: 4rem;
+        padding: 1rem;
     }
 
     .namakFeaturesTabContentWrapper > .tab-pane > div > img {
@@ -494,8 +552,7 @@ section.features .buttonsWrapper a:hover {
     }
 
     section.testimonials > div > div {
-        margin: 2rem;
-
+        flex: 0 1 30%;
     }
 
     section.testimonials > div {
@@ -1107,10 +1164,6 @@ a:hover {
     color: var(--myBlack);
     text-decoration: none;
 
-}
-
-a:hover i {
-    color: var(--myRed);
 }
 
 .topHeader {
