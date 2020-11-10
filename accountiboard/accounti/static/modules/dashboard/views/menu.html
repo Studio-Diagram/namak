@@ -125,7 +125,7 @@
                             <th scope="row">{{ item.name }}</th>
                             <td class="priceField">{{ item.price | number | persianNumber }}</td>
                             <td>{{ item.category_name }}</td>
-                            <td style="text-align: center"><a ng-click="editMenuItem(item.id)" href=""
+                            <td style="text-align: center"><a ng-click="editMenuItem(item.id);change_nav_inside_modal('MENU_ITEM')" href=""
                                                               class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>
                             <td style="text-align: center">
@@ -182,7 +182,7 @@
                                         <span ng-repeat="printer in category.printers"
                                               ng-bind="($index + 1 !== category.printers.length) ? printer.name + ' ، ' : printer.name"></span>
                             </td>
-                            <td class="align-middle"><a ng-click="editMenuCategory(category.id)"
+                            <td class="align-middle"><a ng-click="editMenuCategory(category.id);change_nav_inside_modal('MENU_CATEGORY')"
                                                         href=""
                                                         class="mainButton fullWidthButton smallButton grayButton">جزییات</a>
                             </td>

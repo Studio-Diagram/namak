@@ -89,7 +89,7 @@ angular.module("dashboard")
         };
 
         $scope.closeAddMenuCategoryModal = function () {
-            $rootScope.close_modal('addMenuCategoryModal');
+            $rootScope.close_modal('addModal');
             $scope.resetFrom();
         };
 
@@ -125,7 +125,7 @@ angular.module("dashboard")
                             'printers_id': data['menu_category']['printers_id'],
                             'branch_id': $rootScope.user_data.branch
                         };
-                        $rootScope.open_modal('addMenuCategoryModal');
+                        $rootScope.open_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -156,7 +156,7 @@ angular.module("dashboard")
                     if (data['response_code'] === 2) {
                         $scope.get_menu_item_data($rootScope.user_data);
                         $scope.resetFrom();
-                        $rootScope.close_modal('addMenuItemModal');
+                        $rootScope.close_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
@@ -198,7 +198,7 @@ angular.module("dashboard")
                             'menu_category_id': data['menu_item']['menu_category_id'],
                             'branch_id': $rootScope.user_data.branch
                         };
-                        $rootScope.open_modal('addMenuItemModal');
+                        $rootScope.open_modal('addModal');
                     }
                     else if (data['response_code'] === 3) {
                         $rootScope.show_toast(data.error_msg, 'danger');
