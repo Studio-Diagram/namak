@@ -46,7 +46,6 @@ angular.module("dashboard")
         };
 
         $scope.changePrinterCheckBox = function (is_checked, printer_id) {
-            console.log("clicked");
             var index_of_printer_id = $scope.new_menu_category_data.printers_id.indexOf(printer_id);
             if (index_of_printer_id === -1) {
                 $scope.new_menu_category_data.printers_id.push(printer_id);
